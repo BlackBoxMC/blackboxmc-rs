@@ -24,9 +24,9 @@ pub extern "system" fn __on__PluginEnableEvent(env: JNIEnv<'_>, obj: JObject<'_>
     let mut runnable = BukkitRunnable::from_extendable(
         &plugin,
         &event,
-        format!("lib{}.so", std::env!("CARGO_CRATE_NAME")),
+        format!("lib{}", std::env!("CARGO_CRATE_NAME")),
         "HungerThread".into(),
     )
     .unwrap();
-    runnable.run_task_timer(plugin, 0, 60).unwrap();
+    runnable.run_task_timer(plugin, 0, 20).unwrap();
 }
