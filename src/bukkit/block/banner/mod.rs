@@ -90,7 +90,7 @@ impl std::fmt::Display for PatternTypeEnum {
     }
 }
 pub struct PatternType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub PatternTypeEnum,
 );
@@ -101,8 +101,8 @@ impl<'mc> std::ops::Deref for PatternType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PatternType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -169,36 +169,8 @@ impl<'mc> PatternType<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn get_by_identifier(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("org/bukkit/block/banner/PatternType")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByIdentifier",
-            "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::block::banner::PatternType(
-                jni,
-                raw_obj,
-                crate::bukkit::block::banner::PatternType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -225,14 +197,42 @@ impl<'mc> PatternType<'mc> {
         };
         Ok(ret)
     }
+    pub fn get_by_identifier(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/block/banner/PatternType")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByIdentifier",
+            "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::block::banner::PatternType(
+                jni,
+                raw_obj,
+                crate::bukkit::block::banner::PatternType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 pub struct Pattern<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for Pattern<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -240,8 +240,46 @@ impl<'mc> crate::JNIRaw<'mc> for Pattern<'mc> {
     }
 }
 impl<'mc> Pattern<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Pattern from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Pattern") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Pattern object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
     }
     pub fn color(&mut self) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -294,25 +332,6 @@ impl<'mc> Pattern<'mc> {
             )
         };
         Ok(ret)
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
-        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,

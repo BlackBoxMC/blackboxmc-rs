@@ -14,7 +14,7 @@ impl std::fmt::Display for CookingBookCategoryEnum {
     }
 }
 pub struct CookingBookCategory<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub CookingBookCategoryEnum,
 );
@@ -25,8 +25,8 @@ impl<'mc> std::ops::Deref for CookingBookCategory<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for CookingBookCategory<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -43,7 +43,7 @@ impl<'mc> CookingBookCategory<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<
         crate::bukkit::inventory::recipe::CookingBookCategory<'mc>,
@@ -92,7 +92,7 @@ impl std::fmt::Display for CraftingBookCategoryEnum {
     }
 }
 pub struct CraftingBookCategory<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub CraftingBookCategoryEnum,
 );
@@ -103,8 +103,8 @@ impl<'mc> std::ops::Deref for CraftingBookCategory<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for CraftingBookCategory<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -122,7 +122,7 @@ impl<'mc> CraftingBookCategory<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<
         crate::bukkit::inventory::recipe::CraftingBookCategory<'mc>,

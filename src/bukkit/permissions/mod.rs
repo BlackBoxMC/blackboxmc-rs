@@ -1,12 +1,33 @@
 use crate::JNIRaw;
 /// An instantiatable struct that implements ServerOperator. Needed for returning it from Java.
 pub struct ServerOperator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> ServerOperator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ServerOperator from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ServerOperator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ServerOperator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -26,8 +47,8 @@ impl<'mc> ServerOperator<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for ServerOperator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -35,12 +56,12 @@ impl<'mc> crate::JNIRaw<'mc> for ServerOperator<'mc> {
     }
 }
 pub struct PermissibleBase<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for PermissibleBase<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -48,8 +69,29 @@ impl<'mc> crate::JNIRaw<'mc> for PermissibleBase<'mc> {
     }
 }
 impl<'mc> PermissibleBase<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PermissibleBase from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PermissibleBase") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PermissibleBase object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn remove_attachment(
         &mut self,
@@ -177,7 +219,7 @@ impl std::fmt::Display for PermissionDefaultEnum {
     }
 }
 pub struct PermissionDefault<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub PermissionDefaultEnum,
 );
@@ -188,8 +230,8 @@ impl<'mc> std::ops::Deref for PermissionDefault<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PermissionDefault<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -220,7 +262,7 @@ impl<'mc> PermissionDefault<'mc> {
             .to_string())
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::permissions::PermissionDefault<'mc>, Box<dyn std::error::Error>>
     {
@@ -259,7 +301,7 @@ impl<'mc> PermissionDefault<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn get_by_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::permissions::PermissionDefault<'mc>, Box<dyn std::error::Error>>
     {
@@ -290,12 +332,31 @@ impl<'mc> PermissionDefault<'mc> {
 }
 /// An instantiatable struct that implements Permissible. Needed for returning it from Java.
 pub struct Permissible<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Permissible<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Permissible from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Permissible") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Permissible object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn remove_attachment(
         &mut self,
@@ -333,8 +394,8 @@ impl<'mc> Permissible<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Permissible<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -342,12 +403,12 @@ impl<'mc> crate::JNIRaw<'mc> for Permissible<'mc> {
     }
 }
 pub struct Permission<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for Permission<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -355,8 +416,27 @@ impl<'mc> crate::JNIRaw<'mc> for Permission<'mc> {
     }
 }
 impl<'mc> Permission<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Permission from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Permission") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Permission object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn set_default(
         &mut self,
@@ -367,34 +447,6 @@ impl<'mc> Permission<'mc> {
             &self.jni_object(),
             "setDefault",
             "(Lorg/bukkit/permissions/PermissionDefault;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn recalculate_permissibles(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "recalculatePermissibles", "()V", &[])?;
-        Ok(())
-    }
-    pub fn set_description(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "setDescription",
-            "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
@@ -439,6 +491,34 @@ impl<'mc> Permission<'mc> {
             )
         };
         Ok(ret)
+    }
+    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDescription",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn recalculate_permissibles(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "recalculatePermissibles", "()V", &[])?;
+        Ok(())
+    }
+    pub fn set_description(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDescription",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
     }
     pub fn wait(
         &mut self,
@@ -511,12 +591,12 @@ impl<'mc> Permission<'mc> {
     }
 }
 pub struct PermissionAttachmentInfo<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -524,8 +604,30 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
     }
 }
 impl<'mc> PermissionAttachmentInfo<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PermissionAttachmentInfo from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PermissionAttachmentInfo") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PermissionAttachmentInfo object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -539,6 +641,12 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getValue", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn attachment(
         &mut self,
@@ -572,12 +680,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getValue", "()Z", &[])?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -650,12 +752,12 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
 }
 pub struct PermissionAttachment<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for PermissionAttachment<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -663,8 +765,35 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionAttachment<'mc> {
     }
 }
 impl<'mc> PermissionAttachment<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PermissionAttachment from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PermissionAttachment") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PermissionAttachment object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn remove(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn plugin(
         &mut self,
@@ -729,12 +858,6 @@ impl<'mc> PermissionAttachment<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn remove(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", "()Z", &[])?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -808,12 +931,34 @@ impl<'mc> PermissionAttachment<'mc> {
 }
 /// An instantiatable struct that implements PermissionRemovedExecutor. Needed for returning it from Java.
 pub struct PermissionRemovedExecutor<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> PermissionRemovedExecutor<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PermissionRemovedExecutor from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PermissionRemovedExecutor") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PermissionRemovedExecutor object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn attachment_removed(
         &mut self,
@@ -830,8 +975,8 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PermissionRemovedExecutor<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {

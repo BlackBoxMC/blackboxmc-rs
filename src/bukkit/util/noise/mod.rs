@@ -1,11 +1,11 @@
 use crate::JNIRaw;
 pub struct SimplexNoiseGenerator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for SimplexNoiseGenerator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -13,11 +13,33 @@ impl<'mc> crate::JNIRaw<'mc> for SimplexNoiseGenerator<'mc> {
     }
 }
 impl<'mc> SimplexNoiseGenerator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate SimplexNoiseGenerator from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("SimplexNoiseGenerator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SimplexNoiseGenerator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn instance(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>>
     {
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator")?;
@@ -33,7 +55,10 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         };
         Ok(ret)
     }
-    pub fn floor(mut jni: jni::JNIEnv<'mc>, arg0: f64) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn floor(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: f64,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(
@@ -115,12 +140,12 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     }
 }
 pub struct PerlinNoiseGenerator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for PerlinNoiseGenerator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -128,11 +153,32 @@ impl<'mc> crate::JNIRaw<'mc> for PerlinNoiseGenerator<'mc> {
     }
 }
 impl<'mc> PerlinNoiseGenerator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PerlinNoiseGenerator from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PerlinNoiseGenerator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PerlinNoiseGenerator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn instance(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>>
     {
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator")?;
@@ -148,7 +194,10 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         };
         Ok(ret)
     }
-    pub fn floor(mut jni: jni::JNIEnv<'mc>, arg0: f64) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn floor(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: f64,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(
@@ -230,12 +279,12 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     }
 }
 pub struct SimplexOctaveGenerator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for SimplexOctaveGenerator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -243,8 +292,30 @@ impl<'mc> crate::JNIRaw<'mc> for SimplexOctaveGenerator<'mc> {
     }
 }
 impl<'mc> SimplexOctaveGenerator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate SimplexOctaveGenerator from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("SimplexOctaveGenerator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SimplexOctaveGenerator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());
@@ -391,12 +462,12 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
     }
 }
 pub struct OctaveGenerator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for OctaveGenerator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -404,8 +475,29 @@ impl<'mc> crate::JNIRaw<'mc> for OctaveGenerator<'mc> {
     }
 }
 impl<'mc> OctaveGenerator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate OctaveGenerator from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("OctaveGenerator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a OctaveGenerator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());
@@ -536,12 +628,12 @@ impl<'mc> OctaveGenerator<'mc> {
     }
 }
 pub struct PerlinOctaveGenerator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for PerlinOctaveGenerator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -549,8 +641,30 @@ impl<'mc> crate::JNIRaw<'mc> for PerlinOctaveGenerator<'mc> {
     }
 }
 impl<'mc> PerlinOctaveGenerator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PerlinOctaveGenerator from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PerlinOctaveGenerator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PerlinOctaveGenerator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());
@@ -681,12 +795,12 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
     }
 }
 pub struct NoiseGenerator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for NoiseGenerator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -694,10 +808,56 @@ impl<'mc> crate::JNIRaw<'mc> for NoiseGenerator<'mc> {
     }
 }
 impl<'mc> NoiseGenerator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_extendable(
+        _plugin: &crate::bukkit::plugin::Plugin,
+        env: &crate::SharedJNIEnv<'mc>,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = jni::objects::JValueGen::Object(env.new_object(
+            "net/ioixd/blackbox/extendables/ExtendableNoiseGenerator",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(name).unwrap(),
+                )),
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(lib_name).unwrap(),
+                )),
+            ],
+        )?);
+        Ok(Self(env.clone(), unsafe {
+            jni::objects::JObject::from_raw(obj.l()?.clone())
+        }))
     }
-    pub fn floor(mut jni: jni::JNIEnv<'mc>, arg0: f64) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate NoiseGenerator from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("NoiseGenerator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a NoiseGenerator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn floor(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: f64,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(

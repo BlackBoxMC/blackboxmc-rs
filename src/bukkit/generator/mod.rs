@@ -1,12 +1,71 @@
 use crate::JNIRaw;
 /// An instantiatable struct that implements ChunkGeneratorChunkData. Needed for returning it from Java.
 pub struct ChunkGeneratorChunkData<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> ChunkGeneratorChunkData<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ChunkGeneratorChunkData from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ChunkGeneratorChunkData") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChunkGeneratorChunkData object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn get_type(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "(III)Lorg/bukkit/Material;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Material(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::Material::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
     }
     pub fn get_data(
         &mut self,
@@ -130,47 +189,10 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn get_type(
-        &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = jni::objects::JValueGen::Int(arg1.into());
-        let val_2 = jni::objects::JValueGen::Int(arg2.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "(III)Lorg/bukkit/Material;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Material(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::Material::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for ChunkGeneratorChunkData<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -178,12 +200,12 @@ impl<'mc> crate::JNIRaw<'mc> for ChunkGeneratorChunkData<'mc> {
     }
 }
 pub struct BiomeProvider<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for BiomeProvider<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -191,8 +213,48 @@ impl<'mc> crate::JNIRaw<'mc> for BiomeProvider<'mc> {
     }
 }
 impl<'mc> BiomeProvider<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_extendable(
+        env: &crate::SharedJNIEnv<'mc>,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = jni::objects::JValueGen::Object(env.new_object(
+            "net/ioixd/blackbox/extendables/ExtendableBiomeProvider",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(name).unwrap(),
+                )),
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(lib_name).unwrap(),
+                )),
+            ],
+        )?);
+        Ok(Self(env.clone(), unsafe {
+            jni::objects::JObject::from_raw(obj.l()?.clone())
+        }))
+    }
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BiomeProvider from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BiomeProvider") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BiomeProvider object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn get_biome_with_world_info(
         &mut self,
@@ -299,12 +361,34 @@ self.jni_ref().call_method(&self.jni_object(),"getBiome","(Lorg/bukkit/generator
 }
 /// An instantiatable struct that implements ChunkGeneratorBiomeGrid. Needed for returning it from Java.
 pub struct ChunkGeneratorBiomeGrid<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ChunkGeneratorBiomeGrid from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ChunkGeneratorBiomeGrid") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChunkGeneratorBiomeGrid object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn get_biome_with_int(
         &mut self,
@@ -345,8 +429,8 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -355,12 +439,33 @@ impl<'mc> crate::JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
 }
 /// An instantiatable struct that implements BiomeParameterPoint. Needed for returning it from Java.
 pub struct BiomeParameterPoint<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BiomeParameterPoint<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BiomeParameterPoint from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BiomeParameterPoint") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BiomeParameterPoint object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn temperature(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
@@ -472,8 +577,8 @@ impl<'mc> BiomeParameterPoint<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BiomeParameterPoint<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -481,12 +586,12 @@ impl<'mc> crate::JNIRaw<'mc> for BiomeParameterPoint<'mc> {
     }
 }
 pub struct BlockPopulator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for BlockPopulator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -494,8 +599,50 @@ impl<'mc> crate::JNIRaw<'mc> for BlockPopulator<'mc> {
     }
 }
 impl<'mc> BlockPopulator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_extendable(
+        env: &crate::SharedJNIEnv<'mc>,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = jni::objects::JValueGen::Object(env.new_object(
+            "net/ioixd/blackbox/extendables/ExtendableBlockPopulator",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(name).unwrap(),
+                )),
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(lib_name).unwrap(),
+                )),
+            ],
+        )?);
+        Ok(Self(env.clone(), unsafe {
+            jni::objects::JObject::from_raw(obj.l()?.clone())
+        }))
+    }
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BlockPopulator from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BlockPopulator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BlockPopulator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn wait(
         &mut self,
@@ -569,12 +716,31 @@ impl<'mc> BlockPopulator<'mc> {
 }
 /// An instantiatable struct that implements LimitedRegion. Needed for returning it from Java.
 pub struct LimitedRegion<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> LimitedRegion<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate LimitedRegion from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("LimitedRegion") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a LimitedRegion object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn buffer(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -610,8 +776,8 @@ impl<'mc> LimitedRegion<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for LimitedRegion<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -620,18 +786,50 @@ impl<'mc> crate::JNIRaw<'mc> for LimitedRegion<'mc> {
 }
 /// An instantiatable struct that implements WorldInfo. Needed for returning it from Java.
 pub struct WorldInfo<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> WorldInfo<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate WorldInfo from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("WorldInfo") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WorldInfo object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn seed(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getSeed", "()J", &[])?;
         Ok(res.j().unwrap())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn environment(
         &mut self,
@@ -661,23 +859,10 @@ impl<'mc> WorldInfo<'mc> {
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for WorldInfo<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -685,12 +870,12 @@ impl<'mc> crate::JNIRaw<'mc> for WorldInfo<'mc> {
     }
 }
 pub struct ChunkGenerator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ChunkGenerator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -698,8 +883,50 @@ impl<'mc> crate::JNIRaw<'mc> for ChunkGenerator<'mc> {
     }
 }
 impl<'mc> ChunkGenerator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_extendable(
+        env: &crate::SharedJNIEnv<'mc>,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = jni::objects::JValueGen::Object(env.new_object(
+            "net/ioixd/blackbox/extendables/ExtendableChunkGenerator",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(name).unwrap(),
+                )),
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(lib_name).unwrap(),
+                )),
+            ],
+        )?);
+        Ok(Self(env.clone(), unsafe {
+            jni::objects::JObject::from_raw(obj.l()?.clone())
+        }))
+    }
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ChunkGenerator from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ChunkGenerator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChunkGenerator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn generate_noise(
         &mut self,

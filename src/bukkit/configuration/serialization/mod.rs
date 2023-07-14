@@ -1,11 +1,11 @@
 use crate::JNIRaw;
 pub struct ConfigurationSerialization<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ConfigurationSerialization<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -13,11 +13,33 @@ impl<'mc> crate::JNIRaw<'mc> for ConfigurationSerialization<'mc> {
     }
 }
 impl<'mc> ConfigurationSerialization<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ConfigurationSerialization from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ConfigurationSerialization") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ConfigurationSerialization object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn get_alias(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -34,7 +56,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
             .to_string())
     }
     pub fn register_class_with_class(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -53,7 +75,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         Ok(())
     }
     pub fn get_class_by_alias(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -138,17 +160,61 @@ impl<'mc> ConfigurationSerialization<'mc> {
 }
 /// An instantiatable struct that implements ConfigurationSerializable. Needed for returning it from Java.
 pub struct ConfigurationSerializable<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> ConfigurationSerializable<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_extendable(
+        _plugin: &crate::bukkit::plugin::Plugin,
+        env: &crate::SharedJNIEnv<'mc>,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = jni::objects::JValueGen::Object(env.new_object(
+            "net/ioixd/blackbox/extendables/ExtendableConfigurationSerializable",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(name).unwrap(),
+                )),
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(lib_name).unwrap(),
+                )),
+            ],
+        )?);
+        Ok(Self(env.clone(), unsafe {
+            jni::objects::JObject::from_raw(obj.l()?.clone())
+        }))
+    }
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ConfigurationSerializable from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ConfigurationSerializable") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ConfigurationSerializable object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for ConfigurationSerializable<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -157,12 +223,33 @@ impl<'mc> crate::JNIRaw<'mc> for ConfigurationSerializable<'mc> {
 }
 /// An instantiatable struct that implements SerializableAs. Needed for returning it from Java.
 pub struct SerializableAs<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> SerializableAs<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate SerializableAs from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("SerializableAs") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SerializableAs object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn value(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -219,8 +306,8 @@ impl<'mc> SerializableAs<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for SerializableAs<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -229,12 +316,34 @@ impl<'mc> crate::JNIRaw<'mc> for SerializableAs<'mc> {
 }
 /// An instantiatable struct that implements DelegateDeserialization. Needed for returning it from Java.
 pub struct DelegateDeserialization<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> DelegateDeserialization<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate DelegateDeserialization from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("DelegateDeserialization") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DelegateDeserialization object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn value(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -287,8 +396,8 @@ impl<'mc> DelegateDeserialization<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for DelegateDeserialization<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {

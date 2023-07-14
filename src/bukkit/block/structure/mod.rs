@@ -16,7 +16,7 @@ impl std::fmt::Display for StructureRotationEnum {
     }
 }
 pub struct StructureRotation<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub StructureRotationEnum,
 );
@@ -27,8 +27,8 @@ impl<'mc> std::ops::Deref for StructureRotation<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for StructureRotation<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -46,7 +46,7 @@ impl<'mc> StructureRotation<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::structure::StructureRotation<'mc>, Box<dyn std::error::Error>>
     {
@@ -93,7 +93,7 @@ impl std::fmt::Display for UsageModeEnum {
     }
 }
 pub struct UsageMode<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub UsageModeEnum,
 );
@@ -104,8 +104,8 @@ impl<'mc> std::ops::Deref for UsageMode<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for UsageMode<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -123,7 +123,7 @@ impl<'mc> UsageMode<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::structure::UsageMode<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -166,7 +166,7 @@ impl std::fmt::Display for MirrorEnum {
     }
 }
 pub struct Mirror<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub MirrorEnum,
 );
@@ -177,8 +177,8 @@ impl<'mc> std::ops::Deref for Mirror<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Mirror<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -195,7 +195,7 @@ impl<'mc> Mirror<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::structure::Mirror<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());

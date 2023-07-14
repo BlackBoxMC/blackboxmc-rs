@@ -541,7 +541,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library):
             inner_type_name = inner_type["type_name_resolved"]
             type_alone = "std::ops::Fn"
             generics = [inner_type_name]
-            type_name_resolved = "std::boxed::Box<&dyn std::ops::Fn(jni::JNIEnv<'mc>,"+inner_type_name+")>"
+            type_name_resolved = "std::boxed::Box<&dyn std::ops::Fn(crate::SharedJNIEnv<'mc>,"+inner_type_name+")>"
 
         case _:
             if (ty.startswith("java") != True):
@@ -678,8 +678,30 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
 
     if not is_enum:
-        impl_signature.append("pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {")
-        impl_signature.append("Self(env,obj)")
+        impl_signature.append("pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {")
+        impl_signature.append(
+                    "if obj.is_null() {\n"+
+                    "    return Err(eyre::eyre!(\n"+
+                    "        \"Tried to instantiate "+name+" from null object.\")\n"+
+                    "    .into());\n"+
+                    "}\n"+
+                    "let cls = env.jni.borrow().get_object_class(&obj)?;\n"+
+                    "let name_raw = env\n"+
+                    "    .call_method(cls, \"getName\", \"()Ljava/lang/String;\", &[])?;\n"+
+                    "let oh = name_raw.l()?.into();\n"+
+                    "let what = env\n"+
+                    "    .get_string(&oh)?;\n"+
+                    "let name = what.to_string_lossy();\n"+
+                    "if !name.ends_with(\""+name+"\") {\n"+
+                    "    Err(eyre::eyre!(\n"+
+                    "        \"Invalid argument passed. Expected a "+name+" object, got {}\",\n"+
+                    "        name\n"+
+                    "    )\n"+
+                    "    .into())\n"+
+                    "} else {\n"+
+                    "    Ok(Self(env.clone(), obj))\n"+
+                    "}"
+            )
         impl_signature.append("}")
 
     names = {}
@@ -821,7 +843,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             })
         else:
             func_signature.append({
-                "type_name_resolved": "mut jni: jni::JNIEnv<'mc>",
+                "type_name_resolved": "mut jni: crate::SharedJNIEnv<'mc>",
                 "type_name_lhand": "",
                 "is_array": False,
                 "is_interface": False,
@@ -1018,7 +1040,7 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("}")
 
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) jni::JNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
+            "pub struct "+name+"<'mc>(pub(crate) crate::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
 
         file_cache[mod_path].append("impl<'mc> std::ops::Deref for "+name+"<'mc> {")
         file_cache[mod_path].append("   type Target = "+name+"Enum;")
@@ -1027,8 +1049,8 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
         file_cache[mod_path].append("impl<'mc> crate::JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> jni::JNIEnv<'mc> {")
-        file_cache[mod_path].append("        unsafe {self.0.unsafe_clone()}")
+        file_cache[mod_path].append("    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {")
+        file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
         file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
@@ -1053,7 +1075,7 @@ def parse_classes(library, val, classes):
             "/// An instantiatable struct that implements "+name+". Needed for returning it from Java."
         )
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) jni::JNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+            "pub struct "+name+"<'mc>(pub(crate) crate::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
         file_cache[mod_path].append(
             "impl<'mc> "+name+"<'mc> {")
@@ -1062,8 +1084,8 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("}")
 
         file_cache[mod_path].append("impl<'mc> crate::JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> jni::JNIEnv<'mc> {")
-        file_cache[mod_path].append("        unsafe {self.0.unsafe_clone()}")
+        file_cache[mod_path].append("    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {")
+        file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
         file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
@@ -1075,7 +1097,7 @@ def parse_classes(library, val, classes):
         #        print(inter["name"])
     else:  # struct generation
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) jni::JNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+            "pub struct "+name+"<'mc>(pub(crate) crate::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
 
         if "classes" in val:
@@ -1083,8 +1105,8 @@ def parse_classes(library, val, classes):
                 parse_classes(library,cl, classes)
 
         file_cache[mod_path].append("impl<'mc> crate::JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> jni::JNIEnv<'mc> {")
-        file_cache[mod_path].append("        unsafe {self.0.unsafe_clone()}")
+        file_cache[mod_path].append("    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {")
+        file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
         file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")

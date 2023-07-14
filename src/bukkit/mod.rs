@@ -1,43 +1,36 @@
 use crate::JNIRaw;
 /// An instantiatable struct that implements Server. Needed for returning it from Java.
 pub struct Server<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Server<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Server from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Server") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Server object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn reload(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "reload", "()V", &[])?;
         Ok(())
-    }
-    pub fn get_tag(
-        &mut self,
-        arg0: String,
-        arg1: crate::bukkit::NamespacedKey<'mc>,
-        arg2: jni::objects::JClass<'mc>,
-    ) -> Result<crate::bukkit::Tag<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = arg2;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTag",
-            "(Ljava/lang/String;Lorg/bukkit/NamespacedKey;Ljava/lang/Class;)Lorg/bukkit/Tag;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let ret = {
-            crate::bukkit::Tag(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn version(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -83,6 +76,99 @@ impl<'mc> Server<'mc> {
         )?;
         let ret = {
             crate::bukkit::map::MapView(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn shutdown(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "shutdown", "()V", &[])?;
+        Ok(())
+    }
+    pub fn get_unsafe(
+        &mut self,
+    ) -> Result<crate::bukkit::UnsafeValues<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getUnsafe",
+            "()Lorg/bukkit/UnsafeValues;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::UnsafeValues(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn logger(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLogger",
+            "()Ljava/util/logging/Logger;",
+            &[],
+        )?;
+        Ok(res.l().unwrap())
+    }
+    pub fn port(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPort", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn broadcast(
+        &mut self,
+        arg0: String,
+        arg1: String,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "broadcast",
+            "(Ljava/lang/String;Ljava/lang/String;)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_tag(
+        &mut self,
+        arg0: String,
+        arg1: crate::bukkit::NamespacedKey<'mc>,
+        arg2: jni::objects::JClass<'mc>,
+    ) -> Result<crate::bukkit::Tag<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = arg2;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTag",
+            "(Ljava/lang/String;Lorg/bukkit/NamespacedKey;Ljava/lang/Class;)Lorg/bukkit/Tag;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::Tag(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -1175,73 +1261,6 @@ self.jni_ref().call_method(&self.jni_object(),"craftItem","(Lorg/bukkit/inventor
         };
         Ok(ret)
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn shutdown(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "shutdown", "()V", &[])?;
-        Ok(())
-    }
-    pub fn get_unsafe(
-        &mut self,
-    ) -> Result<crate::bukkit::UnsafeValues<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getUnsafe",
-            "()Lorg/bukkit/UnsafeValues;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::UnsafeValues(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn logger(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLogger",
-            "()Ljava/util/logging/Logger;",
-            &[],
-        )?;
-        Ok(res.l().unwrap())
-    }
-    pub fn port(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getPort", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn broadcast(
-        &mut self,
-        arg0: String,
-        arg1: String,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "broadcast",
-            "(Ljava/lang/String;Ljava/lang/String;)I",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
     pub fn send_plugin_message(
         &mut self,
         arg0: crate::bukkit::plugin::Plugin<'mc>,
@@ -1263,8 +1282,8 @@ self.jni_ref().call_method(&self.jni_object(),"craftItem","(Lorg/bukkit/inventor
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Server<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1272,12 +1291,12 @@ impl<'mc> crate::JNIRaw<'mc> for Server<'mc> {
     }
 }
 pub struct ServerSpigot<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ServerSpigot<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1285,8 +1304,27 @@ impl<'mc> crate::JNIRaw<'mc> for ServerSpigot<'mc> {
     }
 }
 impl<'mc> ServerSpigot<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ServerSpigot from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ServerSpigot") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ServerSpigot object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn config(
         &mut self,
@@ -1399,7 +1437,7 @@ impl std::fmt::Display for DifficultyEnum {
     }
 }
 pub struct Difficulty<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub DifficultyEnum,
 );
@@ -1410,8 +1448,8 @@ impl<'mc> std::ops::Deref for Difficulty<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Difficulty<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1428,36 +1466,8 @@ impl<'mc> Difficulty<'mc> {
             _ => None,
         }
     }
-    pub fn get_by_value(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i32,
-    ) -> Result<crate::bukkit::Difficulty<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = &jni.find_class("org/bukkit/Difficulty")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByValue",
-            "(I)Lorg/bukkit/Difficulty;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Difficulty(
-                jni,
-                raw_obj,
-                crate::bukkit::Difficulty::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Difficulty<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -1490,15 +1500,62 @@ impl<'mc> Difficulty<'mc> {
             .call_method(&self.jni_object(), "getValue", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    pub fn get_by_value(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i32,
+    ) -> Result<crate::bukkit::Difficulty<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let cls = &jni.find_class("org/bukkit/Difficulty")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByValue",
+            "(I)Lorg/bukkit/Difficulty;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Difficulty(
+                jni,
+                raw_obj,
+                crate::bukkit::Difficulty::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 /// An instantiatable struct that implements FeatureFlag. Needed for returning it from Java.
 pub struct FeatureFlag<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> FeatureFlag<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate FeatureFlag from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("FeatureFlag") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FeatureFlag object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1516,8 +1573,8 @@ impl<'mc> FeatureFlag<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for FeatureFlag<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1545,7 +1602,7 @@ impl std::fmt::Display for TreeSpeciesEnum {
     }
 }
 pub struct TreeSpecies<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub TreeSpeciesEnum,
 );
@@ -1556,8 +1613,8 @@ impl<'mc> std::ops::Deref for TreeSpecies<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for TreeSpecies<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1576,42 +1633,8 @@ impl<'mc> TreeSpecies<'mc> {
             _ => None,
         }
     }
-    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", "()B", &[])?;
-        Ok(res.b().unwrap())
-    }
-    pub fn get_by_data(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i8,
-    ) -> Result<crate::bukkit::TreeSpecies<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
-        let cls = &jni.find_class("org/bukkit/TreeSpecies")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByData",
-            "(B)Lorg/bukkit/TreeSpecies;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::TreeSpecies(
-                jni,
-                raw_obj,
-                crate::bukkit::TreeSpecies::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::TreeSpecies<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -1638,15 +1661,82 @@ impl<'mc> TreeSpecies<'mc> {
         };
         Ok(ret)
     }
+    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", "()B", &[])?;
+        Ok(res.b().unwrap())
+    }
+    pub fn get_by_data(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
+    ) -> Result<crate::bukkit::TreeSpecies<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let cls = &jni.find_class("org/bukkit/TreeSpecies")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByData",
+            "(B)Lorg/bukkit/TreeSpecies;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::TreeSpecies(
+                jni,
+                raw_obj,
+                crate::bukkit::TreeSpecies::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 /// An instantiatable struct that implements Raid. Needed for returning it from Java.
 pub struct Raid<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Raid<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Raid from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Raid") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Raid object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "()Lorg/bukkit/Location;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn is_started(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1716,24 +1806,10 @@ impl<'mc> Raid<'mc> {
             .call_method(&self.jni_object(), "getTotalHealth", "()F", &[])?;
         Ok(res.f().unwrap())
     }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for Raid<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1742,12 +1818,31 @@ impl<'mc> crate::JNIRaw<'mc> for Raid<'mc> {
 }
 /// An instantiatable struct that implements UnsafeValues. Needed for returning it from Java.
 pub struct UnsafeValues<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> UnsafeValues<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate UnsafeValues from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("UnsafeValues") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a UnsafeValues object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn get_material(
         &mut self,
@@ -1973,8 +2068,8 @@ impl<'mc> UnsafeValues<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for UnsafeValues<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1983,18 +2078,31 @@ impl<'mc> crate::JNIRaw<'mc> for UnsafeValues<'mc> {
 }
 /// An instantiatable struct that implements World. Needed for returning it from Java.
 pub struct World<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> World<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
-    }
-    pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTime", "()J", &[])?;
-        Ok(res.j().unwrap())
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate World from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("World") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a World object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.into());
@@ -2004,6 +2112,17 @@ impl<'mc> World<'mc> {
             "(J)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
+        Ok(())
+    }
+    pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTime", "()J", &[])?;
+        Ok(res.j().unwrap())
+    }
+    pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "save", "()V", &[])?;
         Ok(())
     }
     pub fn set_ticks_per_water_underground_creature_spawns(
@@ -3246,11 +3365,6 @@ self.jni_ref().call_method(&self.jni_object(),"spawnArrow","(Lorg/bukkit/Locatio
         };
         Ok(ret)
     }
-    pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "save", "()V", &[])?;
-        Ok(())
-    }
     pub fn spawn_entity_with_location(
         &mut self,
         arg0: crate::bukkit::Location<'mc>,
@@ -3283,6 +3397,19 @@ self.jni_ref().call_method(&self.jni_object(),"spawnArrow","(Lorg/bukkit/Locatio
             .call_method(&self.jni_object(), "getSeed", "()J", &[])?;
         Ok(res.j().unwrap())
     }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn environment(
         &mut self,
     ) -> Result<crate::bukkit::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
@@ -3310,19 +3437,6 @@ self.jni_ref().call_method(&self.jni_object(),"spawnArrow","(Lorg/bukkit/Locatio
             .jni_ref()
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[])?;
         Ok(res.i().unwrap())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     pub fn send_plugin_message(
         &mut self,
@@ -3422,8 +3536,8 @@ self.jni_ref().call_method(&self.jni_object(),"spawnArrow","(Lorg/bukkit/Locatio
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for World<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -3445,7 +3559,7 @@ impl std::fmt::Display for FluidCollisionModeEnum {
     }
 }
 pub struct FluidCollisionMode<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub FluidCollisionModeEnum,
 );
@@ -3456,8 +3570,8 @@ impl<'mc> std::ops::Deref for FluidCollisionMode<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for FluidCollisionMode<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -3474,7 +3588,7 @@ impl<'mc> FluidCollisionMode<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::FluidCollisionMode<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -3504,12 +3618,31 @@ impl<'mc> FluidCollisionMode<'mc> {
 }
 /// An instantiatable struct that implements Nameable. Needed for returning it from Java.
 pub struct Nameable<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Nameable<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Nameable from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Nameable") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Nameable object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn custom_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3536,8 +3669,8 @@ impl<'mc> Nameable<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Nameable<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -3755,7 +3888,7 @@ impl std::fmt::Display for ParticleEnum {
     }
 }
 pub struct Particle<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub ParticleEnum,
 );
@@ -3766,8 +3899,8 @@ impl<'mc> std::ops::Deref for Particle<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Particle<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -3775,12 +3908,12 @@ impl<'mc> crate::JNIRaw<'mc> for Particle<'mc> {
     }
 }
 pub struct ParticleDustOptions<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ParticleDustOptions<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -3788,8 +3921,35 @@ impl<'mc> crate::JNIRaw<'mc> for ParticleDustOptions<'mc> {
     }
 }
 impl<'mc> ParticleDustOptions<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ParticleDustOptions from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ParticleDustOptions") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ParticleDustOptions object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn size(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSize", "()F", &[])?;
+        Ok(res.f().unwrap())
     }
     pub fn color(&mut self) -> Result<crate::bukkit::Color<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3804,12 +3964,6 @@ impl<'mc> ParticleDustOptions<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn size(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSize", "()F", &[])?;
-        Ok(res.f().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -3882,12 +4036,12 @@ impl<'mc> ParticleDustOptions<'mc> {
     }
 }
 pub struct ParticleDustTransition<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ParticleDustTransition<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -3895,8 +4049,30 @@ impl<'mc> crate::JNIRaw<'mc> for ParticleDustTransition<'mc> {
     }
 }
 impl<'mc> ParticleDustTransition<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate ParticleDustTransition from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ParticleDustTransition") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ParticleDustTransition object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn to_color(&mut self) -> Result<crate::bukkit::Color<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3912,6 +4088,12 @@ impl<'mc> ParticleDustTransition<'mc> {
         };
         Ok(ret)
     }
+    pub fn size(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSize", "()F", &[])?;
+        Ok(res.f().unwrap())
+    }
     pub fn color(&mut self) -> Result<crate::bukkit::Color<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3925,12 +4107,6 @@ impl<'mc> ParticleDustTransition<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn size(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSize", "()F", &[])?;
-        Ok(res.f().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -4119,7 +4295,7 @@ impl<'mc> Particle<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Particle<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -4240,7 +4416,7 @@ impl std::fmt::Display for EntityEffectEnum {
     }
 }
 pub struct EntityEffect<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub EntityEffectEnum,
 );
@@ -4251,8 +4427,8 @@ impl<'mc> std::ops::Deref for EntityEffect<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for EntityEffect<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -4307,23 +4483,8 @@ impl<'mc> EntityEffect<'mc> {
             _ => None,
         }
     }
-    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", "()B", &[])?;
-        Ok(res.b().unwrap())
-    }
-    pub fn applicable(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getApplicable",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::EntityEffect<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -4350,6 +4511,21 @@ impl<'mc> EntityEffect<'mc> {
         };
         Ok(ret)
     }
+    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", "()B", &[])?;
+        Ok(res.b().unwrap())
+    }
+    pub fn applicable(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getApplicable",
+            "()Ljava/lang/Class;",
+            &[],
+        )?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
 }
 pub enum GrassSpeciesEnum {
     Dead,
@@ -4366,7 +4542,7 @@ impl std::fmt::Display for GrassSpeciesEnum {
     }
 }
 pub struct GrassSpecies<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub GrassSpeciesEnum,
 );
@@ -4377,8 +4553,8 @@ impl<'mc> std::ops::Deref for GrassSpecies<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for GrassSpecies<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -4394,42 +4570,8 @@ impl<'mc> GrassSpecies<'mc> {
             _ => None,
         }
     }
-    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", "()B", &[])?;
-        Ok(res.b().unwrap())
-    }
-    pub fn get_by_data(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i8,
-    ) -> Result<crate::bukkit::GrassSpecies<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
-        let cls = &jni.find_class("org/bukkit/GrassSpecies")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByData",
-            "(B)Lorg/bukkit/GrassSpecies;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::GrassSpecies(
-                jni,
-                raw_obj,
-                crate::bukkit::GrassSpecies::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::GrassSpecies<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -4456,15 +4598,68 @@ impl<'mc> GrassSpecies<'mc> {
         };
         Ok(ret)
     }
+    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", "()B", &[])?;
+        Ok(res.b().unwrap())
+    }
+    pub fn get_by_data(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
+    ) -> Result<crate::bukkit::GrassSpecies<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let cls = &jni.find_class("org/bukkit/GrassSpecies")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByData",
+            "(B)Lorg/bukkit/GrassSpecies;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::GrassSpecies(
+                jni,
+                raw_obj,
+                crate::bukkit::GrassSpecies::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 /// An instantiatable struct that implements Utility. Needed for returning it from Java.
 pub struct Utility<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Utility<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Utility from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Utility") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Utility object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn equals(
         &mut self,
@@ -4511,8 +4706,8 @@ impl<'mc> Utility<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Utility<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -4536,7 +4731,7 @@ impl std::fmt::Display for WorldTypeEnum {
     }
 }
 pub struct WorldType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub WorldTypeEnum,
 );
@@ -4547,8 +4742,8 @@ impl<'mc> std::ops::Deref for WorldType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for WorldType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -4579,7 +4774,7 @@ impl<'mc> WorldType<'mc> {
             .to_string())
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::WorldType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -4607,7 +4802,7 @@ impl<'mc> WorldType<'mc> {
         Ok(ret)
     }
     pub fn get_by_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::WorldType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -4636,12 +4831,12 @@ impl<'mc> WorldType<'mc> {
     }
 }
 pub struct GameEvent<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for GameEvent<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -4649,11 +4844,44 @@ impl<'mc> crate::JNIRaw<'mc> for GameEvent<'mc> {
     }
 }
 impl<'mc> GameEvent<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate GameEvent from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("GameEvent") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a GameEvent object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKey",
+            "()Lorg/bukkit/NamespacedKey;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn get_by_key(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<crate::bukkit::GameEvent<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -4667,20 +4895,6 @@ impl<'mc> GameEvent<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::GameEvent(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
         };
         Ok(ret)
     }
@@ -4756,12 +4970,44 @@ impl<'mc> GameEvent<'mc> {
 }
 /// An instantiatable struct that implements OfflinePlayer. Needed for returning it from Java.
 pub struct OfflinePlayer<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> OfflinePlayer<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate OfflinePlayer from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("OfflinePlayer") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a OfflinePlayer object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn is_banned(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -4899,19 +5145,6 @@ impl<'mc> OfflinePlayer<'mc> {
             .call_method(&self.jni_object(), "hasPlayedBefore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4930,8 +5163,8 @@ impl<'mc> OfflinePlayer<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for OfflinePlayer<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -4939,12 +5172,12 @@ impl<'mc> crate::JNIRaw<'mc> for OfflinePlayer<'mc> {
     }
 }
 pub struct WorldSpigot<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for WorldSpigot<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -4952,8 +5185,27 @@ impl<'mc> crate::JNIRaw<'mc> for WorldSpigot<'mc> {
     }
 }
 impl<'mc> WorldSpigot<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate WorldSpigot from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("WorldSpigot") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WorldSpigot object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn strike_lightning(
         &mut self,
@@ -5072,12 +5324,12 @@ impl<'mc> WorldSpigot<'mc> {
     }
 }
 pub struct WarningWarningState<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for WarningWarningState<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -5085,24 +5337,32 @@ impl<'mc> crate::JNIRaw<'mc> for WarningWarningState<'mc> {
     }
 }
 impl<'mc> WarningWarningState<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
-    }
-    pub fn print_for(
-        &mut self,
-        arg0: crate::bukkit::Warning<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "printFor",
-            "(Lorg/bukkit/Warning;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate WarningWarningState from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("WarningWarningState") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WarningWarningState object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn value(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::WarningWarningState<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -5118,6 +5378,19 @@ impl<'mc> WarningWarningState<'mc> {
             crate::bukkit::WarningWarningState(jni, obj)
         };
         Ok(ret)
+    }
+    pub fn print_for(
+        &mut self,
+        arg0: crate::bukkit::Warning<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "printFor",
+            "(Lorg/bukkit/Warning;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -5256,7 +5529,7 @@ impl std::fmt::Display for SoundCategoryEnum {
     }
 }
 pub struct SoundCategory<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub SoundCategoryEnum,
 );
@@ -5267,8 +5540,8 @@ impl<'mc> std::ops::Deref for SoundCategory<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for SoundCategory<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -5292,7 +5565,7 @@ impl<'mc> SoundCategory<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::SoundCategory<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -5341,7 +5614,7 @@ impl std::fmt::Display for HeightMapEnum {
     }
 }
 pub struct HeightMap<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub HeightMapEnum,
 );
@@ -5352,8 +5625,8 @@ impl<'mc> std::ops::Deref for HeightMap<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for HeightMap<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -5373,7 +5646,7 @@ impl<'mc> HeightMap<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::HeightMap<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -5402,12 +5675,12 @@ impl<'mc> HeightMap<'mc> {
     }
 }
 pub struct Color<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for Color<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -5415,11 +5688,62 @@ impl<'mc> crate::JNIRaw<'mc> for Color<'mc> {
     }
 }
 impl<'mc> Color<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Color from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Color") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Color object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
     }
     pub fn deserialize(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::collections::HashMap<String, jni::objects::JObject<'mc>>,
     ) -> Result<crate::bukkit::Color<'mc>, Box<dyn std::error::Error>> {
         let raw_val_0 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
@@ -5451,7 +5775,7 @@ impl<'mc> Color<'mc> {
         Ok(ret)
     }
     pub fn from_rgb_with_int(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i32>,
@@ -5477,7 +5801,7 @@ impl<'mc> Color<'mc> {
         Ok(ret)
     }
     pub fn from_argb_with_int(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i32>,
@@ -5506,7 +5830,7 @@ impl<'mc> Color<'mc> {
         Ok(ret)
     }
     pub fn from_bgr_with_int(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i32>,
@@ -5679,38 +6003,6 @@ impl<'mc> Color<'mc> {
         };
         Ok(ret)
     }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5766,7 +6058,7 @@ impl std::fmt::Display for FluidEnum {
     }
 }
 pub struct Fluid<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub FluidEnum,
 );
@@ -5777,8 +6069,8 @@ impl<'mc> std::ops::Deref for Fluid<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Fluid<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -5796,7 +6088,7 @@ impl<'mc> Fluid<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Fluid<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -5863,7 +6155,7 @@ impl std::fmt::Display for CropStateEnum {
     }
 }
 pub struct CropState<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub CropStateEnum,
 );
@@ -5874,8 +6166,8 @@ impl<'mc> std::ops::Deref for CropState<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for CropState<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -5896,22 +6188,16 @@ impl<'mc> CropState<'mc> {
             _ => None,
         }
     }
-    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", "()B", &[])?;
-        Ok(res.b().unwrap())
-    }
-    pub fn get_by_data(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i8,
+    pub fn value_of(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
     ) -> Result<crate::bukkit::CropState<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
         let cls = &jni.find_class("org/bukkit/CropState")?;
         let res = jni.call_static_method(
             cls,
-            "getByData",
-            "(B)Lorg/bukkit/CropState;",
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/CropState;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -5930,16 +6216,22 @@ impl<'mc> CropState<'mc> {
         };
         Ok(ret)
     }
-    pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
+    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", "()B", &[])?;
+        Ok(res.b().unwrap())
+    }
+    pub fn get_by_data(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
     ) -> Result<crate::bukkit::CropState<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
         let cls = &jni.find_class("org/bukkit/CropState")?;
         let res = jni.call_static_method(
             cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/CropState;",
+            "getByData",
+            "(B)Lorg/bukkit/CropState;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -5976,7 +6268,7 @@ impl std::fmt::Display for NetherWartsStateEnum {
     }
 }
 pub struct NetherWartsState<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub NetherWartsStateEnum,
 );
@@ -5987,8 +6279,8 @@ impl<'mc> std::ops::Deref for NetherWartsState<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for NetherWartsState<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -6006,7 +6298,7 @@ impl<'mc> NetherWartsState<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::NetherWartsState<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -9269,7 +9561,7 @@ impl std::fmt::Display for SoundEnum {
     }
 }
 pub struct Sound<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub SoundEnum,
 );
@@ -9280,8 +9572,8 @@ impl<'mc> std::ops::Deref for Sound<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Sound<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -10871,7 +11163,7 @@ impl<'mc> Sound<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Sound<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -10915,12 +11207,31 @@ impl<'mc> Sound<'mc> {
 }
 /// An instantiatable struct that implements Chunk. Needed for returning it from Java.
 pub struct Chunk<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Chunk<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Chunk from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Chunk") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Chunk object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn is_loaded(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -10936,6 +11247,19 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unload",
+            "(Z)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn load(
+        &mut self,
+        arg0: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "load",
             "(Z)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
@@ -10993,24 +11317,14 @@ impl<'mc> Chunk<'mc> {
             .call_method(&self.jni_object(), "getZ", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn get_chunk_snapshot(
+    pub fn chunk_snapshot(
         &mut self,
-        arg0: bool,
-        arg1: bool,
-        arg2: bool,
     ) -> Result<crate::bukkit::ChunkSnapshot<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        let val_1 = jni::objects::JValueGen::Bool(arg1.into());
-        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getChunkSnapshot",
-            "(ZZZ)Lorg/bukkit/ChunkSnapshot;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
+            "()Lorg/bukkit/ChunkSnapshot;",
+            &[],
         )?;
         let ret = {
             crate::bukkit::ChunkSnapshot(self.jni_ref(), unsafe {
@@ -11111,19 +11425,6 @@ impl<'mc> Chunk<'mc> {
         };
         Ok(ret)
     }
-    pub fn load(
-        &mut self,
-        arg0: std::option::Option<bool>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "load",
-            "(Z)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
     pub fn persistent_data_container(
         &mut self,
     ) -> Result<crate::bukkit::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>>
@@ -11143,8 +11444,8 @@ impl<'mc> Chunk<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Chunk<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -11192,7 +11493,7 @@ impl std::fmt::Display for DyeColorEnum {
     }
 }
 pub struct DyeColor<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub DyeColorEnum,
 );
@@ -11203,8 +11504,8 @@ impl<'mc> std::ops::Deref for DyeColor<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for DyeColor<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -11233,6 +11534,34 @@ impl<'mc> DyeColor<'mc> {
             _ => None,
         }
     }
+    pub fn value_of(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/DyeColor")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/DyeColor;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::DyeColor(
+                jni,
+                raw_obj,
+                crate::bukkit::DyeColor::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
     pub fn color(&mut self) -> Result<crate::bukkit::Color<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11248,7 +11577,7 @@ impl<'mc> DyeColor<'mc> {
         Ok(ret)
     }
     pub fn legacy_value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -11275,42 +11604,8 @@ impl<'mc> DyeColor<'mc> {
         };
         Ok(ret)
     }
-    pub fn dye_data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDyeData", "()B", &[])?;
-        Ok(res.b().unwrap())
-    }
-    pub fn get_by_dye_data(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i8,
-    ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
-        let cls = &jni.find_class("org/bukkit/DyeColor")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByDyeData",
-            "(B)Lorg/bukkit/DyeColor;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::DyeColor(
-                jni,
-                raw_obj,
-                crate::bukkit::DyeColor::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn get_by_wool_data(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i8,
     ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Byte(arg0.into());
@@ -11343,6 +11638,40 @@ impl<'mc> DyeColor<'mc> {
             .call_method(&self.jni_object(), "getWoolData", "()B", &[])?;
         Ok(res.b().unwrap())
     }
+    pub fn dye_data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDyeData", "()B", &[])?;
+        Ok(res.b().unwrap())
+    }
+    pub fn get_by_dye_data(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
+    ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let cls = &jni.find_class("org/bukkit/DyeColor")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByDyeData",
+            "(B)Lorg/bukkit/DyeColor;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::DyeColor(
+                jni,
+                raw_obj,
+                crate::bukkit::DyeColor::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
     pub fn firework_color(
         &mut self,
     ) -> Result<crate::bukkit::Color<'mc>, Box<dyn std::error::Error>> {
@@ -11360,7 +11689,7 @@ impl<'mc> DyeColor<'mc> {
         Ok(ret)
     }
     pub fn get_by_color(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::Color<'mc>,
     ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -11388,7 +11717,7 @@ impl<'mc> DyeColor<'mc> {
         Ok(ret)
     }
     pub fn get_by_firework_color(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::Color<'mc>,
     ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -11415,42 +11744,14 @@ impl<'mc> DyeColor<'mc> {
         };
         Ok(ret)
     }
-    pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("org/bukkit/DyeColor")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/DyeColor;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::DyeColor(
-                jni,
-                raw_obj,
-                crate::bukkit::DyeColor::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
 }
 pub struct VibrationDestinationBlockDestination<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for VibrationDestinationBlockDestination<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -11458,8 +11759,44 @@ impl<'mc> crate::JNIRaw<'mc> for VibrationDestinationBlockDestination<'mc> {
     }
 }
 impl<'mc> VibrationDestinationBlockDestination<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate VibrationDestinationBlockDestination from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("VibrationDestinationBlockDestination") {
+            Err(eyre::eyre!(
+        "Invalid argument passed. Expected a VibrationDestinationBlockDestination object, got {}",
+        name
+    )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "()Lorg/bukkit/Location;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn block(
         &mut self,
@@ -11472,20 +11809,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -11578,7 +11901,7 @@ impl std::fmt::Display for GameModeEnum {
     }
 }
 pub struct GameMode<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub GameModeEnum,
 );
@@ -11589,8 +11912,8 @@ impl<'mc> std::ops::Deref for GameMode<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for GameMode<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -11607,36 +11930,8 @@ impl<'mc> GameMode<'mc> {
             _ => None,
         }
     }
-    pub fn get_by_value(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i32,
-    ) -> Result<crate::bukkit::GameMode<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = &jni.find_class("org/bukkit/GameMode")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByValue",
-            "(I)Lorg/bukkit/GameMode;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::GameMode(
-                jni,
-                raw_obj,
-                crate::bukkit::GameMode::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::GameMode<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -11669,16 +11964,44 @@ impl<'mc> GameMode<'mc> {
             .call_method(&self.jni_object(), "getValue", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    pub fn get_by_value(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i32,
+    ) -> Result<crate::bukkit::GameMode<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let cls = &jni.find_class("org/bukkit/GameMode")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByValue",
+            "(I)Lorg/bukkit/GameMode;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::GameMode(
+                jni,
+                raw_obj,
+                crate::bukkit::GameMode::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 /// An instantiatable struct that implements VibrationDestination. Needed for returning it from Java.
 pub struct VibrationDestination<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> VibrationDestination<'mc> {}
 impl<'mc> crate::JNIRaw<'mc> for VibrationDestination<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -11686,16 +12009,16 @@ impl<'mc> crate::JNIRaw<'mc> for VibrationDestination<'mc> {
     }
 }
 pub struct Note<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 pub struct NoteTone<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for NoteTone<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -11703,8 +12026,33 @@ impl<'mc> crate::JNIRaw<'mc> for NoteTone<'mc> {
     }
 }
 impl<'mc> NoteTone<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate NoteTone from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("NoteTone") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a NoteTone object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn id(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getId", "()B", &[])?;
+        Ok(res.b().unwrap())
     }
     pub fn is_sharped(&mut self, arg0: i8) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Byte(arg0.into());
@@ -11717,7 +12065,7 @@ impl<'mc> NoteTone<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn get_by_id(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i8,
     ) -> Result<crate::bukkit::NoteTone<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Byte(arg0.into());
@@ -11739,16 +12087,6 @@ impl<'mc> NoteTone<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "isSharpable", "()Z", &[])?;
         Ok(res.z().unwrap())
-    }
-    pub fn get_id(&mut self, arg0: bool) -> Result<i8, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getId",
-            "(Z)B",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.b().unwrap())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -11859,8 +12197,8 @@ impl<'mc> NoteTone<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Note<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -11868,8 +12206,65 @@ impl<'mc> crate::JNIRaw<'mc> for Note<'mc> {
     }
 }
 impl<'mc> Note<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Note from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Note") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Note object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn id(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getId", "()B", &[])?;
+        Ok(res.b().unwrap())
     }
     pub fn is_sharped(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -11892,7 +12287,7 @@ impl<'mc> Note<'mc> {
         Ok(ret)
     }
     pub fn flat(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: crate::bukkit::NoteTone<'mc>,
     ) -> Result<crate::bukkit::Note<'mc>, Box<dyn std::error::Error>> {
@@ -11915,7 +12310,7 @@ impl<'mc> Note<'mc> {
         Ok(ret)
     }
     pub fn sharp(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: crate::bukkit::NoteTone<'mc>,
     ) -> Result<crate::bukkit::Note<'mc>, Box<dyn std::error::Error>> {
@@ -11938,7 +12333,7 @@ impl<'mc> Note<'mc> {
         Ok(ret)
     }
     pub fn natural(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: crate::bukkit::NoteTone<'mc>,
     ) -> Result<crate::bukkit::Note<'mc>, Box<dyn std::error::Error>> {
@@ -11993,44 +12388,6 @@ impl<'mc> Note<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn id(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getId", "()B", &[])?;
-        Ok(res.b().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -12219,7 +12576,7 @@ impl std::fmt::Display for EffectEnum {
     }
 }
 pub struct Effect<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub EffectEnum,
 );
@@ -12230,8 +12587,8 @@ impl<'mc> std::ops::Deref for Effect<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Effect<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -12239,12 +12596,12 @@ impl<'mc> crate::JNIRaw<'mc> for Effect<'mc> {
     }
 }
 pub struct EffectType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for EffectType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -12252,8 +12609,27 @@ impl<'mc> crate::JNIRaw<'mc> for EffectType<'mc> {
     }
 }
 impl<'mc> EffectType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate EffectType from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("EffectType") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EffectType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -12441,45 +12817,8 @@ impl<'mc> Effect<'mc> {
             _ => None,
         }
     }
-    pub fn data(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getData",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    pub fn get_by_id(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i32,
-    ) -> Result<crate::bukkit::Effect<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = &jni.find_class("org/bukkit/Effect")?;
-        let res = jni.call_static_method(
-            cls,
-            "getById",
-            "(I)Lorg/bukkit/Effect;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Effect(
-                jni,
-                raw_obj,
-                crate::bukkit::Effect::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Effect<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -12528,15 +12867,71 @@ impl<'mc> Effect<'mc> {
         };
         Ok(ret)
     }
+    pub fn data(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getData",
+            "()Ljava/lang/Class;",
+            &[],
+        )?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+    pub fn get_by_id(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i32,
+    ) -> Result<crate::bukkit::Effect<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let cls = &jni.find_class("org/bukkit/Effect")?;
+        let res = jni.call_static_method(
+            cls,
+            "getById",
+            "(I)Lorg/bukkit/Effect;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Effect(
+                jni,
+                raw_obj,
+                crate::bukkit::Effect::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 /// An instantiatable struct that implements BanEntry. Needed for returning it from Java.
 pub struct BanEntry<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BanEntry<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BanEntry from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BanEntry") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BanEntry object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn reason(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -12559,6 +12954,29 @@ impl<'mc> BanEntry<'mc> {
             &[],
         )?;
         Ok(res.l().unwrap())
+    }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "save", "()V", &[])?;
+        Ok(())
+    }
+    pub fn target(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTarget",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn source(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -12637,33 +13055,10 @@ impl<'mc> BanEntry<'mc> {
         )?;
         Ok(())
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "save", "()V", &[])?;
-        Ok(())
-    }
-    pub fn target(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTarget",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for BanEntry<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -12671,12 +13066,12 @@ impl<'mc> crate::JNIRaw<'mc> for BanEntry<'mc> {
     }
 }
 pub struct Bukkit<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for Bukkit<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -12684,16 +13079,136 @@ impl<'mc> crate::JNIRaw<'mc> for Bukkit<'mc> {
     }
 }
 impl<'mc> Bukkit<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Bukkit from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Bukkit") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Bukkit object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
-    pub fn reload(mut jni: jni::JNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn reload(mut jni: crate::SharedJNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "reload", "()V", &[])?;
         Ok(())
     }
+    pub fn version(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(cls, "getVersion", "()Ljava/lang/String;", &[])?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_map(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i32,
+    ) -> Result<crate::bukkit::map::MapView<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let cls = &jni.find_class("org/bukkit/map/MapView")?;
+        let res = jni.call_static_method(
+            cls,
+            "getMap",
+            "(I)Lorg/bukkit/map/MapView;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::map::MapView(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn create_map(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::World<'mc>,
+    ) -> Result<crate::bukkit::map::MapView<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/map/MapView")?;
+        let res = jni.call_static_method(
+            cls,
+            "createMap",
+            "(Lorg/bukkit/World;)Lorg/bukkit/map/MapView;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::map::MapView(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn name(mut jni: crate::SharedJNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn shutdown(mut jni: crate::SharedJNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("void")?;
+        let _res = jni.call_static_method(cls, "shutdown", "()V", &[])?;
+        Ok(())
+    }
+    pub fn get_unsafe(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::UnsafeValues<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/UnsafeValues")?;
+        let res = jni.call_static_method(cls, "getUnsafe", "()Lorg/bukkit/UnsafeValues;", &[])?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::UnsafeValues(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn logger(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/util/logging/Logger")?;
+        let res = jni.call_static_method(cls, "getLogger", "()Ljava/util/logging/Logger;", &[])?;
+        Ok(res.l().unwrap())
+    }
+    pub fn port(mut jni: crate::SharedJNIEnv<'mc>) -> Result<i32, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("int")?;
+        let res = jni.call_static_method(cls, "getPort", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn broadcast(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+        arg1: String,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let cls = &jni.find_class("int")?;
+        let res = jni.call_static_method(
+            cls,
+            "broadcast",
+            "(Ljava/lang/String;Ljava/lang/String;)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
     pub fn get_tag(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
         arg1: crate::bukkit::NamespacedKey<'mc>,
         arg2: jni::objects::JClass<'mc>,
@@ -12718,52 +13233,8 @@ impl<'mc> Bukkit<'mc> {
         };
         Ok(ret)
     }
-    pub fn version(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(cls, "getVersion", "()Ljava/lang/String;", &[])?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn get_map(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i32,
-    ) -> Result<crate::bukkit::map::MapView<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = &jni.find_class("org/bukkit/map/MapView")?;
-        let res = jni.call_static_method(
-            cls,
-            "getMap",
-            "(I)Lorg/bukkit/map/MapView;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::map::MapView(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn create_map(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: crate::bukkit::World<'mc>,
-    ) -> Result<crate::bukkit::map::MapView<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let cls = &jni.find_class("org/bukkit/map/MapView")?;
-        let res = jni.call_static_method(
-            cls,
-            "createMap",
-            "(Lorg/bukkit/World;)Lorg/bukkit/map/MapView;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::map::MapView(jni, obj)
-        };
-        Ok(ret)
-    }
     pub fn server(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::Server<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/Server")?;
         let res = jni.call_static_method(cls, "getServer", "()Lorg/bukkit/Server;", &[])?;
@@ -12774,7 +13245,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn spigot(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::ServerSpigot<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/Server$Spigot")?;
         let res = jni.call_static_method(cls, "spigot", "()Lorg/bukkit/Server$Spigot;", &[])?;
@@ -12785,7 +13256,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn get_loot_table(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<crate::bukkit::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -12803,7 +13274,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn get_recipe(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<crate::bukkit::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -12821,7 +13292,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn get_boss_bar(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<crate::bukkit::boss::KeyedBossBar<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -12839,7 +13310,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn create_chunk_data(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::World<'mc>,
     ) -> Result<crate::bukkit::generator::ChunkGeneratorChunkData<'mc>, Box<dyn std::error::Error>>
     {
@@ -12858,7 +13329,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn plugin_manager(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::plugin::PluginManager<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/plugin/PluginManager")?;
         let res = jni.call_static_method(
@@ -12874,7 +13345,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn item_factory(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::inventory::ItemFactory<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/inventory/ItemFactory")?;
         let res = jni.call_static_method(
@@ -12889,7 +13360,9 @@ impl<'mc> Bukkit<'mc> {
         };
         Ok(ret)
     }
-    pub fn bukkit_version(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn bukkit_version(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(cls, "getBukkitVersion", "()Ljava/lang/String;", &[])?;
         Ok(jni
@@ -12897,13 +13370,15 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn max_players(mut jni: jni::JNIEnv<'mc>) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_players(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getMaxPlayers", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn set_max_players(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -12916,19 +13391,21 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
-    pub fn view_distance(mut jni: jni::JNIEnv<'mc>) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn view_distance(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getViewDistance", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn simulation_distance(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getSimulationDistance", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn ip(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn ip(mut jni: crate::SharedJNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(cls, "getIp", "()Ljava/lang/String;", &[])?;
         Ok(jni
@@ -12936,7 +13413,9 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn world_type(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn world_type(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(cls, "getWorldType", "()Ljava/lang/String;", &[])?;
         Ok(jni
@@ -12945,29 +13424,35 @@ impl<'mc> Bukkit<'mc> {
             .to_string())
     }
     pub fn generate_structures(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "getGenerateStructures", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn max_world_size(mut jni: jni::JNIEnv<'mc>) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_world_size(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getMaxWorldSize", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn allow_end(mut jni: jni::JNIEnv<'mc>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn allow_end(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "getAllowEnd", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn allow_nether(mut jni: jni::JNIEnv<'mc>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn allow_nether(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "getAllowNether", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
     pub fn data_pack_manager(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::packs::DataPackManager<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/packs/DataPackManager")?;
         let res = jni.call_static_method(
@@ -12982,7 +13467,9 @@ impl<'mc> Bukkit<'mc> {
         };
         Ok(ret)
     }
-    pub fn resource_pack(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn resource_pack(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(cls, "getResourcePack", "()Ljava/lang/String;", &[])?;
         Ok(jni
@@ -12991,7 +13478,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string())
     }
     pub fn resource_pack_hash(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res =
@@ -13002,7 +13489,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string())
     }
     pub fn resource_pack_prompt(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res =
@@ -13013,19 +13500,21 @@ impl<'mc> Bukkit<'mc> {
             .to_string())
     }
     pub fn is_resource_pack_required(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "isResourcePackRequired", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn has_whitelist(mut jni: jni::JNIEnv<'mc>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_whitelist(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "hasWhitelist", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
     pub fn set_whitelist(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13039,14 +13528,14 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
     pub fn is_whitelist_enforced(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "isWhitelistEnforced", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
     pub fn set_whitelist_enforced(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13059,13 +13548,15 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
-    pub fn reload_whitelist(mut jni: jni::JNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn reload_whitelist(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "reloadWhitelist", "()V", &[])?;
         Ok(())
     }
     pub fn broadcast_message(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -13078,7 +13569,9 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
-    pub fn update_folder(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn update_folder(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(cls, "getUpdateFolder", "()Ljava/lang/String;", &[])?;
         Ok(jni
@@ -13087,42 +13580,42 @@ impl<'mc> Bukkit<'mc> {
             .to_string())
     }
     pub fn connection_throttle(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("long")?;
         let res = jni.call_static_method(cls, "getConnectionThrottle", "()J", &[])?;
         Ok(res.j().unwrap())
     }
     pub fn ticks_per_animal_spawns(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getTicksPerAnimalSpawns", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn ticks_per_monster_spawns(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getTicksPerMonsterSpawns", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn ticks_per_water_spawns(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getTicksPerWaterSpawns", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn ticks_per_water_ambient_spawns(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getTicksPerWaterAmbientSpawns", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn ticks_per_water_underground_creature_spawns(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res =
@@ -13130,14 +13623,14 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn ticks_per_ambient_spawns(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getTicksPerAmbientSpawns", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn get_ticks_per_spawns(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::entity::SpawnCategory<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13151,7 +13644,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn get_player_exact(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -13169,7 +13662,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn scheduler(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::scheduler::BukkitScheduler<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/scheduler/BukkitScheduler")?;
         let res = jni.call_static_method(
@@ -13185,7 +13678,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn services_manager(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::plugin::ServicesManager<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/plugin/ServicesManager")?;
         let res = jni.call_static_method(
@@ -13201,7 +13694,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn create_world(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::WorldCreator<'mc>,
     ) -> Result<crate::bukkit::World<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13219,7 +13712,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn create_world_border(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::WorldBorder<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/WorldBorder")?;
         let res =
@@ -13231,7 +13724,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn create_explorer_map_with_world(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::World<'mc>,
         arg1: crate::bukkit::Location<'mc>,
         arg2: std::option::Option<crate::bukkit::StructureType<'mc>>,
@@ -13251,13 +13744,15 @@ impl<'mc> Bukkit<'mc> {
         };
         Ok(ret)
     }
-    pub fn reload_data(mut jni: jni::JNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn reload_data(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "reloadData", "()V", &[])?;
         Ok(())
     }
     pub fn get_plugin_command(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::command::PluginCommand<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -13274,13 +13769,15 @@ impl<'mc> Bukkit<'mc> {
         };
         Ok(ret)
     }
-    pub fn save_players(mut jni: jni::JNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn save_players(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "savePlayers", "()V", &[])?;
         Ok(())
     }
     pub fn dispatch_command(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::command::CommandSender<'mc>,
         arg1: String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13299,7 +13796,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn add_recipe(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::inventory::Recipe<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13313,7 +13810,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn get_crafting_recipe(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         _arg0: Vec<crate::bukkit::inventory::ItemStack<'mc>>,
         arg1: crate::bukkit::World<'mc>,
     ) -> Result<crate::bukkit::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
@@ -13332,7 +13829,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn craft_item(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         _arg0: Vec<crate::bukkit::inventory::ItemStack<'mc>>,
         arg1: crate::bukkit::World<'mc>,
         arg2: crate::bukkit::entity::Player<'mc>,
@@ -13347,18 +13844,22 @@ impl<'mc> Bukkit<'mc> {
         };
         Ok(ret)
     }
-    pub fn clear_recipes(mut jni: jni::JNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear_recipes(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "clearRecipes", "()V", &[])?;
         Ok(())
     }
-    pub fn reset_recipes(mut jni: jni::JNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn reset_recipes(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "resetRecipes", "()V", &[])?;
         Ok(())
     }
     pub fn remove_recipe(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13371,13 +13872,15 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn spawn_radius(mut jni: jni::JNIEnv<'mc>) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn spawn_radius(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getSpawnRadius", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn set_spawn_radius(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -13391,43 +13894,49 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
     pub fn should_send_chat_previews(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "shouldSendChatPreviews", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
     pub fn is_enforcing_secure_profiles(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "isEnforcingSecureProfiles", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
     pub fn hide_online_players(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "getHideOnlinePlayers", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn online_mode(mut jni: jni::JNIEnv<'mc>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn online_mode(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "getOnlineMode", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn allow_flight(mut jni: jni::JNIEnv<'mc>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn allow_flight(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "getAllowFlight", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn is_hardcore(mut jni: jni::JNIEnv<'mc>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_hardcore(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "isHardcore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
     pub fn get_ban_list(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::BanListType<'mc>,
     ) -> Result<crate::bukkit::BanList<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13445,7 +13954,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn default_game_mode(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::GameMode<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/GameMode")?;
         let res =
@@ -13467,7 +13976,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn set_default_game_mode(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::GameMode<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13481,7 +13990,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
     pub fn console_sender(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::command::ConsoleCommandSender<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/command/ConsoleCommandSender")?;
         let res = jni.call_static_method(
@@ -13497,7 +14006,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn messenger(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::plugin::messaging::Messenger<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/plugin/messaging/Messenger")?;
         let res = jni.call_static_method(
@@ -13513,7 +14022,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn help_map(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::help::HelpMap<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/help/HelpMap")?;
         let res = jni.call_static_method(cls, "getHelpMap", "()Lorg/bukkit/help/HelpMap;", &[])?;
@@ -13524,7 +14033,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn create_merchant(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::inventory::Merchant<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -13542,42 +14051,42 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn max_chained_neighbor_updates(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getMaxChainedNeighborUpdates", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn monster_spawn_limit(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getMonsterSpawnLimit", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn animal_spawn_limit(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getAnimalSpawnLimit", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn water_animal_spawn_limit(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getWaterAnimalSpawnLimit", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn water_ambient_spawn_limit(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getWaterAmbientSpawnLimit", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn water_underground_creature_spawn_limit(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res =
@@ -13585,14 +14094,14 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn ambient_spawn_limit(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getAmbientSpawnLimit", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn get_spawn_limit(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::entity::SpawnCategory<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13606,13 +14115,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn is_primary_thread(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "isPrimaryThread", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn motd(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn motd(mut jni: crate::SharedJNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(cls, "getMotd", "()Ljava/lang/String;", &[])?;
         Ok(jni
@@ -13621,7 +14130,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string())
     }
     pub fn set_motd(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -13635,7 +14144,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
     pub fn shutdown_message(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(cls, "getShutdownMessage", "()Ljava/lang/String;", &[])?;
@@ -13645,7 +14154,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string())
     }
     pub fn warning_state(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::WarningWarningState<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/Warning$WarningState")?;
         let res = jni.call_static_method(
@@ -13661,7 +14170,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn scoreboard_manager(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::scoreboard::ScoreboardManager<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/scoreboard/ScoreboardManager")?;
         let res = jni.call_static_method(
@@ -13677,7 +14186,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn get_scoreboard_criteria(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -13695,7 +14204,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn server_icon(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/util/CachedServerIcon")?;
         let res = jni.call_static_method(
@@ -13711,7 +14220,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn set_idle_timeout(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -13724,13 +14233,15 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
-    pub fn idle_timeout(mut jni: jni::JNIEnv<'mc>) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn idle_timeout(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("int")?;
         let res = jni.call_static_method(cls, "getIdleTimeout", "()I", &[])?;
         Ok(res.i().unwrap())
     }
     pub fn remove_boss_bar(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13744,7 +14255,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn get_entity(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: u128,
     ) -> Result<crate::bukkit::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let upper = (arg0 >> 64) as u64 as i64;
@@ -13767,7 +14278,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn get_advancement(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<crate::bukkit::advancement::Advancement<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13785,7 +14296,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn structure_manager(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::structure::StructureManager<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/structure/StructureManager")?;
         let res = jni.call_static_method(
@@ -13801,7 +14312,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn get_registry(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<crate::bukkit::Registry<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -13819,7 +14330,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(ret)
     }
     pub fn set_server(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::Server<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -13831,61 +14342,6 @@ impl<'mc> Bukkit<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn name(mut jni: jni::JNIEnv<'mc>) -> Result<String, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn shutdown(mut jni: jni::JNIEnv<'mc>) -> Result<(), Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(cls, "shutdown", "()V", &[])?;
-        Ok(())
-    }
-    pub fn get_unsafe(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<crate::bukkit::UnsafeValues<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/UnsafeValues")?;
-        let res = jni.call_static_method(cls, "getUnsafe", "()Lorg/bukkit/UnsafeValues;", &[])?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::UnsafeValues(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn logger(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/logging/Logger")?;
-        let res = jni.call_static_method(cls, "getLogger", "()Ljava/util/logging/Logger;", &[])?;
-        Ok(res.l().unwrap())
-    }
-    pub fn port(mut jni: jni::JNIEnv<'mc>) -> Result<i32, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(cls, "getPort", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn broadcast(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-        arg1: String,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "broadcast",
-            "(Ljava/lang/String;Ljava/lang/String;)I",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -13958,12 +14414,12 @@ impl<'mc> Bukkit<'mc> {
     }
 }
 pub struct ChatColor<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ChatColor<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -13971,11 +14427,49 @@ impl<'mc> crate::JNIRaw<'mc> for ChatColor<'mc> {
     }
 }
 impl<'mc> ChatColor<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ChatColor from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ChatColor") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChatColor object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn char(&mut self) -> Result<u16, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getChar", "()C", &[])?;
+        Ok(res.c().unwrap())
     }
     pub fn get_last_colors(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -14020,7 +14514,7 @@ impl<'mc> ChatColor<'mc> {
         Ok(ret)
     }
     pub fn strip_color(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -14037,7 +14531,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string())
     }
     pub fn translate_alternate_color_codes(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: u16,
         arg1: String,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -14057,25 +14551,6 @@ impl<'mc> ChatColor<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn char(&mut self) -> Result<u16, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getChar", "()C", &[])?;
-        Ok(res.c().unwrap())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -14174,17 +14649,36 @@ impl<'mc> ChatColor<'mc> {
 }
 /// An instantiatable struct that implements BanList. Needed for returning it from Java.
 pub struct BanList<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BanList<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BanList from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BanList") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BanList object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BanList<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -14206,7 +14700,7 @@ impl std::fmt::Display for PortalTypeEnum {
     }
 }
 pub struct PortalType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub PortalTypeEnum,
 );
@@ -14217,8 +14711,8 @@ impl<'mc> std::ops::Deref for PortalType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PortalType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -14235,7 +14729,7 @@ impl<'mc> PortalType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::PortalType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -14264,12 +14758,12 @@ impl<'mc> PortalType<'mc> {
     }
 }
 pub struct BanListType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for BanListType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -14277,8 +14771,27 @@ impl<'mc> crate::JNIRaw<'mc> for BanListType<'mc> {
     }
 }
 impl<'mc> BanListType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BanListType from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BanListType") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BanListType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -14390,12 +14903,37 @@ impl<'mc> BanListType<'mc> {
 }
 /// An instantiatable struct that implements Warning. Needed for returning it from Java.
 pub struct Warning<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Warning<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Warning from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Warning") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Warning object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "value", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn reason(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -14409,12 +14947,6 @@ impl<'mc> Warning<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "value", "()Z", &[])?;
-        Ok(res.z().unwrap())
     }
     pub fn equals(
         &mut self,
@@ -14461,8 +14993,8 @@ impl<'mc> Warning<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Warning<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -14470,12 +15002,12 @@ impl<'mc> crate::JNIRaw<'mc> for Warning<'mc> {
     }
 }
 pub struct WorldCreator<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for WorldCreator<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -14483,8 +15015,81 @@ impl<'mc> crate::JNIRaw<'mc> for WorldCreator<'mc> {
     }
 }
 impl<'mc> WorldCreator<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate WorldCreator from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("WorldCreator") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WorldCreator object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn name(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<String>,
+    ) -> Result<crate::bukkit::WorldCreator<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
+        let cls = &jni.find_class("org/bukkit/WorldCreator")?;
+        let res = jni.call_static_method(
+            cls,
+            "name",
+            "(Ljava/lang/String;)Lorg/bukkit/WorldCreator;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::WorldCreator(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+        arg0: std::option::Option<crate::bukkit::WorldType<'mc>>,
+    ) -> Result<crate::bukkit::WorldCreator<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "type",
+            "(Lorg/bukkit/WorldType;)Lorg/bukkit/WorldCreator;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::WorldCreator(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn seed(
+        &mut self,
+        arg0: std::option::Option<i64>,
+    ) -> Result<crate::bukkit::WorldCreator<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "seed",
+            "(J)Lorg/bukkit/WorldCreator;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::WorldCreator(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn environment(
         &mut self,
@@ -14575,7 +15180,7 @@ impl<'mc> WorldCreator<'mc> {
         Ok(ret)
     }
     pub fn get_generator_for_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
         arg1: String,
         arg2: crate::bukkit::command::CommandSender<'mc>,
@@ -14592,7 +15197,7 @@ impl<'mc> WorldCreator<'mc> {
         Ok(ret)
     }
     pub fn get_biome_provider_for_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
         arg1: String,
         arg2: crate::bukkit::command::CommandSender<'mc>,
@@ -14605,60 +15210,6 @@ impl<'mc> WorldCreator<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::generator::BiomeProvider(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn name(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: std::option::Option<String>,
-    ) -> Result<crate::bukkit::WorldCreator<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
-        let cls = &jni.find_class("org/bukkit/WorldCreator")?;
-        let res = jni.call_static_method(
-            cls,
-            "name",
-            "(Ljava/lang/String;)Lorg/bukkit/WorldCreator;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::WorldCreator(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-        arg0: std::option::Option<crate::bukkit::WorldType<'mc>>,
-    ) -> Result<crate::bukkit::WorldCreator<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "type",
-            "(Lorg/bukkit/WorldType;)Lorg/bukkit/WorldCreator;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::WorldCreator(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn seed(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::bukkit::WorldCreator<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "seed",
-            "(J)Lorg/bukkit/WorldCreator;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::WorldCreator(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
         };
         Ok(ret)
     }
@@ -14801,7 +15352,7 @@ impl std::fmt::Display for ArtEnum {
     }
 }
 pub struct Art<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub ArtEnum,
 );
@@ -14812,8 +15363,8 @@ impl<'mc> std::ops::Deref for Art<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Art<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -14856,48 +15407,8 @@ impl<'mc> Art<'mc> {
             _ => None,
         }
     }
-    pub fn get_by_id(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i32,
-    ) -> Result<crate::bukkit::Art<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = &jni.find_class("org/bukkit/Art")?;
-        let res = jni.call_static_method(
-            cls,
-            "getById",
-            "(I)Lorg/bukkit/Art;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Art(
-                jni,
-                raw_obj,
-                crate::bukkit::Art::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn block_width(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getBlockWidth", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn block_height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getBlockHeight", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Art<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -14945,7 +15456,7 @@ impl<'mc> Art<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn get_by_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Art<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -14972,15 +15483,74 @@ impl<'mc> Art<'mc> {
         };
         Ok(ret)
     }
+    pub fn get_by_id(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i32,
+    ) -> Result<crate::bukkit::Art<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let cls = &jni.find_class("org/bukkit/Art")?;
+        let res = jni.call_static_method(
+            cls,
+            "getById",
+            "(I)Lorg/bukkit/Art;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Art(
+                jni,
+                raw_obj,
+                crate::bukkit::Art::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn block_width(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBlockWidth", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn block_height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBlockHeight", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
 }
 /// An instantiatable struct that implements SoundGroup. Needed for returning it from Java.
 pub struct SoundGroup<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> SoundGroup<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate SoundGroup from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("SoundGroup") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a SoundGroup object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn pitch(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
@@ -15121,8 +15691,8 @@ impl<'mc> SoundGroup<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for SoundGroup<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15130,12 +15700,12 @@ impl<'mc> crate::JNIRaw<'mc> for SoundGroup<'mc> {
     }
 }
 pub struct GameRule<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for GameRule<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15143,8 +15713,27 @@ impl<'mc> crate::JNIRaw<'mc> for GameRule<'mc> {
     }
 }
 impl<'mc> GameRule<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate GameRule from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("GameRule") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a GameRule object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -15195,7 +15784,7 @@ impl<'mc> GameRule<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn get_by_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::GameRule<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -15258,12 +15847,31 @@ impl<'mc> GameRule<'mc> {
 }
 /// An instantiatable struct that implements ChunkSnapshot. Needed for returning it from Java.
 pub struct ChunkSnapshot<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> ChunkSnapshot<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ChunkSnapshot from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ChunkSnapshot") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChunkSnapshot object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn capture_full_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
@@ -15510,8 +16118,8 @@ impl<'mc> ChunkSnapshot<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for ChunkSnapshot<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15519,12 +16127,12 @@ impl<'mc> crate::JNIRaw<'mc> for ChunkSnapshot<'mc> {
     }
 }
 pub struct MusicInstrument<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for MusicInstrument<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15532,11 +16140,46 @@ impl<'mc> crate::JNIRaw<'mc> for MusicInstrument<'mc> {
     }
 }
 impl<'mc> MusicInstrument<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate MusicInstrument from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("MusicInstrument") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MusicInstrument object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKey",
+            "()Lorg/bukkit/NamespacedKey;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn get_by_key(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::NamespacedKey<'mc>,
     ) -> Result<crate::bukkit::MusicInstrument<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
@@ -15550,20 +16193,6 @@ impl<'mc> MusicInstrument<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::MusicInstrument(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
         };
         Ok(ret)
     }
@@ -15639,12 +16268,31 @@ impl<'mc> MusicInstrument<'mc> {
 }
 /// An instantiatable struct that implements Translatable. Needed for returning it from Java.
 pub struct Translatable<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Translatable<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Translatable from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Translatable") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Translatable object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn translation_key(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -15661,8 +16309,8 @@ impl<'mc> Translatable<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Translatable<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15670,16 +16318,16 @@ impl<'mc> crate::JNIRaw<'mc> for Translatable<'mc> {
     }
 }
 pub struct FireworkEffect<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 pub struct FireworkEffectBuilder<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for FireworkEffectBuilder<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15687,8 +16335,30 @@ impl<'mc> crate::JNIRaw<'mc> for FireworkEffectBuilder<'mc> {
     }
 }
 impl<'mc> FireworkEffectBuilder<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate FireworkEffectBuilder from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("FireworkEffectBuilder") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FireworkEffectBuilder object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn trail(
         &mut self,
@@ -15863,12 +16533,12 @@ impl<'mc> FireworkEffectBuilder<'mc> {
     }
 }
 pub struct FireworkEffectType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for FireworkEffectType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15876,8 +16546,29 @@ impl<'mc> crate::JNIRaw<'mc> for FireworkEffectType<'mc> {
     }
 }
 impl<'mc> FireworkEffectType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate FireworkEffectType from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("FireworkEffectType") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FireworkEffectType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -15988,8 +16679,8 @@ impl<'mc> FireworkEffectType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for FireworkEffect<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -15997,11 +16688,92 @@ impl<'mc> crate::JNIRaw<'mc> for FireworkEffect<'mc> {
     }
 }
 impl<'mc> FireworkEffect<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate FireworkEffect from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("FireworkEffect") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FireworkEffect object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn builder(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/FireworkEffect$Builder")?;
+        let res =
+            jni.call_static_method(cls, "builder", "()Lorg/bukkit/FireworkEffect$Builder;", &[])?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::FireworkEffectBuilder(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::FireworkEffectType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/FireworkEffect$Type;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::FireworkEffectType(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn deserialize(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::collections::HashMap<String, jni::objects::JObject<'mc>>,
     ) -> Result<
         crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc>,
@@ -16048,66 +16820,6 @@ impl<'mc> FireworkEffect<'mc> {
             .call_method(&self.jni_object(), "hasTrail", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn builder(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<crate::bukkit::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/FireworkEffect$Builder")?;
-        let res =
-            jni.call_static_method(cls, "builder", "()Lorg/bukkit/FireworkEffect$Builder;", &[])?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::FireworkEffectBuilder(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::FireworkEffectType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/FireworkEffect$Type;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::FireworkEffectType(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -16148,12 +16860,34 @@ impl<'mc> FireworkEffect<'mc> {
 }
 /// An instantiatable struct that implements MinecraftExperimental. Needed for returning it from Java.
 pub struct MinecraftExperimental<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> MinecraftExperimental<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate MinecraftExperimental from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("MinecraftExperimental") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a MinecraftExperimental object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn equals(
         &mut self,
@@ -16200,8 +16934,8 @@ impl<'mc> MinecraftExperimental<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for MinecraftExperimental<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -16210,12 +16944,31 @@ impl<'mc> crate::JNIRaw<'mc> for MinecraftExperimental<'mc> {
 }
 /// An instantiatable struct that implements Keyed. Needed for returning it from Java.
 pub struct Keyed<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Keyed<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Keyed from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Keyed") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Keyed object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -16233,8 +16986,8 @@ impl<'mc> Keyed<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Keyed<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -16418,7 +17171,7 @@ impl std::fmt::Display for StatisticEnum {
     }
 }
 pub struct Statistic<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub StatisticEnum,
 );
@@ -16429,8 +17182,8 @@ impl<'mc> std::ops::Deref for Statistic<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Statistic<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -16438,12 +17191,12 @@ impl<'mc> crate::JNIRaw<'mc> for Statistic<'mc> {
     }
 }
 pub struct StatisticType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for StatisticType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -16451,8 +17204,27 @@ impl<'mc> crate::JNIRaw<'mc> for StatisticType<'mc> {
     }
 }
 impl<'mc> StatisticType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate StatisticType from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("StatisticType") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a StatisticType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -16651,20 +17423,8 @@ impl<'mc> Statistic<'mc> {
             _ => None,
         }
     }
-    pub fn is_block(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isBlock", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn is_substatistic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSubstatistic", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Statistic<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -16721,14 +17481,26 @@ impl<'mc> Statistic<'mc> {
         };
         Ok(ret)
     }
+    pub fn is_block(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBlock", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn is_substatistic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSubstatistic", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
 }
 pub struct NamespacedKey<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for NamespacedKey<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -16736,73 +17508,27 @@ impl<'mc> crate::JNIRaw<'mc> for NamespacedKey<'mc> {
     }
 }
 impl<'mc> NamespacedKey<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
-    }
-    pub fn minecraft(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("org/bukkit/NamespacedKey")?;
-        let res = jni.call_static_method(
-            cls,
-            "minecraft",
-            "(Ljava/lang/String;)Lorg/bukkit/NamespacedKey;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::NamespacedKey(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn namespace(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getNamespace",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn random_key(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/NamespacedKey")?;
-        let res = jni.call_static_method(cls, "randomKey", "()Lorg/bukkit/NamespacedKey;", &[])?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::NamespacedKey(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn from_string_with_string(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
-    ) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
-        let cls = &jni.find_class("org/bukkit/NamespacedKey")?;
-        let res = jni.call_static_method(
-            cls,
-            "fromString",
-            "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)Lorg/bukkit/NamespacedKey;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::NamespacedKey(jni, obj)
-        };
-        Ok(ret)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate NamespacedKey from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("NamespacedKey") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a NamespacedKey object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn equals(
         &mut self,
@@ -16849,6 +17575,71 @@ impl<'mc> NamespacedKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn minecraft(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/NamespacedKey")?;
+        let res = jni.call_static_method(
+            cls,
+            "minecraft",
+            "(Ljava/lang/String;)Lorg/bukkit/NamespacedKey;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::NamespacedKey(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn namespace(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNamespace",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn random_key(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/NamespacedKey")?;
+        let res = jni.call_static_method(cls, "randomKey", "()Lorg/bukkit/NamespacedKey;", &[])?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::NamespacedKey(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn from_string_with_string(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
+    ) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/NamespacedKey")?;
+        let res = jni.call_static_method(
+            cls,
+            "fromString",
+            "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)Lorg/bukkit/NamespacedKey;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::NamespacedKey(jni, obj)
+        };
+        Ok(ret)
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -16889,12 +17680,33 @@ impl<'mc> NamespacedKey<'mc> {
 }
 /// An instantiatable struct that implements RegionAccessor. Needed for returning it from Java.
 pub struct RegionAccessor<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> RegionAccessor<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate RegionAccessor from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("RegionAccessor") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RegionAccessor object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn spawn_entity_with_location(
         &mut self,
@@ -16924,8 +17736,8 @@ impl<'mc> RegionAccessor<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for RegionAccessor<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -16945,7 +17757,7 @@ impl std::fmt::Display for WeatherTypeEnum {
     }
 }
 pub struct WeatherType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub WeatherTypeEnum,
 );
@@ -16956,8 +17768,8 @@ impl<'mc> std::ops::Deref for WeatherType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for WeatherType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -16973,7 +17785,7 @@ impl<'mc> WeatherType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::WeatherType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -17003,12 +17815,42 @@ impl<'mc> WeatherType<'mc> {
 }
 /// An instantiatable struct that implements WorldBorder. Needed for returning it from Java.
 pub struct WorldBorder<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> WorldBorder<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate WorldBorder from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("WorldBorder") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WorldBorder object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn size(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSize", "()D", &[])?;
+        Ok(res.d().unwrap())
+    }
+    pub fn reset(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "reset", "()V", &[])?;
+        Ok(())
     }
     pub fn world(&mut self) -> Result<crate::bukkit::World<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -17127,21 +17969,10 @@ impl<'mc> WorldBorder<'mc> {
             .call_method(&self.jni_object(), "getMaxSize", "()D", &[])?;
         Ok(res.d().unwrap())
     }
-    pub fn size(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSize", "()D", &[])?;
-        Ok(res.d().unwrap())
-    }
-    pub fn reset(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "reset", "()V", &[])?;
-        Ok(())
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for WorldBorder<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -17149,12 +17980,12 @@ impl<'mc> crate::JNIRaw<'mc> for WorldBorder<'mc> {
     }
 }
 pub struct ChunkLoadLevel<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ChunkLoadLevel<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -17162,8 +17993,29 @@ impl<'mc> crate::JNIRaw<'mc> for ChunkLoadLevel<'mc> {
     }
 }
 impl<'mc> ChunkLoadLevel<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate ChunkLoadLevel from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ChunkLoadLevel") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChunkLoadLevel object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -17288,7 +18140,7 @@ impl std::fmt::Display for SandstoneTypeEnum {
     }
 }
 pub struct SandstoneType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub SandstoneTypeEnum,
 );
@@ -17299,8 +18151,8 @@ impl<'mc> std::ops::Deref for SandstoneType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for SandstoneType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -17316,22 +18168,16 @@ impl<'mc> SandstoneType<'mc> {
             _ => None,
         }
     }
-    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", "()B", &[])?;
-        Ok(res.b().unwrap())
-    }
-    pub fn get_by_data(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i8,
+    pub fn value_of(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
     ) -> Result<crate::bukkit::SandstoneType<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
         let cls = &jni.find_class("org/bukkit/SandstoneType")?;
         let res = jni.call_static_method(
             cls,
-            "getByData",
-            "(B)Lorg/bukkit/SandstoneType;",
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/SandstoneType;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -17350,16 +18196,22 @@ impl<'mc> SandstoneType<'mc> {
         };
         Ok(ret)
     }
-    pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
+    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", "()B", &[])?;
+        Ok(res.b().unwrap())
+    }
+    pub fn get_by_data(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
     ) -> Result<crate::bukkit::SandstoneType<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
         let cls = &jni.find_class("org/bukkit/SandstoneType")?;
         let res = jni.call_static_method(
             cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/SandstoneType;",
+            "getByData",
+            "(B)Lorg/bukkit/SandstoneType;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -17394,7 +18246,7 @@ impl std::fmt::Display for AxisEnum {
     }
 }
 pub struct Axis<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub AxisEnum,
 );
@@ -17405,8 +18257,8 @@ impl<'mc> std::ops::Deref for Axis<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Axis<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -17423,7 +18275,7 @@ impl<'mc> Axis<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Axis<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -17506,7 +18358,7 @@ impl std::fmt::Display for TreeTypeEnum {
     }
 }
 pub struct TreeType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub TreeTypeEnum,
 );
@@ -17517,8 +18369,8 @@ impl<'mc> std::ops::Deref for TreeType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for TreeType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -17555,7 +18407,7 @@ impl<'mc> TreeType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::TreeType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -17584,12 +18436,12 @@ impl<'mc> TreeType<'mc> {
     }
 }
 pub struct Vibration<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for Vibration<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -17597,8 +18449,27 @@ impl<'mc> crate::JNIRaw<'mc> for Vibration<'mc> {
     }
 }
 impl<'mc> Vibration<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Vibration from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Vibration") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Vibration object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn origin(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -17707,12 +18578,12 @@ impl<'mc> Vibration<'mc> {
     }
 }
 pub struct RegistrySimpleRegistry<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for RegistrySimpleRegistry<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -17720,8 +18591,30 @@ impl<'mc> crate::JNIRaw<'mc> for RegistrySimpleRegistry<'mc> {
     }
 }
 impl<'mc> RegistrySimpleRegistry<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate RegistrySimpleRegistry from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("RegistrySimpleRegistry") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RegistrySimpleRegistry object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn get_with_namespaced_key(
         &mut self,
@@ -21672,7 +22565,7 @@ impl std::fmt::Display for MaterialEnum {
     }
 }
 pub struct Material<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub MaterialEnum,
 );
@@ -21683,8 +22576,8 @@ impl<'mc> std::ops::Deref for Material<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Material<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -23600,6 +24493,60 @@ impl<'mc> Material<'mc> {
             _ => None,
         }
     }
+    pub fn value_of(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/Material")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/Material;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Material(
+                jni,
+                raw_obj,
+                crate::bukkit::Material::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_record(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isRecord", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKey",
+            "()Lorg/bukkit/NamespacedKey;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getId", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
     pub fn data(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -23610,7 +24557,7 @@ impl<'mc> Material<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn get_material_with_string(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -23788,7 +24735,7 @@ impl<'mc> Material<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn match_material_with_string(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -23934,69 +24881,34 @@ impl<'mc> Material<'mc> {
         };
         Ok(ret)
     }
-    pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("org/bukkit/Material")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/Material;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Material(
-                jni,
-                raw_obj,
-                crate::bukkit::Material::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_record(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRecord", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getId", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
 }
 /// An instantiatable struct that implements Registry. Needed for returning it from Java.
 pub struct Registry<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Registry<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Registry from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Registry") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Registry object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn get(
         &mut self,
@@ -24047,8 +24959,8 @@ impl<'mc> Registry<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Registry<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24080,7 +24992,7 @@ impl std::fmt::Display for RotationEnum {
     }
 }
 pub struct Rotation<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub RotationEnum,
 );
@@ -24091,8 +25003,8 @@ impl<'mc> std::ops::Deref for Rotation<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Rotation<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24112,6 +25024,34 @@ impl<'mc> Rotation<'mc> {
             "COUNTER_CLOCKWISE_45" => Some(RotationEnum::CounterClockwise45),
             _ => None,
         }
+    }
+    pub fn value_of(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::Rotation<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/Rotation")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/Rotation;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Rotation(
+                jni,
+                raw_obj,
+                crate::bukkit::Rotation::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
     }
     pub fn rotate_clockwise(
         &mut self,
@@ -24167,42 +25107,14 @@ impl<'mc> Rotation<'mc> {
         };
         Ok(ret)
     }
-    pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<crate::bukkit::Rotation<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("org/bukkit/Rotation")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/Rotation;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Rotation(
-                jni,
-                raw_obj,
-                crate::bukkit::Rotation::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
 }
 pub struct VibrationDestinationEntityDestination<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for VibrationDestinationEntityDestination<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24210,8 +25122,30 @@ impl<'mc> crate::JNIRaw<'mc> for VibrationDestinationEntityDestination<'mc> {
     }
 }
 impl<'mc> VibrationDestinationEntityDestination<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate VibrationDestinationEntityDestination from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("VibrationDestinationEntityDestination") {
+            Err(eyre::eyre!(
+        "Invalid argument passed. Expected a VibrationDestinationEntityDestination object, got {}",
+        name
+    )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn entity(
         &mut self,
@@ -24301,12 +25235,33 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
 }
 /// An instantiatable struct that implements UndefinedNullability. Needed for returning it from Java.
 pub struct UndefinedNullability<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> UndefinedNullability<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate UndefinedNullability from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("UndefinedNullability") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a UndefinedNullability object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn value(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -24363,8 +25318,8 @@ impl<'mc> UndefinedNullability<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for UndefinedNullability<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24384,7 +25339,7 @@ impl std::fmt::Display for CoalTypeEnum {
     }
 }
 pub struct CoalType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub CoalTypeEnum,
 );
@@ -24395,8 +25350,8 @@ impl<'mc> std::ops::Deref for CoalType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for CoalType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24411,42 +25366,8 @@ impl<'mc> CoalType<'mc> {
             _ => None,
         }
     }
-    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", "()B", &[])?;
-        Ok(res.b().unwrap())
-    }
-    pub fn get_by_data(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i8,
-    ) -> Result<crate::bukkit::CoalType<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
-        let cls = &jni.find_class("org/bukkit/CoalType")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByData",
-            "(B)Lorg/bukkit/CoalType;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::CoalType(
-                jni,
-                raw_obj,
-                crate::bukkit::CoalType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::CoalType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -24473,14 +25394,48 @@ impl<'mc> CoalType<'mc> {
         };
         Ok(ret)
     }
+    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", "()B", &[])?;
+        Ok(res.b().unwrap())
+    }
+    pub fn get_by_data(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
+    ) -> Result<crate::bukkit::CoalType<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let cls = &jni.find_class("org/bukkit/CoalType")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByData",
+            "(B)Lorg/bukkit/CoalType;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::CoalType(
+                jni,
+                raw_obj,
+                crate::bukkit::CoalType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 pub struct WorldEnvironment<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for WorldEnvironment<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24488,11 +25443,38 @@ impl<'mc> crate::JNIRaw<'mc> for WorldEnvironment<'mc> {
     }
 }
 impl<'mc> WorldEnvironment<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate WorldEnvironment from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("WorldEnvironment") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a WorldEnvironment object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getId", "()I", &[])?;
+        Ok(res.i().unwrap())
     }
     pub fn get_environment(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<crate::bukkit::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -24508,12 +25490,6 @@ impl<'mc> WorldEnvironment<'mc> {
             crate::bukkit::WorldEnvironment(jni, obj)
         };
         Ok(ret)
-    }
-    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getId", "()I", &[])?;
-        Ok(res.i().unwrap())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -24625,12 +25601,54 @@ impl<'mc> WorldEnvironment<'mc> {
 }
 /// An instantiatable struct that implements BlockChangeDelegate. Needed for returning it from Java.
 pub struct BlockChangeDelegate<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BlockChangeDelegate<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BlockChangeDelegate from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BlockChangeDelegate") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BlockChangeDelegate object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn is_empty(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isEmpty",
+            "(III)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(res.z().unwrap())
     }
     pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -24688,31 +25706,10 @@ impl<'mc> BlockChangeDelegate<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn is_empty(
-        &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = jni::objects::JValueGen::Int(arg1.into());
-        let val_2 = jni::objects::JValueGen::Int(arg2.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isEmpty",
-            "(III)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for BlockChangeDelegate<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24720,12 +25717,12 @@ impl<'mc> crate::JNIRaw<'mc> for BlockChangeDelegate<'mc> {
     }
 }
 pub struct StructureType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for StructureType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24733,24 +25730,27 @@ impl<'mc> crate::JNIRaw<'mc> for StructureType<'mc> {
     }
 }
 impl<'mc> StructureType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
-    }
-    pub fn map_icon(
-        &mut self,
-    ) -> Result<crate::bukkit::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMapIcon",
-            "()Lorg/bukkit/map/MapCursor$Type;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::map::MapCursorType(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate StructureType from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("StructureType") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a StructureType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -24811,6 +25811,22 @@ impl<'mc> StructureType<'mc> {
         };
         Ok(ret)
     }
+    pub fn map_icon(
+        &mut self,
+    ) -> Result<crate::bukkit::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMapIcon",
+            "()Lorg/bukkit/map/MapCursor$Type;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::map::MapCursorType(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -24850,12 +25866,12 @@ impl<'mc> StructureType<'mc> {
     }
 }
 pub struct RaidRaidStatus<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for RaidRaidStatus<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -24863,8 +25879,29 @@ impl<'mc> crate::JNIRaw<'mc> for RaidRaidStatus<'mc> {
     }
 }
 impl<'mc> RaidRaidStatus<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate RaidRaidStatus from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("RaidRaidStatus") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RaidRaidStatus object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -25029,7 +26066,7 @@ impl std::fmt::Display for InstrumentEnum {
     }
 }
 pub struct Instrument<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub InstrumentEnum,
 );
@@ -25040,8 +26077,8 @@ impl<'mc> std::ops::Deref for Instrument<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Instrument<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -25077,36 +26114,8 @@ impl<'mc> Instrument<'mc> {
             _ => None,
         }
     }
-    pub fn get_by_type(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: i8,
-    ) -> Result<crate::bukkit::Instrument<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
-        let cls = &jni.find_class("org/bukkit/Instrument")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByType",
-            "(B)Lorg/bukkit/Instrument;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Instrument(
-                jni,
-                raw_obj,
-                crate::bukkit::Instrument::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::Instrument<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -25139,15 +26148,62 @@ impl<'mc> Instrument<'mc> {
             .call_method(&self.jni_object(), "getType", "()B", &[])?;
         Ok(res.b().unwrap())
     }
+    pub fn get_by_type(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
+    ) -> Result<crate::bukkit::Instrument<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let cls = &jni.find_class("org/bukkit/Instrument")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByType",
+            "(B)Lorg/bukkit/Instrument;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Instrument(
+                jni,
+                raw_obj,
+                crate::bukkit::Instrument::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 /// An instantiatable struct that implements Tag. Needed for returning it from Java.
 pub struct Tag<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Tag<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Tag from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Tag") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Tag object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn is_tagged(
         &mut self,
@@ -25178,8 +26234,8 @@ impl<'mc> Tag<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Tag<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -25209,7 +26265,7 @@ impl std::fmt::Display for SkullTypeEnum {
     }
 }
 pub struct SkullType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub SkullTypeEnum,
 );
@@ -25220,8 +26276,8 @@ impl<'mc> std::ops::Deref for SkullType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for SkullType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -25242,7 +26298,7 @@ impl<'mc> SkullType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::SkullType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -25271,12 +26327,12 @@ impl<'mc> SkullType<'mc> {
     }
 }
 pub struct Location<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for Location<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -25284,8 +26340,106 @@ impl<'mc> crate::JNIRaw<'mc> for Location<'mc> {
     }
 }
 impl<'mc> Location<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Location from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Location") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Location object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "length", "()D", &[])?;
+        Ok(res.d().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn clone(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/Location;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn zero(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "zero",
+            "()Lorg/bukkit/Location;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn distance(
+        &mut self,
+        arg0: crate::bukkit::Location<'mc>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "distance",
+            "(Lorg/bukkit/Location;)D",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.d().unwrap())
     }
     pub fn multiply(
         &mut self,
@@ -25403,7 +26557,7 @@ impl<'mc> Location<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn loc_to_block(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: f64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());
@@ -25555,7 +26709,7 @@ impl<'mc> Location<'mc> {
         Ok(())
     }
     pub fn deserialize(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: std::collections::HashMap<String, jni::objects::JObject<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
         let raw_val_0 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
@@ -25587,7 +26741,7 @@ impl<'mc> Location<'mc> {
         Ok(ret)
     }
     pub fn normalize_yaw(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: f32,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Float(arg0.into());
@@ -25601,7 +26755,7 @@ impl<'mc> Location<'mc> {
         Ok(res.f().unwrap())
     }
     pub fn normalize_pitch(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: f32,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Float(arg0.into());
@@ -25613,77 +26767,6 @@ impl<'mc> Location<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.f().unwrap())
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "length", "()D", &[])?;
-        Ok(res.d().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
-    pub fn zero(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "zero",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn distance(
-        &mut self,
-        arg0: crate::bukkit::Location<'mc>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "distance",
-            "(Lorg/bukkit/Location;)D",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.d().unwrap())
     }
     pub fn wait(
         &mut self,

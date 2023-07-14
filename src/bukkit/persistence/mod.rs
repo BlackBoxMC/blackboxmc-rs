@@ -1,12 +1,33 @@
 use crate::JNIRaw;
 /// An instantiatable struct that implements PersistentDataHolder. Needed for returning it from Java.
 pub struct PersistentDataHolder<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> PersistentDataHolder<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PersistentDataHolder from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PersistentDataHolder") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PersistentDataHolder object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn persistent_data_container(
         &mut self,
@@ -27,8 +48,8 @@ impl<'mc> PersistentDataHolder<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataHolder<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -36,12 +57,12 @@ impl<'mc> crate::JNIRaw<'mc> for PersistentDataHolder<'mc> {
     }
 }
 pub struct PersistentDataTypePrimitivePersistentDataType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -49,8 +70,29 @@ impl<'mc> crate::JNIRaw<'mc> for PersistentDataTypePrimitivePersistentDataType<'
     }
 }
 impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+        "Tried to instantiate PersistentDataTypePrimitivePersistentDataType from null object.")
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PersistentDataTypePrimitivePersistentDataType") {
+            Err(eyre::eyre!(
+        "Invalid argument passed. Expected a PersistentDataTypePrimitivePersistentDataType object, got {}",
+        name
+    )
+    .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn primitive_type(
         &mut self,
@@ -168,12 +210,34 @@ self.jni_ref().call_method(&self.jni_object(),"fromPrimitive","(Ljava/lang/Objec
 }
 /// An instantiatable struct that implements PersistentDataAdapterContext. Needed for returning it from Java.
 pub struct PersistentDataAdapterContext<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> PersistentDataAdapterContext<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PersistentDataAdapterContext from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PersistentDataAdapterContext") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PersistentDataAdapterContext object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn new_persistent_data_container(
         &mut self,
@@ -194,8 +258,8 @@ impl<'mc> PersistentDataAdapterContext<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataAdapterContext<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -204,12 +268,54 @@ impl<'mc> crate::JNIRaw<'mc> for PersistentDataAdapterContext<'mc> {
 }
 /// An instantiatable struct that implements PersistentDataType. Needed for returning it from Java.
 pub struct PersistentDataType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> PersistentDataType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_extendable(
+        env: &crate::SharedJNIEnv<'mc>,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = jni::objects::JValueGen::Object(env.new_object(
+            "net/ioixd/blackbox/extendables/ExtendablePersistentDataType",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(name).unwrap(),
+                )),
+                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                    env.new_string(lib_name).unwrap(),
+                )),
+            ],
+        )?);
+        Ok(Self(env.clone(), unsafe {
+            jni::objects::JObject::from_raw(obj.l()?.clone())
+        }))
+    }
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate PersistentDataType from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PersistentDataType") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PersistentDataType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn primitive_type(
         &mut self,
@@ -257,8 +363,8 @@ self.jni_ref().call_method(&self.jni_object(),"fromPrimitive","(Ljava/lang/Objec
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -266,12 +372,12 @@ impl<'mc> crate::JNIRaw<'mc> for PersistentDataType<'mc> {
     }
 }
 pub struct PersistentDataTypeBooleanPersistentDataType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -279,8 +385,29 @@ impl<'mc> crate::JNIRaw<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc
     }
 }
 impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+        "Tried to instantiate PersistentDataTypeBooleanPersistentDataType from null object.")
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PersistentDataTypeBooleanPersistentDataType") {
+            Err(eyre::eyre!(
+        "Invalid argument passed. Expected a PersistentDataTypeBooleanPersistentDataType object, got {}",
+        name
+    )
+    .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn primitive_type(
         &mut self,
@@ -376,12 +503,34 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
 }
 /// An instantiatable struct that implements PersistentDataContainer. Needed for returning it from Java.
 pub struct PersistentDataContainer<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> PersistentDataContainer<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate PersistentDataContainer from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("PersistentDataContainer") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a PersistentDataContainer object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn has(
         &mut self,
@@ -400,25 +549,6 @@ impl<'mc> PersistentDataContainer<'mc> {
             ],
         )?;
         Ok(res.z().unwrap())
-    }
-    pub fn adapter_context(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::persistence::PersistentDataAdapterContext<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAdapterContext",
-            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::persistence::PersistentDataAdapterContext(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn remove(
         &mut self,
@@ -475,10 +605,29 @@ self.jni_ref().call_method(&self.jni_object(),"get","(Lorg/bukkit/NamespacedKey;
 self.jni_ref().call_method(&self.jni_object(),"getOrDefault","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/persistence/PersistentDataType;Ljava/lang/Object;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(res.l().unwrap())
     }
+    pub fn adapter_context(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::persistence::PersistentDataAdapterContext<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAdapterContext",
+            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::persistence::PersistentDataAdapterContext(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
 }
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataContainer<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {

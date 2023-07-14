@@ -1,11 +1,11 @@
 use crate::JNIRaw;
 pub struct EnchantmentWrapper<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for EnchantmentWrapper<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -13,8 +13,42 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantmentWrapper<'mc> {
     }
 }
 impl<'mc> EnchantmentWrapper<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EnchantmentWrapper from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("EnchantmentWrapper") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EnchantmentWrapper object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn enchantment(
         &mut self,
@@ -99,65 +133,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn register_enchantment(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
-            cls,
-            "registerEnchantment",
-            "(Lorg/bukkit/enchantments/Enchantment;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
-    pub fn get_by_key(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
-    ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByKey",
-            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/enchantments/Enchantment;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::enchantments::Enchantment(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn stop_accepting_registrations(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_accepting_registrations(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(cls, "isAcceptingRegistrations", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -205,7 +180,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(ret)
     }
     pub fn get_by_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -221,6 +196,52 @@ impl<'mc> EnchantmentWrapper<'mc> {
             crate::bukkit::enchantments::Enchantment(jni, obj)
         };
         Ok(ret)
+    }
+    pub fn register_enchantment(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("void")?;
+        let _res = jni.call_static_method(
+            cls,
+            "registerEnchantment",
+            "(Lorg/bukkit/enchantments/Enchantment;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn get_by_key(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::NamespacedKey<'mc>,
+    ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByKey",
+            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/enchantments/Enchantment;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::enchantments::Enchantment(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn stop_accepting_registrations(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("void")?;
+        let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_accepting_registrations(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("boolean")?;
+        let res = jni.call_static_method(cls, "isAcceptingRegistrations", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -261,12 +282,12 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
 }
 pub struct EnchantmentOffer<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for EnchantmentOffer<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -274,8 +295,29 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantmentOffer<'mc> {
     }
 }
 impl<'mc> EnchantmentOffer<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EnchantmentOffer from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("EnchantmentOffer") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EnchantmentOffer object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn enchantment(
         &mut self,
@@ -409,12 +451,12 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
 }
 pub struct EnchantmentTarget<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for EnchantmentTarget<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -422,8 +464,29 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantmentTarget<'mc> {
     }
 }
 impl<'mc> EnchantmentTarget<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate EnchantmentTarget from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("EnchantmentTarget") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a EnchantmentTarget object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -534,12 +597,12 @@ impl<'mc> EnchantmentTarget<'mc> {
     }
 }
 pub struct Enchantment<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for Enchantment<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -547,121 +610,27 @@ impl<'mc> crate::JNIRaw<'mc> for Enchantment<'mc> {
     }
 }
 impl<'mc> Enchantment<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
-    }
-    pub fn register_enchantment(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
-            cls,
-            "registerEnchantment",
-            "(Lorg/bukkit/enchantments/Enchantment;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
-    pub fn get_by_key(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
-    ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByKey",
-            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/enchantments/Enchantment;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::enchantments::Enchantment(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn start_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getStartLevel", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn max_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getMaxLevel", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
-    pub fn can_enchant_item(
-        &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "canEnchantItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn stop_accepting_registrations(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
-        Ok(())
-    }
-    pub fn item_target(
-        &mut self,
-    ) -> Result<crate::bukkit::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getItemTarget",
-            "()Lorg/bukkit/enchantments/EnchantmentTarget;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::enchantments::EnchantmentTarget(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn is_treasure(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isTreasure", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn is_cursed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCursed", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn conflicts_with(
-        &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "conflictsWith",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn is_accepting_registrations(
-        mut jni: jni::JNIEnv<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(cls, "isAcceptingRegistrations", "()Z", &[])?;
-        Ok(res.z().unwrap())
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Enchantment from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Enchantment") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Enchantment object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -723,7 +692,7 @@ impl<'mc> Enchantment<'mc> {
         Ok(ret)
     }
     pub fn get_by_name(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -739,6 +708,119 @@ impl<'mc> Enchantment<'mc> {
             crate::bukkit::enchantments::Enchantment(jni, obj)
         };
         Ok(ret)
+    }
+    pub fn register_enchantment(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("void")?;
+        let _res = jni.call_static_method(
+            cls,
+            "registerEnchantment",
+            "(Lorg/bukkit/enchantments/Enchantment;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn get_by_key(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::NamespacedKey<'mc>,
+    ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByKey",
+            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/enchantments/Enchantment;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::enchantments::Enchantment(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn start_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getStartLevel", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn max_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getMaxLevel", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn can_enchant_item(
+        &mut self,
+        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "canEnchantItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn stop_accepting_registrations(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("void")?;
+        let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
+        Ok(())
+    }
+    pub fn item_target(
+        &mut self,
+    ) -> Result<crate::bukkit::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getItemTarget",
+            "()Lorg/bukkit/enchantments/EnchantmentTarget;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::enchantments::EnchantmentTarget(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn is_treasure(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isTreasure", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn is_cursed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCursed", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn conflicts_with(
+        &mut self,
+        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "conflictsWith",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn is_accepting_registrations(
+        mut jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("boolean")?;
+        let res = jni.call_static_method(cls, "isAcceptingRegistrations", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,

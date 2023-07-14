@@ -34,7 +34,7 @@ impl std::fmt::Display for MushroomBlockTextureEnum {
     }
 }
 pub struct MushroomBlockTexture<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub MushroomBlockTextureEnum,
 );
@@ -45,8 +45,8 @@ impl<'mc> std::ops::Deref for MushroomBlockTexture<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for MushroomBlockTexture<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -72,6 +72,36 @@ impl<'mc> MushroomBlockTexture<'mc> {
             _ => None,
         }
     }
+    pub fn value_of(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/material/types/MushroomBlockTexture")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/material/types/MushroomBlockTexture;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            let raw_obj = obj;
+            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = jni
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::material::types::MushroomBlockTexture(
+                jni,
+                raw_obj,
+                crate::bukkit::material::types::MushroomBlockTexture::from_string(variant_str)
+                    .unwrap(),
+            )
+        };
+        Ok(ret)
+    }
     pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -79,7 +109,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
         Ok(res.b().unwrap())
     }
     pub fn get_by_data(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: i8,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {
@@ -109,7 +139,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
         Ok(ret)
     }
     pub fn get_cap_by_face(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::block::BlockFace<'mc>,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {
@@ -161,36 +191,6 @@ impl<'mc> MushroomBlockTexture<'mc> {
                 self.jni_ref(),
                 raw_obj,
                 crate::bukkit::block::BlockFace::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("org/bukkit/material/types/MushroomBlockTexture")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/material/types/MushroomBlockTexture;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            let raw_obj = obj;
-            let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = jni
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::material::types::MushroomBlockTexture(
-                jni,
-                raw_obj,
-                crate::bukkit::material::types::MushroomBlockTexture::from_string(variant_str)
-                    .unwrap(),
             )
         };
         Ok(ret)

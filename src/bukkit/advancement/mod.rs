@@ -1,12 +1,33 @@
 use crate::JNIRaw;
 /// An instantiatable struct that implements AdvancementProgress. Needed for returning it from Java.
 pub struct AdvancementProgress<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> AdvancementProgress<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate AdvancementProgress from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("AdvancementProgress") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a AdvancementProgress object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn is_done(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -65,8 +86,8 @@ impl<'mc> AdvancementProgress<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for AdvancementProgress<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -88,7 +109,7 @@ impl std::fmt::Display for AdvancementDisplayTypeEnum {
     }
 }
 pub struct AdvancementDisplayType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub AdvancementDisplayTypeEnum,
 );
@@ -99,8 +120,8 @@ impl<'mc> std::ops::Deref for AdvancementDisplayType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for AdvancementDisplayType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -116,22 +137,8 @@ impl<'mc> AdvancementDisplayType<'mc> {
             _ => None,
         }
     }
-    pub fn color(&mut self) -> Result<crate::bukkit::ChatColor<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getColor",
-            "()Lorg/bukkit/ChatColor;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::ChatColor(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
     {
@@ -160,15 +167,85 @@ impl<'mc> AdvancementDisplayType<'mc> {
         };
         Ok(ret)
     }
+    pub fn color(&mut self) -> Result<crate::bukkit::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getColor",
+            "()Lorg/bukkit/ChatColor;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::ChatColor(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
 }
 /// An instantiatable struct that implements AdvancementDisplay. Needed for returning it from Java.
 pub struct AdvancementDisplay<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> AdvancementDisplay<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate AdvancementDisplay from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("AdvancementDisplay") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a AdvancementDisplay object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isHidden", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/advancement/AdvancementDisplayType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::advancement::AdvancementDisplayType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::advancement::AdvancementDisplayType::from_string(variant_str)
+                    .unwrap(),
+            )
+        };
+        Ok(ret)
     }
     pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
@@ -236,45 +313,10 @@ impl<'mc> AdvancementDisplay<'mc> {
                 .call_method(&self.jni_object(), "shouldAnnounceChat", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isHidden", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/advancement/AdvancementDisplayType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::advancement::AdvancementDisplayType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::advancement::AdvancementDisplayType::from_string(variant_str)
-                    .unwrap(),
-            )
-        };
-        Ok(ret)
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for AdvancementDisplay<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -283,12 +325,31 @@ impl<'mc> crate::JNIRaw<'mc> for AdvancementDisplay<'mc> {
 }
 /// An instantiatable struct that implements Advancement. Needed for returning it from Java.
 pub struct Advancement<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> Advancement<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Advancement from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("Advancement") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Advancement object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn display(
         &mut self,
@@ -323,8 +384,8 @@ impl<'mc> Advancement<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Advancement<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {

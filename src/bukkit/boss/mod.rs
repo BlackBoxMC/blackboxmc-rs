@@ -18,7 +18,7 @@ impl std::fmt::Display for BarStyleEnum {
     }
 }
 pub struct BarStyle<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub BarStyleEnum,
 );
@@ -29,8 +29,8 @@ impl<'mc> std::ops::Deref for BarStyle<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BarStyle<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -49,7 +49,7 @@ impl<'mc> BarStyle<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -100,7 +100,7 @@ impl std::fmt::Display for BarColorEnum {
     }
 }
 pub struct BarColor<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub BarColorEnum,
 );
@@ -111,8 +111,8 @@ impl<'mc> std::ops::Deref for BarColor<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BarColor<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -133,7 +133,7 @@ impl<'mc> BarColor<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -176,7 +176,7 @@ impl std::fmt::Display for BarFlagEnum {
     }
 }
 pub struct BarFlag<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub BarFlagEnum,
 );
@@ -187,8 +187,8 @@ impl<'mc> std::ops::Deref for BarFlag<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BarFlag<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -205,7 +205,7 @@ impl<'mc> BarFlag<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::boss::BarFlag<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -235,12 +235,31 @@ impl<'mc> BarFlag<'mc> {
 }
 /// An instantiatable struct that implements KeyedBossBar. Needed for returning it from Java.
 pub struct KeyedBossBar<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> KeyedBossBar<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate KeyedBossBar from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("KeyedBossBar") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a KeyedBossBar object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn set_color(
         &mut self,
@@ -266,6 +285,11 @@ impl<'mc> KeyedBossBar<'mc> {
             "(Lorg/bukkit/boss/BarFlag;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
+        Ok(())
+    }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
         Ok(())
     }
     pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -450,11 +474,6 @@ impl<'mc> KeyedBossBar<'mc> {
     pub fn hide(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "hide", "()V", &[])?;
-        Ok(())
-    }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
         Ok(())
     }
     pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
@@ -473,8 +492,8 @@ impl<'mc> KeyedBossBar<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for KeyedBossBar<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -483,12 +502,31 @@ impl<'mc> crate::JNIRaw<'mc> for KeyedBossBar<'mc> {
 }
 /// An instantiatable struct that implements BossBar. Needed for returning it from Java.
 pub struct BossBar<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BossBar<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BossBar from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BossBar") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BossBar object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn set_color(
         &mut self,
@@ -514,6 +552,11 @@ impl<'mc> BossBar<'mc> {
             "(Lorg/bukkit/boss/BarFlag;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
+        Ok(())
+    }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
         Ok(())
     }
     pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -700,15 +743,10 @@ impl<'mc> BossBar<'mc> {
             .call_method(&self.jni_object(), "hide", "()V", &[])?;
         Ok(())
     }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
-        Ok(())
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for BossBar<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -717,12 +755,31 @@ impl<'mc> crate::JNIRaw<'mc> for BossBar<'mc> {
 }
 /// An instantiatable struct that implements DragonBattle. Needed for returning it from Java.
 pub struct DragonBattle<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> DragonBattle<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate DragonBattle from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("DragonBattle") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DragonBattle object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn respawn_phase(
         &mut self,
@@ -833,8 +890,8 @@ impl<'mc> DragonBattle<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for DragonBattle<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -842,12 +899,12 @@ impl<'mc> crate::JNIRaw<'mc> for DragonBattle<'mc> {
     }
 }
 pub struct DragonBattleRespawnPhase<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for DragonBattleRespawnPhase<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -855,8 +912,30 @@ impl<'mc> crate::JNIRaw<'mc> for DragonBattleRespawnPhase<'mc> {
     }
 }
 impl<'mc> DragonBattleRespawnPhase<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate DragonBattleRespawnPhase from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("DragonBattleRespawnPhase") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a DragonBattleRespawnPhase object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =

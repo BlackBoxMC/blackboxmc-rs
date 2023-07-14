@@ -14,7 +14,7 @@ impl std::fmt::Display for ChatMessageTypeEnum {
     }
 }
 pub struct ChatMessageType<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
     pub ChatMessageTypeEnum,
 );
@@ -25,8 +25,8 @@ impl<'mc> std::ops::Deref for ChatMessageType<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for ChatMessageType<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -43,7 +43,7 @@ impl<'mc> ChatMessageType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bungee::bungee::api::ChatMessageType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -72,12 +72,12 @@ impl<'mc> ChatMessageType<'mc> {
     }
 }
 pub struct ChatColor<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for ChatColor<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -85,102 +85,27 @@ impl<'mc> crate::JNIRaw<'mc> for ChatColor<'mc> {
     }
 }
 impl<'mc> ChatColor<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
-    }
-    pub fn color(&mut self) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getColor",
-            "()Ljava/awt/Color;",
-            &[],
-        )?;
-        let r = self
-            .jni_ref()
-            .call_method(
-                unsafe { jni::objects::JObject::from_raw(res.as_jni().l) },
-                "getRed",
-                "(V)I",
-                &[],
-            )?
-            .i()? as u8;
-        let g = self
-            .jni_ref()
-            .call_method(
-                unsafe { jni::objects::JObject::from_raw(res.as_jni().l) },
-                "getGreen",
-                "(V)I",
-                &[],
-            )?
-            .i()? as u8;
-        let b = self
-            .jni_ref()
-            .call_method(
-                unsafe { jni::objects::JObject::from_raw(res.as_jni().l) },
-                "getBlue",
-                "(V)I",
-                &[],
-            )?
-            .i()? as u8;
-        (r, g, b);
-        Ok((r, g, b))
-    }
-    pub fn get_by_char(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: u16,
-    ) -> Result<crate::bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Char(arg0.into());
-        let cls = &jni.find_class("net/md_5/bungee/api/ChatColor")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByChar",
-            "(C)Lnet/md_5/bungee/api/ChatColor;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bungee::bungee::api::ChatColor(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn strip_color(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "stripColor",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn translate_alternate_color_codes(
-        mut jni: jni::JNIEnv<'mc>,
-        arg0: u16,
-        arg1: String,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Char(arg0.into());
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "translateAlternateColorCodes",
-            "(CLjava/lang/String;)Ljava/lang/String;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate ChatColor from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("ChatColor") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a ChatColor object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -225,7 +150,7 @@ impl<'mc> ChatColor<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn value_of(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -247,6 +172,100 @@ impl<'mc> ChatColor<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[])?;
         Ok(res.i().unwrap())
+    }
+    pub fn color(&mut self) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getColor",
+            "()Ljava/awt/Color;",
+            &[],
+        )?;
+        let r = self
+            .jni_ref()
+            .call_method(
+                unsafe { jni::objects::JObject::from_raw(res.as_jni().l) },
+                "getRed",
+                "(V)I",
+                &[],
+            )?
+            .i()? as u8;
+        let g = self
+            .jni_ref()
+            .call_method(
+                unsafe { jni::objects::JObject::from_raw(res.as_jni().l) },
+                "getGreen",
+                "(V)I",
+                &[],
+            )?
+            .i()? as u8;
+        let b = self
+            .jni_ref()
+            .call_method(
+                unsafe { jni::objects::JObject::from_raw(res.as_jni().l) },
+                "getBlue",
+                "(V)I",
+                &[],
+            )?
+            .i()? as u8;
+        (r, g, b);
+        Ok((r, g, b))
+    }
+    pub fn get_by_char(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: u16,
+    ) -> Result<crate::bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Char(arg0.into());
+        let cls = &jni.find_class("net/md_5/bungee/api/ChatColor")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByChar",
+            "(C)Lnet/md_5/bungee/api/ChatColor;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bungee::bungee::api::ChatColor(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn strip_color(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "stripColor",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn translate_alternate_color_codes(
+        mut jni: crate::SharedJNIEnv<'mc>,
+        arg0: u16,
+        arg1: String,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Char(arg0.into());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "translateAlternateColorCodes",
+            "(CLjava/lang/String;)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn wait(
         &mut self,

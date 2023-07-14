@@ -1,12 +1,31 @@
 use crate::JNIRaw;
 /// An instantiatable struct that implements BukkitTask. Needed for returning it from Java.
 pub struct BukkitTask<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BukkitTask<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BukkitTask from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BukkitTask") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BukkitTask object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
@@ -49,8 +68,8 @@ impl<'mc> BukkitTask<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BukkitTask<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -59,12 +78,31 @@ impl<'mc> crate::JNIRaw<'mc> for BukkitTask<'mc> {
 }
 /// An instantiatable struct that implements BukkitWorker. Needed for returning it from Java.
 pub struct BukkitWorker<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BukkitWorker<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate BukkitWorker from null object.").into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BukkitWorker") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BukkitWorker object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn owner(
         &mut self,
@@ -99,8 +137,8 @@ impl<'mc> BukkitWorker<'mc> {
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BukkitWorker<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -109,12 +147,33 @@ impl<'mc> crate::JNIRaw<'mc> for BukkitWorker<'mc> {
 }
 /// An instantiatable struct that implements BukkitScheduler. Needed for returning it from Java.
 pub struct BukkitScheduler<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> BukkitScheduler<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BukkitScheduler from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BukkitScheduler") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BukkitScheduler object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn is_queued(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -217,8 +276,8 @@ self.jni_ref().call_method(&self.jni_object(),"callSyncMethod","(Lorg/bukkit/plu
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for BukkitScheduler<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -226,12 +285,12 @@ impl<'mc> crate::JNIRaw<'mc> for BukkitScheduler<'mc> {
     }
 }
 pub struct BukkitRunnable<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for BukkitRunnable<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -239,34 +298,50 @@ impl<'mc> crate::JNIRaw<'mc> for BukkitRunnable<'mc> {
     }
 }
 impl<'mc> BukkitRunnable<'mc> {
-    pub fn from_extendable<T>(
-        plugin: &super::plugin::Plugin,
-        event: &'mc T,
+    pub fn from_extendable(
+        env: &crate::SharedJNIEnv<'mc>,
         lib_name: String,
         name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>>
-    where
-        T: crate::JNIRaw<'mc>,
-    {
-        let obj = jni::objects::JValueGen::Object(event.jni_ref().new_object(
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = jni::objects::JValueGen::Object(env.new_object(
             "net/ioixd/blackbox/extendables/ExtendableBukkitRunnable",
-            "(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Ljava/lang/String;)V",
+            "(Ljava/lang/String;Ljava/lang/String;)V",
             &[
-                jni::objects::JValueGen::from(&plugin.1),
                 jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    event.jni_ref().new_string(name).unwrap(),
+                    env.new_string(name).unwrap(),
                 )),
                 jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    event.jni_ref().new_string(lib_name).unwrap(),
+                    env.new_string(lib_name).unwrap(),
                 )),
             ],
         )?);
-        Ok(Self(event.jni_ref(), unsafe {
+        Ok(Self(env.clone(), unsafe {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
     }
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate BukkitRunnable from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("BukkitRunnable") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a BukkitRunnable object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()

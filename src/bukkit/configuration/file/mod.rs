@@ -1,11 +1,11 @@
 use crate::JNIRaw;
 pub struct FileConfiguration<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for FileConfiguration<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -13,8 +13,46 @@ impl<'mc> crate::JNIRaw<'mc> for FileConfiguration<'mc> {
     }
 }
 impl<'mc> FileConfiguration<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate FileConfiguration from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("FileConfiguration") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FileConfiguration object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn options(
+        &mut self,
+    ) -> Result<crate::bukkit::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "options",
+            "()Lorg/bukkit/configuration/ConfigurationOptions;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::ConfigurationOptions(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn save_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -39,20 +77,18 @@ impl<'mc> FileConfiguration<'mc> {
         )?;
         Ok(())
     }
-    pub fn options(
+    pub fn parent(
         &mut self,
-    ) -> Result<
-        crate::bukkit::configuration::file::FileConfigurationOptions<'mc>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<crate::bukkit::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>>
+    {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "options",
-            "()Lorg/bukkit/configuration/file/FileConfigurationOptions;",
+            "getParent",
+            "()Lorg/bukkit/configuration/ConfigurationSection;",
             &[],
         )?;
         let ret = {
-            crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
+            crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -105,23 +141,6 @@ impl<'mc> FileConfiguration<'mc> {
         )?;
         Ok(())
     }
-    pub fn parent(
-        &mut self,
-    ) -> Result<crate::bukkit::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getParent",
-            "()Lorg/bukkit/configuration/ConfigurationSection;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn get_string_with_string(
         &mut self,
         arg0: std::option::Option<String>,
@@ -143,6 +162,228 @@ impl<'mc> FileConfiguration<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = arg1.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "get",
+            "(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_boolean_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBoolean",
+            "(Ljava/lang/String;Z)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_int_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getInt",
+            "(Ljava/lang/String;I)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_long_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<i64>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLong",
+            "(Ljava/lang/String;J)J",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.j().unwrap())
+    }
+    pub fn get_double_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDouble",
+            "(Ljava/lang/String;D)D",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.d().unwrap())
+    }
+    pub fn contains_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "contains",
+            "(Ljava/lang/String;Z)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Ljava/lang/String;Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn set(
+        &mut self,
+        arg0: String,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = arg1;
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "set",
+            "(Ljava/lang/String;Ljava/lang/Object;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_set(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSet",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn root(
+        &mut self,
+    ) -> Result<crate::bukkit::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getRoot",
+            "()Lorg/bukkit/configuration/Configuration;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_object_with_string(
+        &mut self,
+        arg0: String,
+        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg2: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = arg1.unwrap();
+        let val_2 = arg2.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getObject",
+            "(Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(res.l().unwrap())
     }
     pub fn get_color_with_string(
         &mut self,
@@ -214,7 +455,7 @@ impl<'mc> FileConfiguration<'mc> {
         Ok(ret)
     }
     pub fn create_path_with_configuration_section(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::configuration::ConfigurationSection<'mc>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<crate::bukkit::configuration::ConfigurationSection<'mc>>,
@@ -510,228 +751,6 @@ self.jni_ref().call_method(&self.jni_object(),"getSerializable","(Ljava/lang/Str
         )?;
         Ok(())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn get_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = arg1.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "get",
-            "(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.l().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn get_boolean_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<bool>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBoolean",
-            "(Ljava/lang/String;Z)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn get_int_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getInt",
-            "(Ljava/lang/String;I)I",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn get_long_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<i64>,
-    ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLong",
-            "(Ljava/lang/String;J)J",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.j().unwrap())
-    }
-    pub fn get_double_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDouble",
-            "(Ljava/lang/String;D)D",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.d().unwrap())
-    }
-    pub fn contains_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<bool>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "contains",
-            "(Ljava/lang/String;Z)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn get_location_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<crate::bukkit::Location<'mc>>,
-    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "(Ljava/lang/String;Lorg/bukkit/Location;)Lorg/bukkit/Location;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn set(
-        &mut self,
-        arg0: String,
-        arg1: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = arg1;
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "set",
-            "(Ljava/lang/String;Ljava/lang/Object;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn is_set(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isSet",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn root(
-        &mut self,
-    ) -> Result<crate::bukkit::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRoot",
-            "()Lorg/bukkit/configuration/Configuration;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_object_with_string(
-        &mut self,
-        arg0: String,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
-        arg2: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = arg1.unwrap();
-        let val_2 = arg2.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getObject",
-            "(Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.l().unwrap())
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -790,12 +809,12 @@ self.jni_ref().call_method(&self.jni_object(),"getSerializable","(Ljava/lang/Str
     }
 }
 pub struct FileConfigurationOptions<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for FileConfigurationOptions<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -803,8 +822,30 @@ impl<'mc> crate::JNIRaw<'mc> for FileConfigurationOptions<'mc> {
     }
 }
 impl<'mc> FileConfigurationOptions<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate FileConfigurationOptions from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("FileConfigurationOptions") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FileConfigurationOptions object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn header(
         &mut self,
@@ -822,6 +863,22 @@ impl<'mc> FileConfigurationOptions<'mc> {
         )?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn configuration(
+        &mut self,
+    ) -> Result<crate::bukkit::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "configuration",
+            "()Lorg/bukkit/configuration/Configuration;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -979,23 +1036,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         };
         Ok(ret)
     }
-    pub fn configuration(
-        &mut self,
-    ) -> Result<crate::bukkit::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "configuration",
-            "()Lorg/bukkit/configuration/MemoryConfiguration;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::MemoryConfiguration(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1067,12 +1107,12 @@ impl<'mc> FileConfigurationOptions<'mc> {
     }
 }
 pub struct YamlConfigurationOptions<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for YamlConfigurationOptions<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1080,50 +1120,30 @@ impl<'mc> crate::JNIRaw<'mc> for YamlConfigurationOptions<'mc> {
     }
 }
 impl<'mc> YamlConfigurationOptions<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
-    }
-    pub fn header(
-        &mut self,
-        arg0: std::option::Option<String>,
-    ) -> Result<
-        crate::bukkit::configuration::file::YamlConfigurationOptions<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getHeader",
-            "(Ljava/lang/String;)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn path_separator(
-        &mut self,
-        arg0: std::option::Option<u16>,
-    ) -> Result<
-        crate::bukkit::configuration::MemoryConfigurationOptions<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_0 = jni::objects::JValueGen::Char(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pathSeparator",
-            "(C)Lorg/bukkit/configuration/MemoryConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::MemoryConfigurationOptions(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!(
+                "Tried to instantiate YamlConfigurationOptions from null object."
+            )
+            .into());
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("YamlConfigurationOptions") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a YamlConfigurationOptions object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
     }
     pub fn width(
         &mut self,
@@ -1146,94 +1166,18 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         };
         Ok(ret)
     }
-    pub fn copy_defaults(
+    pub fn header(
         &mut self,
-        arg0: std::option::Option<bool>,
-    ) -> Result<
-        crate::bukkit::configuration::MemoryConfigurationOptions<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyDefaults",
-            "(Z)Lorg/bukkit/configuration/MemoryConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::MemoryConfigurationOptions(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn parse_comments(
-        &mut self,
-        arg0: std::option::Option<bool>,
-    ) -> Result<
-        crate::bukkit::configuration::file::YamlConfigurationOptions<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "parseComments",
-            "(Z)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn set_header_with_list(
-        &mut self,
-        arg0: std::option::Option<Vec<String>>,
-    ) -> Result<
-        crate::bukkit::configuration::file::YamlConfigurationOptions<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let raw_val_0 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
-        for v in arg0.unwrap() {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
-            self.jni_ref().call_method(
-                &raw_val_0,
-                "add",
-                "(Ljava/Lang/Object)V",
-                &[jni::objects::JValueGen::from(&map_val_0)],
-            )?;
-        }
-        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setHeader",
-            "(Ljava/util/List;)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn copy_header(
-        &mut self,
-        arg0: std::option::Option<bool>,
+        arg0: std::option::Option<String>,
     ) -> Result<
         crate::bukkit::configuration::file::FileConfigurationOptions<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "copyHeader",
-            "(Z)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
+            "getHeader",
+            "(Ljava/lang/String;)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -1266,15 +1210,100 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     }
     pub fn configuration(
         &mut self,
-    ) -> Result<crate::bukkit::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<
+        crate::bukkit::configuration::file::YamlConfiguration<'mc>,
+        Box<dyn std::error::Error>,
+    > {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "configuration",
-            "()Lorg/bukkit/configuration/Configuration;",
+            "()Lorg/bukkit/configuration/file/YamlConfiguration;",
             &[],
         )?;
         let ret = {
-            crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
+            crate::bukkit::configuration::file::YamlConfiguration(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn path_separator(
+        &mut self,
+        arg0: std::option::Option<u16>,
+    ) -> Result<crate::bukkit::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JValueGen::Char(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "pathSeparator",
+            "(C)Lorg/bukkit/configuration/ConfigurationOptions;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::ConfigurationOptions(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn copy_defaults(
+        &mut self,
+        arg0: std::option::Option<bool>,
+    ) -> Result<
+        crate::bukkit::configuration::file::YamlConfigurationOptions<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copyDefaults",
+            "(Z)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn parse_comments(
+        &mut self,
+        arg0: std::option::Option<bool>,
+    ) -> Result<
+        crate::bukkit::configuration::file::YamlConfigurationOptions<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "parseComments",
+            "(Z)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn copy_header(
+        &mut self,
+        arg0: std::option::Option<bool>,
+    ) -> Result<
+        crate::bukkit::configuration::file::YamlConfigurationOptions<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copyHeader",
+            "(Z)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -1351,12 +1380,12 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     }
 }
 pub struct YamlConfiguration<'mc>(
-    pub(crate) jni::JNIEnv<'mc>,
+    pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> crate::JNIRaw<'mc> for YamlConfiguration<'mc> {
-    fn jni_ref(&self) -> jni::JNIEnv<'mc> {
-        unsafe { self.0.unsafe_clone() }
+    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
@@ -1364,8 +1393,46 @@ impl<'mc> crate::JNIRaw<'mc> for YamlConfiguration<'mc> {
     }
 }
 impl<'mc> YamlConfiguration<'mc> {
-    pub fn from_raw(env: jni::JNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Self {
-        Self(env, obj)
+    pub fn from_raw(
+        env: &crate::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate YamlConfiguration from null object.").into(),
+            );
+        }
+        let cls = env.jni.borrow().get_object_class(&obj)?;
+        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
+        let oh = name_raw.l()?.into();
+        let what = env.get_string(&oh)?;
+        let name = what.to_string_lossy();
+        if !name.ends_with("YamlConfiguration") {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a YamlConfiguration object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn options(
+        &mut self,
+    ) -> Result<crate::bukkit::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "options",
+            "()Lorg/bukkit/configuration/ConfigurationOptions;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::ConfigurationOptions(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn save_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1390,20 +1457,18 @@ impl<'mc> YamlConfiguration<'mc> {
         )?;
         Ok(())
     }
-    pub fn options(
+    pub fn parent(
         &mut self,
-    ) -> Result<
-        crate::bukkit::configuration::file::YamlConfigurationOptions<'mc>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<crate::bukkit::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>>
+    {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "options",
-            "()Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
+            "getParent",
+            "()Lorg/bukkit/configuration/ConfigurationSection;",
             &[],
         )?;
         let ret = {
-            crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
+            crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -1456,23 +1521,6 @@ impl<'mc> YamlConfiguration<'mc> {
         )?;
         Ok(())
     }
-    pub fn parent(
-        &mut self,
-    ) -> Result<crate::bukkit::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getParent",
-            "()Lorg/bukkit/configuration/ConfigurationSection;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn get_string_with_string(
         &mut self,
         arg0: std::option::Option<String>,
@@ -1494,6 +1542,228 @@ impl<'mc> YamlConfiguration<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = arg1.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "get",
+            "(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_boolean_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBoolean",
+            "(Ljava/lang/String;Z)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_int_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getInt",
+            "(Ljava/lang/String;I)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_long_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<i64>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLong",
+            "(Ljava/lang/String;J)J",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.j().unwrap())
+    }
+    pub fn get_double_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDouble",
+            "(Ljava/lang/String;D)D",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.d().unwrap())
+    }
+    pub fn contains_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "contains",
+            "(Ljava/lang/String;Z)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location_with_string(
+        &mut self,
+        arg0: std::option::Option<String>,
+        arg1: std::option::Option<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Ljava/lang/String;Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn set(
+        &mut self,
+        arg0: String,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = arg1;
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "set",
+            "(Ljava/lang/String;Ljava/lang/Object;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_set(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSet",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn root(
+        &mut self,
+    ) -> Result<crate::bukkit::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getRoot",
+            "()Lorg/bukkit/configuration/Configuration;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_object_with_string(
+        &mut self,
+        arg0: String,
+        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg2: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = arg1.unwrap();
+        let val_2 = arg2.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getObject",
+            "(Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(res.l().unwrap())
     }
     pub fn get_color_with_string(
         &mut self,
@@ -1565,7 +1835,7 @@ impl<'mc> YamlConfiguration<'mc> {
         Ok(ret)
     }
     pub fn create_path_with_configuration_section(
-        mut jni: jni::JNIEnv<'mc>,
+        mut jni: crate::SharedJNIEnv<'mc>,
         arg0: crate::bukkit::configuration::ConfigurationSection<'mc>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<crate::bukkit::configuration::ConfigurationSection<'mc>>,
@@ -1860,228 +2130,6 @@ self.jni_ref().call_method(&self.jni_object(),"getSerializable","(Ljava/lang/Str
             ],
         )?;
         Ok(())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn get_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = arg1.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "get",
-            "(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.l().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn get_boolean_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<bool>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBoolean",
-            "(Ljava/lang/String;Z)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn get_int_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getInt",
-            "(Ljava/lang/String;I)I",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn get_long_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<i64>,
-    ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLong",
-            "(Ljava/lang/String;J)J",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.j().unwrap())
-    }
-    pub fn get_double_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDouble",
-            "(Ljava/lang/String;D)D",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.d().unwrap())
-    }
-    pub fn contains_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<bool>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "contains",
-            "(Ljava/lang/String;Z)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn get_location_with_string(
-        &mut self,
-        arg0: std::option::Option<String>,
-        arg1: std::option::Option<crate::bukkit::Location<'mc>>,
-    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "(Ljava/lang/String;Lorg/bukkit/Location;)Lorg/bukkit/Location;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn set(
-        &mut self,
-        arg0: String,
-        arg1: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = arg1;
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "set",
-            "(Ljava/lang/String;Ljava/lang/Object;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn is_set(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isSet",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn root(
-        &mut self,
-    ) -> Result<crate::bukkit::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRoot",
-            "()Lorg/bukkit/configuration/Configuration;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_object_with_string(
-        &mut self,
-        arg0: String,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
-        arg2: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = arg1.unwrap();
-        let val_2 = arg2.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getObject",
-            "(Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.l().unwrap())
     }
     pub fn wait(
         &mut self,
