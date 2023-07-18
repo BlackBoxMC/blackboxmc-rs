@@ -239,6 +239,10 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionDefault<'mc> {
     }
 }
 impl<'mc> PermissionDefault<'mc> {
+    pub const VARIANTTRUE: PermissionDefaultEnum = PermissionDefaultEnum::VariantTrue;
+    pub const VARIANTFALSE: PermissionDefaultEnum = PermissionDefaultEnum::VariantFalse;
+    pub const OP: PermissionDefaultEnum = PermissionDefaultEnum::Op;
+    pub const NOTOP: PermissionDefaultEnum = PermissionDefaultEnum::NotOp;
     pub fn from_string(str: String) -> std::option::Option<PermissionDefaultEnum> {
         match str.as_str() {
             "TRUE" => Some(PermissionDefaultEnum::VariantTrue),

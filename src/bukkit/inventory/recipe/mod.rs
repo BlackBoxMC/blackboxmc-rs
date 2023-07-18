@@ -34,6 +34,9 @@ impl<'mc> crate::JNIRaw<'mc> for CookingBookCategory<'mc> {
     }
 }
 impl<'mc> CookingBookCategory<'mc> {
+    pub const FOOD: CookingBookCategoryEnum = CookingBookCategoryEnum::Food;
+    pub const BLOCKS: CookingBookCategoryEnum = CookingBookCategoryEnum::Blocks;
+    pub const MISC: CookingBookCategoryEnum = CookingBookCategoryEnum::Misc;
     pub fn from_string(str: String) -> std::option::Option<CookingBookCategoryEnum> {
         match str.as_str() {
             "FOOD" => Some(CookingBookCategoryEnum::Food),
@@ -112,6 +115,10 @@ impl<'mc> crate::JNIRaw<'mc> for CraftingBookCategory<'mc> {
     }
 }
 impl<'mc> CraftingBookCategory<'mc> {
+    pub const BUILDING: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Building;
+    pub const REDSTONE: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Redstone;
+    pub const EQUIPMENT: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Equipment;
+    pub const MISC: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Misc;
     pub fn from_string(str: String) -> std::option::Option<CraftingBookCategoryEnum> {
         match str.as_str() {
             "BUILDING" => Some(CraftingBookCategoryEnum::Building),

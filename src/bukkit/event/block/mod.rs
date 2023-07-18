@@ -2184,6 +2184,11 @@ impl<'mc> crate::JNIRaw<'mc> for Action<'mc> {
     }
 }
 impl<'mc> Action<'mc> {
+    pub const LEFTCLICKBLOCK: ActionEnum = ActionEnum::LeftClickBlock;
+    pub const RIGHTCLICKBLOCK: ActionEnum = ActionEnum::RightClickBlock;
+    pub const LEFTCLICKAIR: ActionEnum = ActionEnum::LeftClickAir;
+    pub const RIGHTCLICKAIR: ActionEnum = ActionEnum::RightClickAir;
+    pub const PHYSICAL: ActionEnum = ActionEnum::Physical;
     pub fn from_string(str: String) -> std::option::Option<ActionEnum> {
         match str.as_str() {
             "LEFT_CLICK_BLOCK" => Some(ActionEnum::LeftClickBlock),

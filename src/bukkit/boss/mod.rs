@@ -38,6 +38,11 @@ impl<'mc> crate::JNIRaw<'mc> for BarStyle<'mc> {
     }
 }
 impl<'mc> BarStyle<'mc> {
+    pub const SOLID: BarStyleEnum = BarStyleEnum::Solid;
+    pub const SEGMENTED6: BarStyleEnum = BarStyleEnum::Segmented6;
+    pub const SEGMENTED10: BarStyleEnum = BarStyleEnum::Segmented10;
+    pub const SEGMENTED12: BarStyleEnum = BarStyleEnum::Segmented12;
+    pub const SEGMENTED20: BarStyleEnum = BarStyleEnum::Segmented20;
     pub fn from_string(str: String) -> std::option::Option<BarStyleEnum> {
         match str.as_str() {
             "SOLID" => Some(BarStyleEnum::Solid),
@@ -120,6 +125,13 @@ impl<'mc> crate::JNIRaw<'mc> for BarColor<'mc> {
     }
 }
 impl<'mc> BarColor<'mc> {
+    pub const PINK: BarColorEnum = BarColorEnum::Pink;
+    pub const BLUE: BarColorEnum = BarColorEnum::Blue;
+    pub const RED: BarColorEnum = BarColorEnum::Red;
+    pub const GREEN: BarColorEnum = BarColorEnum::Green;
+    pub const YELLOW: BarColorEnum = BarColorEnum::Yellow;
+    pub const PURPLE: BarColorEnum = BarColorEnum::Purple;
+    pub const WHITE: BarColorEnum = BarColorEnum::White;
     pub fn from_string(str: String) -> std::option::Option<BarColorEnum> {
         match str.as_str() {
             "PINK" => Some(BarColorEnum::Pink),
@@ -196,6 +208,9 @@ impl<'mc> crate::JNIRaw<'mc> for BarFlag<'mc> {
     }
 }
 impl<'mc> BarFlag<'mc> {
+    pub const DARKENSKY: BarFlagEnum = BarFlagEnum::DarkenSky;
+    pub const PLAYBOSSMUSIC: BarFlagEnum = BarFlagEnum::PlayBossMusic;
+    pub const CREATEFOG: BarFlagEnum = BarFlagEnum::CreateFog;
     pub fn from_string(str: String) -> std::option::Option<BarFlagEnum> {
         match str.as_str() {
             "DARKEN_SKY" => Some(BarFlagEnum::DarkenSky),

@@ -689,6 +689,8 @@ impl<'mc> crate::JNIRaw<'mc> for DragType<'mc> {
     }
 }
 impl<'mc> DragType<'mc> {
+    pub const SINGLE: DragTypeEnum = DragTypeEnum::Single;
+    pub const EVEN: DragTypeEnum = DragTypeEnum::Even;
     pub fn from_string(str: String) -> std::option::Option<DragTypeEnum> {
         match str.as_str() {
             "SINGLE" => Some(DragTypeEnum::Single),
@@ -1918,6 +1920,20 @@ impl<'mc> crate::JNIRaw<'mc> for ClickType<'mc> {
     }
 }
 impl<'mc> ClickType<'mc> {
+    pub const LEFT: ClickTypeEnum = ClickTypeEnum::Left;
+    pub const SHIFTLEFT: ClickTypeEnum = ClickTypeEnum::ShiftLeft;
+    pub const RIGHT: ClickTypeEnum = ClickTypeEnum::Right;
+    pub const SHIFTRIGHT: ClickTypeEnum = ClickTypeEnum::ShiftRight;
+    pub const WINDOWBORDERLEFT: ClickTypeEnum = ClickTypeEnum::WindowBorderLeft;
+    pub const WINDOWBORDERRIGHT: ClickTypeEnum = ClickTypeEnum::WindowBorderRight;
+    pub const MIDDLE: ClickTypeEnum = ClickTypeEnum::Middle;
+    pub const NUMBERKEY: ClickTypeEnum = ClickTypeEnum::NumberKey;
+    pub const DOUBLECLICK: ClickTypeEnum = ClickTypeEnum::DoubleClick;
+    pub const DROP: ClickTypeEnum = ClickTypeEnum::Drop;
+    pub const CONTROLDROP: ClickTypeEnum = ClickTypeEnum::ControlDrop;
+    pub const CREATIVE: ClickTypeEnum = ClickTypeEnum::Creative;
+    pub const SWAPOFFHAND: ClickTypeEnum = ClickTypeEnum::SwapOffhand;
+    pub const UNKNOWN: ClickTypeEnum = ClickTypeEnum::Unknown;
     pub fn from_string(str: String) -> std::option::Option<ClickTypeEnum> {
         match str.as_str() {
             "LEFT" => Some(ClickTypeEnum::Left),
@@ -5088,6 +5104,35 @@ impl<'mc> InventoryTypeSlotType<'mc> {
     }
 }
 impl<'mc> InventoryType<'mc> {
+    pub const CHEST: InventoryTypeEnum = InventoryTypeEnum::Chest;
+    pub const DISPENSER: InventoryTypeEnum = InventoryTypeEnum::Dispenser;
+    pub const DROPPER: InventoryTypeEnum = InventoryTypeEnum::Dropper;
+    pub const FURNACE: InventoryTypeEnum = InventoryTypeEnum::Furnace;
+    pub const WORKBENCH: InventoryTypeEnum = InventoryTypeEnum::Workbench;
+    pub const CRAFTING: InventoryTypeEnum = InventoryTypeEnum::Crafting;
+    pub const ENCHANTING: InventoryTypeEnum = InventoryTypeEnum::Enchanting;
+    pub const BREWING: InventoryTypeEnum = InventoryTypeEnum::Brewing;
+    pub const PLAYER: InventoryTypeEnum = InventoryTypeEnum::Player;
+    pub const CREATIVE: InventoryTypeEnum = InventoryTypeEnum::Creative;
+    pub const MERCHANT: InventoryTypeEnum = InventoryTypeEnum::Merchant;
+    pub const ENDERCHEST: InventoryTypeEnum = InventoryTypeEnum::EnderChest;
+    pub const ANVIL: InventoryTypeEnum = InventoryTypeEnum::Anvil;
+    pub const SMITHING: InventoryTypeEnum = InventoryTypeEnum::Smithing;
+    pub const BEACON: InventoryTypeEnum = InventoryTypeEnum::Beacon;
+    pub const HOPPER: InventoryTypeEnum = InventoryTypeEnum::Hopper;
+    pub const SHULKERBOX: InventoryTypeEnum = InventoryTypeEnum::ShulkerBox;
+    pub const BARREL: InventoryTypeEnum = InventoryTypeEnum::Barrel;
+    pub const BLASTFURNACE: InventoryTypeEnum = InventoryTypeEnum::BlastFurnace;
+    pub const LECTERN: InventoryTypeEnum = InventoryTypeEnum::Lectern;
+    pub const SMOKER: InventoryTypeEnum = InventoryTypeEnum::Smoker;
+    pub const LOOM: InventoryTypeEnum = InventoryTypeEnum::Loom;
+    pub const CARTOGRAPHY: InventoryTypeEnum = InventoryTypeEnum::Cartography;
+    pub const GRINDSTONE: InventoryTypeEnum = InventoryTypeEnum::Grindstone;
+    pub const STONECUTTER: InventoryTypeEnum = InventoryTypeEnum::Stonecutter;
+    pub const COMPOSTER: InventoryTypeEnum = InventoryTypeEnum::Composter;
+    pub const CHISELEDBOOKSHELF: InventoryTypeEnum = InventoryTypeEnum::ChiseledBookshelf;
+    pub const JUKEBOX: InventoryTypeEnum = InventoryTypeEnum::Jukebox;
+    pub const SMITHINGNEW: InventoryTypeEnum = InventoryTypeEnum::SmithingNew;
     pub fn from_string(str: String) -> std::option::Option<InventoryTypeEnum> {
         match str.as_str() {
             "CHEST" => Some(InventoryTypeEnum::Chest),
@@ -5738,6 +5783,25 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryAction<'mc> {
     }
 }
 impl<'mc> InventoryAction<'mc> {
+    pub const NOTHING: InventoryActionEnum = InventoryActionEnum::Nothing;
+    pub const PICKUPALL: InventoryActionEnum = InventoryActionEnum::PickupAll;
+    pub const PICKUPSOME: InventoryActionEnum = InventoryActionEnum::PickupSome;
+    pub const PICKUPHALF: InventoryActionEnum = InventoryActionEnum::PickupHalf;
+    pub const PICKUPONE: InventoryActionEnum = InventoryActionEnum::PickupOne;
+    pub const PLACEALL: InventoryActionEnum = InventoryActionEnum::PlaceAll;
+    pub const PLACESOME: InventoryActionEnum = InventoryActionEnum::PlaceSome;
+    pub const PLACEONE: InventoryActionEnum = InventoryActionEnum::PlaceOne;
+    pub const SWAPWITHCURSOR: InventoryActionEnum = InventoryActionEnum::SwapWithCursor;
+    pub const DROPALLCURSOR: InventoryActionEnum = InventoryActionEnum::DropAllCursor;
+    pub const DROPONECURSOR: InventoryActionEnum = InventoryActionEnum::DropOneCursor;
+    pub const DROPALLSLOT: InventoryActionEnum = InventoryActionEnum::DropAllSlot;
+    pub const DROPONESLOT: InventoryActionEnum = InventoryActionEnum::DropOneSlot;
+    pub const MOVETOOTHERINVENTORY: InventoryActionEnum = InventoryActionEnum::MoveToOtherInventory;
+    pub const HOTBARMOVEANDREADD: InventoryActionEnum = InventoryActionEnum::HotbarMoveAndReadd;
+    pub const HOTBARSWAP: InventoryActionEnum = InventoryActionEnum::HotbarSwap;
+    pub const CLONESTACK: InventoryActionEnum = InventoryActionEnum::CloneStack;
+    pub const COLLECTTOCURSOR: InventoryActionEnum = InventoryActionEnum::CollectToCursor;
+    pub const UNKNOWN: InventoryActionEnum = InventoryActionEnum::Unknown;
     pub fn from_string(str: String) -> std::option::Option<InventoryActionEnum> {
         match str.as_str() {
             "NOTHING" => Some(InventoryActionEnum::Nothing),

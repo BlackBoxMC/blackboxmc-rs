@@ -129,6 +129,9 @@ impl<'mc> crate::JNIRaw<'mc> for AdvancementDisplayType<'mc> {
     }
 }
 impl<'mc> AdvancementDisplayType<'mc> {
+    pub const TASK: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Task;
+    pub const CHALLENGE: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Challenge;
+    pub const GOAL: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Goal;
     pub fn from_string(str: String) -> std::option::Option<AdvancementDisplayTypeEnum> {
         match str.as_str() {
             "TASK" => Some(AdvancementDisplayTypeEnum::Task),

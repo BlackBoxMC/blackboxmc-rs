@@ -1345,6 +1345,27 @@ impl<'mc> crate::JNIRaw<'mc> for PotionType<'mc> {
     }
 }
 impl<'mc> PotionType<'mc> {
+    pub const UNCRAFTABLE: PotionTypeEnum = PotionTypeEnum::Uncraftable;
+    pub const WATER: PotionTypeEnum = PotionTypeEnum::Water;
+    pub const MUNDANE: PotionTypeEnum = PotionTypeEnum::Mundane;
+    pub const THICK: PotionTypeEnum = PotionTypeEnum::Thick;
+    pub const AWKWARD: PotionTypeEnum = PotionTypeEnum::Awkward;
+    pub const NIGHTVISION: PotionTypeEnum = PotionTypeEnum::NightVision;
+    pub const INVISIBILITY: PotionTypeEnum = PotionTypeEnum::Invisibility;
+    pub const JUMP: PotionTypeEnum = PotionTypeEnum::Jump;
+    pub const FIRERESISTANCE: PotionTypeEnum = PotionTypeEnum::FireResistance;
+    pub const SPEED: PotionTypeEnum = PotionTypeEnum::Speed;
+    pub const SLOWNESS: PotionTypeEnum = PotionTypeEnum::Slowness;
+    pub const WATERBREATHING: PotionTypeEnum = PotionTypeEnum::WaterBreathing;
+    pub const INSTANTHEAL: PotionTypeEnum = PotionTypeEnum::InstantHeal;
+    pub const INSTANTDAMAGE: PotionTypeEnum = PotionTypeEnum::InstantDamage;
+    pub const POISON: PotionTypeEnum = PotionTypeEnum::Poison;
+    pub const REGEN: PotionTypeEnum = PotionTypeEnum::Regen;
+    pub const STRENGTH: PotionTypeEnum = PotionTypeEnum::Strength;
+    pub const WEAKNESS: PotionTypeEnum = PotionTypeEnum::Weakness;
+    pub const LUCK: PotionTypeEnum = PotionTypeEnum::Luck;
+    pub const TURTLEMASTER: PotionTypeEnum = PotionTypeEnum::TurtleMaster;
+    pub const SLOWFALLING: PotionTypeEnum = PotionTypeEnum::SlowFalling;
     pub fn from_string(str: String) -> std::option::Option<PotionTypeEnum> {
         match str.as_str() {
             "UNCRAFTABLE" => Some(PotionTypeEnum::Uncraftable),

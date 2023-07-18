@@ -36,6 +36,10 @@ impl<'mc> crate::JNIRaw<'mc> for StructureRotation<'mc> {
     }
 }
 impl<'mc> StructureRotation<'mc> {
+    pub const NONE: StructureRotationEnum = StructureRotationEnum::None;
+    pub const CLOCKWISE90: StructureRotationEnum = StructureRotationEnum::Clockwise90;
+    pub const CLOCKWISE180: StructureRotationEnum = StructureRotationEnum::Clockwise180;
+    pub const COUNTERCLOCKWISE90: StructureRotationEnum = StructureRotationEnum::Counterclockwise90;
     pub fn from_string(str: String) -> std::option::Option<StructureRotationEnum> {
         match str.as_str() {
             "NONE" => Some(StructureRotationEnum::None),
@@ -113,6 +117,10 @@ impl<'mc> crate::JNIRaw<'mc> for UsageMode<'mc> {
     }
 }
 impl<'mc> UsageMode<'mc> {
+    pub const SAVE: UsageModeEnum = UsageModeEnum::Save;
+    pub const LOAD: UsageModeEnum = UsageModeEnum::Load;
+    pub const CORNER: UsageModeEnum = UsageModeEnum::Corner;
+    pub const DATA: UsageModeEnum = UsageModeEnum::Data;
     pub fn from_string(str: String) -> std::option::Option<UsageModeEnum> {
         match str.as_str() {
             "SAVE" => Some(UsageModeEnum::Save),
@@ -186,6 +194,9 @@ impl<'mc> crate::JNIRaw<'mc> for Mirror<'mc> {
     }
 }
 impl<'mc> Mirror<'mc> {
+    pub const NONE: MirrorEnum = MirrorEnum::None;
+    pub const LEFTRIGHT: MirrorEnum = MirrorEnum::LeftRight;
+    pub const FRONTBACK: MirrorEnum = MirrorEnum::FrontBack;
     pub fn from_string(str: String) -> std::option::Option<MirrorEnum> {
         match str.as_str() {
             "NONE" => Some(MirrorEnum::None),

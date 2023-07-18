@@ -32,6 +32,8 @@ impl<'mc> crate::JNIRaw<'mc> for PluginChannelDirection<'mc> {
     }
 }
 impl<'mc> PluginChannelDirection<'mc> {
+    pub const INCOMING: PluginChannelDirectionEnum = PluginChannelDirectionEnum::Incoming;
+    pub const OUTGOING: PluginChannelDirectionEnum = PluginChannelDirectionEnum::Outgoing;
     pub fn from_string(str: String) -> std::option::Option<PluginChannelDirectionEnum> {
         match str.as_str() {
             "INCOMING" => Some(PluginChannelDirectionEnum::Incoming),

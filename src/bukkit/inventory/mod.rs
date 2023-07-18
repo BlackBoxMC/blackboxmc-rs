@@ -3592,6 +3592,8 @@ impl<'mc> crate::JNIRaw<'mc> for MainHand<'mc> {
     }
 }
 impl<'mc> MainHand<'mc> {
+    pub const LEFT: MainHandEnum = MainHandEnum::Left;
+    pub const RIGHT: MainHandEnum = MainHandEnum::Right;
     pub fn from_string(str: String) -> std::option::Option<MainHandEnum> {
         match str.as_str() {
             "LEFT" => Some(MainHandEnum::Left),
@@ -3673,6 +3675,14 @@ impl<'mc> crate::JNIRaw<'mc> for ItemFlag<'mc> {
     }
 }
 impl<'mc> ItemFlag<'mc> {
+    pub const HIDEENCHANTS: ItemFlagEnum = ItemFlagEnum::HideEnchants;
+    pub const HIDEATTRIBUTES: ItemFlagEnum = ItemFlagEnum::HideAttributes;
+    pub const HIDEUNBREAKABLE: ItemFlagEnum = ItemFlagEnum::HideUnbreakable;
+    pub const HIDEDESTROYS: ItemFlagEnum = ItemFlagEnum::HideDestroys;
+    pub const HIDEPLACEDON: ItemFlagEnum = ItemFlagEnum::HidePlacedOn;
+    pub const HIDEPOTIONEFFECTS: ItemFlagEnum = ItemFlagEnum::HidePotionEffects;
+    pub const HIDEDYE: ItemFlagEnum = ItemFlagEnum::HideDye;
+    pub const HIDEARMORTRIM: ItemFlagEnum = ItemFlagEnum::HideArmorTrim;
     pub fn from_string(str: String) -> std::option::Option<ItemFlagEnum> {
         match str.as_str() {
             "HIDE_ENCHANTS" => Some(ItemFlagEnum::HideEnchants),
@@ -5478,6 +5488,12 @@ impl<'mc> crate::JNIRaw<'mc> for EquipmentSlot<'mc> {
     }
 }
 impl<'mc> EquipmentSlot<'mc> {
+    pub const HAND: EquipmentSlotEnum = EquipmentSlotEnum::Hand;
+    pub const OFFHAND: EquipmentSlotEnum = EquipmentSlotEnum::OffHand;
+    pub const FEET: EquipmentSlotEnum = EquipmentSlotEnum::Feet;
+    pub const LEGS: EquipmentSlotEnum = EquipmentSlotEnum::Legs;
+    pub const CHEST: EquipmentSlotEnum = EquipmentSlotEnum::Chest;
+    pub const HEAD: EquipmentSlotEnum = EquipmentSlotEnum::Head;
     pub fn from_string(str: String) -> std::option::Option<EquipmentSlotEnum> {
         match str.as_str() {
             "HAND" => Some(EquipmentSlotEnum::Hand),
@@ -10304,6 +10320,15 @@ impl<'mc> crate::JNIRaw<'mc> for CreativeCategory<'mc> {
     }
 }
 impl<'mc> CreativeCategory<'mc> {
+    pub const BUILDINGBLOCKS: CreativeCategoryEnum = CreativeCategoryEnum::BuildingBlocks;
+    pub const DECORATIONS: CreativeCategoryEnum = CreativeCategoryEnum::Decorations;
+    pub const REDSTONE: CreativeCategoryEnum = CreativeCategoryEnum::Redstone;
+    pub const TRANSPORTATION: CreativeCategoryEnum = CreativeCategoryEnum::Transportation;
+    pub const MISC: CreativeCategoryEnum = CreativeCategoryEnum::Misc;
+    pub const FOOD: CreativeCategoryEnum = CreativeCategoryEnum::Food;
+    pub const TOOLS: CreativeCategoryEnum = CreativeCategoryEnum::Tools;
+    pub const COMBAT: CreativeCategoryEnum = CreativeCategoryEnum::Combat;
+    pub const BREWING: CreativeCategoryEnum = CreativeCategoryEnum::Brewing;
     pub fn from_string(str: String) -> std::option::Option<CreativeCategoryEnum> {
         match str.as_str() {
             "BUILDING_BLOCKS" => Some(CreativeCategoryEnum::BuildingBlocks),

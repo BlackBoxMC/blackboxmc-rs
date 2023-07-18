@@ -637,6 +637,12 @@ impl<'mc> crate::JNIRaw<'mc> for EventPriority<'mc> {
     }
 }
 impl<'mc> EventPriority<'mc> {
+    pub const LOWEST: EventPriorityEnum = EventPriorityEnum::Lowest;
+    pub const LOW: EventPriorityEnum = EventPriorityEnum::Low;
+    pub const NORMAL: EventPriorityEnum = EventPriorityEnum::Normal;
+    pub const HIGH: EventPriorityEnum = EventPriorityEnum::High;
+    pub const HIGHEST: EventPriorityEnum = EventPriorityEnum::Highest;
+    pub const MONITOR: EventPriorityEnum = EventPriorityEnum::Monitor;
     pub fn from_string(str: String) -> std::option::Option<EventPriorityEnum> {
         match str.as_str() {
             "LOWEST" => Some(EventPriorityEnum::Lowest),

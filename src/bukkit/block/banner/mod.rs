@@ -110,6 +110,47 @@ impl<'mc> crate::JNIRaw<'mc> for PatternType<'mc> {
     }
 }
 impl<'mc> PatternType<'mc> {
+    pub const BASE: PatternTypeEnum = PatternTypeEnum::Base;
+    pub const SQUAREBOTTOMLEFT: PatternTypeEnum = PatternTypeEnum::SquareBottomLeft;
+    pub const SQUAREBOTTOMRIGHT: PatternTypeEnum = PatternTypeEnum::SquareBottomRight;
+    pub const SQUARETOPLEFT: PatternTypeEnum = PatternTypeEnum::SquareTopLeft;
+    pub const SQUARETOPRIGHT: PatternTypeEnum = PatternTypeEnum::SquareTopRight;
+    pub const STRIPEBOTTOM: PatternTypeEnum = PatternTypeEnum::StripeBottom;
+    pub const STRIPETOP: PatternTypeEnum = PatternTypeEnum::StripeTop;
+    pub const STRIPELEFT: PatternTypeEnum = PatternTypeEnum::StripeLeft;
+    pub const STRIPERIGHT: PatternTypeEnum = PatternTypeEnum::StripeRight;
+    pub const STRIPECENTER: PatternTypeEnum = PatternTypeEnum::StripeCenter;
+    pub const STRIPEMIDDLE: PatternTypeEnum = PatternTypeEnum::StripeMiddle;
+    pub const STRIPEDOWNRIGHT: PatternTypeEnum = PatternTypeEnum::StripeDownright;
+    pub const STRIPEDOWNLEFT: PatternTypeEnum = PatternTypeEnum::StripeDownleft;
+    pub const STRIPESMALL: PatternTypeEnum = PatternTypeEnum::StripeSmall;
+    pub const CROSS: PatternTypeEnum = PatternTypeEnum::Cross;
+    pub const STRAIGHTCROSS: PatternTypeEnum = PatternTypeEnum::StraightCross;
+    pub const TRIANGLEBOTTOM: PatternTypeEnum = PatternTypeEnum::TriangleBottom;
+    pub const TRIANGLETOP: PatternTypeEnum = PatternTypeEnum::TriangleTop;
+    pub const TRIANGLESBOTTOM: PatternTypeEnum = PatternTypeEnum::TrianglesBottom;
+    pub const TRIANGLESTOP: PatternTypeEnum = PatternTypeEnum::TrianglesTop;
+    pub const DIAGONALLEFT: PatternTypeEnum = PatternTypeEnum::DiagonalLeft;
+    pub const DIAGONALRIGHT: PatternTypeEnum = PatternTypeEnum::DiagonalRight;
+    pub const DIAGONALLEFTMIRROR: PatternTypeEnum = PatternTypeEnum::DiagonalLeftMirror;
+    pub const DIAGONALRIGHTMIRROR: PatternTypeEnum = PatternTypeEnum::DiagonalRightMirror;
+    pub const CIRCLEMIDDLE: PatternTypeEnum = PatternTypeEnum::CircleMiddle;
+    pub const RHOMBUSMIDDLE: PatternTypeEnum = PatternTypeEnum::RhombusMiddle;
+    pub const HALFVERTICAL: PatternTypeEnum = PatternTypeEnum::HalfVertical;
+    pub const HALFHORIZONTAL: PatternTypeEnum = PatternTypeEnum::HalfHorizontal;
+    pub const HALFVERTICALMIRROR: PatternTypeEnum = PatternTypeEnum::HalfVerticalMirror;
+    pub const HALFHORIZONTALMIRROR: PatternTypeEnum = PatternTypeEnum::HalfHorizontalMirror;
+    pub const BORDER: PatternTypeEnum = PatternTypeEnum::Border;
+    pub const CURLYBORDER: PatternTypeEnum = PatternTypeEnum::CurlyBorder;
+    pub const CREEPER: PatternTypeEnum = PatternTypeEnum::Creeper;
+    pub const GRADIENT: PatternTypeEnum = PatternTypeEnum::Gradient;
+    pub const GRADIENTUP: PatternTypeEnum = PatternTypeEnum::GradientUp;
+    pub const BRICKS: PatternTypeEnum = PatternTypeEnum::Bricks;
+    pub const SKULL: PatternTypeEnum = PatternTypeEnum::Skull;
+    pub const FLOWER: PatternTypeEnum = PatternTypeEnum::Flower;
+    pub const MOJANG: PatternTypeEnum = PatternTypeEnum::Mojang;
+    pub const GLOBE: PatternTypeEnum = PatternTypeEnum::Globe;
+    pub const PIGLIN: PatternTypeEnum = PatternTypeEnum::Piglin;
     pub fn from_string(str: String) -> std::option::Option<PatternTypeEnum> {
         match str.as_str() {
             "BASE" => Some(PatternTypeEnum::Base),

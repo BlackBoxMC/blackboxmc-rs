@@ -390,6 +390,10 @@ impl<'mc> crate::JNIRaw<'mc> for NameTagVisibility<'mc> {
     }
 }
 impl<'mc> NameTagVisibility<'mc> {
+    pub const ALWAYS: NameTagVisibilityEnum = NameTagVisibilityEnum::Always;
+    pub const NEVER: NameTagVisibilityEnum = NameTagVisibilityEnum::Never;
+    pub const HIDEFOROTHERTEAMS: NameTagVisibilityEnum = NameTagVisibilityEnum::HideForOtherTeams;
+    pub const HIDEFOROWNTEAM: NameTagVisibilityEnum = NameTagVisibilityEnum::HideForOwnTeam;
     pub fn from_string(str: String) -> std::option::Option<NameTagVisibilityEnum> {
         match str.as_str() {
             "ALWAYS" => Some(NameTagVisibilityEnum::Always),
@@ -461,6 +465,8 @@ impl<'mc> crate::JNIRaw<'mc> for RenderType<'mc> {
     }
 }
 impl<'mc> RenderType<'mc> {
+    pub const INTEGER: RenderTypeEnum = RenderTypeEnum::Integer;
+    pub const HEARTS: RenderTypeEnum = RenderTypeEnum::Hearts;
     pub fn from_string(str: String) -> std::option::Option<RenderTypeEnum> {
         match str.as_str() {
             "INTEGER" => Some(RenderTypeEnum::Integer),
@@ -1018,6 +1024,25 @@ impl<'mc> crate::JNIRaw<'mc> for DisplaySlot<'mc> {
     }
 }
 impl<'mc> DisplaySlot<'mc> {
+    pub const BELOWNAME: DisplaySlotEnum = DisplaySlotEnum::BelowName;
+    pub const PLAYERLIST: DisplaySlotEnum = DisplaySlotEnum::PlayerList;
+    pub const SIDEBAR: DisplaySlotEnum = DisplaySlotEnum::Sidebar;
+    pub const SIDEBARBLACK: DisplaySlotEnum = DisplaySlotEnum::SidebarBlack;
+    pub const SIDEBARDARKBLUE: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkBlue;
+    pub const SIDEBARDARKGREEN: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkGreen;
+    pub const SIDEBARDARKAQUA: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkAqua;
+    pub const SIDEBARDARKRED: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkRed;
+    pub const SIDEBARDARKPURPLE: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkPurple;
+    pub const SIDEBARGOLD: DisplaySlotEnum = DisplaySlotEnum::SidebarGold;
+    pub const SIDEBARGRAY: DisplaySlotEnum = DisplaySlotEnum::SidebarGray;
+    pub const SIDEBARDARKGRAY: DisplaySlotEnum = DisplaySlotEnum::SidebarDarkGray;
+    pub const SIDEBARBLUE: DisplaySlotEnum = DisplaySlotEnum::SidebarBlue;
+    pub const SIDEBARGREEN: DisplaySlotEnum = DisplaySlotEnum::SidebarGreen;
+    pub const SIDEBARAQUA: DisplaySlotEnum = DisplaySlotEnum::SidebarAqua;
+    pub const SIDEBARRED: DisplaySlotEnum = DisplaySlotEnum::SidebarRed;
+    pub const SIDEBARLIGHTPURPLE: DisplaySlotEnum = DisplaySlotEnum::SidebarLightPurple;
+    pub const SIDEBARYELLOW: DisplaySlotEnum = DisplaySlotEnum::SidebarYellow;
+    pub const SIDEBARWHITE: DisplaySlotEnum = DisplaySlotEnum::SidebarWhite;
     pub fn from_string(str: String) -> std::option::Option<DisplaySlotEnum> {
         match str.as_str() {
             "BELOW_NAME" => Some(DisplaySlotEnum::BelowName),

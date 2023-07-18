@@ -9225,6 +9225,8 @@ impl<'mc> crate::JNIRaw<'mc> for PlayerAnimationType<'mc> {
     }
 }
 impl<'mc> PlayerAnimationType<'mc> {
+    pub const ARMSWING: PlayerAnimationTypeEnum = PlayerAnimationTypeEnum::ArmSwing;
+    pub const OFFARMSWING: PlayerAnimationTypeEnum = PlayerAnimationTypeEnum::OffArmSwing;
     pub fn from_string(str: String) -> std::option::Option<PlayerAnimationTypeEnum> {
         match str.as_str() {
             "ARM_SWING" => Some(PlayerAnimationTypeEnum::ArmSwing),

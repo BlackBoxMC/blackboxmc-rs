@@ -671,6 +671,9 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         impl_signature.append("impl<'mc> "+name+"<'mc> {")
 
     if is_enum and not is_trait:
+        for (v,val_proper) in variants:
+            impl_signature.append("pub const "+val_proper.upper()+": "+name+"Enum = "+name+"Enum::"+val_proper+";")
+            
         impl_signature.append("pub fn from_string(str: String) -> std::option::Option<"+name+"Enum> {\nmatch str.as_str() {")
         for (v,val_proper) in variants:
             impl_signature.append("\""+v+"\" => Some("+name+"Enum::"+val_proper+"),")

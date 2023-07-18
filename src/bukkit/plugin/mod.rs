@@ -472,6 +472,8 @@ impl<'mc> crate::JNIRaw<'mc> for PluginLoadOrder<'mc> {
     }
 }
 impl<'mc> PluginLoadOrder<'mc> {
+    pub const STARTUP: PluginLoadOrderEnum = PluginLoadOrderEnum::Startup;
+    pub const POSTWORLD: PluginLoadOrderEnum = PluginLoadOrderEnum::Postworld;
     pub fn from_string(str: String) -> std::option::Option<PluginLoadOrderEnum> {
         match str.as_str() {
             "STARTUP" => Some(PluginLoadOrderEnum::Startup),

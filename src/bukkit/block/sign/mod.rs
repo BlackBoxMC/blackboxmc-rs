@@ -32,6 +32,8 @@ impl<'mc> crate::JNIRaw<'mc> for Side<'mc> {
     }
 }
 impl<'mc> Side<'mc> {
+    pub const FRONT: SideEnum = SideEnum::Front;
+    pub const BACK: SideEnum = SideEnum::Back;
     pub fn from_string(str: String) -> std::option::Option<SideEnum> {
         match str.as_str() {
             "FRONT" => Some(SideEnum::Front),
