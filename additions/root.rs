@@ -83,7 +83,7 @@ impl<'mc> SharedJNIEnv<'mc> {
             .call_static_method(class, name, sig, args)?)
     }
 
-    pub(crate) fn clone(&self) -> Self {
+    pub fn clone(&self) -> Self {
         Self {
             jni: RefCell::new(
                 // The reason it's unsafe is actually OK for this use case. The "local reference frame" is a discrete feature of the library that is only ever used if you instantiate the JVM from the Rust program itself, which we never do. Since the JNI pointer lasts for the lifetime of the program, we can safely clone it.
