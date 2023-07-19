@@ -153,10 +153,10 @@ impl<'mc> MushroomBlockTexture<'mc> {
     }
     pub fn get_cap_by_face(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/material/types/MushroomBlockTexture")?;
         let res = jni.call_static_method(
             cls,

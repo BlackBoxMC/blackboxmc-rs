@@ -626,9 +626,9 @@ impl<'mc> Objective<'mc> {
     }
     pub fn set_display_slot(
         &mut self,
-        arg0: crate::bukkit::scoreboard::DisplaySlot<'mc>,
+        arg0: impl Into<crate::bukkit::scoreboard::DisplaySlot<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplaySlot",
@@ -666,9 +666,9 @@ impl<'mc> Objective<'mc> {
     }
     pub fn set_render_type(
         &mut self,
-        arg0: crate::bukkit::scoreboard::RenderType<'mc>,
+        arg0: impl Into<crate::bukkit::scoreboard::RenderType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setRenderType",
@@ -865,9 +865,9 @@ impl<'mc> Scoreboard<'mc> {
     }
     pub fn get_player_team(
         &mut self,
-        arg0: crate::bukkit::OfflinePlayer<'mc>,
+        arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
     ) -> Result<crate::bukkit::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPlayerTeam",
@@ -937,9 +937,9 @@ impl<'mc> Scoreboard<'mc> {
     }
     pub fn clear_slot(
         &mut self,
-        arg0: crate::bukkit::scoreboard::DisplaySlot<'mc>,
+        arg0: impl Into<crate::bukkit::scoreboard::DisplaySlot<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "clearSlot",
@@ -1199,9 +1199,9 @@ impl<'mc> Team<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::ChatColor<'mc>,
+        arg0: impl Into<crate::bukkit::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -1407,9 +1407,9 @@ impl<'mc> Team<'mc> {
     }
     pub fn set_name_tag_visibility(
         &mut self,
-        arg0: crate::bukkit::scoreboard::NameTagVisibility<'mc>,
+        arg0: impl Into<crate::bukkit::scoreboard::NameTagVisibility<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setNameTagVisibility",
@@ -1436,9 +1436,9 @@ impl<'mc> Team<'mc> {
     }
     pub fn add_player(
         &mut self,
-        arg0: crate::bukkit::OfflinePlayer<'mc>,
+        arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addPlayer",
@@ -1449,9 +1449,9 @@ impl<'mc> Team<'mc> {
     }
     pub fn remove_player(
         &mut self,
-        arg0: crate::bukkit::OfflinePlayer<'mc>,
+        arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePlayer",
@@ -1462,9 +1462,9 @@ impl<'mc> Team<'mc> {
     }
     pub fn has_player(
         &mut self,
-        arg0: crate::bukkit::OfflinePlayer<'mc>,
+        arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPlayer",
@@ -1485,9 +1485,9 @@ impl<'mc> Team<'mc> {
     }
     pub fn get_option(
         &mut self,
-        arg0: crate::bukkit::scoreboard::TeamOption<'mc>,
+        arg0: impl Into<crate::bukkit::scoreboard::TeamOption<'mc>>,
     ) -> Result<crate::bukkit::scoreboard::TeamOptionStatus<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getOption",
@@ -1503,11 +1503,11 @@ impl<'mc> Team<'mc> {
     }
     pub fn set_option(
         &mut self,
-        arg0: crate::bukkit::scoreboard::TeamOption<'mc>,
-        arg1: crate::bukkit::scoreboard::TeamOptionStatus<'mc>,
+        arg0: impl Into<crate::bukkit::scoreboard::TeamOption<'mc>>,
+        arg1: impl Into<crate::bukkit::scoreboard::TeamOptionStatus<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setOption",

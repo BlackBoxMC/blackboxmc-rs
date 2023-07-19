@@ -15,12 +15,12 @@ impl<'mc> crate::JNIRaw<'mc> for ArmorTrim<'mc> {
 impl<'mc> ArmorTrim<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::inventory::meta::trim::TrimMaterial<'mc>,
-        arg1: crate::bukkit::inventory::meta::trim::TrimPattern<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::meta::trim::TrimMaterial<'mc>>,
+        arg1: impl Into<crate::bukkit::inventory::meta::trim::TrimPattern<'mc>>,
     ) -> Result<crate::bukkit::inventory::meta::trim::ArmorTrim<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/inventory/meta/trim/ArmorTrim")?;
         let res = jni.new_object(cls,
 "(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
@@ -205,6 +205,11 @@ impl<'mc> crate::JNIRaw<'mc> for TrimMaterial<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for TrimMaterial<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements TrimPattern. Needed for returning it from Java.
 pub struct TrimPattern<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -255,5 +260,10 @@ impl<'mc> crate::JNIRaw<'mc> for TrimPattern<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for TrimPattern<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

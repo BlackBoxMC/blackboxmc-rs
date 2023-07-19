@@ -69,7 +69,8 @@ def snake_case_to_camel_case(string):
 
 def func_signature_format(ty, increment, returning, options_start_at=-1):
     thing = ""
-    internal = ty["type_name_resolved"].startswith("crate") or ty["type_name_resolved"].startswith("bukkit") or ty["type_name_resolved"].startswith("jni") or ty["type_name_resolved"].startswith("blackbox")
+    internal_do_into = ty["type_name_resolved"].startswith("crate") or ty["type_name_resolved"].startswith("bukkit") or ty["type_name_resolved"].startswith("blackbox")
+    internal = internal_do_into or ty["type_name_resolved"].startswith("jni")
     generic_letters = []
     generic_args = []
     if(ty["type_name_lhand"] == "" and not returning):
@@ -90,21 +91,34 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
             generic_args.append(letter+": crate::JNIRaw<'mc> + "+old.replace("&dyn","")+"<'mc>")
 
         if ty["is_array"]:
-            thing += "Vec<"+ty["type_name_resolved"]
+            thing += "Vec<"
+            if internal_do_into and not returning:
+                thing += "impl Into<"
+            thing += ty["type_name_resolved"]
             if(internal):
                 thing += "<'mc>"
+            if internal_do_into and not returning:
+                thing += ">"
             thing += ">"
         else:
+            if internal_do_into and not returning:
+                thing += "impl Into<"
             if len(ty["generics"]) >= 1:
                 thing += ty["type_name_alone"]+"<"
                 j = []
                 for g in ty["generics"]:
                     if len(g) >= 2:
                         if g.startswith("crate") or g.startswith("bukkit") or g.startswith("jni") or g.startswith("blackbox"):
+                            k = ""
+                            if not returning and not g.startswith("jni"):
+                                k += "impl Into<"
                             if not g.endswith("<'mc>"):
-                                j.append(g+"<'mc>")
+                                k += g+"<'mc>"
                             else:
-                                j.append(g)
+                                k += g
+                            if not returning and not g.startswith("jni"):
+                                k += ">"
+                            j.append(k)
                         else:
                             j.append(g)
                     else:
@@ -115,9 +129,12 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
                 thing += ty["type_name_resolved"]
                 if(internal):
                     thing += "<'mc>"
+            if internal_do_into and not returning:
+                thing += ">"
         if(options_start_at != -1):
             if increment >= options_start_at:
                 thing += ">"
+
     return {
         "result": thing,
         "generic_letters": generic_letters,
@@ -147,7 +164,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
     if(ty.startswith("crate") or ty.startswith("blackbox")): # for internal types...
         # get the original object.
-        fcall = ".1.clone()"
+        fcall = ".into().1.clone()"
         if type["type_name_resolved"].startswith("&dyn"):
             fcall = ".jni_object().clone()"
 
@@ -578,7 +595,10 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                     type_name_resolved = ty.replace(
                         crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
             else:
-                print("Unbound std class:",ty,"\t\t",method["method"]["name"])
+                if method is None:
+                    print("Unbound std class:",ty,"\t\t",ty)
+                else:
+                    print("Unbound std class:",ty,"\t\t",method["method"]["name"])
 
     if type_alone == "":
         type_alone = type_name_resolved
@@ -596,11 +616,13 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     if type_name_lhand in reserved_words:
         type_name_lhand = "arg_"+type_name_lhand
 
-    if "options_start_at" in method:
-        options_start_at = method["options_start_at"]
+    if method is not None:
+        if "options_start_at" in method:
+            options_start_at = method["options_start_at"]
+        else:
+            options_start_at = -1
     else:
         options_start_at = -1
-
     package_name = ".".join(filter(lambda f: f.islower(), type_name_original.split(".")))
     return {
         "type_name_resolved": type_name_resolved,
@@ -1069,11 +1091,6 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("}")
-        #file_cache[mod_path].append("impl Drop for "+name+"<'_> {")
-        #file_cache[mod_path].append("    fn drop(&mut self) {")
-        #file_cache[mod_path].append("        std::mem::forget(&self.2)")
-        #file_cache[mod_path].append("    }")
-        #file_cache[mod_path].append("}")
 
         if "classes" in val:
             for cl in val["classes"]:
@@ -1140,6 +1157,20 @@ def parse_classes(library, val, classes):
 
         file_cache[mod_path].append("}")
 
+    if not val["isEnum"]:
+        if "interfaces" in val:
+            for inter in val["interfaces"]:
+                if inter["packageName"].startswith("java"):
+                    continue
+                inter_resolved = java_type_to_rust("", inter["packageName"]+"."+inter["name"], None, 0, library, False)
+                    
+                if inter_resolved is None:
+                    continue
+                file_cache[mod_path].append(" impl<'mc> Into<"+inter_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc> {\n"+
+                                        "   fn into(self) -> "+inter_resolved["type_name_resolved"]+"<'mc> {\n"+
+                                        "       "+inter_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+
+                                        "   }\n"+
+                                        "}")
 
 # what we first want to do is collect any interfaces.
 for library in libraries:

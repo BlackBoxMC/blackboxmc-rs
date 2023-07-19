@@ -144,9 +144,9 @@ impl<'mc> SignSide<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -188,5 +188,10 @@ impl<'mc> crate::JNIRaw<'mc> for SignSide<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Colorable<'mc>> for SignSide<'mc> {
+    fn into(self) -> crate::bukkit::material::Colorable<'mc> {
+        crate::bukkit::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

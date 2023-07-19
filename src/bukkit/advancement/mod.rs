@@ -395,3 +395,8 @@ impl<'mc> crate::JNIRaw<'mc> for Advancement<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for Advancement<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}

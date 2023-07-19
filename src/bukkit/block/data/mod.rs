@@ -67,9 +67,9 @@ impl<'mc> Hatchable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -80,9 +80,9 @@ impl<'mc> Hatchable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -98,9 +98,9 @@ impl<'mc> Hatchable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -187,9 +187,9 @@ impl<'mc> Hatchable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -227,11 +227,11 @@ impl<'mc> Hatchable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -272,9 +272,9 @@ impl<'mc> Hatchable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -307,6 +307,11 @@ impl<'mc> crate::JNIRaw<'mc> for Hatchable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Hatchable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Lightable. Needed for returning it from Java.
@@ -371,9 +376,9 @@ impl<'mc> Lightable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -384,9 +389,9 @@ impl<'mc> Lightable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -402,9 +407,9 @@ impl<'mc> Lightable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -491,9 +496,9 @@ impl<'mc> Lightable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -531,11 +536,11 @@ impl<'mc> Lightable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -576,9 +581,9 @@ impl<'mc> Lightable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -611,6 +616,11 @@ impl<'mc> crate::JNIRaw<'mc> for Lightable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Lightable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Orientable. Needed for returning it from Java.
@@ -668,9 +678,9 @@ impl<'mc> Orientable<'mc> {
     }
     pub fn set_axis(
         &mut self,
-        arg0: crate::bukkit::Axis<'mc>,
+        arg0: impl Into<crate::bukkit::Axis<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setAxis",
@@ -697,9 +707,9 @@ impl<'mc> Orientable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -710,9 +720,9 @@ impl<'mc> Orientable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -728,9 +738,9 @@ impl<'mc> Orientable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -817,9 +827,9 @@ impl<'mc> Orientable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -857,11 +867,11 @@ impl<'mc> Orientable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -902,9 +912,9 @@ impl<'mc> Orientable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -937,6 +947,11 @@ impl<'mc> crate::JNIRaw<'mc> for Orientable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Orientable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements FaceAttachable. Needed for returning it from Java.
@@ -990,9 +1005,9 @@ impl<'mc> FaceAttachable<'mc> {
     }
     pub fn set_attached_face(
         &mut self,
-        arg0: crate::bukkit::block::data::FaceAttachableAttachedFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::FaceAttachableAttachedFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setAttachedFace",
@@ -1019,9 +1034,9 @@ impl<'mc> FaceAttachable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -1032,9 +1047,9 @@ impl<'mc> FaceAttachable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -1050,9 +1065,9 @@ impl<'mc> FaceAttachable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -1139,9 +1154,9 @@ impl<'mc> FaceAttachable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -1179,11 +1194,11 @@ impl<'mc> FaceAttachable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -1224,9 +1239,9 @@ impl<'mc> FaceAttachable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -1259,6 +1274,11 @@ impl<'mc> crate::JNIRaw<'mc> for FaceAttachable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for FaceAttachable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Powerable. Needed for returning it from Java.
@@ -1323,9 +1343,9 @@ impl<'mc> Powerable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -1336,9 +1356,9 @@ impl<'mc> Powerable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -1354,9 +1374,9 @@ impl<'mc> Powerable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -1443,9 +1463,9 @@ impl<'mc> Powerable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -1483,11 +1503,11 @@ impl<'mc> Powerable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -1528,9 +1548,9 @@ impl<'mc> Powerable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -1563,6 +1583,11 @@ impl<'mc> crate::JNIRaw<'mc> for Powerable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Powerable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct FaceAttachableAttachedFace<'mc>(
@@ -1780,9 +1805,9 @@ impl<'mc> Levelled<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -1793,9 +1818,9 @@ impl<'mc> Levelled<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -1811,9 +1836,9 @@ impl<'mc> Levelled<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -1900,9 +1925,9 @@ impl<'mc> Levelled<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -1940,11 +1965,11 @@ impl<'mc> Levelled<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -1985,9 +2010,9 @@ impl<'mc> Levelled<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -2020,6 +2045,11 @@ impl<'mc> crate::JNIRaw<'mc> for Levelled<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Levelled<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Ageable. Needed for returning it from Java.
@@ -2090,9 +2120,9 @@ impl<'mc> Ageable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -2103,9 +2133,9 @@ impl<'mc> Ageable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -2121,9 +2151,9 @@ impl<'mc> Ageable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -2210,9 +2240,9 @@ impl<'mc> Ageable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -2250,11 +2280,11 @@ impl<'mc> Ageable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -2295,9 +2325,9 @@ impl<'mc> Ageable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -2332,6 +2362,11 @@ impl<'mc> crate::JNIRaw<'mc> for Ageable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Ageable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements MultipleFacing. Needed for returning it from Java.
 pub struct MultipleFacing<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -2364,10 +2399,10 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn set_face(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2382,9 +2417,9 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn has_face(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasFace",
@@ -2411,9 +2446,9 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -2424,9 +2459,9 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -2442,9 +2477,9 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -2531,9 +2566,9 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -2571,11 +2606,11 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -2616,9 +2651,9 @@ impl<'mc> MultipleFacing<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -2651,6 +2686,11 @@ impl<'mc> crate::JNIRaw<'mc> for MultipleFacing<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for MultipleFacing<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct RailShape<'mc>(
@@ -2859,9 +2899,9 @@ impl<'mc> Snowable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -2872,9 +2912,9 @@ impl<'mc> Snowable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -2890,9 +2930,9 @@ impl<'mc> Snowable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -2979,9 +3019,9 @@ impl<'mc> Snowable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -3019,11 +3059,11 @@ impl<'mc> Snowable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -3064,9 +3104,9 @@ impl<'mc> Snowable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -3099,6 +3139,11 @@ impl<'mc> crate::JNIRaw<'mc> for Snowable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Snowable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Directional. Needed for returning it from Java.
@@ -3158,9 +3203,9 @@ impl<'mc> Directional<'mc> {
     }
     pub fn set_facing(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacing",
@@ -3187,9 +3232,9 @@ impl<'mc> Directional<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -3200,9 +3245,9 @@ impl<'mc> Directional<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -3218,9 +3263,9 @@ impl<'mc> Directional<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -3307,9 +3352,9 @@ impl<'mc> Directional<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -3347,11 +3392,11 @@ impl<'mc> Directional<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -3392,9 +3437,9 @@ impl<'mc> Directional<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -3427,6 +3472,11 @@ impl<'mc> crate::JNIRaw<'mc> for Directional<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Directional<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Openable. Needed for returning it from Java.
@@ -3491,9 +3541,9 @@ impl<'mc> Openable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -3504,9 +3554,9 @@ impl<'mc> Openable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -3522,9 +3572,9 @@ impl<'mc> Openable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -3611,9 +3661,9 @@ impl<'mc> Openable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -3651,11 +3701,11 @@ impl<'mc> Openable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -3696,9 +3746,9 @@ impl<'mc> Openable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -3731,6 +3781,11 @@ impl<'mc> crate::JNIRaw<'mc> for Openable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Openable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Rotatable. Needed for returning it from Java.
@@ -3790,9 +3845,9 @@ impl<'mc> Rotatable<'mc> {
     }
     pub fn set_rotation(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setRotation",
@@ -3819,9 +3874,9 @@ impl<'mc> Rotatable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -3832,9 +3887,9 @@ impl<'mc> Rotatable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -3850,9 +3905,9 @@ impl<'mc> Rotatable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -3939,9 +3994,9 @@ impl<'mc> Rotatable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -3979,11 +4034,11 @@ impl<'mc> Rotatable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -4024,9 +4079,9 @@ impl<'mc> Rotatable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -4059,6 +4114,11 @@ impl<'mc> crate::JNIRaw<'mc> for Rotatable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Rotatable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Hangable. Needed for returning it from Java.
@@ -4123,9 +4183,9 @@ impl<'mc> Hangable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -4136,9 +4196,9 @@ impl<'mc> Hangable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -4154,9 +4214,9 @@ impl<'mc> Hangable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -4243,9 +4303,9 @@ impl<'mc> Hangable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -4283,11 +4343,11 @@ impl<'mc> Hangable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -4328,9 +4388,9 @@ impl<'mc> Hangable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -4363,6 +4423,11 @@ impl<'mc> crate::JNIRaw<'mc> for Hangable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Hangable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Rail. Needed for returning it from Java.
@@ -4411,9 +4476,9 @@ impl<'mc> Rail<'mc> {
     }
     pub fn set_shape(
         &mut self,
-        arg0: crate::bukkit::block::data::RailShape<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::RailShape<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setShape",
@@ -4456,9 +4521,9 @@ impl<'mc> Rail<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -4469,9 +4534,9 @@ impl<'mc> Rail<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -4487,9 +4552,9 @@ impl<'mc> Rail<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -4576,9 +4641,9 @@ impl<'mc> Rail<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -4616,11 +4681,11 @@ impl<'mc> Rail<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -4661,9 +4726,9 @@ impl<'mc> Rail<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -4696,6 +4761,11 @@ impl<'mc> crate::JNIRaw<'mc> for Rail<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::Waterlogged<'mc>> for Rail<'mc> {
+    fn into(self) -> crate::bukkit::block::data::Waterlogged<'mc> {
+        crate::bukkit::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Waterlogged. Needed for returning it from Java.
@@ -4760,9 +4830,9 @@ impl<'mc> Waterlogged<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -4773,9 +4843,9 @@ impl<'mc> Waterlogged<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -4791,9 +4861,9 @@ impl<'mc> Waterlogged<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -4880,9 +4950,9 @@ impl<'mc> Waterlogged<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -4920,11 +4990,11 @@ impl<'mc> Waterlogged<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -4965,9 +5035,9 @@ impl<'mc> Waterlogged<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -5000,6 +5070,11 @@ impl<'mc> crate::JNIRaw<'mc> for Waterlogged<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Waterlogged<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BlockData. Needed for returning it from Java.
@@ -5048,9 +5123,9 @@ impl<'mc> BlockData<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -5061,9 +5136,9 @@ impl<'mc> BlockData<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -5079,9 +5154,9 @@ impl<'mc> BlockData<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -5168,9 +5243,9 @@ impl<'mc> BlockData<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -5208,11 +5283,11 @@ impl<'mc> BlockData<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -5253,9 +5328,9 @@ impl<'mc> BlockData<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -5360,9 +5435,9 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -5373,9 +5448,9 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -5391,9 +5466,9 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -5480,9 +5555,9 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -5520,11 +5595,11 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -5565,9 +5640,9 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -5600,6 +5675,11 @@ impl<'mc> crate::JNIRaw<'mc> for AnaloguePowerable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for AnaloguePowerable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Brushable. Needed for returning it from Java.
@@ -5670,9 +5750,9 @@ impl<'mc> Brushable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -5683,9 +5763,9 @@ impl<'mc> Brushable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -5701,9 +5781,9 @@ impl<'mc> Brushable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -5790,9 +5870,9 @@ impl<'mc> Brushable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -5830,11 +5910,11 @@ impl<'mc> Brushable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -5875,9 +5955,9 @@ impl<'mc> Brushable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -5910,6 +5990,11 @@ impl<'mc> crate::JNIRaw<'mc> for Brushable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Brushable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Attachable. Needed for returning it from Java.
@@ -5974,9 +6059,9 @@ impl<'mc> Attachable<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -5987,9 +6072,9 @@ impl<'mc> Attachable<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -6005,9 +6090,9 @@ impl<'mc> Attachable<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -6094,9 +6179,9 @@ impl<'mc> Attachable<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -6134,11 +6219,11 @@ impl<'mc> Attachable<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -6179,9 +6264,9 @@ impl<'mc> Attachable<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -6214,6 +6299,11 @@ impl<'mc> crate::JNIRaw<'mc> for Attachable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Attachable<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Bisected. Needed for returning it from Java.
@@ -6262,9 +6352,9 @@ impl<'mc> Bisected<'mc> {
     }
     pub fn set_half(
         &mut self,
-        arg0: crate::bukkit::block::data::BisectedHalf<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BisectedHalf<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setHalf",
@@ -6291,9 +6381,9 @@ impl<'mc> Bisected<'mc> {
     }
     pub fn matches(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "matches",
@@ -6304,9 +6394,9 @@ impl<'mc> Bisected<'mc> {
     }
     pub fn merge(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "merge",
@@ -6322,9 +6412,9 @@ impl<'mc> Bisected<'mc> {
     }
     pub fn rotate(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "rotate",
@@ -6411,9 +6501,9 @@ impl<'mc> Bisected<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -6451,11 +6541,11 @@ impl<'mc> Bisected<'mc> {
     }
     pub fn is_face_sturdy(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
-        arg1: crate::bukkit::block::BlockSupport<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg1: impl Into<crate::bukkit::block::BlockSupport<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFaceSturdy",
@@ -6496,9 +6586,9 @@ impl<'mc> Bisected<'mc> {
     }
     pub fn mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "mirror",
@@ -6531,6 +6621,11 @@ impl<'mc> crate::JNIRaw<'mc> for Bisected<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::data::BlockData<'mc>> for Bisected<'mc> {
+    fn into(self) -> crate::bukkit::block::data::BlockData<'mc> {
+        crate::bukkit::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct BisectedHalf<'mc>(

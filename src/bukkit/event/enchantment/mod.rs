@@ -15,25 +15,28 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantItemEvent<'mc> {
 impl<'mc> EnchantItemEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::entity::Player<'mc>,
-        arg1: crate::bukkit::inventory::InventoryView<'mc>,
-        arg2: crate::bukkit::block::Block<'mc>,
-        arg3: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
+        arg1: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg2: impl Into<crate::bukkit::block::Block<'mc>>,
+        arg3: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
         arg4: i32,
-        arg5: std::collections::HashMap<crate::bukkit::enchantments::Enchantment<'mc>, i32>,
-        arg6: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg5: std::collections::HashMap<
+            impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
+            i32,
+        >,
+        arg6: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg7: i32,
         arg8: i32,
     ) -> Result<crate::bukkit::event::enchantment::EnchantItemEvent<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let val_4 = jni::objects::JValueGen::Int(arg4.into());
         let raw_val_5 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
         for (k, v) in arg5 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(k.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(k.into().1.clone()) };
             let map_val_1 = jni::objects::JValueGen::Int(v.into());
             jni.call_method(
                 &raw_val_5,
@@ -46,7 +49,7 @@ impl<'mc> EnchantItemEvent<'mc> {
             )?;
         }
         let val_5 = jni::objects::JValueGen::Object(raw_val_5);
-        let val_6 = unsafe { jni::objects::JObject::from_raw(arg6.1.clone()) };
+        let val_6 = unsafe { jni::objects::JObject::from_raw(arg6.into().1.clone()) };
         let val_7 = jni::objects::JValueGen::Int(arg7.into());
         let val_8 = jni::objects::JValueGen::Int(arg8.into());
         let cls = &jni.find_class("org/bukkit/event/enchantment/EnchantItemEvent")?;
@@ -340,6 +343,11 @@ impl<'mc> EnchantItemEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for EnchantItemEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
+        crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct PrepareItemEnchantEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -356,20 +364,20 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareItemEnchantEvent<'mc> {
 impl<'mc> PrepareItemEnchantEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::entity::Player<'mc>,
-        arg1: crate::bukkit::inventory::InventoryView<'mc>,
-        arg2: crate::bukkit::block::Block<'mc>,
-        arg3: crate::bukkit::inventory::ItemStack<'mc>,
-        _arg4: Vec<crate::bukkit::enchantments::EnchantmentOffer<'mc>>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
+        arg1: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg2: impl Into<crate::bukkit::block::Block<'mc>>,
+        arg3: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        _arg4: Vec<impl Into<crate::bukkit::enchantments::EnchantmentOffer<'mc>>>,
         arg5: i32,
     ) -> Result<
         crate::bukkit::event::enchantment::PrepareItemEnchantEvent<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let val_4 = jni::objects::JValueGen::Int(arg5.into());
         let cls = &jni.find_class("org/bukkit/event/enchantment/PrepareItemEnchantEvent")?;
         let res = jni.new_object(cls,
@@ -623,5 +631,10 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for PrepareItemEnchantEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
+        crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

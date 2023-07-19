@@ -847,9 +847,9 @@ impl<'mc> VoxelShape<'mc> {
     }
     pub fn overlaps(
         &mut self,
-        arg0: crate::bukkit::util::BoundingBox<'mc>,
+        arg0: impl Into<crate::bukkit::util::BoundingBox<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "overlaps",
@@ -1129,9 +1129,9 @@ impl<'mc> BoundingBox<'mc> {
     }
     pub fn copy(
         &mut self,
-        arg0: crate::bukkit::util::BoundingBox<'mc>,
+        arg0: impl Into<crate::bukkit::util::BoundingBox<'mc>>,
     ) -> Result<crate::bukkit::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copy",
@@ -1336,9 +1336,9 @@ impl<'mc> BoundingBox<'mc> {
     }
     pub fn intersection(
         &mut self,
-        arg0: crate::bukkit::util::BoundingBox<'mc>,
+        arg0: impl Into<crate::bukkit::util::BoundingBox<'mc>>,
     ) -> Result<crate::bukkit::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "intersection",
@@ -1354,12 +1354,12 @@ impl<'mc> BoundingBox<'mc> {
     }
     pub fn ray_trace(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg2: f64,
     ) -> Result<crate::bukkit::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = jni::objects::JValueGen::Double(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1414,6 +1414,17 @@ impl<'mc> BoundingBox<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc>>
+    for BoundingBox<'mc>
+{
+    fn into(self) -> crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc> {
+        crate::bukkit::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.jni_ref(),
+            self.1,
+        )
+        .unwrap()
     }
 }
 pub struct BlockVector<'mc>(
@@ -1527,9 +1538,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn add(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -1564,9 +1575,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn dot(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "dot",
@@ -1577,9 +1588,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn copy(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copy",
@@ -1625,9 +1636,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn distance(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "distance",
@@ -1674,9 +1685,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn subtract(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subtract",
@@ -1698,9 +1709,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn distance_squared(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "distanceSquared",
@@ -1722,9 +1733,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn divide(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "divide",
@@ -1740,9 +1751,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn angle(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "angle",
@@ -1753,9 +1764,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn midpoint(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "midpoint",
@@ -1771,9 +1782,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn get_midpoint(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getMidpoint",
@@ -1789,9 +1800,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn cross_product(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "crossProduct",
@@ -1807,9 +1818,9 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn get_cross_product(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCrossProduct",
@@ -1825,11 +1836,11 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn is_in_aabb(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isInAABB",
@@ -1843,10 +1854,10 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn is_in_sphere(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1920,10 +1931,10 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn rotate_around_axis(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1943,10 +1954,10 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn rotate_around_non_unit_axis(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1966,11 +1977,11 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn to_location_with_world(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::World<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::World<'mc>>>,
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<f32>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -2008,11 +2019,11 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn get_minimum(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::util::Vector<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -2031,11 +2042,11 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn get_maximum(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::util::Vector<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -2673,9 +2684,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn add(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -2745,9 +2756,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn dot(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "dot",
@@ -2758,9 +2769,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn copy(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copy",
@@ -2806,9 +2817,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn distance(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "distance",
@@ -2855,9 +2866,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn subtract(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subtract",
@@ -2879,9 +2890,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn distance_squared(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "distanceSquared",
@@ -2935,9 +2946,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn divide(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "divide",
@@ -2953,9 +2964,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn angle(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "angle",
@@ -2966,9 +2977,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn midpoint(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "midpoint",
@@ -2984,9 +2995,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn get_midpoint(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getMidpoint",
@@ -3002,9 +3013,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn cross_product(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "crossProduct",
@@ -3020,9 +3031,9 @@ impl<'mc> Vector<'mc> {
     }
     pub fn get_cross_product(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCrossProduct",
@@ -3038,11 +3049,11 @@ impl<'mc> Vector<'mc> {
     }
     pub fn is_in_aabb(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isInAABB",
@@ -3056,10 +3067,10 @@ impl<'mc> Vector<'mc> {
     }
     pub fn is_in_sphere(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3133,10 +3144,10 @@ impl<'mc> Vector<'mc> {
     }
     pub fn rotate_around_axis(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3156,10 +3167,10 @@ impl<'mc> Vector<'mc> {
     }
     pub fn rotate_around_non_unit_axis(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3179,11 +3190,11 @@ impl<'mc> Vector<'mc> {
     }
     pub fn to_location_with_world(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::World<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::World<'mc>>>,
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<f32>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -3221,11 +3232,11 @@ impl<'mc> Vector<'mc> {
     }
     pub fn get_minimum(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::util::Vector<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -3244,11 +3255,11 @@ impl<'mc> Vector<'mc> {
     }
     pub fn get_maximum(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::util::Vector<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<crate::bukkit::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -3312,6 +3323,17 @@ impl<'mc> Vector<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc>>
+    for Vector<'mc>
+{
+    fn into(self) -> crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc> {
+        crate::bukkit::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.jni_ref(),
+            self.1,
+        )
+        .unwrap()
     }
 }
 pub struct FileUtil<'mc>(

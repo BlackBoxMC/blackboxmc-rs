@@ -93,9 +93,9 @@ impl<'mc> Chest<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -306,9 +306,9 @@ impl<'mc> Diode<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -457,6 +457,16 @@ impl<'mc> Diode<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Diode<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for Diode<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Pumpkin<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -541,9 +551,9 @@ impl<'mc> Pumpkin<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -676,6 +686,11 @@ impl<'mc> Pumpkin<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Pumpkin<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct FlowerPot<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -692,10 +707,10 @@ impl<'mc> crate::JNIRaw<'mc> for FlowerPot<'mc> {
 impl<'mc> FlowerPot<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::FlowerPot<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/FlowerPot")?;
         let res = jni.new_object(
@@ -768,9 +783,9 @@ impl<'mc> FlowerPot<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setContents",
@@ -913,10 +928,10 @@ impl<'mc> crate::JNIRaw<'mc> for PoweredRail<'mc> {
 impl<'mc> PoweredRail<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::PoweredRail<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/PoweredRail")?;
         let res = jni.new_object(
@@ -986,10 +1001,10 @@ impl<'mc> PoweredRail<'mc> {
     }
     pub fn set_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1172,6 +1187,11 @@ impl<'mc> PoweredRail<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for PoweredRail<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct TripwireHook<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1239,9 +1259,9 @@ impl<'mc> TripwireHook<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -1458,6 +1478,11 @@ impl<'mc> TripwireHook<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for TripwireHook<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct SimpleAttachableMaterialData<'mc>(
@@ -1701,9 +1726,9 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -1711,6 +1736,11 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Attachable<'mc>> for SimpleAttachableMaterialData<'mc> {
+    fn into(self) -> crate::bukkit::material::Attachable<'mc> {
+        crate::bukkit::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Openable. Needed for returning it from Java.
@@ -1783,10 +1813,10 @@ impl<'mc> crate::JNIRaw<'mc> for Torch<'mc> {
 impl<'mc> Torch<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Torch<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Torch")?;
         let res = jni.new_object(
@@ -1840,9 +1870,9 @@ impl<'mc> Torch<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -2130,9 +2160,9 @@ impl<'mc> Comparator<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -2287,6 +2317,16 @@ impl<'mc> Comparator<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Comparator<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for Comparator<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Button<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2303,10 +2343,10 @@ impl<'mc> crate::JNIRaw<'mc> for Button<'mc> {
 impl<'mc> Button<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Button<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Button")?;
         let res = jni.new_object(
@@ -2373,9 +2413,9 @@ impl<'mc> Button<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -2572,6 +2612,11 @@ impl<'mc> Button<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for Button<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Coal<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2654,9 +2699,9 @@ impl<'mc> Coal<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::CoalType<'mc>,
+        arg0: impl Into<crate::bukkit::CoalType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -2813,9 +2858,9 @@ impl<'mc> Colorable<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -2943,9 +2988,9 @@ impl<'mc> Tree<'mc> {
     }
     pub fn set_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDirection",
@@ -2956,9 +3001,9 @@ impl<'mc> Tree<'mc> {
     }
     pub fn set_species(
         &mut self,
-        arg0: crate::bukkit::TreeSpecies<'mc>,
+        arg0: impl Into<crate::bukkit::TreeSpecies<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpecies",
@@ -3128,10 +3173,10 @@ impl<'mc> crate::JNIRaw<'mc> for PistonBaseMaterial<'mc> {
 impl<'mc> PistonBaseMaterial<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::PistonBaseMaterial<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/PistonBaseMaterial")?;
         let res = jni.new_object(
@@ -3214,9 +3259,9 @@ impl<'mc> PistonBaseMaterial<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -3378,6 +3423,16 @@ impl<'mc> PistonBaseMaterial<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for PistonBaseMaterial<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for PistonBaseMaterial<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct TrapDoor<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3394,10 +3449,10 @@ impl<'mc> crate::JNIRaw<'mc> for TrapDoor<'mc> {
 impl<'mc> TrapDoor<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::TrapDoor<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/TrapDoor")?;
         let res = jni.new_object(
@@ -3470,9 +3525,9 @@ impl<'mc> TrapDoor<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -3679,6 +3734,11 @@ impl<'mc> TrapDoor<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Openable<'mc>> for TrapDoor<'mc> {
+    fn into(self) -> crate::bukkit::material::Openable<'mc> {
+        crate::bukkit::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Crops<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3717,9 +3777,9 @@ impl<'mc> Crops<'mc> {
     }
     pub fn set_state(
         &mut self,
-        arg0: crate::bukkit::CropState<'mc>,
+        arg0: impl Into<crate::bukkit::CropState<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setState",
@@ -3974,9 +4034,9 @@ impl<'mc> SpawnEgg<'mc> {
     }
     pub fn set_spawned_type(
         &mut self,
-        arg0: crate::bukkit::entity::EntityType<'mc>,
+        arg0: impl Into<crate::bukkit::entity::EntityType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpawnedType",
@@ -4119,10 +4179,10 @@ impl<'mc> crate::JNIRaw<'mc> for MonsterEggs<'mc> {
 impl<'mc> MonsterEggs<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::MonsterEggs<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/MonsterEggs")?;
         let res = jni.new_object(
@@ -4214,9 +4274,9 @@ impl<'mc> MonsterEggs<'mc> {
     }
     pub fn set_material(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMaterial",
@@ -4437,9 +4497,9 @@ impl<'mc> Furnace<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -4582,10 +4642,10 @@ impl<'mc> crate::JNIRaw<'mc> for Rails<'mc> {
 impl<'mc> Rails<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Rails<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Rails")?;
         let res = jni.new_object(
@@ -4669,10 +4729,10 @@ impl<'mc> Rails<'mc> {
     }
     pub fn set_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4901,9 +4961,9 @@ impl<'mc> Sapling<'mc> {
     }
     pub fn set_species(
         &mut self,
-        arg0: crate::bukkit::TreeSpecies<'mc>,
+        arg0: impl Into<crate::bukkit::TreeSpecies<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpecies",
@@ -5117,11 +5177,11 @@ impl<'mc> crate::JNIRaw<'mc> for PistonExtensionMaterial<'mc> {
 impl<'mc> PistonExtensionMaterial<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::PistonExtensionMaterial<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/PistonExtensionMaterial")?;
         let res = jni.new_object(
@@ -5206,9 +5266,9 @@ impl<'mc> PistonExtensionMaterial<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -5391,6 +5451,11 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Attachable<'mc>> for PistonExtensionMaterial<'mc> {
+    fn into(self) -> crate::bukkit::material::Attachable<'mc> {
+        crate::bukkit::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Lever<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5407,10 +5472,10 @@ impl<'mc> crate::JNIRaw<'mc> for Lever<'mc> {
 impl<'mc> Lever<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Lever<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Lever")?;
         let res = jni.new_object(
@@ -5477,9 +5542,9 @@ impl<'mc> Lever<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -5676,6 +5741,11 @@ impl<'mc> Lever<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for Lever<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct DirectionalContainer<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5692,11 +5762,11 @@ impl<'mc> crate::JNIRaw<'mc> for DirectionalContainer<'mc> {
 impl<'mc> DirectionalContainer<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::DirectionalContainer<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/DirectionalContainer")?;
         let res = jni.new_object(
@@ -5792,9 +5862,9 @@ impl<'mc> DirectionalContainer<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -5921,6 +5991,11 @@ impl<'mc> DirectionalContainer<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for DirectionalContainer<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct NetherWarts<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5959,9 +6034,9 @@ impl<'mc> NetherWarts<'mc> {
     }
     pub fn set_state(
         &mut self,
-        arg0: crate::bukkit::NetherWartsState<'mc>,
+        arg0: impl Into<crate::bukkit::NetherWartsState<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setState",
@@ -6160,10 +6235,10 @@ impl<'mc> crate::JNIRaw<'mc> for MaterialData<'mc> {
 impl<'mc> MaterialData<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/MaterialData")?;
         let res = jni.new_object(
@@ -6403,9 +6478,9 @@ impl<'mc> LongGrass<'mc> {
     }
     pub fn set_species(
         &mut self,
-        arg0: crate::bukkit::GrassSpecies<'mc>,
+        arg0: impl Into<crate::bukkit::GrassSpecies<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpecies",
@@ -6575,10 +6650,10 @@ impl<'mc> crate::JNIRaw<'mc> for Tripwire<'mc> {
 impl<'mc> Tripwire<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Tripwire<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Tripwire")?;
         let res = jni.new_object(
@@ -6799,10 +6874,10 @@ impl<'mc> crate::JNIRaw<'mc> for TexturedMaterial<'mc> {
 impl<'mc> TexturedMaterial<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::TexturedMaterial<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/TexturedMaterial")?;
         let res = jni.new_object(
@@ -6896,9 +6971,9 @@ impl<'mc> TexturedMaterial<'mc> {
     }
     pub fn set_material(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMaterial",
@@ -7152,9 +7227,9 @@ impl<'mc> Dispenser<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -7310,10 +7385,10 @@ impl<'mc> crate::JNIRaw<'mc> for Cake<'mc> {
 impl<'mc> Cake<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Cake<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Cake")?;
         let res = jni.new_object(
@@ -7618,9 +7693,9 @@ impl<'mc> Gate<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -7757,6 +7832,16 @@ impl<'mc> Gate<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Gate<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Openable<'mc>> for Gate<'mc> {
+    fn into(self) -> crate::bukkit::material::Openable<'mc> {
+        crate::bukkit::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Step<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7773,10 +7858,10 @@ impl<'mc> crate::JNIRaw<'mc> for Step<'mc> {
 impl<'mc> Step<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Step<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Step")?;
         let res = jni.new_object(
@@ -7884,9 +7969,9 @@ impl<'mc> Step<'mc> {
     }
     pub fn set_material(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMaterial",
@@ -8029,10 +8114,10 @@ impl<'mc> crate::JNIRaw<'mc> for SmoothBrick<'mc> {
 impl<'mc> SmoothBrick<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::SmoothBrick<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/SmoothBrick")?;
         let res = jni.new_object(
@@ -8124,9 +8209,9 @@ impl<'mc> SmoothBrick<'mc> {
     }
     pub fn set_material(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMaterial",
@@ -8352,9 +8437,9 @@ impl<'mc> Leaves<'mc> {
     }
     pub fn set_species(
         &mut self,
-        arg0: crate::bukkit::TreeSpecies<'mc>,
+        arg0: impl Into<crate::bukkit::TreeSpecies<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpecies",
@@ -8546,9 +8631,9 @@ impl<'mc> Dye<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -8729,6 +8814,11 @@ impl<'mc> Dye<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Colorable<'mc>> for Dye<'mc> {
+    fn into(self) -> crate::bukkit::material::Colorable<'mc> {
+        crate::bukkit::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct PressurePlate<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8745,10 +8835,10 @@ impl<'mc> crate::JNIRaw<'mc> for PressurePlate<'mc> {
 impl<'mc> PressurePlate<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::PressurePlate<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/PressurePlate")?;
         let res = jni.new_object(
@@ -8937,6 +9027,11 @@ impl<'mc> PressurePlate<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::PressureSensor<'mc>> for PressurePlate<'mc> {
+    fn into(self) -> crate::bukkit::material::PressureSensor<'mc> {
+        crate::bukkit::material::PressureSensor::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Observer<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9021,9 +9116,9 @@ impl<'mc> Observer<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -9156,6 +9251,16 @@ impl<'mc> Observer<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Observer<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for Observer<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Stairs<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9172,10 +9277,10 @@ impl<'mc> crate::JNIRaw<'mc> for Stairs<'mc> {
 impl<'mc> Stairs<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Stairs<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Stairs")?;
         let res = jni.new_object(
@@ -9269,9 +9374,9 @@ impl<'mc> Stairs<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -9468,6 +9573,11 @@ impl<'mc> Stairs<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Stairs<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Sandstone<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9552,9 +9662,9 @@ impl<'mc> Sandstone<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::SandstoneType<'mc>,
+        arg0: impl Into<crate::bukkit::SandstoneType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -9775,9 +9885,9 @@ impl<'mc> EnderChest<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -9920,10 +10030,10 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceAndDispenser<'mc> {
 impl<'mc> FurnaceAndDispenser<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::FurnaceAndDispenser<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/FurnaceAndDispenser")?;
         let res = jni.new_object(
@@ -10019,9 +10129,9 @@ impl<'mc> FurnaceAndDispenser<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -10242,9 +10352,9 @@ impl<'mc> Bed<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -10387,6 +10497,11 @@ impl<'mc> Bed<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Bed<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct RedstoneWire<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10403,10 +10518,10 @@ impl<'mc> crate::JNIRaw<'mc> for RedstoneWire<'mc> {
 impl<'mc> RedstoneWire<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::RedstoneWire<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/RedstoneWire")?;
         let res = jni.new_object(
@@ -10595,6 +10710,11 @@ impl<'mc> RedstoneWire<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for RedstoneWire<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct WoodenStep<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10678,9 +10798,9 @@ impl<'mc> WoodenStep<'mc> {
     }
     pub fn set_species(
         &mut self,
-        arg0: crate::bukkit::TreeSpecies<'mc>,
+        arg0: impl Into<crate::bukkit::TreeSpecies<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpecies",
@@ -10901,9 +11021,9 @@ impl<'mc> Vine<'mc> {
     }
     pub fn is_on_face(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isOnFace",
@@ -10914,9 +11034,9 @@ impl<'mc> Vine<'mc> {
     }
     pub fn put_on_face(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "putOnFace",
@@ -10927,9 +11047,9 @@ impl<'mc> Vine<'mc> {
     }
     pub fn remove_from_face(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeFromFace",
@@ -11123,9 +11243,9 @@ impl<'mc> Wood<'mc> {
     }
     pub fn set_species(
         &mut self,
-        arg0: crate::bukkit::TreeSpecies<'mc>,
+        arg0: impl Into<crate::bukkit::TreeSpecies<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpecies",
@@ -11295,10 +11415,10 @@ impl<'mc> crate::JNIRaw<'mc> for Banner<'mc> {
 impl<'mc> Banner<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Banner<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Banner")?;
         let res = jni.new_object(
@@ -11382,9 +11502,9 @@ impl<'mc> Banner<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -11544,6 +11664,11 @@ impl<'mc> Banner<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Attachable<'mc>> for Banner<'mc> {
+    fn into(self) -> crate::bukkit::material::Attachable<'mc> {
+        crate::bukkit::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Mushroom<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11641,9 +11766,9 @@ impl<'mc> Mushroom<'mc> {
     }
     pub fn set_block_texture(
         &mut self,
-        arg0: crate::bukkit::material::types::MushroomBlockTexture<'mc>,
+        arg0: impl Into<crate::bukkit::material::types::MushroomBlockTexture<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockTexture",
@@ -11654,9 +11779,9 @@ impl<'mc> Mushroom<'mc> {
     }
     pub fn is_face_painted(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isFacePainted",
@@ -11667,10 +11792,10 @@ impl<'mc> Mushroom<'mc> {
     }
     pub fn set_face_painted(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -11817,10 +11942,10 @@ impl<'mc> crate::JNIRaw<'mc> for RedstoneTorch<'mc> {
 impl<'mc> RedstoneTorch<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::RedstoneTorch<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/RedstoneTorch")?;
         let res = jni.new_object(
@@ -11893,9 +12018,9 @@ impl<'mc> RedstoneTorch<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -12074,6 +12199,11 @@ impl<'mc> RedstoneTorch<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for RedstoneTorch<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct CocoaPlant<'mc>(
@@ -12261,9 +12391,9 @@ impl<'mc> CocoaPlant<'mc> {
     }
     pub fn set_size(
         &mut self,
-        arg0: crate::bukkit::material::CocoaPlantCocoaPlantSize<'mc>,
+        arg0: impl Into<crate::bukkit::material::CocoaPlantCocoaPlantSize<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSize",
@@ -12337,9 +12467,9 @@ impl<'mc> CocoaPlant<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -12493,6 +12623,16 @@ impl<'mc> CocoaPlant<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for CocoaPlant<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Attachable<'mc>> for CocoaPlant<'mc> {
+    fn into(self) -> crate::bukkit::material::Attachable<'mc> {
+        crate::bukkit::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Door<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12583,9 +12723,9 @@ impl<'mc> Door<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -12632,9 +12772,9 @@ impl<'mc> Door<'mc> {
     }
     pub fn get_wood_door_of_species(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::TreeSpecies<'mc>,
+        arg0: impl Into<crate::bukkit::TreeSpecies<'mc>>,
     ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/Material")?;
         let res = jni.call_static_method(
             cls,
@@ -12809,6 +12949,16 @@ impl<'mc> Door<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Door<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Openable<'mc>> for Door<'mc> {
+    fn into(self) -> crate::bukkit::material::Openable<'mc> {
+        crate::bukkit::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements Directional. Needed for returning it from Java.
 pub struct Directional<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -12866,9 +13016,9 @@ impl<'mc> Directional<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -12903,10 +13053,10 @@ impl<'mc> crate::JNIRaw<'mc> for ExtendedRails<'mc> {
 impl<'mc> ExtendedRails<'mc> {
     pub fn new_with_material(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::ExtendedRails<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/ExtendedRails")?;
         let res = jni.new_object(
@@ -12960,10 +13110,10 @@ impl<'mc> ExtendedRails<'mc> {
     }
     pub fn set_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -13347,10 +13497,10 @@ impl<'mc> crate::JNIRaw<'mc> for Ladder<'mc> {
 impl<'mc> Ladder<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Ladder<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Ladder")?;
         let res = jni.new_object(
@@ -13404,9 +13554,9 @@ impl<'mc> Ladder<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -13616,10 +13766,10 @@ impl<'mc> crate::JNIRaw<'mc> for Command<'mc> {
 impl<'mc> Command<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Command<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Command")?;
         let res = jni.new_object(
@@ -13808,6 +13958,11 @@ impl<'mc> Command<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for Command<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct DetectorRail<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13824,10 +13979,10 @@ impl<'mc> crate::JNIRaw<'mc> for DetectorRail<'mc> {
 impl<'mc> DetectorRail<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::DetectorRail<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/DetectorRail")?;
         let res = jni.new_object(
@@ -13897,10 +14052,10 @@ impl<'mc> DetectorRail<'mc> {
     }
     pub fn set_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -14083,6 +14238,11 @@ impl<'mc> DetectorRail<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::PressureSensor<'mc>> for DetectorRail<'mc> {
+    fn into(self) -> crate::bukkit::material::PressureSensor<'mc> {
+        crate::bukkit::material::PressureSensor::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Hopper<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14173,9 +14333,9 @@ impl<'mc> Hopper<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -14318,6 +14478,16 @@ impl<'mc> Hopper<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Hopper<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Redstone<'mc>> for Hopper<'mc> {
+    fn into(self) -> crate::bukkit::material::Redstone<'mc> {
+        crate::bukkit::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Skull<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14402,9 +14572,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -14531,6 +14701,11 @@ impl<'mc> Skull<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Skull<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Sign<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14547,10 +14722,10 @@ impl<'mc> crate::JNIRaw<'mc> for Sign<'mc> {
 impl<'mc> Sign<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::bukkit::material::Sign<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Sign")?;
         let res = jni.new_object(
@@ -14634,9 +14809,9 @@ impl<'mc> Sign<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -14796,6 +14971,11 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Attachable<'mc>> for Sign<'mc> {
+    fn into(self) -> crate::bukkit::material::Attachable<'mc> {
+        crate::bukkit::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Wool<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14834,9 +15014,9 @@ impl<'mc> Wool<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -15017,6 +15197,11 @@ impl<'mc> Wool<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::material::Colorable<'mc>> for Wool<'mc> {
+    fn into(self) -> crate::bukkit::material::Colorable<'mc> {
+        crate::bukkit::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements Attachable. Needed for returning it from Java.
 pub struct Attachable<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -15101,9 +15286,9 @@ impl<'mc> Attachable<'mc> {
     }
     pub fn set_facing_direction(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFacingDirection",
@@ -15120,6 +15305,11 @@ impl<'mc> crate::JNIRaw<'mc> for Attachable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Directional<'mc>> for Attachable<'mc> {
+    fn into(self) -> crate::bukkit::material::Directional<'mc> {
+        crate::bukkit::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub mod types;

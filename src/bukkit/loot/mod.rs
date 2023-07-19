@@ -29,13 +29,13 @@ impl<'mc> LootTable<'mc> {
     }
     pub fn fill_inventory(
         &mut self,
-        arg0: crate::bukkit::inventory::Inventory<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::Inventory<'mc>>,
         arg1: jni::objects::JObject<'mc>,
-        arg2: crate::bukkit::loot::LootContext<'mc>,
+        arg2: impl Into<crate::bukkit::loot::LootContext<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = arg1;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "fillInventory",
@@ -70,6 +70,11 @@ impl<'mc> crate::JNIRaw<'mc> for LootTable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for LootTable<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Lootable. Needed for returning it from Java.
@@ -118,9 +123,9 @@ impl<'mc> Lootable<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -920,9 +925,9 @@ impl<'mc> crate::JNIRaw<'mc> for LootContextBuilder<'mc> {
 impl<'mc> LootContextBuilder<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/loot/LootContext$Builder")?;
         let res = jni.new_object(
             cls,
@@ -992,9 +997,9 @@ impl<'mc> LootContextBuilder<'mc> {
     }
     pub fn looted_entity(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<crate::bukkit::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lootedEntity",
@@ -1028,9 +1033,9 @@ impl<'mc> LootContextBuilder<'mc> {
     }
     pub fn killer(
         &mut self,
-        arg0: crate::bukkit::entity::HumanEntity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::HumanEntity<'mc>>,
     ) -> Result<crate::bukkit::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "killer",

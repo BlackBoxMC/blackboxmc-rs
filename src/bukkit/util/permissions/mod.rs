@@ -154,9 +154,9 @@ impl<'mc> CommandPermissions<'mc> {
     }
     pub fn register_permissions(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::permissions::Permission<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::Permission<'mc>>,
     ) -> Result<crate::bukkit::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(
             cls,
@@ -280,9 +280,9 @@ impl<'mc> BroadcastPermissions<'mc> {
     }
     pub fn register_permissions(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::permissions::Permission<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::Permission<'mc>>,
     ) -> Result<crate::bukkit::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(
             cls,

@@ -187,11 +187,11 @@ impl<'mc> BukkitScheduler<'mc> {
     }
     pub fn schedule_async_delayed_task_with_plugin(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<i64>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = arg1.unwrap();
         let val_2 = jni::objects::JValueGen::Long(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -208,12 +208,12 @@ impl<'mc> BukkitScheduler<'mc> {
     }
     pub fn schedule_async_repeating_task(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: jni::objects::JObject<'mc>,
         arg2: i64,
         arg3: i64,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = arg1;
         let val_2 = jni::objects::JValueGen::Long(arg2.into());
         let val_3 = jni::objects::JValueGen::Long(arg3.into());
@@ -232,10 +232,10 @@ impl<'mc> BukkitScheduler<'mc> {
     }
     pub fn call_sync_method(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = arg1;
         let res =
 self.jni_ref().call_method(&self.jni_object(),"callSyncMethod","(Lorg/bukkit/plugin/Plugin;Ljava/util/concurrent/Callable;)Ljava/util/concurrent/Future;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
@@ -253,9 +253,9 @@ self.jni_ref().call_method(&self.jni_object(),"callSyncMethod","(Lorg/bukkit/plu
     }
     pub fn cancel_tasks(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "cancelTasks",
@@ -364,9 +364,9 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     pub fn run_task(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<crate::bukkit::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "runTask",
@@ -382,9 +382,9 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     pub fn run_task_asynchronously(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<crate::bukkit::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "runTaskAsynchronously",
@@ -400,10 +400,10 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     pub fn run_task_later(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: i64,
     ) -> Result<crate::bukkit::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -423,10 +423,10 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     pub fn run_task_later_asynchronously(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: i64,
     ) -> Result<crate::bukkit::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -446,11 +446,11 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     pub fn run_task_timer(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: i64,
         arg2: i64,
     ) -> Result<crate::bukkit::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Long(arg1.into());
         let val_2 = jni::objects::JValueGen::Long(arg2.into());
         let res = self.jni_ref().call_method(
@@ -472,11 +472,11 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     pub fn run_task_timer_asynchronously(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: i64,
         arg2: i64,
     ) -> Result<crate::bukkit::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Long(arg1.into());
         let val_2 = jni::objects::JValueGen::Long(arg2.into());
         let res = self.jni_ref().call_method(

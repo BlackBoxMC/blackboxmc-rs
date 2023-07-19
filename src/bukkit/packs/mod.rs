@@ -274,6 +274,11 @@ impl<'mc> crate::JNIRaw<'mc> for DataPack<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for DataPack<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements DataPackManager. Needed for returning it from Java.
 pub struct DataPackManager<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -306,9 +311,9 @@ impl<'mc> DataPackManager<'mc> {
     }
     pub fn get_data_pack(
         &mut self,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::packs::DataPack<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDataPack",

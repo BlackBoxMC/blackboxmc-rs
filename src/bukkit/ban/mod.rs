@@ -1,4 +1,4 @@
-
+use crate::JNIRaw;
 /// An instantiatable struct that implements ProfileBanList. Needed for returning it from Java.
 pub struct ProfileBanList<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -39,6 +39,11 @@ impl<'mc> crate::JNIRaw<'mc> for ProfileBanList<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::BanList<'mc>> for ProfileBanList<'mc> {
+    fn into(self) -> crate::bukkit::BanList<'mc> {
+        crate::bukkit::BanList::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements IpBanList. Needed for returning it from Java.
 pub struct IpBanList<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -75,5 +80,10 @@ impl<'mc> crate::JNIRaw<'mc> for IpBanList<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::BanList<'mc>> for IpBanList<'mc> {
+    fn into(self) -> crate::bukkit::BanList<'mc> {
+        crate::bukkit::BanList::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

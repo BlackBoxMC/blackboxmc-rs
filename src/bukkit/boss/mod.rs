@@ -278,9 +278,9 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::boss::BarColor<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -291,9 +291,9 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     pub fn add_flag(
         &mut self,
-        arg0: crate::bukkit::boss::BarFlag<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addFlag",
@@ -365,9 +365,9 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     pub fn add_player(
         &mut self,
-        arg0: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addPlayer",
@@ -378,9 +378,9 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     pub fn remove_player(
         &mut self,
-        arg0: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removePlayer",
@@ -428,9 +428,9 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     pub fn set_style(
         &mut self,
-        arg0: crate::bukkit::boss::BarStyle<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarStyle<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setStyle",
@@ -441,9 +441,9 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     pub fn remove_flag(
         &mut self,
-        arg0: crate::bukkit::boss::BarFlag<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeFlag",
@@ -454,9 +454,9 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     pub fn has_flag(
         &mut self,
-        arg0: crate::bukkit::boss::BarFlag<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasFlag",
@@ -515,6 +515,16 @@ impl<'mc> crate::JNIRaw<'mc> for KeyedBossBar<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::boss::BossBar<'mc>> for KeyedBossBar<'mc> {
+    fn into(self) -> crate::bukkit::boss::BossBar<'mc> {
+        crate::bukkit::boss::BossBar::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for KeyedBossBar<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements BossBar. Needed for returning it from Java.
 pub struct BossBar<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -545,9 +555,9 @@ impl<'mc> BossBar<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::boss::BarColor<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -558,9 +568,9 @@ impl<'mc> BossBar<'mc> {
     }
     pub fn add_flag(
         &mut self,
-        arg0: crate::bukkit::boss::BarFlag<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addFlag",
@@ -632,9 +642,9 @@ impl<'mc> BossBar<'mc> {
     }
     pub fn add_player(
         &mut self,
-        arg0: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addPlayer",
@@ -645,9 +655,9 @@ impl<'mc> BossBar<'mc> {
     }
     pub fn remove_player(
         &mut self,
-        arg0: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removePlayer",
@@ -695,9 +705,9 @@ impl<'mc> BossBar<'mc> {
     }
     pub fn set_style(
         &mut self,
-        arg0: crate::bukkit::boss::BarStyle<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarStyle<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setStyle",
@@ -708,9 +718,9 @@ impl<'mc> BossBar<'mc> {
     }
     pub fn remove_flag(
         &mut self,
-        arg0: crate::bukkit::boss::BarFlag<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeFlag",
@@ -721,9 +731,9 @@ impl<'mc> BossBar<'mc> {
     }
     pub fn has_flag(
         &mut self,
-        arg0: crate::bukkit::boss::BarFlag<'mc>,
+        arg0: impl Into<crate::bukkit::boss::BarFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasFlag",
@@ -887,9 +897,9 @@ impl<'mc> DragonBattle<'mc> {
     }
     pub fn set_respawn_phase(
         &mut self,
-        arg0: crate::bukkit::boss::DragonBattleRespawnPhase<'mc>,
+        arg0: impl Into<crate::bukkit::boss::DragonBattleRespawnPhase<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setRespawnPhase",

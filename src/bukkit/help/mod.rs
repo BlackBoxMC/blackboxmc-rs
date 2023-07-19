@@ -400,9 +400,9 @@ impl<'mc> HelpTopicFactory<'mc> {
     }
     pub fn create_topic(
         &mut self,
-        arg0: crate::bukkit::command::Command<'mc>,
+        arg0: impl Into<crate::bukkit::command::Command<'mc>>,
     ) -> Result<crate::bukkit::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "createTopic",
@@ -506,9 +506,9 @@ impl<'mc> HelpTopic<'mc> {
     }
     pub fn can_see(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "canSee",
@@ -542,9 +542,9 @@ impl<'mc> HelpTopic<'mc> {
     }
     pub fn get_full_text(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFullText",
@@ -698,9 +698,9 @@ impl<'mc> HelpMap<'mc> {
     }
     pub fn add_topic(
         &mut self,
-        arg0: crate::bukkit::help::HelpTopic<'mc>,
+        arg0: impl Into<crate::bukkit::help::HelpTopic<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addTopic",
@@ -712,10 +712,10 @@ impl<'mc> HelpMap<'mc> {
     pub fn register_help_topic_factory(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
-        arg1: crate::bukkit::help::HelpTopicFactory<'mc>,
+        arg1: impl Into<crate::bukkit::help::HelpTopicFactory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "registerHelpTopicFactory",
@@ -777,9 +777,9 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     pub fn can_see(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "canSee",
@@ -800,9 +800,9 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     pub fn get_full_text(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFullText",
@@ -945,9 +945,9 @@ impl<'mc> crate::JNIRaw<'mc> for GenericCommandHelpTopic<'mc> {
 impl<'mc> GenericCommandHelpTopic<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::command::Command<'mc>,
+        arg0: impl Into<crate::bukkit::command::Command<'mc>>,
     ) -> Result<crate::bukkit::help::GenericCommandHelpTopic<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/help/GenericCommandHelpTopic")?;
         let res = jni.new_object(
             cls,
@@ -984,9 +984,9 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     pub fn can_see(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "canSee",
@@ -1033,9 +1033,9 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     pub fn get_full_text(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFullText",

@@ -31,11 +31,11 @@ impl<'mc> MetadataStore<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: String,
-        arg2: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg2: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -70,11 +70,11 @@ impl<'mc> MetadataStore<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: String,
-        arg2: crate::bukkit::plugin::Plugin<'mc>,
+        arg2: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -89,9 +89,9 @@ impl<'mc> MetadataStore<'mc> {
     }
     pub fn invalidate_all(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "invalidateAll",
@@ -282,10 +282,10 @@ impl<'mc> Metadatable<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -310,10 +310,10 @@ impl<'mc> Metadatable<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -385,11 +385,11 @@ impl<'mc> MetadataStoreBase<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: String,
-        arg2: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg2: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -424,11 +424,11 @@ impl<'mc> MetadataStoreBase<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: String,
-        arg2: crate::bukkit::plugin::Plugin<'mc>,
+        arg2: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -443,9 +443,9 @@ impl<'mc> MetadataStoreBase<'mc> {
     }
     pub fn invalidate_all(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "invalidateAll",
@@ -877,10 +877,10 @@ impl<'mc> crate::JNIRaw<'mc> for FixedMetadataValue<'mc> {
 impl<'mc> FixedMetadataValue<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<crate::bukkit::metadata::FixedMetadataValue<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = arg1;
         let cls = &jni.find_class("org/bukkit/metadata/FixedMetadataValue")?;
         let res = jni.new_object(
@@ -1258,5 +1258,10 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::metadata::MetadataValue<'mc>> for MetadataValueAdapter<'mc> {
+    fn into(self) -> crate::bukkit::metadata::MetadataValue<'mc> {
+        crate::bukkit::metadata::MetadataValue::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

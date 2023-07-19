@@ -95,9 +95,9 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     pub fn can_enchant_item(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "canEnchantItem",
@@ -137,9 +137,9 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     pub fn conflicts_with(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "conflictsWith",
@@ -214,9 +214,9 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     pub fn register_enchantment(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
             cls,
@@ -228,9 +228,9 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     pub fn get_by_key(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
         let res = jni.call_static_method(
             cls,
@@ -312,12 +312,12 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantmentOffer<'mc> {
 impl<'mc> EnchantmentOffer<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: i32,
     ) -> Result<crate::bukkit::enchantments::EnchantmentOffer<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Int(arg2.into());
         let cls = &jni.find_class("org/bukkit/enchantments/EnchantmentOffer")?;
@@ -375,9 +375,9 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     pub fn set_enchantment(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setEnchantment",
@@ -650,9 +650,9 @@ impl<'mc> crate::JNIRaw<'mc> for Enchantment<'mc> {
 impl<'mc> Enchantment<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
         let res = jni.new_object(
             cls,
@@ -763,9 +763,9 @@ impl<'mc> Enchantment<'mc> {
     }
     pub fn register_enchantment(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
             cls,
@@ -777,9 +777,9 @@ impl<'mc> Enchantment<'mc> {
     }
     pub fn get_by_key(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
         let res = jni.call_static_method(
             cls,
@@ -807,9 +807,9 @@ impl<'mc> Enchantment<'mc> {
     }
     pub fn can_enchant_item(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "canEnchantItem",
@@ -856,9 +856,9 @@ impl<'mc> Enchantment<'mc> {
     }
     pub fn conflicts_with(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "conflictsWith",
@@ -910,5 +910,10 @@ impl<'mc> Enchantment<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for Enchantment<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

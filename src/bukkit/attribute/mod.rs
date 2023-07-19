@@ -29,9 +29,9 @@ impl<'mc> Attributable<'mc> {
     }
     pub fn get_attribute(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
     ) -> Result<crate::bukkit::attribute::AttributeInstance<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAttribute",
@@ -274,9 +274,9 @@ impl<'mc> AttributeInstance<'mc> {
     }
     pub fn add_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addModifier",
@@ -287,9 +287,9 @@ impl<'mc> AttributeInstance<'mc> {
     }
     pub fn remove_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeModifier",
@@ -656,5 +656,16 @@ impl<'mc> AttributeModifier<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc>>
+    for AttributeModifier<'mc>
+{
+    fn into(self) -> crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc> {
+        crate::bukkit::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.jni_ref(),
+            self.1,
+        )
+        .unwrap()
     }
 }

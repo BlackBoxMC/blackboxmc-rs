@@ -184,18 +184,18 @@ impl<'mc> crate::JNIRaw<'mc> for RaidSpawnWaveEvent<'mc> {
 impl<'mc> RaidSpawnWaveEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::Raid<'mc>,
-        arg1: crate::bukkit::World<'mc>,
-        arg2: crate::bukkit::entity::Raider<'mc>,
-        arg3: Vec<crate::bukkit::entity::Raider<'mc>>,
+        arg0: impl Into<crate::bukkit::Raid<'mc>>,
+        arg1: impl Into<crate::bukkit::World<'mc>>,
+        arg2: impl Into<crate::bukkit::entity::Raider<'mc>>,
+        arg3: Vec<impl Into<crate::bukkit::entity::Raider<'mc>>>,
     ) -> Result<crate::bukkit::event::raid::RaidSpawnWaveEvent<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let raw_val_3 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
         for v in arg3 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
             jni.call_method(
                 &raw_val_3,
                 "add",
@@ -423,13 +423,13 @@ impl<'mc> crate::JNIRaw<'mc> for RaidTriggerEvent<'mc> {
 impl<'mc> RaidTriggerEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::Raid<'mc>,
-        arg1: crate::bukkit::World<'mc>,
-        arg2: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::Raid<'mc>>,
+        arg1: impl Into<crate::bukkit::World<'mc>>,
+        arg2: impl Into<crate::bukkit::entity::Player<'mc>>,
     ) -> Result<crate::bukkit::event::raid::RaidTriggerEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/event/raid/RaidTriggerEvent")?;
         let res = jni.new_object(
             cls,
@@ -648,6 +648,11 @@ impl<'mc> RaidTriggerEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for RaidTriggerEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
+        crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct RaidFinishEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -664,15 +669,15 @@ impl<'mc> crate::JNIRaw<'mc> for RaidFinishEvent<'mc> {
 impl<'mc> RaidFinishEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::Raid<'mc>,
-        arg1: crate::bukkit::World<'mc>,
-        arg2: Vec<crate::bukkit::entity::Player<'mc>>,
+        arg0: impl Into<crate::bukkit::Raid<'mc>>,
+        arg1: impl Into<crate::bukkit::World<'mc>>,
+        arg2: Vec<impl Into<crate::bukkit::entity::Player<'mc>>>,
     ) -> Result<crate::bukkit::event::raid::RaidFinishEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
         for v in arg2 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
             jni.call_method(
                 &raw_val_2,
                 "add",
@@ -1029,13 +1034,13 @@ impl<'mc> crate::JNIRaw<'mc> for RaidStopEvent<'mc> {
 impl<'mc> RaidStopEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::Raid<'mc>,
-        arg1: crate::bukkit::World<'mc>,
-        arg2: crate::bukkit::event::raid::RaidStopEventReason<'mc>,
+        arg0: impl Into<crate::bukkit::Raid<'mc>>,
+        arg1: impl Into<crate::bukkit::World<'mc>>,
+        arg2: impl Into<crate::bukkit::event::raid::RaidStopEventReason<'mc>>,
     ) -> Result<crate::bukkit::event::raid::RaidStopEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/event/raid/RaidStopEvent")?;
         let res = jni.new_object(
             cls,

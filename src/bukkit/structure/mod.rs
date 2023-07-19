@@ -75,9 +75,9 @@ impl<'mc> StructureManager<'mc> {
     }
     pub fn copy(
         &mut self,
-        arg0: crate::bukkit::structure::Structure<'mc>,
+        arg0: impl Into<crate::bukkit::structure::Structure<'mc>>,
     ) -> Result<crate::bukkit::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copy",
@@ -93,9 +93,9 @@ impl<'mc> StructureManager<'mc> {
     }
     pub fn get_structure(
         &mut self,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStructure",
@@ -111,11 +111,11 @@ impl<'mc> StructureManager<'mc> {
     }
     pub fn register_structure(
         &mut self,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
-        arg1: crate::bukkit::structure::Structure<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::bukkit::structure::Structure<'mc>>,
     ) -> Result<crate::bukkit::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res =
 self.jni_ref().call_method(&self.jni_object(),"registerStructure","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/structure/Structure;)Lorg/bukkit/structure/Structure;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
         let ret = {
@@ -127,10 +127,10 @@ self.jni_ref().call_method(&self.jni_object(),"registerStructure","(Lorg/bukkit/
     }
     pub fn delete_structure_with_namespaced_key(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::NamespacedKey<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::NamespacedKey<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -161,9 +161,9 @@ self.jni_ref().call_method(&self.jni_object(),"registerStructure","(Lorg/bukkit/
     }
     pub fn unregister_structure(
         &mut self,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregisterStructure",
@@ -268,5 +268,10 @@ impl<'mc> crate::JNIRaw<'mc> for Structure<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::persistence::PersistentDataHolder<'mc>> for Structure<'mc> {
+    fn into(self) -> crate::bukkit::persistence::PersistentDataHolder<'mc> {
+        crate::bukkit::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

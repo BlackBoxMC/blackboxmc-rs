@@ -112,9 +112,9 @@ impl<'mc> Chest<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -169,9 +169,9 @@ impl<'mc> Chest<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -268,9 +268,9 @@ impl<'mc> Chest<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -281,9 +281,9 @@ impl<'mc> Chest<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -317,10 +317,10 @@ impl<'mc> Chest<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -345,10 +345,10 @@ impl<'mc> Chest<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -430,9 +430,9 @@ impl<'mc> Chest<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -475,6 +475,21 @@ impl<'mc> crate::JNIRaw<'mc> for Chest<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for Chest<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for Chest<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Lidded<'mc>> for Chest<'mc> {
+    fn into(self) -> crate::bukkit::block::Lidded<'mc> {
+        crate::bukkit::block::Lidded::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub enum BlockFaceEnum {
@@ -750,9 +765,9 @@ impl<'mc> DaylightDetector<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -807,9 +822,9 @@ impl<'mc> DaylightDetector<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -906,9 +921,9 @@ impl<'mc> DaylightDetector<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -919,9 +934,9 @@ impl<'mc> DaylightDetector<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -955,10 +970,10 @@ impl<'mc> DaylightDetector<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -983,10 +998,10 @@ impl<'mc> DaylightDetector<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -1006,6 +1021,11 @@ impl<'mc> crate::JNIRaw<'mc> for DaylightDetector<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for DaylightDetector<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Lockable. Needed for returning it from Java.
@@ -1188,9 +1208,9 @@ impl<'mc> Lectern<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -1245,9 +1265,9 @@ impl<'mc> Lectern<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -1344,9 +1364,9 @@ impl<'mc> Lectern<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -1357,9 +1377,9 @@ impl<'mc> Lectern<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -1393,10 +1413,10 @@ impl<'mc> Lectern<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -1421,10 +1441,10 @@ impl<'mc> Lectern<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -1444,6 +1464,16 @@ impl<'mc> crate::JNIRaw<'mc> for Lectern<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Lectern<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::BlockInventoryHolder<'mc>> for Lectern<'mc> {
+    fn into(self) -> crate::bukkit::inventory::BlockInventoryHolder<'mc> {
+        crate::bukkit::inventory::BlockInventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements CreatureSpawner. Needed for returning it from Java.
@@ -1505,9 +1535,9 @@ impl<'mc> CreatureSpawner<'mc> {
     }
     pub fn set_spawned_type(
         &mut self,
-        arg0: crate::bukkit::entity::EntityType<'mc>,
+        arg0: impl Into<crate::bukkit::entity::EntityType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpawnedType",
@@ -1694,9 +1724,9 @@ impl<'mc> CreatureSpawner<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -1751,9 +1781,9 @@ impl<'mc> CreatureSpawner<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -1850,9 +1880,9 @@ impl<'mc> CreatureSpawner<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -1863,9 +1893,9 @@ impl<'mc> CreatureSpawner<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -1899,10 +1929,10 @@ impl<'mc> CreatureSpawner<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -1927,10 +1957,10 @@ impl<'mc> CreatureSpawner<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -1950,6 +1980,11 @@ impl<'mc> crate::JNIRaw<'mc> for CreatureSpawner<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for CreatureSpawner<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Comparator. Needed for returning it from Java.
@@ -2017,9 +2052,9 @@ impl<'mc> Comparator<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -2074,9 +2109,9 @@ impl<'mc> Comparator<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -2173,9 +2208,9 @@ impl<'mc> Comparator<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -2186,9 +2221,9 @@ impl<'mc> Comparator<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -2222,10 +2257,10 @@ impl<'mc> Comparator<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -2250,10 +2285,10 @@ impl<'mc> Comparator<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -2273,6 +2308,11 @@ impl<'mc> crate::JNIRaw<'mc> for Comparator<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Comparator<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements EndGateway. Needed for returning it from Java.
@@ -2321,9 +2361,9 @@ impl<'mc> EndGateway<'mc> {
     }
     pub fn set_exit_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setExitLocation",
@@ -2401,9 +2441,9 @@ impl<'mc> EndGateway<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -2458,9 +2498,9 @@ impl<'mc> EndGateway<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -2557,9 +2597,9 @@ impl<'mc> EndGateway<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -2570,9 +2610,9 @@ impl<'mc> EndGateway<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -2606,10 +2646,10 @@ impl<'mc> EndGateway<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -2634,10 +2674,10 @@ impl<'mc> EndGateway<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -2657,6 +2697,11 @@ impl<'mc> crate::JNIRaw<'mc> for EndGateway<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for EndGateway<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Container. Needed for returning it from Java.
@@ -2756,9 +2801,9 @@ impl<'mc> Container<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -2813,9 +2858,9 @@ impl<'mc> Container<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -2912,9 +2957,9 @@ impl<'mc> Container<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -2925,9 +2970,9 @@ impl<'mc> Container<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -2961,10 +3006,10 @@ impl<'mc> Container<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -2989,10 +3034,10 @@ impl<'mc> Container<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -3064,6 +3109,26 @@ impl<'mc> crate::JNIRaw<'mc> for Container<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Container<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::BlockInventoryHolder<'mc>> for Container<'mc> {
+    fn into(self) -> crate::bukkit::inventory::BlockInventoryHolder<'mc> {
+        crate::bukkit::inventory::BlockInventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Lockable<'mc>> for Container<'mc> {
+    fn into(self) -> crate::bukkit::block::Lockable<'mc> {
+        crate::bukkit::block::Lockable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::Nameable<'mc>> for Container<'mc> {
+    fn into(self) -> crate::bukkit::Nameable<'mc> {
+        crate::bukkit::Nameable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BlastFurnace. Needed for returning it from Java.
@@ -3211,9 +3276,9 @@ impl<'mc> BlastFurnace<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -3268,9 +3333,9 @@ impl<'mc> BlastFurnace<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -3367,9 +3432,9 @@ impl<'mc> BlastFurnace<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -3380,9 +3445,9 @@ impl<'mc> BlastFurnace<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -3416,10 +3481,10 @@ impl<'mc> BlastFurnace<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -3444,10 +3509,10 @@ impl<'mc> BlastFurnace<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -3519,6 +3584,11 @@ impl<'mc> crate::JNIRaw<'mc> for BlastFurnace<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Furnace<'mc>> for BlastFurnace<'mc> {
+    fn into(self) -> crate::bukkit::block::Furnace<'mc> {
+        crate::bukkit::block::Furnace::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub enum PistonMoveReactionEnum {
@@ -3753,9 +3823,9 @@ impl<'mc> EnchantingTable<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -3810,9 +3880,9 @@ impl<'mc> EnchantingTable<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -3909,9 +3979,9 @@ impl<'mc> EnchantingTable<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -3922,9 +3992,9 @@ impl<'mc> EnchantingTable<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -3958,10 +4028,10 @@ impl<'mc> EnchantingTable<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -3986,10 +4056,10 @@ impl<'mc> EnchantingTable<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -4032,6 +4102,16 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantingTable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for EnchantingTable<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::Nameable<'mc>> for EnchantingTable<'mc> {
+    fn into(self) -> crate::bukkit::Nameable<'mc> {
+        crate::bukkit::Nameable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements ShulkerBox. Needed for returning it from Java.
@@ -4156,9 +4236,9 @@ impl<'mc> ShulkerBox<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -4213,9 +4293,9 @@ impl<'mc> ShulkerBox<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -4312,9 +4392,9 @@ impl<'mc> ShulkerBox<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -4325,9 +4405,9 @@ impl<'mc> ShulkerBox<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -4361,10 +4441,10 @@ impl<'mc> ShulkerBox<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -4389,10 +4469,10 @@ impl<'mc> ShulkerBox<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -4474,9 +4554,9 @@ impl<'mc> ShulkerBox<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -4519,6 +4599,21 @@ impl<'mc> crate::JNIRaw<'mc> for ShulkerBox<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for ShulkerBox<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for ShulkerBox<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Lidded<'mc>> for ShulkerBox<'mc> {
+    fn into(self) -> crate::bukkit::block::Lidded<'mc> {
+        crate::bukkit::block::Lidded::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements EntityBlockStorage. Needed for returning it from Java.
@@ -4581,9 +4676,9 @@ impl<'mc> EntityBlockStorage<'mc> {
     }
     pub fn add_entity(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addEntity",
@@ -4629,9 +4724,9 @@ impl<'mc> EntityBlockStorage<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -4686,9 +4781,9 @@ impl<'mc> EntityBlockStorage<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -4785,9 +4880,9 @@ impl<'mc> EntityBlockStorage<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -4798,9 +4893,9 @@ impl<'mc> EntityBlockStorage<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -4834,10 +4929,10 @@ impl<'mc> EntityBlockStorage<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -4862,10 +4957,10 @@ impl<'mc> EntityBlockStorage<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -4885,6 +4980,11 @@ impl<'mc> crate::JNIRaw<'mc> for EntityBlockStorage<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for EntityBlockStorage<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Beehive. Needed for returning it from Java.
@@ -4931,9 +5031,9 @@ impl<'mc> Beehive<'mc> {
     }
     pub fn set_flower(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlower",
@@ -4978,9 +5078,9 @@ impl<'mc> Beehive<'mc> {
     }
     pub fn add_entity(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addEntity",
@@ -5026,9 +5126,9 @@ impl<'mc> Beehive<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -5083,9 +5183,9 @@ impl<'mc> Beehive<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -5182,9 +5282,9 @@ impl<'mc> Beehive<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -5195,9 +5295,9 @@ impl<'mc> Beehive<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -5231,10 +5331,10 @@ impl<'mc> Beehive<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -5259,10 +5359,10 @@ impl<'mc> Beehive<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -5282,6 +5382,11 @@ impl<'mc> crate::JNIRaw<'mc> for Beehive<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::EntityBlockStorage<'mc>> for Beehive<'mc> {
+    fn into(self) -> crate::bukkit::block::EntityBlockStorage<'mc> {
+        crate::bukkit::block::EntityBlockStorage::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements SculkCatalyst. Needed for returning it from Java.
@@ -5349,9 +5454,9 @@ impl<'mc> SculkCatalyst<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -5406,9 +5511,9 @@ impl<'mc> SculkCatalyst<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -5505,9 +5610,9 @@ impl<'mc> SculkCatalyst<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -5518,9 +5623,9 @@ impl<'mc> SculkCatalyst<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -5554,10 +5659,10 @@ impl<'mc> SculkCatalyst<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -5582,10 +5687,10 @@ impl<'mc> SculkCatalyst<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -5605,6 +5710,11 @@ impl<'mc> crate::JNIRaw<'mc> for SculkCatalyst<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for SculkCatalyst<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Furnace. Needed for returning it from Java.
@@ -5752,9 +5862,9 @@ impl<'mc> Furnace<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -5809,9 +5919,9 @@ impl<'mc> Furnace<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -5908,9 +6018,9 @@ impl<'mc> Furnace<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -5921,9 +6031,9 @@ impl<'mc> Furnace<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -5957,10 +6067,10 @@ impl<'mc> Furnace<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -5985,10 +6095,10 @@ impl<'mc> Furnace<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -6060,6 +6170,11 @@ impl<'mc> crate::JNIRaw<'mc> for Furnace<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for Furnace<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Dropper. Needed for returning it from Java.
@@ -6164,9 +6279,9 @@ impl<'mc> Dropper<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -6221,9 +6336,9 @@ impl<'mc> Dropper<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -6320,9 +6435,9 @@ impl<'mc> Dropper<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -6333,9 +6448,9 @@ impl<'mc> Dropper<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -6369,10 +6484,10 @@ impl<'mc> Dropper<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -6397,10 +6512,10 @@ impl<'mc> Dropper<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -6482,9 +6597,9 @@ impl<'mc> Dropper<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -6517,6 +6632,16 @@ impl<'mc> crate::JNIRaw<'mc> for Dropper<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for Dropper<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for Dropper<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements SuspiciousSand. Needed for returning it from Java.
@@ -6567,9 +6692,9 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     pub fn set_item(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setItem",
@@ -6596,9 +6721,9 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -6660,9 +6785,9 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -6717,9 +6842,9 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -6816,9 +6941,9 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -6829,9 +6954,9 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -6865,10 +6990,10 @@ impl<'mc> SuspiciousSand<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -6893,10 +7018,10 @@ impl<'mc> SuspiciousSand<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -6916,6 +7041,11 @@ impl<'mc> crate::JNIRaw<'mc> for SuspiciousSand<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::BrushableBlock<'mc>> for SuspiciousSand<'mc> {
+    fn into(self) -> crate::bukkit::block::BrushableBlock<'mc> {
+        crate::bukkit::block::BrushableBlock::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Conduit. Needed for returning it from Java.
@@ -6983,9 +7113,9 @@ impl<'mc> Conduit<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -7040,9 +7170,9 @@ impl<'mc> Conduit<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -7139,9 +7269,9 @@ impl<'mc> Conduit<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -7152,9 +7282,9 @@ impl<'mc> Conduit<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -7188,10 +7318,10 @@ impl<'mc> Conduit<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -7216,10 +7346,10 @@ impl<'mc> Conduit<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -7239,6 +7369,11 @@ impl<'mc> crate::JNIRaw<'mc> for Conduit<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Conduit<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Beacon. Needed for returning it from Java.
@@ -7293,9 +7428,9 @@ impl<'mc> Beacon<'mc> {
     }
     pub fn set_primary_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffectType<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPrimaryEffect",
@@ -7322,9 +7457,9 @@ impl<'mc> Beacon<'mc> {
     }
     pub fn set_secondary_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffectType<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSecondaryEffect",
@@ -7370,9 +7505,9 @@ impl<'mc> Beacon<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -7427,9 +7562,9 @@ impl<'mc> Beacon<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -7526,9 +7661,9 @@ impl<'mc> Beacon<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -7539,9 +7674,9 @@ impl<'mc> Beacon<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -7575,10 +7710,10 @@ impl<'mc> Beacon<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -7603,10 +7738,10 @@ impl<'mc> Beacon<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -7678,6 +7813,21 @@ impl<'mc> crate::JNIRaw<'mc> for Beacon<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Beacon<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Lockable<'mc>> for Beacon<'mc> {
+    fn into(self) -> crate::bukkit::block::Lockable<'mc> {
+        crate::bukkit::block::Lockable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::Nameable<'mc>> for Beacon<'mc> {
+    fn into(self) -> crate::bukkit::Nameable<'mc> {
+        crate::bukkit::Nameable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Block. Needed for returning it from Java.
@@ -7785,10 +7935,10 @@ impl<'mc> Block<'mc> {
     }
     pub fn set_type_with_material(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7809,9 +7959,9 @@ impl<'mc> Block<'mc> {
     }
     pub fn is_preferred_tool(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPreferredTool",
@@ -7919,10 +8069,10 @@ impl<'mc> Block<'mc> {
     }
     pub fn set_block_data_with_block_data(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::block::data::BlockData<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::data::BlockData<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7937,9 +8087,9 @@ impl<'mc> Block<'mc> {
     }
     pub fn get_face(
         &mut self,
-        arg0: crate::bukkit::block::Block<'mc>,
+        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFace",
@@ -7966,15 +8116,15 @@ impl<'mc> Block<'mc> {
     }
     pub fn ray_trace(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
-        arg1: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: impl Into<crate::bukkit::util::Vector<'mc>>,
         arg2: f64,
-        arg3: crate::bukkit::FluidCollisionMode<'mc>,
+        arg3: impl Into<crate::bukkit::FluidCollisionMode<'mc>>,
     ) -> Result<crate::bukkit::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = jni::objects::JValueGen::Double(arg2.into());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let res =
 self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;Lorg/bukkit/util/Vector;DLorg/bukkit/FluidCollisionMode;)Lorg/bukkit/util/RayTraceResult;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         let ret = {
@@ -8013,9 +8163,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn set_biome(
         &mut self,
-        arg0: crate::bukkit::block::Biome<'mc>,
+        arg0: impl Into<crate::bukkit::block::Biome<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBiome",
@@ -8065,9 +8215,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn is_block_face_powered(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isBlockFacePowered",
@@ -8078,9 +8228,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn is_block_face_indirectly_powered(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isBlockFaceIndirectlyPowered",
@@ -8091,9 +8241,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn get_block_power(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBlockPower",
@@ -8110,9 +8260,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn break_naturally(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "breakNaturally",
@@ -8123,9 +8273,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn apply_bone_meal(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "applyBoneMeal",
@@ -8136,9 +8286,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn get_break_speed(
         &mut self,
-        arg0: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBreakSpeed",
@@ -8171,9 +8321,9 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     }
     pub fn can_place(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "canPlace",
@@ -8185,10 +8335,10 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -8213,10 +8363,10 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -8249,6 +8399,16 @@ impl<'mc> crate::JNIRaw<'mc> for Block<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::metadata::Metadatable<'mc>> for Block<'mc> {
+    fn into(self) -> crate::bukkit::metadata::Metadatable<'mc> {
+        crate::bukkit::metadata::Metadatable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::Translatable<'mc>> for Block<'mc> {
+    fn into(self) -> crate::bukkit::Translatable<'mc> {
+        crate::bukkit::Translatable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Bell. Needed for returning it from Java.
@@ -8340,9 +8500,9 @@ impl<'mc> Bell<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -8397,9 +8557,9 @@ impl<'mc> Bell<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -8496,9 +8656,9 @@ impl<'mc> Bell<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -8509,9 +8669,9 @@ impl<'mc> Bell<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -8545,10 +8705,10 @@ impl<'mc> Bell<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -8573,10 +8733,10 @@ impl<'mc> Bell<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -8596,6 +8756,11 @@ impl<'mc> crate::JNIRaw<'mc> for Bell<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Bell<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Jigsaw. Needed for returning it from Java.
@@ -8663,9 +8828,9 @@ impl<'mc> Jigsaw<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -8720,9 +8885,9 @@ impl<'mc> Jigsaw<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -8819,9 +8984,9 @@ impl<'mc> Jigsaw<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -8832,9 +8997,9 @@ impl<'mc> Jigsaw<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -8868,10 +9033,10 @@ impl<'mc> Jigsaw<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -8896,10 +9061,10 @@ impl<'mc> Jigsaw<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -8919,6 +9084,11 @@ impl<'mc> crate::JNIRaw<'mc> for Jigsaw<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Jigsaw<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Dispenser. Needed for returning it from Java.
@@ -9041,9 +9211,9 @@ impl<'mc> Dispenser<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -9098,9 +9268,9 @@ impl<'mc> Dispenser<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -9197,9 +9367,9 @@ impl<'mc> Dispenser<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -9210,9 +9380,9 @@ impl<'mc> Dispenser<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -9246,10 +9416,10 @@ impl<'mc> Dispenser<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -9274,10 +9444,10 @@ impl<'mc> Dispenser<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -9359,9 +9529,9 @@ impl<'mc> Dispenser<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -9394,6 +9564,21 @@ impl<'mc> crate::JNIRaw<'mc> for Dispenser<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for Dispenser<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::Nameable<'mc>> for Dispenser<'mc> {
+    fn into(self) -> crate::bukkit::Nameable<'mc> {
+        crate::bukkit::Nameable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for Dispenser<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BrushableBlock. Needed for returning it from Java.
@@ -9444,9 +9629,9 @@ impl<'mc> BrushableBlock<'mc> {
     }
     pub fn set_item(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setItem",
@@ -9473,9 +9658,9 @@ impl<'mc> BrushableBlock<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -9537,9 +9722,9 @@ impl<'mc> BrushableBlock<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -9594,9 +9779,9 @@ impl<'mc> BrushableBlock<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -9693,9 +9878,9 @@ impl<'mc> BrushableBlock<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -9706,9 +9891,9 @@ impl<'mc> BrushableBlock<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -9742,10 +9927,10 @@ impl<'mc> BrushableBlock<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -9770,10 +9955,10 @@ impl<'mc> BrushableBlock<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -9793,6 +9978,16 @@ impl<'mc> crate::JNIRaw<'mc> for BrushableBlock<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for BrushableBlock<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for BrushableBlock<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements SculkShrieker. Needed for returning it from Java.
@@ -9876,9 +10071,9 @@ impl<'mc> SculkShrieker<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -9933,9 +10128,9 @@ impl<'mc> SculkShrieker<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -10032,9 +10227,9 @@ impl<'mc> SculkShrieker<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -10045,9 +10240,9 @@ impl<'mc> SculkShrieker<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -10081,10 +10276,10 @@ impl<'mc> SculkShrieker<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -10109,10 +10304,10 @@ impl<'mc> SculkShrieker<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -10132,6 +10327,11 @@ impl<'mc> crate::JNIRaw<'mc> for SculkShrieker<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for SculkShrieker<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements DecoratedPot. Needed for returning it from Java.
@@ -10199,9 +10399,9 @@ impl<'mc> DecoratedPot<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -10256,9 +10456,9 @@ impl<'mc> DecoratedPot<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -10355,9 +10555,9 @@ impl<'mc> DecoratedPot<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -10368,9 +10568,9 @@ impl<'mc> DecoratedPot<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -10404,10 +10604,10 @@ impl<'mc> DecoratedPot<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -10432,10 +10632,10 @@ impl<'mc> DecoratedPot<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -10455,6 +10655,11 @@ impl<'mc> crate::JNIRaw<'mc> for DecoratedPot<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for DecoratedPot<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Campfire. Needed for returning it from Java.
@@ -10512,10 +10717,10 @@ impl<'mc> Campfire<'mc> {
     pub fn set_item(
         &mut self,
         arg0: i32,
-        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setItem",
@@ -10620,9 +10825,9 @@ impl<'mc> Campfire<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -10677,9 +10882,9 @@ impl<'mc> Campfire<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -10776,9 +10981,9 @@ impl<'mc> Campfire<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -10789,9 +10994,9 @@ impl<'mc> Campfire<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -10825,10 +11030,10 @@ impl<'mc> Campfire<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -10853,10 +11058,10 @@ impl<'mc> Campfire<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -10876,6 +11081,11 @@ impl<'mc> crate::JNIRaw<'mc> for Campfire<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Campfire<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub enum BiomeEnum {
@@ -11360,9 +11570,9 @@ impl<'mc> Smoker<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -11417,9 +11627,9 @@ impl<'mc> Smoker<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -11516,9 +11726,9 @@ impl<'mc> Smoker<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -11529,9 +11739,9 @@ impl<'mc> Smoker<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -11565,10 +11775,10 @@ impl<'mc> Smoker<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -11593,10 +11803,10 @@ impl<'mc> Smoker<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -11668,6 +11878,11 @@ impl<'mc> crate::JNIRaw<'mc> for Smoker<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Furnace<'mc>> for Smoker<'mc> {
+    fn into(self) -> crate::bukkit::block::Furnace<'mc> {
+        crate::bukkit::block::Furnace::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements CalibratedSculkSensor. Needed for returning it from Java.
@@ -11760,9 +11975,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -11817,9 +12032,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -11916,9 +12131,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -11929,9 +12144,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -11965,10 +12180,10 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -11993,10 +12208,10 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -12016,6 +12231,11 @@ impl<'mc> crate::JNIRaw<'mc> for CalibratedSculkSensor<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::SculkSensor<'mc>> for CalibratedSculkSensor<'mc> {
+    fn into(self) -> crate::bukkit::block::SculkSensor<'mc> {
+        crate::bukkit::block::SculkSensor::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Structure. Needed for returning it from Java.
@@ -12093,9 +12313,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_rotation(
         &mut self,
-        arg0: crate::bukkit::block::structure::StructureRotation<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setRotation",
@@ -12107,10 +12327,10 @@ impl<'mc> Structure<'mc> {
     pub fn set_metadata_with_string(
         &mut self,
         arg0: std::option::Option<String>,
-        arg1: std::option::Option<crate::bukkit::metadata::MetadataValue<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::metadata::MetadataValue<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -12176,9 +12396,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_relative_position(
         &mut self,
-        arg0: crate::bukkit::util::BlockVector<'mc>,
+        arg0: impl Into<crate::bukkit::util::BlockVector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setRelativePosition",
@@ -12205,9 +12425,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_structure_size(
         &mut self,
-        arg0: crate::bukkit::util::BlockVector<'mc>,
+        arg0: impl Into<crate::bukkit::util::BlockVector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setStructureSize",
@@ -12218,9 +12438,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_mirror(
         &mut self,
-        arg0: crate::bukkit::block::structure::Mirror<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::Mirror<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMirror",
@@ -12258,9 +12478,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_usage_mode(
         &mut self,
-        arg0: crate::bukkit::block::structure::UsageMode<'mc>,
+        arg0: impl Into<crate::bukkit::block::structure::UsageMode<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setUsageMode",
@@ -12400,9 +12620,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -12457,9 +12677,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -12556,9 +12776,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -12569,9 +12789,9 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -12615,10 +12835,10 @@ impl<'mc> Structure<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -12638,6 +12858,11 @@ impl<'mc> crate::JNIRaw<'mc> for Structure<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Structure<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements EnderChest. Needed for returning it from Java.
@@ -12715,9 +12940,9 @@ impl<'mc> EnderChest<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -12772,9 +12997,9 @@ impl<'mc> EnderChest<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -12871,9 +13096,9 @@ impl<'mc> EnderChest<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -12884,9 +13109,9 @@ impl<'mc> EnderChest<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -12920,10 +13145,10 @@ impl<'mc> EnderChest<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -12948,10 +13173,10 @@ impl<'mc> EnderChest<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -12971,6 +13196,16 @@ impl<'mc> crate::JNIRaw<'mc> for EnderChest<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Lidded<'mc>> for EnderChest<'mc> {
+    fn into(self) -> crate::bukkit::block::Lidded<'mc> {
+        crate::bukkit::block::Lidded::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for EnderChest<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Bed. Needed for returning it from Java.
@@ -13038,9 +13273,9 @@ impl<'mc> Bed<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -13095,9 +13330,9 @@ impl<'mc> Bed<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -13194,9 +13429,9 @@ impl<'mc> Bed<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -13207,9 +13442,9 @@ impl<'mc> Bed<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -13243,10 +13478,10 @@ impl<'mc> Bed<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -13271,10 +13506,10 @@ impl<'mc> Bed<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -13288,9 +13523,9 @@ impl<'mc> Bed<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -13332,6 +13567,16 @@ impl<'mc> crate::JNIRaw<'mc> for Bed<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Bed<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Colorable<'mc>> for Bed<'mc> {
+    fn into(self) -> crate::bukkit::material::Colorable<'mc> {
+        crate::bukkit::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Jukebox. Needed for returning it from Java.
@@ -13402,9 +13647,9 @@ impl<'mc> Jukebox<'mc> {
     }
     pub fn set_record(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setRecord",
@@ -13456,9 +13701,9 @@ impl<'mc> Jukebox<'mc> {
     }
     pub fn set_playing(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPlaying",
@@ -13527,9 +13772,9 @@ impl<'mc> Jukebox<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -13584,9 +13829,9 @@ impl<'mc> Jukebox<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -13683,9 +13928,9 @@ impl<'mc> Jukebox<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -13696,9 +13941,9 @@ impl<'mc> Jukebox<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -13732,10 +13977,10 @@ impl<'mc> Jukebox<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -13760,10 +14005,10 @@ impl<'mc> Jukebox<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -13783,6 +14028,16 @@ impl<'mc> crate::JNIRaw<'mc> for Jukebox<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Jukebox<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::BlockInventoryHolder<'mc>> for Jukebox<'mc> {
+    fn into(self) -> crate::bukkit::inventory::BlockInventoryHolder<'mc> {
+        crate::bukkit::inventory::BlockInventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Banner. Needed for returning it from Java.
@@ -13842,9 +14097,9 @@ impl<'mc> Banner<'mc> {
     }
     pub fn set_base_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBaseColor",
@@ -13855,14 +14110,14 @@ impl<'mc> Banner<'mc> {
     }
     pub fn set_patterns(
         &mut self,
-        arg0: Vec<crate::bukkit::block::banner::Pattern<'mc>>,
+        arg0: Vec<impl Into<crate::bukkit::block::banner::Pattern<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -13881,9 +14136,9 @@ impl<'mc> Banner<'mc> {
     }
     pub fn add_pattern(
         &mut self,
-        arg0: crate::bukkit::block::banner::Pattern<'mc>,
+        arg0: impl Into<crate::bukkit::block::banner::Pattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addPattern",
@@ -13931,10 +14186,10 @@ impl<'mc> Banner<'mc> {
     pub fn set_pattern(
         &mut self,
         arg0: i32,
-        arg1: crate::bukkit::block::banner::Pattern<'mc>,
+        arg1: impl Into<crate::bukkit::block::banner::Pattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPattern",
@@ -13989,9 +14244,9 @@ impl<'mc> Banner<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -14046,9 +14301,9 @@ impl<'mc> Banner<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -14145,9 +14400,9 @@ impl<'mc> Banner<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -14158,9 +14413,9 @@ impl<'mc> Banner<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -14194,10 +14449,10 @@ impl<'mc> Banner<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -14222,10 +14477,10 @@ impl<'mc> Banner<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -14245,6 +14500,11 @@ impl<'mc> crate::JNIRaw<'mc> for Banner<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Banner<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Barrel. Needed for returning it from Java.
@@ -14344,9 +14604,9 @@ impl<'mc> Barrel<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -14401,9 +14661,9 @@ impl<'mc> Barrel<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -14500,9 +14760,9 @@ impl<'mc> Barrel<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -14513,9 +14773,9 @@ impl<'mc> Barrel<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -14549,10 +14809,10 @@ impl<'mc> Barrel<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -14577,10 +14837,10 @@ impl<'mc> Barrel<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -14662,9 +14922,9 @@ impl<'mc> Barrel<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -14707,6 +14967,21 @@ impl<'mc> crate::JNIRaw<'mc> for Barrel<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for Barrel<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for Barrel<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Lidded<'mc>> for Barrel<'mc> {
+    fn into(self) -> crate::bukkit::block::Lidded<'mc> {
+        crate::bukkit::block::Lidded::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements CommandBlock. Needed for returning it from Java.
@@ -14820,9 +15095,9 @@ impl<'mc> CommandBlock<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -14877,9 +15152,9 @@ impl<'mc> CommandBlock<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -14976,9 +15251,9 @@ impl<'mc> CommandBlock<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -14989,9 +15264,9 @@ impl<'mc> CommandBlock<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -15025,10 +15300,10 @@ impl<'mc> CommandBlock<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -15053,10 +15328,10 @@ impl<'mc> CommandBlock<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -15076,6 +15351,11 @@ impl<'mc> crate::JNIRaw<'mc> for CommandBlock<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for CommandBlock<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements SculkSensor. Needed for returning it from Java.
@@ -15165,9 +15445,9 @@ impl<'mc> SculkSensor<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -15222,9 +15502,9 @@ impl<'mc> SculkSensor<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -15321,9 +15601,9 @@ impl<'mc> SculkSensor<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -15334,9 +15614,9 @@ impl<'mc> SculkSensor<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -15370,10 +15650,10 @@ impl<'mc> SculkSensor<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -15398,10 +15678,10 @@ impl<'mc> SculkSensor<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -15421,6 +15701,11 @@ impl<'mc> crate::JNIRaw<'mc> for SculkSensor<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for SculkSensor<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements ChiseledBookshelf. Needed for returning it from Java.
@@ -15455,9 +15740,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     pub fn get_slot(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getSlot",
@@ -15555,9 +15840,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -15612,9 +15897,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -15711,9 +15996,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -15724,9 +16009,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -15760,10 +16045,10 @@ impl<'mc> ChiseledBookshelf<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -15788,10 +16073,10 @@ impl<'mc> ChiseledBookshelf<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -15811,6 +16096,16 @@ impl<'mc> crate::JNIRaw<'mc> for ChiseledBookshelf<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for ChiseledBookshelf<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::BlockInventoryHolder<'mc>> for ChiseledBookshelf<'mc> {
+    fn into(self) -> crate::bukkit::inventory::BlockInventoryHolder<'mc> {
+        crate::bukkit::inventory::BlockInventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements HangingSign. Needed for returning it from Java.
@@ -15843,9 +16138,9 @@ impl<'mc> HangingSign<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -15957,9 +16252,9 @@ impl<'mc> HangingSign<'mc> {
     }
     pub fn get_side(
         &mut self,
-        arg0: crate::bukkit::block::sign::Side<'mc>,
+        arg0: impl Into<crate::bukkit::block::sign::Side<'mc>>,
     ) -> Result<crate::bukkit::block::sign::SignSide<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getSide",
@@ -16010,9 +16305,9 @@ impl<'mc> HangingSign<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -16067,9 +16362,9 @@ impl<'mc> HangingSign<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -16166,9 +16461,9 @@ impl<'mc> HangingSign<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -16179,9 +16474,9 @@ impl<'mc> HangingSign<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -16215,10 +16510,10 @@ impl<'mc> HangingSign<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -16243,10 +16538,10 @@ impl<'mc> HangingSign<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -16266,6 +16561,11 @@ impl<'mc> crate::JNIRaw<'mc> for HangingSign<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Sign<'mc>> for HangingSign<'mc> {
+    fn into(self) -> crate::bukkit::block::Sign<'mc> {
+        crate::bukkit::block::Sign::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements TileState. Needed for returning it from Java.
@@ -16333,9 +16633,9 @@ impl<'mc> TileState<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -16390,9 +16690,9 @@ impl<'mc> TileState<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -16489,9 +16789,9 @@ impl<'mc> TileState<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -16502,9 +16802,9 @@ impl<'mc> TileState<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -16538,10 +16838,10 @@ impl<'mc> TileState<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -16566,10 +16866,10 @@ impl<'mc> TileState<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -16589,6 +16889,16 @@ impl<'mc> crate::JNIRaw<'mc> for TileState<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::BlockState<'mc>> for TileState<'mc> {
+    fn into(self) -> crate::bukkit::block::BlockState<'mc> {
+        crate::bukkit::block::BlockState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::persistence::PersistentDataHolder<'mc>> for TileState<'mc> {
+    fn into(self) -> crate::bukkit::persistence::PersistentDataHolder<'mc> {
+        crate::bukkit::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BlockState. Needed for returning it from Java.
@@ -16639,9 +16949,9 @@ impl<'mc> BlockState<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -16696,9 +17006,9 @@ impl<'mc> BlockState<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -16795,9 +17105,9 @@ impl<'mc> BlockState<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -16808,9 +17118,9 @@ impl<'mc> BlockState<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -16844,10 +17154,10 @@ impl<'mc> BlockState<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -16872,10 +17182,10 @@ impl<'mc> BlockState<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -16895,6 +17205,11 @@ impl<'mc> crate::JNIRaw<'mc> for BlockState<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::metadata::Metadatable<'mc>> for BlockState<'mc> {
+    fn into(self) -> crate::bukkit::metadata::Metadatable<'mc> {
+        crate::bukkit::metadata::Metadatable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BrewingStand. Needed for returning it from Java.
@@ -17026,9 +17341,9 @@ impl<'mc> BrewingStand<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -17083,9 +17398,9 @@ impl<'mc> BrewingStand<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -17182,9 +17497,9 @@ impl<'mc> BrewingStand<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -17195,9 +17510,9 @@ impl<'mc> BrewingStand<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -17231,10 +17546,10 @@ impl<'mc> BrewingStand<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -17259,10 +17574,10 @@ impl<'mc> BrewingStand<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -17334,6 +17649,11 @@ impl<'mc> crate::JNIRaw<'mc> for BrewingStand<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for BrewingStand<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Skull. Needed for returning it from Java.
@@ -17416,9 +17736,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_rotation(
         &mut self,
-        arg0: crate::bukkit::block::BlockFace<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setRotation",
@@ -17451,9 +17771,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_owning_player(
         &mut self,
-        arg0: crate::bukkit::OfflinePlayer<'mc>,
+        arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setOwningPlayer",
@@ -17480,9 +17800,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_owner_profile(
         &mut self,
-        arg0: crate::bukkit::profile::PlayerProfile<'mc>,
+        arg0: impl Into<crate::bukkit::profile::PlayerProfile<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setOwnerProfile",
@@ -17509,9 +17829,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_note_block_sound(
         &mut self,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setNoteBlockSound",
@@ -17549,9 +17869,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_skull_type(
         &mut self,
-        arg0: crate::bukkit::SkullType<'mc>,
+        arg0: impl Into<crate::bukkit::SkullType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSkullType",
@@ -17597,9 +17917,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -17654,9 +17974,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -17753,9 +18073,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -17766,9 +18086,9 @@ impl<'mc> Skull<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -17802,10 +18122,10 @@ impl<'mc> Skull<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -17830,10 +18150,10 @@ impl<'mc> Skull<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -17853,6 +18173,11 @@ impl<'mc> crate::JNIRaw<'mc> for Skull<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Skull<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Hopper. Needed for returning it from Java.
@@ -17952,9 +18277,9 @@ impl<'mc> Hopper<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -18009,9 +18334,9 @@ impl<'mc> Hopper<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -18108,9 +18433,9 @@ impl<'mc> Hopper<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -18121,9 +18446,9 @@ impl<'mc> Hopper<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -18157,10 +18482,10 @@ impl<'mc> Hopper<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -18185,10 +18510,10 @@ impl<'mc> Hopper<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -18270,9 +18595,9 @@ impl<'mc> Hopper<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -18307,6 +18632,16 @@ impl<'mc> crate::JNIRaw<'mc> for Hopper<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::block::Container<'mc>> for Hopper<'mc> {
+    fn into(self) -> crate::bukkit::block::Container<'mc> {
+        crate::bukkit::block::Container::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for Hopper<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements Sign. Needed for returning it from Java.
 pub struct Sign<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -18337,9 +18672,9 @@ impl<'mc> Sign<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -18451,9 +18786,9 @@ impl<'mc> Sign<'mc> {
     }
     pub fn get_side(
         &mut self,
-        arg0: crate::bukkit::block::sign::Side<'mc>,
+        arg0: impl Into<crate::bukkit::block::sign::Side<'mc>>,
     ) -> Result<crate::bukkit::block::sign::SignSide<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getSide",
@@ -18504,9 +18839,9 @@ impl<'mc> Sign<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -18561,9 +18896,9 @@ impl<'mc> Sign<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",
@@ -18660,9 +18995,9 @@ impl<'mc> Sign<'mc> {
     }
     pub fn set_data(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setData",
@@ -18673,9 +19008,9 @@ impl<'mc> Sign<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -18709,10 +19044,10 @@ impl<'mc> Sign<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -18737,10 +19072,10 @@ impl<'mc> Sign<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -18762,6 +19097,16 @@ impl<'mc> crate::JNIRaw<'mc> for Sign<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::block::TileState<'mc>> for Sign<'mc> {
+    fn into(self) -> crate::bukkit::block::TileState<'mc> {
+        crate::bukkit::block::TileState::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::material::Colorable<'mc>> for Sign<'mc> {
+    fn into(self) -> crate::bukkit::material::Colorable<'mc> {
+        crate::bukkit::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct DoubleChest<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18778,9 +19123,9 @@ impl<'mc> crate::JNIRaw<'mc> for DoubleChest<'mc> {
 impl<'mc> DoubleChest<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::inventory::DoubleChestInventory<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::DoubleChestInventory<'mc>>,
     ) -> Result<crate::bukkit::block::DoubleChest<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/block/DoubleChest")?;
         let res = jni.new_object(
             cls,
@@ -18974,6 +19319,11 @@ impl<'mc> DoubleChest<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::InventoryHolder<'mc>> for DoubleChest<'mc> {
+    fn into(self) -> crate::bukkit::inventory::InventoryHolder<'mc> {
+        crate::bukkit::inventory::InventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub enum BlockSupportEnum {

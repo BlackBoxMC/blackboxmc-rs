@@ -135,9 +135,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlyingVelocityMod",
@@ -164,9 +164,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDerailedVelocityMod",
@@ -177,9 +177,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_display_block(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlock",
@@ -206,9 +206,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_display_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlockData",
@@ -254,9 +254,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVelocity",
@@ -300,9 +300,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -603,9 +603,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPassenger",
@@ -616,9 +616,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn add_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPassenger",
@@ -629,9 +629,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn remove_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePassenger",
@@ -664,9 +664,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_last_damage_cause(
         &mut self,
-        arg0: crate::bukkit::event::entity::EntityDamageEvent<'mc>,
+        arg0: impl Into<crate::bukkit::event::entity::EntityDamageEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLastDamageCause",
@@ -710,9 +710,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn play_effect(
         &mut self,
-        arg0: crate::bukkit::EntityEffect<'mc>,
+        arg0: impl Into<crate::bukkit::EntityEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "playEffect",
@@ -1025,10 +1025,10 @@ impl<'mc> ExplosiveMinecart<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -1053,10 +1053,10 @@ impl<'mc> ExplosiveMinecart<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -1083,9 +1083,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -1163,6 +1163,11 @@ impl<'mc> crate::JNIRaw<'mc> for ExplosiveMinecart<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::entity::Minecart<'mc>> for ExplosiveMinecart<'mc> {
+    fn into(self) -> crate::bukkit::entity::Minecart<'mc> {
+        crate::bukkit::entity::Minecart::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements HopperMinecart. Needed for returning it from Java.
@@ -1277,9 +1282,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlyingVelocityMod",
@@ -1306,9 +1311,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDerailedVelocityMod",
@@ -1319,9 +1324,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_display_block(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlock",
@@ -1348,9 +1353,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_display_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlockData",
@@ -1396,9 +1401,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVelocity",
@@ -1442,9 +1447,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -1745,9 +1750,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPassenger",
@@ -1758,9 +1763,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn add_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPassenger",
@@ -1771,9 +1776,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn remove_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePassenger",
@@ -1806,9 +1811,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_last_damage_cause(
         &mut self,
-        arg0: crate::bukkit::event::entity::EntityDamageEvent<'mc>,
+        arg0: impl Into<crate::bukkit::event::entity::EntityDamageEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLastDamageCause",
@@ -1852,9 +1857,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn play_effect(
         &mut self,
-        arg0: crate::bukkit::EntityEffect<'mc>,
+        arg0: impl Into<crate::bukkit::EntityEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "playEffect",
@@ -2167,10 +2172,10 @@ impl<'mc> HopperMinecart<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -2195,10 +2200,10 @@ impl<'mc> HopperMinecart<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -2225,9 +2230,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -2331,9 +2336,9 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -2366,6 +2371,21 @@ impl<'mc> crate::JNIRaw<'mc> for HopperMinecart<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::entity::Minecart<'mc>> for HopperMinecart<'mc> {
+    fn into(self) -> crate::bukkit::entity::Minecart<'mc> {
+        crate::bukkit::entity::Minecart::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::InventoryHolder<'mc>> for HopperMinecart<'mc> {
+    fn into(self) -> crate::bukkit::inventory::InventoryHolder<'mc> {
+        crate::bukkit::inventory::InventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for HopperMinecart<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements StorageMinecart. Needed for returning it from Java.
@@ -2464,9 +2484,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlyingVelocityMod",
@@ -2493,9 +2513,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDerailedVelocityMod",
@@ -2506,9 +2526,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_display_block(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlock",
@@ -2535,9 +2555,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_display_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlockData",
@@ -2583,9 +2603,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVelocity",
@@ -2629,9 +2649,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -2932,9 +2952,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPassenger",
@@ -2945,9 +2965,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn add_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPassenger",
@@ -2958,9 +2978,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn remove_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePassenger",
@@ -2993,9 +3013,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_last_damage_cause(
         &mut self,
-        arg0: crate::bukkit::event::entity::EntityDamageEvent<'mc>,
+        arg0: impl Into<crate::bukkit::event::entity::EntityDamageEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLastDamageCause",
@@ -3039,9 +3059,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn play_effect(
         &mut self,
-        arg0: crate::bukkit::EntityEffect<'mc>,
+        arg0: impl Into<crate::bukkit::EntityEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "playEffect",
@@ -3354,10 +3374,10 @@ impl<'mc> StorageMinecart<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -3382,10 +3402,10 @@ impl<'mc> StorageMinecart<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -3412,9 +3432,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -3518,9 +3538,9 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_loot_table(
         &mut self,
-        arg0: crate::bukkit::loot::LootTable<'mc>,
+        arg0: impl Into<crate::bukkit::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
@@ -3553,6 +3573,21 @@ impl<'mc> crate::JNIRaw<'mc> for StorageMinecart<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::entity::Minecart<'mc>> for StorageMinecart<'mc> {
+    fn into(self) -> crate::bukkit::entity::Minecart<'mc> {
+        crate::bukkit::entity::Minecart::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::InventoryHolder<'mc>> for StorageMinecart<'mc> {
+    fn into(self) -> crate::bukkit::inventory::InventoryHolder<'mc> {
+        crate::bukkit::inventory::InventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::loot::Lootable<'mc>> for StorageMinecart<'mc> {
+    fn into(self) -> crate::bukkit::loot::Lootable<'mc> {
+        crate::bukkit::loot::Lootable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements SpawnerMinecart. Needed for returning it from Java.
@@ -3651,9 +3686,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlyingVelocityMod",
@@ -3680,9 +3715,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDerailedVelocityMod",
@@ -3693,9 +3728,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_display_block(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlock",
@@ -3722,9 +3757,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_display_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlockData",
@@ -3770,9 +3805,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVelocity",
@@ -3816,9 +3851,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -4119,9 +4154,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPassenger",
@@ -4132,9 +4167,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn add_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPassenger",
@@ -4145,9 +4180,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn remove_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePassenger",
@@ -4180,9 +4215,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_last_damage_cause(
         &mut self,
-        arg0: crate::bukkit::event::entity::EntityDamageEvent<'mc>,
+        arg0: impl Into<crate::bukkit::event::entity::EntityDamageEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLastDamageCause",
@@ -4226,9 +4261,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn play_effect(
         &mut self,
-        arg0: crate::bukkit::EntityEffect<'mc>,
+        arg0: impl Into<crate::bukkit::EntityEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "playEffect",
@@ -4541,10 +4576,10 @@ impl<'mc> SpawnerMinecart<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -4569,10 +4604,10 @@ impl<'mc> SpawnerMinecart<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -4599,9 +4634,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -4679,6 +4714,11 @@ impl<'mc> crate::JNIRaw<'mc> for SpawnerMinecart<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::entity::Minecart<'mc>> for SpawnerMinecart<'mc> {
+    fn into(self) -> crate::bukkit::entity::Minecart<'mc> {
+        crate::bukkit::entity::Minecart::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements PoweredMinecart. Needed for returning it from Java.
@@ -4793,9 +4833,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlyingVelocityMod",
@@ -4822,9 +4862,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDerailedVelocityMod",
@@ -4835,9 +4875,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_display_block(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlock",
@@ -4864,9 +4904,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_display_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlockData",
@@ -4912,9 +4952,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVelocity",
@@ -4958,9 +4998,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -5261,9 +5301,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPassenger",
@@ -5274,9 +5314,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn add_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPassenger",
@@ -5287,9 +5327,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn remove_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePassenger",
@@ -5322,9 +5362,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_last_damage_cause(
         &mut self,
-        arg0: crate::bukkit::event::entity::EntityDamageEvent<'mc>,
+        arg0: impl Into<crate::bukkit::event::entity::EntityDamageEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLastDamageCause",
@@ -5368,9 +5408,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn play_effect(
         &mut self,
-        arg0: crate::bukkit::EntityEffect<'mc>,
+        arg0: impl Into<crate::bukkit::EntityEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "playEffect",
@@ -5683,10 +5723,10 @@ impl<'mc> PoweredMinecart<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -5711,10 +5751,10 @@ impl<'mc> PoweredMinecart<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -5741,9 +5781,9 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -5821,6 +5861,11 @@ impl<'mc> crate::JNIRaw<'mc> for PoweredMinecart<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::entity::Minecart<'mc>> for PoweredMinecart<'mc> {
+    fn into(self) -> crate::bukkit::entity::Minecart<'mc> {
+        crate::bukkit::entity::Minecart::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements RideableMinecart. Needed for returning it from Java.
@@ -5919,9 +5964,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlyingVelocityMod",
@@ -5948,9 +5993,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDerailedVelocityMod",
@@ -5961,9 +6006,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_display_block(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlock",
@@ -5990,9 +6035,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_display_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlockData",
@@ -6038,9 +6083,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVelocity",
@@ -6084,9 +6129,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -6387,9 +6432,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPassenger",
@@ -6400,9 +6445,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn add_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPassenger",
@@ -6413,9 +6458,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn remove_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePassenger",
@@ -6448,9 +6493,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_last_damage_cause(
         &mut self,
-        arg0: crate::bukkit::event::entity::EntityDamageEvent<'mc>,
+        arg0: impl Into<crate::bukkit::event::entity::EntityDamageEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLastDamageCause",
@@ -6494,9 +6539,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn play_effect(
         &mut self,
-        arg0: crate::bukkit::EntityEffect<'mc>,
+        arg0: impl Into<crate::bukkit::EntityEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "playEffect",
@@ -6809,10 +6854,10 @@ impl<'mc> RideableMinecart<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -6837,10 +6882,10 @@ impl<'mc> RideableMinecart<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -6867,9 +6912,9 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -6947,6 +6992,11 @@ impl<'mc> crate::JNIRaw<'mc> for RideableMinecart<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::entity::Minecart<'mc>> for RideableMinecart<'mc> {
+    fn into(self) -> crate::bukkit::entity::Minecart<'mc> {
+        crate::bukkit::entity::Minecart::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements CommandMinecart. Needed for returning it from Java.
@@ -7078,9 +7128,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setFlyingVelocityMod",
@@ -7107,9 +7157,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDerailedVelocityMod",
@@ -7120,9 +7170,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_display_block(
         &mut self,
-        arg0: crate::bukkit::material::MaterialData<'mc>,
+        arg0: impl Into<crate::bukkit::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlock",
@@ -7149,9 +7199,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_display_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayBlockData",
@@ -7197,9 +7247,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: crate::bukkit::util::Vector<'mc>,
+        arg0: impl Into<crate::bukkit::util::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVelocity",
@@ -7243,9 +7293,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn get_location(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -7546,9 +7596,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPassenger",
@@ -7559,9 +7609,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn add_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPassenger",
@@ -7572,9 +7622,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn remove_passenger(
         &mut self,
-        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePassenger",
@@ -7607,9 +7657,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_last_damage_cause(
         &mut self,
-        arg0: crate::bukkit::event::entity::EntityDamageEvent<'mc>,
+        arg0: impl Into<crate::bukkit::event::entity::EntityDamageEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLastDamageCause",
@@ -7653,9 +7703,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn play_effect(
         &mut self,
-        arg0: crate::bukkit::EntityEffect<'mc>,
+        arg0: impl Into<crate::bukkit::EntityEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "playEffect",
@@ -7968,10 +8018,10 @@ impl<'mc> CommandMinecart<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::metadata::MetadataValue<'mc>,
+        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -7996,10 +8046,10 @@ impl<'mc> CommandMinecart<'mc> {
     pub fn remove_metadata(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -8026,9 +8076,9 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -8106,5 +8156,10 @@ impl<'mc> crate::JNIRaw<'mc> for CommandMinecart<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::entity::Minecart<'mc>> for CommandMinecart<'mc> {
+    fn into(self) -> crate::bukkit::entity::Minecart<'mc> {
+        crate::bukkit::entity::Minecart::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

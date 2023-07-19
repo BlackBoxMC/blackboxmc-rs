@@ -162,14 +162,16 @@ impl<'mc> crate::JNIRaw<'mc> for LightningStrikeEvent<'mc> {
 impl<'mc> LightningStrikeEvent<'mc> {
     pub fn new_with_world(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::World<'mc>,
-        arg1: std::option::Option<crate::bukkit::entity::LightningStrike<'mc>>,
-        arg2: std::option::Option<crate::bukkit::event::weather::LightningStrikeEventCause<'mc>>,
+        arg0: impl Into<crate::bukkit::World<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::entity::LightningStrike<'mc>>>,
+        arg2: std::option::Option<
+            impl Into<crate::bukkit::event::weather::LightningStrikeEventCause<'mc>>,
+        >,
     ) -> Result<crate::bukkit::event::weather::LightningStrikeEvent<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/event/weather/LightningStrikeEvent")?;
         let res = jni.new_object(cls,
 "(Lorg/bukkit/World;Lorg/bukkit/entity/LightningStrike;Lorg/bukkit/event/weather/LightningStrikeEvent$Cause;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
@@ -386,6 +388,11 @@ impl<'mc> LightningStrikeEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for LightningStrikeEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
+        crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct ThunderChangeEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -402,11 +409,11 @@ impl<'mc> crate::JNIRaw<'mc> for ThunderChangeEvent<'mc> {
 impl<'mc> ThunderChangeEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::World<'mc>,
+        arg0: impl Into<crate::bukkit::World<'mc>>,
         arg1: bool,
     ) -> Result<crate::bukkit::event::weather::ThunderChangeEvent<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = &jni.find_class("org/bukkit/event/weather/ThunderChangeEvent")?;
         let res = jni.new_object(
@@ -601,6 +608,11 @@ impl<'mc> ThunderChangeEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for ThunderChangeEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
+        crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct WeatherChangeEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -617,11 +629,11 @@ impl<'mc> crate::JNIRaw<'mc> for WeatherChangeEvent<'mc> {
 impl<'mc> WeatherChangeEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::World<'mc>,
+        arg0: impl Into<crate::bukkit::World<'mc>>,
         arg1: bool,
     ) -> Result<crate::bukkit::event::weather::WeatherChangeEvent<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = &jni.find_class("org/bukkit/event/weather/WeatherChangeEvent")?;
         let res = jni.new_object(
@@ -816,6 +828,11 @@ impl<'mc> WeatherChangeEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for WeatherChangeEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
+        crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct WeatherEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -832,9 +849,9 @@ impl<'mc> crate::JNIRaw<'mc> for WeatherEvent<'mc> {
 impl<'mc> WeatherEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::World<'mc>,
+        arg0: impl Into<crate::bukkit::World<'mc>>,
     ) -> Result<crate::bukkit::event::weather::WeatherEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/event/weather/WeatherEvent")?;
         let res = jni.new_object(
             cls,

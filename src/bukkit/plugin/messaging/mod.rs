@@ -108,11 +108,11 @@ impl<'mc> PluginMessageListener<'mc> {
     pub fn on_plugin_message_received(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::entity::Player<'mc>,
+        arg1: impl Into<crate::bukkit::entity::Player<'mc>>,
         _arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "onPluginMessageReceived",
@@ -150,18 +150,18 @@ impl<'mc> crate::JNIRaw<'mc> for PluginMessageListenerRegistration<'mc> {
 impl<'mc> PluginMessageListenerRegistration<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::plugin::messaging::Messenger<'mc>,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::messaging::Messenger<'mc>>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg2: String,
-        arg3: crate::bukkit::plugin::messaging::PluginMessageListener<'mc>,
+        arg3: impl Into<crate::bukkit::plugin::messaging::PluginMessageListener<'mc>>,
     ) -> Result<
         crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = jni::objects::JObject::from(jni.new_string(arg2).unwrap());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let cls =
             &jni.find_class("org/bukkit/plugin/messaging/PluginMessageListenerRegistration")?;
         let res = jni.new_object(cls,
@@ -361,10 +361,10 @@ impl<'mc> Messenger<'mc> {
     }
     pub fn register_outgoing_plugin_channel(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -379,10 +379,10 @@ impl<'mc> Messenger<'mc> {
     }
     pub fn unregister_outgoing_plugin_channel_with_plugin(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -397,16 +397,16 @@ impl<'mc> Messenger<'mc> {
     }
     pub fn register_incoming_plugin_channel(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
-        arg2: crate::bukkit::plugin::messaging::PluginMessageListener<'mc>,
+        arg2: impl Into<crate::bukkit::plugin::messaging::PluginMessageListener<'mc>>,
     ) -> Result<
         crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let res =
 self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)Lorg/bukkit/plugin/messaging/PluginMessageListenerRegistration;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         let ret = {
@@ -419,21 +419,23 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn unregister_incoming_plugin_channel_with_plugin(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<String>,
-        arg2: std::option::Option<crate::bukkit::plugin::messaging::PluginMessageListener<'mc>>,
+        arg2: std::option::Option<
+            impl Into<crate::bukkit::plugin::messaging::PluginMessageListener<'mc>>,
+        >,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
         self.jni_ref().call_method(&self.jni_object(),"unregisterIncomingPluginChannel","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(())
     }
     pub fn is_registration_valid(
         &mut self,
-        arg0: crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isRegistrationValid",
@@ -444,10 +446,10 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn is_incoming_channel_registered(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -462,10 +464,10 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn is_outgoing_channel_registered(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -480,11 +482,11 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn dispatch_incoming_message(
         &mut self,
-        arg0: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
         arg1: String,
         _arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -586,10 +588,10 @@ impl<'mc> StandardMessenger<'mc> {
     }
     pub fn register_outgoing_plugin_channel(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -604,10 +606,10 @@ impl<'mc> StandardMessenger<'mc> {
     }
     pub fn unregister_outgoing_plugin_channel_with_plugin(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -622,16 +624,16 @@ impl<'mc> StandardMessenger<'mc> {
     }
     pub fn register_incoming_plugin_channel(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
-        arg2: crate::bukkit::plugin::messaging::PluginMessageListener<'mc>,
+        arg2: impl Into<crate::bukkit::plugin::messaging::PluginMessageListener<'mc>>,
     ) -> Result<
         crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let res =
 self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)Lorg/bukkit/plugin/messaging/PluginMessageListenerRegistration;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         let ret = {
@@ -644,21 +646,23 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn unregister_incoming_plugin_channel_with_plugin(
         &mut self,
-        arg0: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<String>,
-        arg2: std::option::Option<crate::bukkit::plugin::messaging::PluginMessageListener<'mc>>,
+        arg2: std::option::Option<
+            impl Into<crate::bukkit::plugin::messaging::PluginMessageListener<'mc>>,
+        >,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
         self.jni_ref().call_method(&self.jni_object(),"unregisterIncomingPluginChannel","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(())
     }
     pub fn is_registration_valid(
         &mut self,
-        arg0: crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isRegistrationValid",
@@ -669,10 +673,10 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn is_incoming_channel_registered(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -687,10 +691,10 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn is_outgoing_channel_registered(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -705,11 +709,11 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn dispatch_incoming_message(
         &mut self,
-        arg0: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
         arg1: String,
         _arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -738,13 +742,13 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
     }
     pub fn validate_plugin_message(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::plugin::messaging::Messenger<'mc>,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::messaging::Messenger<'mc>>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg2: String,
         _arg3: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = jni::objects::JObject::from(jni.new_string(arg2).unwrap());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls,"validatePluginMessage",
@@ -821,6 +825,11 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::plugin::messaging::Messenger<'mc>> for StandardMessenger<'mc> {
+    fn into(self) -> crate::bukkit::plugin::messaging::Messenger<'mc> {
+        crate::bukkit::plugin::messaging::Messenger::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements PluginMessageRecipient. Needed for returning it from Java.
 pub struct PluginMessageRecipient<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -854,11 +863,11 @@ impl<'mc> PluginMessageRecipient<'mc> {
     }
     pub fn send_plugin_message(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg1: String,
         _arg2: Vec<i8>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),

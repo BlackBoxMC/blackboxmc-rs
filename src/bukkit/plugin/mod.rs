@@ -528,14 +528,14 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         jni: crate::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
         arg1: jni::objects::JObject<'mc>,
-        arg2: crate::bukkit::plugin::ServicePriority<'mc>,
-        arg3: crate::bukkit::plugin::Plugin<'mc>,
+        arg2: impl Into<crate::bukkit::plugin::ServicePriority<'mc>>,
+        arg3: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<crate::bukkit::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = arg0;
         let val_1 = arg1;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/plugin/RegisteredServiceProvider")?;
         let res = jni.new_object(cls,
 "(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
@@ -914,9 +914,9 @@ impl<'mc> PluginManager<'mc> {
     }
     pub fn call_event(
         &mut self,
-        arg0: crate::bukkit::event::Event<'mc>,
+        arg0: impl Into<crate::bukkit::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "callEvent",
@@ -927,9 +927,9 @@ impl<'mc> PluginManager<'mc> {
     }
     pub fn recalculate_permission_defaults(
         &mut self,
-        arg0: crate::bukkit::permissions::Permission<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::Permission<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "recalculatePermissionDefaults",
@@ -940,9 +940,9 @@ impl<'mc> PluginManager<'mc> {
     }
     pub fn add_permission(
         &mut self,
-        arg0: crate::bukkit::permissions::Permission<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::Permission<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addPermission",
@@ -954,10 +954,10 @@ impl<'mc> PluginManager<'mc> {
     pub fn subscribe_to_default_perms(
         &mut self,
         arg0: bool,
-        arg1: crate::bukkit::permissions::Permissible<'mc>,
+        arg1: impl Into<crate::bukkit::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "subscribeToDefaultPerms",
@@ -972,10 +972,10 @@ impl<'mc> PluginManager<'mc> {
     pub fn subscribe_to_permission(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::permissions::Permissible<'mc>,
+        arg1: impl Into<crate::bukkit::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "subscribeToPermission",
@@ -990,10 +990,10 @@ impl<'mc> PluginManager<'mc> {
     pub fn unsubscribe_from_permission(
         &mut self,
         arg0: String,
-        arg1: crate::bukkit::permissions::Permissible<'mc>,
+        arg1: impl Into<crate::bukkit::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "unsubscribeFromPermission",
@@ -1008,10 +1008,10 @@ impl<'mc> PluginManager<'mc> {
     pub fn unsubscribe_from_default_perms(
         &mut self,
         arg0: bool,
-        arg1: crate::bukkit::permissions::Permissible<'mc>,
+        arg1: impl Into<crate::bukkit::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "unsubscribeFromDefaultPerms",
@@ -1031,9 +1031,9 @@ impl<'mc> PluginManager<'mc> {
     }
     pub fn enable_plugin(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "enablePlugin",
@@ -1044,9 +1044,9 @@ impl<'mc> PluginManager<'mc> {
     }
     pub fn disable_plugin(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "disablePlugin",
@@ -1080,11 +1080,11 @@ impl<'mc> PluginManager<'mc> {
     }
     pub fn register_events(
         &mut self,
-        arg0: crate::bukkit::event::Listener<'mc>,
-        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::event::Listener<'mc>>,
+        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "registerEvents",
@@ -1099,17 +1099,17 @@ impl<'mc> PluginManager<'mc> {
     pub fn register_event_with_class(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
-        arg1: crate::bukkit::event::Listener<'mc>,
-        arg2: crate::bukkit::event::EventPriority<'mc>,
-        arg3: crate::bukkit::plugin::EventExecutor<'mc>,
-        arg4: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: impl Into<crate::bukkit::event::Listener<'mc>>,
+        arg2: impl Into<crate::bukkit::event::EventPriority<'mc>>,
+        arg3: impl Into<crate::bukkit::plugin::EventExecutor<'mc>>,
+        arg4: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
         arg5: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().1.clone()) };
         let val_5 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
         self.jni_ref().call_method(&self.jni_object(),"registerEvent","(Ljava/lang/Class;Lorg/bukkit/event/Listener;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         Ok(())
@@ -1476,17 +1476,22 @@ impl<'mc> PluginBase<'mc> {
     }
     pub fn on_command(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
-        arg1: crate::bukkit::command::Command<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::bukkit::command::Command<'mc>>,
         arg2: String,
         _arg3: Vec<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg2).unwrap());
         let res =
 self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(res.z().unwrap())
+    }
+}
+impl<'mc> Into<crate::bukkit::plugin::Plugin<'mc>> for PluginBase<'mc> {
+    fn into(self) -> crate::bukkit::plugin::Plugin<'mc> {
+        crate::bukkit::plugin::Plugin::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements EventExecutor. Needed for returning it from Java.
@@ -1519,11 +1524,11 @@ impl<'mc> EventExecutor<'mc> {
     }
     pub fn execute(
         &mut self,
-        arg0: crate::bukkit::event::Listener<'mc>,
-        arg1: crate::bukkit::event::Event<'mc>,
+        arg0: impl Into<crate::bukkit::event::Listener<'mc>>,
+        arg1: impl Into<crate::bukkit::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "execute",
@@ -1592,21 +1597,21 @@ impl<'mc> ServicesManager<'mc> {
         &mut self,
         arg0: jni::objects::JClass<'mc>,
         arg1: jni::objects::JObject<'mc>,
-        arg2: crate::bukkit::plugin::Plugin<'mc>,
-        arg3: crate::bukkit::plugin::ServicePriority<'mc>,
+        arg2: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg3: impl Into<crate::bukkit::plugin::ServicePriority<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = arg1;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         self.jni_ref().call_method(&self.jni_object(),"register","(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/Plugin;Lorg/bukkit/plugin/ServicePriority;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         Ok(())
     }
     pub fn unregister_all(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "unregisterAll",
@@ -1721,21 +1726,21 @@ impl<'mc> SimpleServicesManager<'mc> {
         &mut self,
         arg0: jni::objects::JClass<'mc>,
         arg1: jni::objects::JObject<'mc>,
-        arg2: crate::bukkit::plugin::Plugin<'mc>,
-        arg3: crate::bukkit::plugin::ServicePriority<'mc>,
+        arg2: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg3: impl Into<crate::bukkit::plugin::ServicePriority<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = arg1;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         self.jni_ref().call_method(&self.jni_object(),"register","(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/Plugin;Lorg/bukkit/plugin/ServicePriority;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         Ok(())
     }
     pub fn unregister_all(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "unregisterAll",
@@ -1846,6 +1851,11 @@ impl<'mc> SimpleServicesManager<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::plugin::ServicesManager<'mc>> for SimpleServicesManager<'mc> {
+    fn into(self) -> crate::bukkit::plugin::ServicesManager<'mc> {
+        crate::bukkit::plugin::ServicesManager::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct TimedRegisteredListener<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1862,17 +1872,17 @@ impl<'mc> crate::JNIRaw<'mc> for TimedRegisteredListener<'mc> {
 impl<'mc> TimedRegisteredListener<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::event::Listener<'mc>,
-        arg1: crate::bukkit::plugin::EventExecutor<'mc>,
-        arg2: crate::bukkit::event::EventPriority<'mc>,
-        arg3: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::event::Listener<'mc>>,
+        arg1: impl Into<crate::bukkit::plugin::EventExecutor<'mc>>,
+        arg2: impl Into<crate::bukkit::event::EventPriority<'mc>>,
+        arg3: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg4: bool,
     ) -> Result<crate::bukkit::plugin::TimedRegisteredListener<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let val_4 = jni::objects::JValueGen::Bool(arg4.into());
         let cls = &jni.find_class("org/bukkit/plugin/TimedRegisteredListener")?;
         let res = jni.new_object(cls,
@@ -1918,9 +1928,9 @@ impl<'mc> TimedRegisteredListener<'mc> {
     }
     pub fn call_event(
         &mut self,
-        arg0: crate::bukkit::event::Event<'mc>,
+        arg0: impl Into<crate::bukkit::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "callEvent",
@@ -2136,9 +2146,9 @@ impl<'mc> PluginLoader<'mc> {
     }
     pub fn enable_plugin(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "enablePlugin",
@@ -2149,9 +2159,9 @@ impl<'mc> PluginLoader<'mc> {
     }
     pub fn disable_plugin(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "disablePlugin",
@@ -2186,16 +2196,16 @@ impl<'mc> crate::JNIRaw<'mc> for RegisteredListener<'mc> {
 impl<'mc> RegisteredListener<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::event::Listener<'mc>,
-        arg1: crate::bukkit::plugin::EventExecutor<'mc>,
-        arg2: crate::bukkit::event::EventPriority<'mc>,
-        arg3: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::event::Listener<'mc>>,
+        arg1: impl Into<crate::bukkit::plugin::EventExecutor<'mc>>,
+        arg2: impl Into<crate::bukkit::event::EventPriority<'mc>>,
+        arg3: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg4: bool,
     ) -> Result<crate::bukkit::plugin::RegisteredListener<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let val_4 = jni::objects::JValueGen::Bool(arg4.into());
         let cls = &jni.find_class("org/bukkit/plugin/RegisteredListener")?;
         let res = jni.new_object(cls,
@@ -2288,9 +2298,9 @@ impl<'mc> RegisteredListener<'mc> {
     }
     pub fn call_event(
         &mut self,
-        arg0: crate::bukkit::event::Event<'mc>,
+        arg0: impl Into<crate::bukkit::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "callEvent",
@@ -2642,13 +2652,13 @@ impl<'mc> Plugin<'mc> {
     }
     pub fn on_command(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
-        arg1: crate::bukkit::command::Command<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::bukkit::command::Command<'mc>>,
         arg2: String,
         _arg3: Vec<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg2).unwrap());
         let res =
 self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
@@ -2662,6 +2672,11 @@ impl<'mc> crate::JNIRaw<'mc> for Plugin<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::command::TabExecutor<'mc>> for Plugin<'mc> {
+    fn into(self) -> crate::bukkit::command::TabExecutor<'mc> {
+        crate::bukkit::command::TabExecutor::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub mod java;

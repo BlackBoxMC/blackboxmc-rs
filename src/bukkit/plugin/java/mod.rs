@@ -15,10 +15,10 @@ impl<'mc> crate::JNIRaw<'mc> for JavaPluginLoader<'mc> {
 impl<'mc> JavaPluginLoader<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::Server<'mc>,
+        arg0: impl Into<crate::bukkit::Server<'mc>>,
     ) -> Result<crate::bukkit::plugin::java::JavaPluginLoader<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/plugin/java/JavaPluginLoader")?;
         let res = jni.new_object(
             cls,
@@ -54,9 +54,9 @@ impl<'mc> JavaPluginLoader<'mc> {
     }
     pub fn enable_plugin(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "enablePlugin",
@@ -67,9 +67,9 @@ impl<'mc> JavaPluginLoader<'mc> {
     }
     pub fn disable_plugin(
         &mut self,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "disablePlugin",
@@ -146,6 +146,11 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::plugin::PluginLoader<'mc>> for JavaPluginLoader<'mc> {
+    fn into(self) -> crate::bukkit::plugin::PluginLoader<'mc> {
+        crate::bukkit::plugin::PluginLoader::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaPlugin<'mc>(
@@ -259,13 +264,13 @@ impl<'mc> JavaPlugin<'mc> {
     }
     pub fn on_command(
         &mut self,
-        arg0: crate::bukkit::command::CommandSender<'mc>,
-        arg1: crate::bukkit::command::Command<'mc>,
+        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::bukkit::command::Command<'mc>>,
         arg2: String,
         _arg3: Vec<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg2).unwrap());
         let res =
 self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;

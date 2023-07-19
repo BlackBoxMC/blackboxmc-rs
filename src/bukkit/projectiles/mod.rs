@@ -32,10 +32,10 @@ impl<'mc> ProjectileSource<'mc> {
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<crate::bukkit::util::Vector<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::util::Vector<'mc>>>,
     ) -> Result<crate::bukkit::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -112,10 +112,10 @@ impl<'mc> BlockProjectileSource<'mc> {
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<crate::bukkit::util::Vector<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::util::Vector<'mc>>>,
     ) -> Result<crate::bukkit::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -140,5 +140,10 @@ impl<'mc> crate::JNIRaw<'mc> for BlockProjectileSource<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::projectiles::ProjectileSource<'mc>> for BlockProjectileSource<'mc> {
+    fn into(self) -> crate::bukkit::projectiles::ProjectileSource<'mc> {
+        crate::bukkit::projectiles::ProjectileSource::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

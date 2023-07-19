@@ -175,9 +175,9 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn get_block_data(
         &mut self,
-        arg0: crate::bukkit::Material<'mc>,
+        arg0: impl Into<crate::bukkit::Material<'mc>>,
     ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBlockData",
@@ -193,9 +193,9 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn set_block_data(
         &mut self,
-        arg0: crate::bukkit::block::data::BlockData<'mc>,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockData",
@@ -346,9 +346,9 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -359,9 +359,9 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -372,11 +372,11 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -393,9 +393,9 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -406,9 +406,9 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -419,7 +419,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -431,7 +431,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -443,9 +443,9 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -478,11 +478,11 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -550,6 +550,11 @@ impl<'mc> crate::JNIRaw<'mc> for BlockDataMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for BlockDataMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements ArmorMeta. Needed for returning it from Java.
 pub struct ArmorMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -602,9 +607,9 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn set_trim(
         &mut self,
-        arg0: crate::bukkit::inventory::meta::trim::ArmorTrim<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::meta::trim::ArmorTrim<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setTrim",
@@ -760,9 +765,9 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -773,9 +778,9 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -786,11 +791,11 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -807,9 +812,9 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -820,9 +825,9 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -833,7 +838,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -845,7 +850,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -857,9 +862,9 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -892,11 +897,11 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -964,6 +969,11 @@ impl<'mc> crate::JNIRaw<'mc> for ArmorMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for ArmorMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements AxolotlBucketMeta. Needed for returning it from Java.
 pub struct AxolotlBucketMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -1018,9 +1028,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn set_variant(
         &mut self,
-        arg0: crate::bukkit::entity::AxolotlVariant<'mc>,
+        arg0: impl Into<crate::bukkit::entity::AxolotlVariant<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setVariant",
@@ -1165,9 +1175,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -1178,9 +1188,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -1191,11 +1201,11 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -1212,9 +1222,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -1225,9 +1235,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -1238,7 +1248,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1250,7 +1260,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1262,9 +1272,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -1297,11 +1307,11 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -1367,6 +1377,11 @@ impl<'mc> crate::JNIRaw<'mc> for AxolotlBucketMeta<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for AxolotlBucketMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements SkullMeta. Needed for returning it from Java.
@@ -1460,9 +1475,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn set_owning_player(
         &mut self,
-        arg0: crate::bukkit::OfflinePlayer<'mc>,
+        arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setOwningPlayer",
@@ -1489,9 +1504,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn set_owner_profile(
         &mut self,
-        arg0: crate::bukkit::profile::PlayerProfile<'mc>,
+        arg0: impl Into<crate::bukkit::profile::PlayerProfile<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setOwnerProfile",
@@ -1518,9 +1533,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn set_note_block_sound(
         &mut self,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setNoteBlockSound",
@@ -1659,9 +1674,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -1672,9 +1687,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -1685,11 +1700,11 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -1706,9 +1721,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -1719,9 +1734,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -1732,7 +1747,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1744,7 +1759,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1756,9 +1771,9 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -1791,11 +1806,11 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -1863,6 +1878,11 @@ impl<'mc> crate::JNIRaw<'mc> for SkullMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for SkullMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements CompassMeta. Needed for returning it from Java.
 pub struct CompassMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -1921,9 +1941,9 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn set_lodestone(
         &mut self,
-        arg0: crate::bukkit::Location<'mc>,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLodestone",
@@ -2078,9 +2098,9 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -2091,9 +2111,9 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -2104,11 +2124,11 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -2125,9 +2145,9 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -2138,9 +2158,9 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -2151,7 +2171,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2163,7 +2183,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2175,9 +2195,9 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -2210,11 +2230,11 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -2282,6 +2302,11 @@ impl<'mc> crate::JNIRaw<'mc> for CompassMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for CompassMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements SuspiciousStewMeta. Needed for returning it from Java.
 pub struct SuspiciousStewMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -2326,10 +2351,10 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn add_custom_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffect<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffect<'mc>>,
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2344,9 +2369,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn remove_custom_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffectType<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeCustomEffect",
@@ -2357,9 +2382,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn has_custom_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffectType<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasCustomEffect",
@@ -2504,9 +2529,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -2517,9 +2542,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -2530,11 +2555,11 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -2551,9 +2576,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -2564,9 +2589,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -2577,7 +2602,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2589,7 +2614,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2601,9 +2626,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -2636,11 +2661,11 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -2708,6 +2733,11 @@ impl<'mc> crate::JNIRaw<'mc> for SuspiciousStewMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for SuspiciousStewMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements CrossbowMeta. Needed for returning it from Java.
 pub struct CrossbowMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -2744,14 +2774,14 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn set_charged_projectiles(
         &mut self,
-        arg0: Vec<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: Vec<impl Into<crate::bukkit::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -2770,9 +2800,9 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn add_charged_projectile(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addChargedProjectile",
@@ -2917,9 +2947,9 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -2930,9 +2960,9 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -2943,11 +2973,11 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -2964,9 +2994,9 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -2977,9 +3007,9 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -2990,7 +3020,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3002,7 +3032,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3014,9 +3044,9 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -3049,11 +3079,11 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -3119,6 +3149,11 @@ impl<'mc> crate::JNIRaw<'mc> for CrossbowMeta<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for CrossbowMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements ItemMeta. Needed for returning it from Java.
@@ -3285,9 +3320,9 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -3298,9 +3333,9 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -3311,11 +3346,11 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -3332,9 +3367,9 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -3345,9 +3380,9 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -3358,7 +3393,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3370,7 +3405,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3382,9 +3417,9 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -3417,11 +3452,11 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -3487,6 +3522,22 @@ impl<'mc> crate::JNIRaw<'mc> for ItemMeta<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc>>
+    for ItemMeta<'mc>
+{
+    fn into(self) -> crate::bukkit::configuration::serialization::ConfigurationSerializable<'mc> {
+        crate::bukkit::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.jni_ref(),
+            self.1,
+        )
+        .unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::persistence::PersistentDataHolder<'mc>> for ItemMeta<'mc> {
+    fn into(self) -> crate::bukkit::persistence::PersistentDataHolder<'mc> {
+        crate::bukkit::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Repairable. Needed for returning it from Java.
@@ -3685,9 +3736,9 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -3698,9 +3749,9 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -3711,11 +3762,11 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -3732,9 +3783,9 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -3745,9 +3796,9 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -3758,7 +3809,7 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3770,7 +3821,7 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3782,9 +3833,9 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -3817,11 +3868,11 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -3889,6 +3940,11 @@ impl<'mc> crate::JNIRaw<'mc> for Repairable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for Repairable<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements BannerMeta. Needed for returning it from Java.
 pub struct BannerMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -3946,9 +4002,9 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn set_base_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBaseColor",
@@ -3959,14 +4015,14 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn set_patterns(
         &mut self,
-        arg0: Vec<crate::bukkit::block::banner::Pattern<'mc>>,
+        arg0: Vec<impl Into<crate::bukkit::block::banner::Pattern<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -3985,9 +4041,9 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn add_pattern(
         &mut self,
-        arg0: crate::bukkit::block::banner::Pattern<'mc>,
+        arg0: impl Into<crate::bukkit::block::banner::Pattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addPattern",
@@ -4035,10 +4091,10 @@ impl<'mc> BannerMeta<'mc> {
     pub fn set_pattern(
         &mut self,
         arg0: i32,
-        arg1: crate::bukkit::block::banner::Pattern<'mc>,
+        arg1: impl Into<crate::bukkit::block::banner::Pattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPattern",
@@ -4192,9 +4248,9 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -4205,9 +4261,9 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -4218,11 +4274,11 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -4239,9 +4295,9 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -4252,9 +4308,9 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -4265,7 +4321,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4277,7 +4333,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4289,9 +4345,9 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -4324,11 +4380,11 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -4396,6 +4452,11 @@ impl<'mc> crate::JNIRaw<'mc> for BannerMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for BannerMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements BundleMeta. Needed for returning it from Java.
 pub struct BundleMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -4426,9 +4487,9 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn add_item(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addItem",
@@ -4445,14 +4506,14 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn set_items(
         &mut self,
-        arg0: Vec<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: Vec<impl Into<crate::bukkit::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -4605,9 +4666,9 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -4618,9 +4679,9 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -4631,11 +4692,11 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -4652,9 +4713,9 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -4665,9 +4726,9 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -4678,7 +4739,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4690,7 +4751,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4702,9 +4763,9 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -4737,11 +4798,11 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -4809,6 +4870,11 @@ impl<'mc> crate::JNIRaw<'mc> for BundleMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for BundleMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements ColorableArmorMeta. Needed for returning it from Java.
 pub struct ColorableArmorMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -4864,9 +4930,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn set_trim(
         &mut self,
-        arg0: crate::bukkit::inventory::meta::trim::ArmorTrim<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::meta::trim::ArmorTrim<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setTrim",
@@ -5022,9 +5088,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -5035,9 +5101,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -5048,11 +5114,11 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -5069,9 +5135,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -5082,9 +5148,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -5095,7 +5161,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5107,7 +5173,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5119,9 +5185,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -5154,11 +5220,11 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -5218,9 +5284,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::Color<'mc>,
+        arg0: impl Into<crate::bukkit::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -5251,6 +5317,16 @@ impl<'mc> crate::JNIRaw<'mc> for ColorableArmorMeta<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::meta::ArmorMeta<'mc>> for ColorableArmorMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ArmorMeta<'mc> {
+        crate::bukkit::inventory::meta::ArmorMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::meta::LeatherArmorMeta<'mc>> for ColorableArmorMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::LeatherArmorMeta<'mc> {
+        crate::bukkit::inventory::meta::LeatherArmorMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements SpawnEggMeta. Needed for returning it from Java.
@@ -5326,9 +5402,9 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn set_spawned_type(
         &mut self,
-        arg0: crate::bukkit::entity::EntityType<'mc>,
+        arg0: impl Into<crate::bukkit::entity::EntityType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setSpawnedType",
@@ -5467,9 +5543,9 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -5480,9 +5556,9 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -5493,11 +5569,11 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -5514,9 +5590,9 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -5527,9 +5603,9 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -5540,7 +5616,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5552,7 +5628,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5564,9 +5640,9 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -5599,11 +5675,11 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -5669,6 +5745,11 @@ impl<'mc> crate::JNIRaw<'mc> for SpawnEggMeta<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for SpawnEggMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Damageable. Needed for returning it from Java.
@@ -5867,9 +5948,9 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -5880,9 +5961,9 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -5893,11 +5974,11 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -5914,9 +5995,9 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -5927,9 +6008,9 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -5940,7 +6021,7 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5952,7 +6033,7 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5964,9 +6045,9 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -5999,11 +6080,11 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -6071,6 +6152,11 @@ impl<'mc> crate::JNIRaw<'mc> for Damageable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for Damageable<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements FireworkMeta. Needed for returning it from Java.
 pub struct FireworkMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -6123,9 +6209,9 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn add_effect(
         &mut self,
-        arg0: crate::bukkit::FireworkEffect<'mc>,
+        arg0: impl Into<crate::bukkit::FireworkEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addEffect",
@@ -6291,9 +6377,9 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -6304,9 +6390,9 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -6317,11 +6403,11 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -6338,9 +6424,9 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -6351,9 +6437,9 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -6364,7 +6450,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6376,7 +6462,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6388,9 +6474,9 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -6423,11 +6509,11 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -6495,6 +6581,11 @@ impl<'mc> crate::JNIRaw<'mc> for FireworkMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for FireworkMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements PotionMeta. Needed for returning it from Java.
 pub struct PotionMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -6525,9 +6616,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::Color<'mc>,
+        arg0: impl Into<crate::bukkit::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -6574,10 +6665,10 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn add_custom_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffect<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffect<'mc>>,
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6592,9 +6683,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn remove_custom_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffectType<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeCustomEffect",
@@ -6605,9 +6696,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn has_custom_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffectType<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasCustomEffect",
@@ -6624,9 +6715,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn set_base_potion_data(
         &mut self,
-        arg0: crate::bukkit::potion::PotionData<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBasePotionData",
@@ -6653,9 +6744,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn set_main_effect(
         &mut self,
-        arg0: crate::bukkit::potion::PotionEffectType<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMainEffect",
@@ -6800,9 +6891,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -6813,9 +6904,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -6826,11 +6917,11 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -6847,9 +6938,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -6860,9 +6951,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -6873,7 +6964,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6885,7 +6976,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6897,9 +6988,9 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -6932,11 +7023,11 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -7004,6 +7095,11 @@ impl<'mc> crate::JNIRaw<'mc> for PotionMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for PotionMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements BlockStateMeta. Needed for returning it from Java.
 pub struct BlockStateMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -7058,9 +7154,9 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn set_block_state(
         &mut self,
-        arg0: crate::bukkit::block::BlockState<'mc>,
+        arg0: impl Into<crate::bukkit::block::BlockState<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBlockState",
@@ -7205,9 +7301,9 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -7218,9 +7314,9 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -7231,11 +7327,11 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -7252,9 +7348,9 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -7265,9 +7361,9 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -7278,7 +7374,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7290,7 +7386,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7302,9 +7398,9 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -7337,11 +7433,11 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -7409,6 +7505,11 @@ impl<'mc> crate::JNIRaw<'mc> for BlockStateMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for BlockStateMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements EnchantmentStorageMeta. Needed for returning it from Java.
 pub struct EnchantmentStorageMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -7448,9 +7549,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn has_stored_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasStoredEnchant",
@@ -7461,9 +7562,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn get_stored_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStoredEnchantLevel",
@@ -7474,11 +7575,11 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn add_stored_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -7495,9 +7596,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn remove_stored_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeStoredEnchant",
@@ -7508,9 +7609,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn has_conflicting_stored_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingStoredEnchant",
@@ -7655,9 +7756,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -7668,9 +7769,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -7681,11 +7782,11 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -7702,9 +7803,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -7715,9 +7816,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -7728,7 +7829,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7740,7 +7841,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7752,9 +7853,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -7787,11 +7888,11 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -7859,6 +7960,11 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantmentStorageMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for EnchantmentStorageMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements KnowledgeBookMeta. Needed for returning it from Java.
 pub struct KnowledgeBookMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -7897,14 +8003,14 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn set_recipes(
         &mut self,
-        arg0: Vec<crate::bukkit::NamespacedKey<'mc>>,
+        arg0: Vec<impl Into<crate::bukkit::NamespacedKey<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -7923,7 +8029,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn add_recipe(
         &mut self,
-        _arg0: Vec<crate::bukkit::NamespacedKey<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::NamespacedKey<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8069,9 +8175,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -8082,9 +8188,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -8095,11 +8201,11 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -8116,9 +8222,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -8129,9 +8235,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -8142,7 +8248,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8154,7 +8260,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8166,9 +8272,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -8201,11 +8307,11 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -8273,6 +8379,11 @@ impl<'mc> crate::JNIRaw<'mc> for KnowledgeBookMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for KnowledgeBookMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements MapMeta. Needed for returning it from Java.
 pub struct MapMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -8303,9 +8414,9 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::Color<'mc>,
+        arg0: impl Into<crate::bukkit::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -8396,9 +8507,9 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn set_map_view(
         &mut self,
-        arg0: crate::bukkit::map::MapView<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapView<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMapView",
@@ -8582,9 +8693,9 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -8595,9 +8706,9 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -8608,11 +8719,11 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -8629,9 +8740,9 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -8642,9 +8753,9 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -8655,7 +8766,7 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8667,7 +8778,7 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8679,9 +8790,9 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -8714,11 +8825,11 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -8786,6 +8897,11 @@ impl<'mc> crate::JNIRaw<'mc> for MapMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for MapMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct BookMetaSpigot<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8836,7 +8952,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     pub fn set_page(
         &mut self,
         arg0: i32,
-        _arg1: Vec<crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        _arg1: Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
         self.jni_ref().call_method(
@@ -8849,7 +8965,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     }
     pub fn add_page(
         &mut self,
-        _arg0: Vec<crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        _arg0: Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8961,9 +9077,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn set_color(
         &mut self,
-        arg0: crate::bukkit::Color<'mc>,
+        arg0: impl Into<crate::bukkit::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -9133,9 +9249,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -9146,9 +9262,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -9159,11 +9275,11 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -9180,9 +9296,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -9193,9 +9309,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -9206,7 +9322,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9218,7 +9334,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9230,9 +9346,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -9265,11 +9381,11 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -9337,6 +9453,11 @@ impl<'mc> crate::JNIRaw<'mc> for LeatherArmorMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for LeatherArmorMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements FireworkEffectMeta. Needed for returning it from Java.
 pub struct FireworkEffectMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -9386,9 +9507,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn set_effect(
         &mut self,
-        arg0: crate::bukkit::FireworkEffect<'mc>,
+        arg0: impl Into<crate::bukkit::FireworkEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setEffect",
@@ -9549,9 +9670,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -9562,9 +9683,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -9575,11 +9696,11 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -9596,9 +9717,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -9609,9 +9730,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -9622,7 +9743,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9634,7 +9755,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9646,9 +9767,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -9681,11 +9802,11 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -9753,6 +9874,11 @@ impl<'mc> crate::JNIRaw<'mc> for FireworkEffectMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for FireworkEffectMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements TropicalFishBucketMeta. Needed for returning it from Java.
 pub struct TropicalFishBucketMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -9808,9 +9934,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn set_pattern(
         &mut self,
-        arg0: crate::bukkit::entity::TropicalFishPattern<'mc>,
+        arg0: impl Into<crate::bukkit::entity::TropicalFishPattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPattern",
@@ -9848,9 +9974,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn set_pattern_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPatternColor",
@@ -9888,9 +10014,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn set_body_color(
         &mut self,
-        arg0: crate::bukkit::DyeColor<'mc>,
+        arg0: impl Into<crate::bukkit::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setBodyColor",
@@ -10035,9 +10161,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -10048,9 +10174,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -10061,11 +10187,11 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -10082,9 +10208,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -10095,9 +10221,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -10108,7 +10234,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10120,7 +10246,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10132,9 +10258,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -10167,11 +10293,11 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -10237,6 +10363,11 @@ impl<'mc> crate::JNIRaw<'mc> for TropicalFishBucketMeta<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for TropicalFishBucketMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BookMeta. Needed for returning it from Java.
@@ -10416,9 +10547,9 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn set_generation(
         &mut self,
-        arg0: crate::bukkit::inventory::meta::BookMetaGeneration<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::meta::BookMetaGeneration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setGeneration",
@@ -10569,9 +10700,9 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -10582,9 +10713,9 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -10595,11 +10726,11 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -10616,9 +10747,9 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -10629,9 +10760,9 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -10642,7 +10773,7 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10654,7 +10785,7 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10666,9 +10797,9 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -10701,11 +10832,11 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -10773,6 +10904,11 @@ impl<'mc> crate::JNIRaw<'mc> for BookMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for BookMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 /// An instantiatable struct that implements MusicInstrumentMeta. Needed for returning it from Java.
 pub struct MusicInstrumentMeta<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -10838,9 +10974,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn set_instrument(
         &mut self,
-        arg0: crate::bukkit::MusicInstrument<'mc>,
+        arg0: impl Into<crate::bukkit::MusicInstrument<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setInstrument",
@@ -10979,9 +11115,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn has_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasEnchant",
@@ -10992,9 +11128,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn get_enchant_level(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantLevel",
@@ -11005,11 +11141,11 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn add_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
@@ -11026,9 +11162,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn remove_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
@@ -11039,9 +11175,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn has_conflicting_enchant(
         &mut self,
-        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasConflictingEnchant",
@@ -11052,7 +11188,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn add_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -11064,7 +11200,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn remove_item_flags(
         &mut self,
-        _arg0: Vec<crate::bukkit::inventory::ItemFlag<'mc>>,
+        _arg0: Vec<impl Into<crate::bukkit::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -11076,9 +11212,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn has_item_flag(
         &mut self,
-        arg0: crate::bukkit::inventory::ItemFlag<'mc>,
+        arg0: impl Into<crate::bukkit::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasItemFlag",
@@ -11111,11 +11247,11 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn add_attribute_modifier(
         &mut self,
-        arg0: crate::bukkit::attribute::Attribute<'mc>,
-        arg1: crate::bukkit::attribute::AttributeModifier<'mc>,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
@@ -11181,6 +11317,11 @@ impl<'mc> crate::JNIRaw<'mc> for MusicInstrumentMeta<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::inventory::meta::ItemMeta<'mc>> for MusicInstrumentMeta<'mc> {
+    fn into(self) -> crate::bukkit::inventory::meta::ItemMeta<'mc> {
+        crate::bukkit::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub mod tags;

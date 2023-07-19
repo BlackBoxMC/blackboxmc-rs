@@ -45,9 +45,9 @@ impl<'mc> HandlerList<'mc> {
     }
     pub fn register(
         &mut self,
-        arg0: crate::bukkit::plugin::RegisteredListener<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::RegisteredListener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "register",

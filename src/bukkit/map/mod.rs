@@ -226,9 +226,9 @@ impl<'mc> MapCursorCollection<'mc> {
     }
     pub fn remove_cursor(
         &mut self,
-        arg0: crate::bukkit::map::MapCursor<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapCursor<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeCursor",
@@ -369,9 +369,9 @@ impl<'mc> MapCanvas<'mc> {
     }
     pub fn set_cursors(
         &mut self,
-        arg0: crate::bukkit::map::MapCursorCollection<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapCursorCollection<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCursors",
@@ -550,12 +550,12 @@ impl<'mc> MapCanvas<'mc> {
         &mut self,
         arg0: i32,
         arg1: i32,
-        arg2: crate::bukkit::map::MapFont<'mc>,
+        arg2: impl Into<crate::bukkit::map::MapFont<'mc>>,
         arg3: String,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg3).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -649,9 +649,9 @@ impl<'mc> MapRenderer<'mc> {
     }
     pub fn initialize(
         &mut self,
-        arg0: crate::bukkit::map::MapView<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapView<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "initialize",
@@ -668,13 +668,13 @@ impl<'mc> MapRenderer<'mc> {
     }
     pub fn render(
         &mut self,
-        arg0: crate::bukkit::map::MapView<'mc>,
-        arg1: crate::bukkit::map::MapCanvas<'mc>,
-        arg2: crate::bukkit::entity::Player<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapView<'mc>>,
+        arg1: impl Into<crate::bukkit::map::MapCanvas<'mc>>,
+        arg2: impl Into<crate::bukkit::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "render",
@@ -937,9 +937,9 @@ impl<'mc> MapView<'mc> {
     }
     pub fn set_scale(
         &mut self,
-        arg0: crate::bukkit::map::MapViewScale<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapViewScale<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setScale",
@@ -992,9 +992,9 @@ impl<'mc> MapView<'mc> {
     }
     pub fn set_world(
         &mut self,
-        arg0: crate::bukkit::World<'mc>,
+        arg0: impl Into<crate::bukkit::World<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setWorld",
@@ -1043,9 +1043,9 @@ impl<'mc> MapView<'mc> {
     }
     pub fn add_renderer(
         &mut self,
-        arg0: crate::bukkit::map::MapRenderer<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapRenderer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "addRenderer",
@@ -1056,9 +1056,9 @@ impl<'mc> MapView<'mc> {
     }
     pub fn remove_renderer(
         &mut self,
-        arg0: crate::bukkit::map::MapRenderer<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapRenderer<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeRenderer",
@@ -1194,10 +1194,10 @@ impl<'mc> MapFont<'mc> {
     pub fn set_char(
         &mut self,
         arg0: u16,
-        arg1: crate::bukkit::map::MapFontCharacterSprite<'mc>,
+        arg1: impl Into<crate::bukkit::map::MapFontCharacterSprite<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Char(arg0.into());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setChar",
@@ -1370,10 +1370,10 @@ impl<'mc> MinecraftFont<'mc> {
     pub fn set_char(
         &mut self,
         arg0: u16,
-        arg1: crate::bukkit::map::MapFontCharacterSprite<'mc>,
+        arg1: impl Into<crate::bukkit::map::MapFontCharacterSprite<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Char(arg0.into());
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setChar",
@@ -1609,9 +1609,9 @@ impl<'mc> MapPalette<'mc> {
     }
     pub fn set_map_color_cache(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::map::MapPaletteMapColorCache<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapPaletteMapColorCache<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
             cls,
@@ -1919,9 +1919,9 @@ impl<'mc> MapCursor<'mc> {
     }
     pub fn set_type(
         &mut self,
-        arg0: crate::bukkit::map::MapCursorType<'mc>,
+        arg0: impl Into<crate::bukkit::map::MapCursorType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setType",

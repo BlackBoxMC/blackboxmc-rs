@@ -51,9 +51,9 @@ impl<'mc> MemoryKey<'mc> {
     }
     pub fn get_by_key(
         mut jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::entity::memory::MemoryKey<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/entity/memory/MemoryKey")?;
         let res = jni.call_static_method(
             cls,
@@ -146,5 +146,10 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for MemoryKey<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

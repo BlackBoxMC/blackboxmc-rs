@@ -128,6 +128,11 @@ impl<'mc> StructureType<'mc> {
         Ok(ret)
     }
 }
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for StructureType<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct Structure<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -272,5 +277,10 @@ impl<'mc> Structure<'mc> {
             })
         };
         Ok(ret)
+    }
+}
+impl<'mc> Into<crate::bukkit::Keyed<'mc>> for Structure<'mc> {
+    fn into(self) -> crate::bukkit::Keyed<'mc> {
+        crate::bukkit::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

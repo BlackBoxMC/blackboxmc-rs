@@ -71,9 +71,9 @@ impl<'mc> crate::JNIRaw<'mc> for PermissibleBase<'mc> {
 impl<'mc> PermissibleBase<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::permissions::ServerOperator<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::ServerOperator<'mc>>,
     ) -> Result<crate::bukkit::permissions::PermissibleBase<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/PermissibleBase")?;
         let res = jni.new_object(
             cls,
@@ -109,9 +109,9 @@ impl<'mc> PermissibleBase<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -214,6 +214,11 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::permissions::Permissible<'mc>> for PermissibleBase<'mc> {
+    fn into(self) -> crate::bukkit::permissions::Permissible<'mc> {
+        crate::bukkit::permissions::Permissible::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub enum PermissionDefaultEnum {
@@ -378,9 +383,9 @@ impl<'mc> Permissible<'mc> {
     }
     pub fn remove_attachment(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeAttachment",
@@ -418,6 +423,11 @@ impl<'mc> crate::JNIRaw<'mc> for Permissible<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Into<crate::bukkit::permissions::ServerOperator<'mc>> for Permissible<'mc> {
+    fn into(self) -> crate::bukkit::permissions::ServerOperator<'mc> {
+        crate::bukkit::permissions::ServerOperator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Permission<'mc>(
@@ -458,9 +468,9 @@ impl<'mc> Permission<'mc> {
     }
     pub fn set_default(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionDefault<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionDefault<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDefault",
@@ -624,15 +634,15 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
 impl<'mc> PermissionAttachmentInfo<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::permissions::Permissible<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::Permissible<'mc>>,
         arg1: String,
-        arg2: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg2: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
         arg3: bool,
     ) -> Result<crate::bukkit::permissions::PermissionAttachmentInfo<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let val_3 = jni::objects::JValueGen::Bool(arg3.into());
         let cls = &jni.find_class("org/bukkit/permissions/PermissionAttachmentInfo")?;
         let res = jni.new_object(cls,
@@ -803,12 +813,12 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionAttachment<'mc> {
 impl<'mc> PermissionAttachment<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: crate::bukkit::plugin::Plugin<'mc>,
-        arg1: crate::bukkit::permissions::Permissible<'mc>,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: impl Into<crate::bukkit::permissions::Permissible<'mc>>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/PermissionAttachment")?;
         let res = jni.new_object(
             cls,
@@ -888,9 +898,9 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     pub fn set_removal_callback(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionRemovedExecutor<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionRemovedExecutor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "setRemovalCallback",
@@ -1018,9 +1028,9 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
     }
     pub fn attachment_removed(
         &mut self,
-        arg0: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "attachmentRemoved",
