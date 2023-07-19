@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements PistonHead. Needed for returning it from Java.
 pub struct PistonHead<'mc>(
@@ -27,6 +28,12 @@ impl<'mc> PistonHead<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn is_short(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isShort", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn set_short(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
@@ -38,11 +45,18 @@ impl<'mc> PistonHead<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_short(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isShort", "()Z", &[])?;
-        Ok(res.z().unwrap())
+    pub fn set_type(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::mod_type::TechnicalPistonType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setType",
+            "(Lorg/bukkit/block/data/type/TechnicalPiston$Type;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
     }
     pub fn get_type(
         &mut self,
@@ -62,19 +76,6 @@ impl<'mc> PistonHead<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn set_type(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::mod_type::TechnicalPistonType<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "setType",
-            "(Lorg/bukkit/block/data/type/TechnicalPiston$Type;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
     }
     pub fn facing(
         &mut self,
@@ -116,53 +117,6 @@ impl<'mc> PistonHead<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -176,15 +130,15 @@ impl<'mc> PistonHead<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -214,14 +168,12 @@ impl<'mc> PistonHead<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -375,6 +327,53 @@ impl<'mc> PistonHead<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -424,6 +423,19 @@ impl<'mc> Chest<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn set_type(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::mod_type::ChestType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setType",
+            "(Lorg/bukkit/block/data/type/Chest$Type;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn get_type(
         &mut self,
     ) -> Result<crate::bukkit::block::data::mod_type::ChestType<'mc>, Box<dyn std::error::Error>>
@@ -440,19 +452,6 @@ impl<'mc> Chest<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn set_type(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::mod_type::ChestType<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "setType",
-            "(Lorg/bukkit/block/data/type/Chest$Type;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
     }
     pub fn facing(
         &mut self,
@@ -494,53 +493,6 @@ impl<'mc> Chest<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -554,15 +506,15 @@ impl<'mc> Chest<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -592,14 +544,12 @@ impl<'mc> Chest<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -753,6 +703,53 @@ impl<'mc> Chest<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -855,53 +852,6 @@ impl<'mc> GlassPane<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -915,15 +865,15 @@ impl<'mc> GlassPane<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -953,14 +903,12 @@ impl<'mc> GlassPane<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -1114,6 +1062,53 @@ impl<'mc> GlassPane<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -1201,53 +1196,6 @@ impl<'mc> TripwireHook<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -1261,15 +1209,15 @@ impl<'mc> TripwireHook<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -1299,14 +1247,12 @@ impl<'mc> TripwireHook<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -1460,6 +1406,53 @@ impl<'mc> TripwireHook<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -1597,53 +1590,6 @@ impl<'mc> PitcherCrop<'mc> {
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -1657,15 +1603,15 @@ impl<'mc> PitcherCrop<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -1695,14 +1641,12 @@ impl<'mc> PitcherCrop<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -1856,6 +1800,53 @@ impl<'mc> PitcherCrop<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -1984,53 +1975,6 @@ impl<'mc> Lectern<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -2044,15 +1988,15 @@ impl<'mc> Lectern<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -2082,14 +2026,12 @@ impl<'mc> Lectern<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -2243,6 +2185,53 @@ impl<'mc> Lectern<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -2354,53 +2343,6 @@ impl<'mc> DaylightDetector<'mc> {
             .call_method(&self.jni_object(), "getMaximumPower", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -2414,15 +2356,15 @@ impl<'mc> DaylightDetector<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -2452,14 +2394,12 @@ impl<'mc> DaylightDetector<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -2613,6 +2553,53 @@ impl<'mc> DaylightDetector<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -2695,53 +2682,6 @@ impl<'mc> StructureBlock<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -2755,15 +2695,15 @@ impl<'mc> StructureBlock<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -2793,14 +2733,12 @@ impl<'mc> StructureBlock<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -2954,6 +2892,53 @@ impl<'mc> StructureBlock<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -3064,53 +3049,6 @@ impl<'mc> PinkPetals<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -3124,15 +3062,15 @@ impl<'mc> PinkPetals<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -3162,14 +3100,12 @@ impl<'mc> PinkPetals<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -3323,6 +3259,53 @@ impl<'mc> PinkPetals<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -3428,53 +3411,6 @@ impl<'mc> Piston<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -3488,15 +3424,15 @@ impl<'mc> Piston<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -3526,14 +3462,12 @@ impl<'mc> Piston<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -3687,6 +3621,53 @@ impl<'mc> Piston<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -3752,53 +3733,6 @@ impl<'mc> TNT<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -3812,15 +3746,15 @@ impl<'mc> TNT<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -3850,14 +3784,12 @@ impl<'mc> TNT<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -4011,6 +3943,53 @@ impl<'mc> TNT<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -4091,53 +4070,6 @@ impl<'mc> Fence<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -4151,15 +4083,15 @@ impl<'mc> Fence<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -4189,14 +4121,12 @@ impl<'mc> Fence<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -4350,6 +4280,53 @@ impl<'mc> Fence<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -4791,53 +4768,6 @@ impl<'mc> SculkCatalyst<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -4851,15 +4781,15 @@ impl<'mc> SculkCatalyst<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -4889,14 +4819,12 @@ impl<'mc> SculkCatalyst<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -5050,6 +4978,53 @@ impl<'mc> SculkCatalyst<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -5316,53 +5291,6 @@ impl<'mc> Furnace<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -5376,15 +5304,15 @@ impl<'mc> Furnace<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -5414,14 +5342,12 @@ impl<'mc> Furnace<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -5575,6 +5501,53 @@ impl<'mc> Furnace<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -5667,53 +5640,6 @@ impl<'mc> Sapling<'mc> {
             .call_method(&self.jni_object(), "getMaximumStage", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -5727,15 +5653,15 @@ impl<'mc> Sapling<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -5765,14 +5691,12 @@ impl<'mc> Sapling<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -5926,6 +5850,53 @@ impl<'mc> Sapling<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -6194,53 +6165,6 @@ impl<'mc> WallHangingSign<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -6254,15 +6178,15 @@ impl<'mc> WallHangingSign<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -6292,14 +6216,12 @@ impl<'mc> WallHangingSign<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -6453,6 +6375,53 @@ impl<'mc> WallHangingSign<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -6525,6 +6494,19 @@ impl<'mc> TechnicalPiston<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn set_type(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::mod_type::TechnicalPistonType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setType",
+            "(Lorg/bukkit/block/data/type/TechnicalPiston$Type;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn get_type(
         &mut self,
     ) -> Result<
@@ -6543,19 +6525,6 @@ impl<'mc> TechnicalPiston<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn set_type(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::mod_type::TechnicalPistonType<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "setType",
-            "(Lorg/bukkit/block/data/type/TechnicalPiston$Type;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
     }
     pub fn facing(
         &mut self,
@@ -6597,53 +6566,6 @@ impl<'mc> TechnicalPiston<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -6657,15 +6579,15 @@ impl<'mc> TechnicalPiston<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -6695,14 +6617,12 @@ impl<'mc> TechnicalPiston<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -6861,6 +6781,53 @@ impl<'mc> TechnicalPiston<'mc> {
         };
         Ok(ret)
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
 }
 impl<'mc> crate::JNIRaw<'mc> for TechnicalPiston<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -6904,6 +6871,7 @@ impl<'mc> Switch<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    #[deprecated]
     pub fn face(
         &mut self,
     ) -> Result<crate::bukkit::block::data::mod_type::SwitchFace<'mc>, Box<dyn std::error::Error>>
@@ -6921,6 +6889,7 @@ impl<'mc> Switch<'mc> {
         };
         Ok(ret)
     }
+    #[deprecated]
     pub fn set_face(
         &mut self,
         arg0: impl Into<crate::bukkit::block::data::mod_type::SwitchFace<'mc>>,
@@ -6974,53 +6943,6 @@ impl<'mc> Switch<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -7034,15 +6956,15 @@ impl<'mc> Switch<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -7072,14 +6994,12 @@ impl<'mc> Switch<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -7233,6 +7153,53 @@ impl<'mc> Switch<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -7357,53 +7324,6 @@ impl<'mc> BubbleColumn<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -7417,15 +7337,15 @@ impl<'mc> BubbleColumn<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -7455,14 +7375,12 @@ impl<'mc> BubbleColumn<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -7616,6 +7534,53 @@ impl<'mc> BubbleColumn<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -7734,53 +7699,6 @@ impl<'mc> Bell<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -7794,15 +7712,15 @@ impl<'mc> Bell<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -7832,14 +7750,12 @@ impl<'mc> Bell<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -7993,6 +7909,53 @@ impl<'mc> Bell<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -8115,53 +8078,6 @@ impl<'mc> Bamboo<'mc> {
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -8175,15 +8091,15 @@ impl<'mc> Bamboo<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -8213,14 +8129,12 @@ impl<'mc> Bamboo<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -8374,6 +8288,53 @@ impl<'mc> Bamboo<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -8481,53 +8442,6 @@ impl<'mc> Jigsaw<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -8541,15 +8455,15 @@ impl<'mc> Jigsaw<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -8579,14 +8493,12 @@ impl<'mc> Jigsaw<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -8740,6 +8652,53 @@ impl<'mc> Jigsaw<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -8826,53 +8785,6 @@ impl<'mc> Chain<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -8886,15 +8798,15 @@ impl<'mc> Chain<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -8924,14 +8836,12 @@ impl<'mc> Chain<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -9085,6 +8995,53 @@ impl<'mc> Chain<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -9172,53 +9129,6 @@ impl<'mc> Lantern<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -9232,15 +9142,15 @@ impl<'mc> Lantern<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -9270,14 +9180,12 @@ impl<'mc> Lantern<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -9431,6 +9339,53 @@ impl<'mc> Lantern<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -9558,53 +9513,6 @@ impl<'mc> Dispenser<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -9618,15 +9526,15 @@ impl<'mc> Dispenser<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -9656,14 +9564,12 @@ impl<'mc> Dispenser<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -9817,6 +9723,53 @@ impl<'mc> Dispenser<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -10065,53 +10018,6 @@ impl<'mc> RespawnAnchor<'mc> {
                 .call_method(&self.jni_object(), "getMaximumCharges", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -10125,15 +10031,15 @@ impl<'mc> RespawnAnchor<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -10163,14 +10069,12 @@ impl<'mc> RespawnAnchor<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -10324,6 +10228,53 @@ impl<'mc> RespawnAnchor<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -10394,53 +10345,6 @@ impl<'mc> Cake<'mc> {
             .call_method(&self.jni_object(), "getMaximumBites", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -10454,15 +10358,15 @@ impl<'mc> Cake<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -10492,14 +10396,12 @@ impl<'mc> Cake<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -10653,6 +10555,53 @@ impl<'mc> Cake<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -10760,53 +10709,6 @@ impl<'mc> EndPortalFrame<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -10820,15 +10722,15 @@ impl<'mc> EndPortalFrame<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -10858,14 +10760,12 @@ impl<'mc> EndPortalFrame<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -11019,6 +10919,53 @@ impl<'mc> EndPortalFrame<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -11107,53 +11054,6 @@ impl<'mc> DecoratedPot<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -11167,15 +11067,15 @@ impl<'mc> DecoratedPot<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -11205,14 +11105,12 @@ impl<'mc> DecoratedPot<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -11366,6 +11264,53 @@ impl<'mc> DecoratedPot<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -11468,53 +11413,6 @@ impl<'mc> GlowLichen<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -11528,15 +11426,15 @@ impl<'mc> GlowLichen<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -11566,14 +11464,12 @@ impl<'mc> GlowLichen<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -11727,6 +11623,53 @@ impl<'mc> GlowLichen<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -12015,53 +11958,6 @@ impl<'mc> Observer<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -12075,15 +11971,15 @@ impl<'mc> Observer<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -12113,14 +12009,12 @@ impl<'mc> Observer<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -12274,6 +12168,53 @@ impl<'mc> Observer<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -12403,53 +12344,6 @@ impl<'mc> Stairs<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -12463,15 +12357,15 @@ impl<'mc> Stairs<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -12501,14 +12395,12 @@ impl<'mc> Stairs<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -12662,6 +12554,53 @@ impl<'mc> Stairs<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -13174,53 +13113,6 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -13234,15 +13126,15 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -13272,14 +13164,12 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -13433,6 +13323,53 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -13600,53 +13537,6 @@ impl<'mc> EnderChest<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -13660,15 +13550,15 @@ impl<'mc> EnderChest<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -13698,14 +13588,12 @@ impl<'mc> EnderChest<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -13859,6 +13747,53 @@ impl<'mc> EnderChest<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -14005,53 +13940,6 @@ impl<'mc> Bed<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -14065,15 +13953,15 @@ impl<'mc> Bed<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -14103,14 +13991,12 @@ impl<'mc> Bed<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -14264,6 +14150,53 @@ impl<'mc> Bed<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -14530,53 +14463,6 @@ impl<'mc> AmethystCluster<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -14590,15 +14476,15 @@ impl<'mc> AmethystCluster<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -14628,14 +14514,12 @@ impl<'mc> AmethystCluster<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -14789,6 +14673,53 @@ impl<'mc> AmethystCluster<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -14943,53 +14874,6 @@ impl<'mc> NoteBlock<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -15003,15 +14887,15 @@ impl<'mc> NoteBlock<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -15041,14 +14925,12 @@ impl<'mc> NoteBlock<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -15202,6 +15084,53 @@ impl<'mc> NoteBlock<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -15274,53 +15203,6 @@ impl<'mc> MangrovePropagule<'mc> {
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -15334,15 +15216,15 @@ impl<'mc> MangrovePropagule<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -15372,14 +15254,12 @@ impl<'mc> MangrovePropagule<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -15533,6 +15413,53 @@ impl<'mc> MangrovePropagule<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -15706,53 +15633,6 @@ impl<'mc> SculkSensor<'mc> {
             .call_method(&self.jni_object(), "getMaximumPower", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -15766,15 +15646,15 @@ impl<'mc> SculkSensor<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -15804,14 +15684,12 @@ impl<'mc> SculkSensor<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -15965,6 +15843,53 @@ impl<'mc> SculkSensor<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -16107,53 +16032,6 @@ impl<'mc> BigDripleaf<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -16167,15 +16045,15 @@ impl<'mc> BigDripleaf<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -16205,14 +16083,12 @@ impl<'mc> BigDripleaf<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -16366,6 +16242,53 @@ impl<'mc> BigDripleaf<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -16471,53 +16394,6 @@ impl<'mc> Ladder<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -16531,15 +16407,15 @@ impl<'mc> Ladder<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -16569,14 +16445,12 @@ impl<'mc> Ladder<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -16730,6 +16604,53 @@ impl<'mc> Ladder<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -16856,53 +16777,6 @@ impl<'mc> Scaffolding<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -16916,15 +16790,15 @@ impl<'mc> Scaffolding<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -16954,14 +16828,12 @@ impl<'mc> Scaffolding<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -17115,6 +16987,53 @@ impl<'mc> Scaffolding<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -17194,53 +17113,6 @@ impl<'mc> BrewingStand<'mc> {
                 .call_method(&self.jni_object(), "getMaximumBottles", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -17254,15 +17126,15 @@ impl<'mc> BrewingStand<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -17292,14 +17164,12 @@ impl<'mc> BrewingStand<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -17453,6 +17323,53 @@ impl<'mc> BrewingStand<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -17523,53 +17440,6 @@ impl<'mc> Fire<'mc> {
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -17583,15 +17453,15 @@ impl<'mc> Fire<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -17621,14 +17491,12 @@ impl<'mc> Fire<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -17782,6 +17650,53 @@ impl<'mc> Fire<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -17924,53 +17839,6 @@ impl<'mc> Hopper<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -17984,15 +17852,15 @@ impl<'mc> Hopper<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -18022,14 +17890,12 @@ impl<'mc> Hopper<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -18183,6 +18049,53 @@ impl<'mc> Hopper<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -18316,53 +18229,6 @@ impl<'mc> Repeater<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -18376,15 +18242,15 @@ impl<'mc> Repeater<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -18414,14 +18280,12 @@ impl<'mc> Repeater<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -18575,6 +18439,53 @@ impl<'mc> Repeater<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -18645,6 +18556,19 @@ impl<'mc> Slab<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn set_type(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::mod_type::SlabType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setType",
+            "(Lorg/bukkit/block/data/type/Slab$Type;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn get_type(
         &mut self,
     ) -> Result<crate::bukkit::block::data::mod_type::SlabType<'mc>, Box<dyn std::error::Error>>
@@ -18661,19 +18585,6 @@ impl<'mc> Slab<'mc> {
             })
         };
         Ok(ret)
-    }
-    pub fn set_type(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::mod_type::SlabType<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "setType",
-            "(Lorg/bukkit/block/data/type/Slab$Type;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -18692,53 +18603,6 @@ impl<'mc> Slab<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -18752,15 +18616,15 @@ impl<'mc> Slab<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -18790,14 +18654,12 @@ impl<'mc> Slab<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -18951,6 +18813,53 @@ impl<'mc> Slab<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -19027,53 +18936,6 @@ impl<'mc> Snow<'mc> {
             .call_method(&self.jni_object(), "getMaximumLayers", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -19087,15 +18949,15 @@ impl<'mc> Snow<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -19125,14 +18987,12 @@ impl<'mc> Snow<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -19286,6 +19146,53 @@ impl<'mc> Snow<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -19535,53 +19442,6 @@ impl<'mc> Cocoa<'mc> {
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -19595,15 +19455,15 @@ impl<'mc> Cocoa<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -19633,14 +19493,12 @@ impl<'mc> Cocoa<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -19794,6 +19652,53 @@ impl<'mc> Cocoa<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -19957,53 +19862,6 @@ impl<'mc> Comparator<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -20017,15 +19875,15 @@ impl<'mc> Comparator<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -20055,14 +19913,12 @@ impl<'mc> Comparator<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -20216,6 +20072,53 @@ impl<'mc> Comparator<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -20303,53 +20206,6 @@ impl<'mc> RedstoneRail<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -20363,15 +20219,15 @@ impl<'mc> RedstoneRail<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -20401,14 +20257,12 @@ impl<'mc> RedstoneRail<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -20562,6 +20416,53 @@ impl<'mc> RedstoneRail<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -20680,53 +20581,6 @@ impl<'mc> CaveVinesPlant<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -20740,15 +20594,15 @@ impl<'mc> CaveVinesPlant<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -20778,14 +20632,12 @@ impl<'mc> CaveVinesPlant<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -20939,6 +20791,53 @@ impl<'mc> CaveVinesPlant<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -21009,53 +20908,6 @@ impl<'mc> Light<'mc> {
             .call_method(&self.jni_object(), "getMaximumLevel", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -21069,15 +20921,15 @@ impl<'mc> Light<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -21107,14 +20959,12 @@ impl<'mc> Light<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -21268,6 +21118,53 @@ impl<'mc> Light<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -21378,53 +21275,6 @@ impl<'mc> SmallDripleaf<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -21438,15 +21288,15 @@ impl<'mc> SmallDripleaf<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -21476,14 +21326,12 @@ impl<'mc> SmallDripleaf<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -21637,6 +21485,53 @@ impl<'mc> SmallDripleaf<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -21765,53 +21660,6 @@ impl<'mc> TrapDoor<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -21825,15 +21673,15 @@ impl<'mc> TrapDoor<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -21863,14 +21711,12 @@ impl<'mc> TrapDoor<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -22029,6 +21875,53 @@ impl<'mc> TrapDoor<'mc> {
         };
         Ok(ret)
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -22069,12 +21962,6 @@ impl<'mc> TrapDoor<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
@@ -22085,6 +21972,12 @@ impl<'mc> TrapDoor<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -22223,53 +22116,6 @@ impl<'mc> Grindstone<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -22283,15 +22129,15 @@ impl<'mc> Grindstone<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -22321,14 +22167,12 @@ impl<'mc> Grindstone<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -22482,6 +22326,53 @@ impl<'mc> Grindstone<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -22808,53 +22699,6 @@ impl<'mc> Beehive<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -22868,15 +22712,15 @@ impl<'mc> Beehive<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -22906,14 +22750,12 @@ impl<'mc> Beehive<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -23067,6 +22909,53 @@ impl<'mc> Beehive<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -23155,53 +23044,6 @@ impl<'mc> CoralWallFan<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -23215,15 +23057,15 @@ impl<'mc> CoralWallFan<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -23253,14 +23095,12 @@ impl<'mc> CoralWallFan<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -23414,6 +23254,53 @@ impl<'mc> CoralWallFan<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -23516,53 +23403,6 @@ impl<'mc> SculkVein<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -23576,15 +23416,15 @@ impl<'mc> SculkVein<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -23614,14 +23454,12 @@ impl<'mc> SculkVein<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -23775,6 +23613,53 @@ impl<'mc> SculkVein<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -24055,53 +23940,6 @@ impl<'mc> Tripwire<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -24115,15 +23953,15 @@ impl<'mc> Tripwire<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -24153,14 +23991,12 @@ impl<'mc> Tripwire<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -24314,6 +24150,53 @@ impl<'mc> Tripwire<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -24492,53 +24375,6 @@ impl<'mc> Wall<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -24552,15 +24388,15 @@ impl<'mc> Wall<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -24590,14 +24426,12 @@ impl<'mc> Wall<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -24751,6 +24585,53 @@ impl<'mc> Wall<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -24997,53 +24878,6 @@ impl<'mc> Farmland<'mc> {
                 .call_method(&self.jni_object(), "getMaximumMoisture", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -25057,15 +24891,15 @@ impl<'mc> Farmland<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -25095,14 +24929,12 @@ impl<'mc> Farmland<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -25256,6 +25088,53 @@ impl<'mc> Farmland<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -25361,53 +25240,6 @@ impl<'mc> Gate<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -25421,15 +25253,15 @@ impl<'mc> Gate<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -25459,14 +25291,12 @@ impl<'mc> Gate<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -25625,11 +25455,52 @@ impl<'mc> Gate<'mc> {
         };
         Ok(ret)
     }
-    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -25641,6 +25512,12 @@ impl<'mc> Gate<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -25939,53 +25816,6 @@ impl<'mc> SculkShrieker<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -25999,15 +25829,15 @@ impl<'mc> SculkShrieker<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -26037,14 +25867,12 @@ impl<'mc> SculkShrieker<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -26198,6 +26026,53 @@ impl<'mc> SculkShrieker<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -26296,53 +26171,6 @@ impl<'mc> Leaves<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -26356,15 +26184,15 @@ impl<'mc> Leaves<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -26394,14 +26222,12 @@ impl<'mc> Leaves<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -26555,6 +26381,53 @@ impl<'mc> Leaves<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -26660,53 +26533,6 @@ impl<'mc> Campfire<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -26720,15 +26546,15 @@ impl<'mc> Campfire<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -26758,14 +26584,12 @@ impl<'mc> Campfire<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -26919,6 +26743,53 @@ impl<'mc> Campfire<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -27051,53 +26922,6 @@ impl<'mc> Dripleaf<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -27111,15 +26935,15 @@ impl<'mc> Dripleaf<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -27149,14 +26973,12 @@ impl<'mc> Dripleaf<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -27310,6 +27132,53 @@ impl<'mc> Dripleaf<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -27425,53 +27294,6 @@ impl<'mc> SeaPickle<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -27485,15 +27307,15 @@ impl<'mc> SeaPickle<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -27523,14 +27345,12 @@ impl<'mc> SeaPickle<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -27684,6 +27504,53 @@ impl<'mc> SeaPickle<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -27774,53 +27641,6 @@ impl<'mc> RedstoneWallTorch<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -27834,15 +27654,15 @@ impl<'mc> RedstoneWallTorch<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -27872,14 +27692,12 @@ impl<'mc> RedstoneWallTorch<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -28033,6 +27851,53 @@ impl<'mc> RedstoneWallTorch<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -28340,53 +28205,6 @@ impl<'mc> RedstoneWire<'mc> {
             .call_method(&self.jni_object(), "getMaximumPower", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -28400,15 +28218,15 @@ impl<'mc> RedstoneWire<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -28438,14 +28256,12 @@ impl<'mc> RedstoneWire<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -28599,6 +28415,53 @@ impl<'mc> RedstoneWire<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -28687,53 +28550,6 @@ impl<'mc> WallSign<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -28747,15 +28563,15 @@ impl<'mc> WallSign<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -28785,14 +28601,12 @@ impl<'mc> WallSign<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -28946,6 +28760,53 @@ impl<'mc> WallSign<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -29022,53 +28883,6 @@ impl<'mc> Jukebox<'mc> {
             .call_method(&self.jni_object(), "hasRecord", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -29082,15 +28896,15 @@ impl<'mc> Jukebox<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -29120,14 +28934,12 @@ impl<'mc> Jukebox<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -29281,6 +29093,53 @@ impl<'mc> Jukebox<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -29369,53 +29228,6 @@ impl<'mc> Barrel<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -29429,15 +29241,15 @@ impl<'mc> Barrel<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -29467,14 +29279,12 @@ impl<'mc> Barrel<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -29633,11 +29443,52 @@ impl<'mc> Barrel<'mc> {
         };
         Ok(ret)
     }
-    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -29649,6 +29500,12 @@ impl<'mc> Barrel<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Barrel<'mc> {
@@ -29755,53 +29612,6 @@ impl<'mc> CommandBlock<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -29815,15 +29625,15 @@ impl<'mc> CommandBlock<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -29853,14 +29663,12 @@ impl<'mc> CommandBlock<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -30014,6 +29822,53 @@ impl<'mc> CommandBlock<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -30121,53 +29976,6 @@ impl<'mc> Door<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -30181,15 +29989,15 @@ impl<'mc> Door<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -30219,14 +30027,12 @@ impl<'mc> Door<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -30385,6 +30191,53 @@ impl<'mc> Door<'mc> {
         };
         Ok(ret)
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -30425,12 +30278,6 @@ impl<'mc> Door<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
@@ -30441,6 +30288,12 @@ impl<'mc> Door<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isOpen", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -30597,53 +30450,6 @@ impl<'mc> ChiseledBookshelf<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -30657,15 +30463,15 @@ impl<'mc> ChiseledBookshelf<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -30695,14 +30501,12 @@ impl<'mc> ChiseledBookshelf<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -30856,6 +30660,53 @@ impl<'mc> ChiseledBookshelf<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -30921,53 +30772,6 @@ impl<'mc> HangingSign<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -30981,15 +30785,15 @@ impl<'mc> HangingSign<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -31019,14 +30823,12 @@ impl<'mc> HangingSign<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -31180,6 +30982,53 @@ impl<'mc> HangingSign<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -31334,53 +31183,6 @@ impl<'mc> Candle<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -31394,15 +31196,15 @@ impl<'mc> Candle<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -31432,14 +31234,12 @@ impl<'mc> Candle<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -31593,6 +31393,53 @@ impl<'mc> Candle<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -31755,53 +31602,6 @@ impl<'mc> PointedDripstone<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -31815,15 +31615,15 @@ impl<'mc> PointedDripstone<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -31853,14 +31653,12 @@ impl<'mc> PointedDripstone<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -32014,6 +31812,53 @@ impl<'mc> PointedDripstone<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -32280,53 +32125,6 @@ impl<'mc> LightningRod<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -32340,15 +32138,15 @@ impl<'mc> LightningRod<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -32378,14 +32176,12 @@ impl<'mc> LightningRod<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -32539,6 +32335,53 @@ impl<'mc> LightningRod<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -32671,53 +32514,6 @@ impl<'mc> Sign<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -32731,15 +32527,15 @@ impl<'mc> Sign<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -32769,14 +32565,12 @@ impl<'mc> Sign<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -32930,6 +32724,53 @@ impl<'mc> Sign<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -33022,53 +32863,6 @@ impl<'mc> CaveVines<'mc> {
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -33082,15 +32876,15 @@ impl<'mc> CaveVines<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -33120,14 +32914,12 @@ impl<'mc> CaveVines<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -33281,6 +33073,53 @@ impl<'mc> CaveVines<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -33578,53 +33417,6 @@ impl<'mc> TurtleEgg<'mc> {
             .call_method(&self.jni_object(), "getMaximumHatch", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn matches(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matches",
-            "(Lorg/bukkit/block/data/BlockData;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn merge(
-        &mut self,
-        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
-    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "merge",
-            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn rotate(
         &mut self,
         arg0: impl Into<crate::bukkit::block::structure::StructureRotation<'mc>>,
@@ -33638,15 +33430,15 @@ impl<'mc> TurtleEgg<'mc> {
         )?;
         Ok(())
     }
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSupported",
-            "(Lorg/bukkit/block/Block;)Z",
+            "(Lorg/bukkit/Location;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -33676,14 +33468,12 @@ impl<'mc> TurtleEgg<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
-        // -2
-        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAsString",
-            "(Z)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/lang/String;",
+            &[],
         )?;
         Ok(self
             .jni_ref()
@@ -33837,6 +33627,53 @@ impl<'mc> TurtleEgg<'mc> {
         )?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn matches(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matches",
+            "(Lorg/bukkit/block/data/BlockData;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn merge(
+        &mut self,
+        arg0: impl Into<crate::bukkit::block::data::BlockData<'mc>>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "merge",
+            "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };

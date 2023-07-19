@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub enum SideEnum {
     Front,

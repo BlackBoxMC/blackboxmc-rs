@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub enum PluginChannelDirectionEnum {
     Incoming,
@@ -200,25 +201,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
     pub fn channel(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -266,6 +248,25 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             })
         };
         Ok(ret)
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -556,6 +557,7 @@ impl<'mc> StandardMessenger<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    #[deprecated]
     pub fn validate_and_correct_channel(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
@@ -726,6 +728,7 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
         )?;
         Ok(())
     }
+    #[deprecated]
     pub fn validate_channel(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: String,

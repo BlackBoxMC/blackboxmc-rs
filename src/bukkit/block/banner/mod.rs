@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub enum PatternTypeEnum {
     Base,
@@ -210,7 +211,7 @@ impl<'mc> PatternType<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn value_of(
+    pub fn get_by_identifier(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
@@ -218,7 +219,7 @@ impl<'mc> PatternType<'mc> {
         let cls = &jni.find_class("org/bukkit/block/banner/PatternType")?;
         let res = jni.call_static_method(
             cls,
-            "valueOf",
+            "getByIdentifier",
             "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
@@ -238,7 +239,7 @@ impl<'mc> PatternType<'mc> {
         };
         Ok(ret)
     }
-    pub fn get_by_identifier(
+    pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
@@ -246,7 +247,7 @@ impl<'mc> PatternType<'mc> {
         let cls = &jni.find_class("org/bukkit/block/banner/PatternType")?;
         let res = jni.call_static_method(
             cls,
-            "getByIdentifier",
+            "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
@@ -322,25 +323,6 @@ impl<'mc> Pattern<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
-        Ok(res.i().unwrap())
-    }
     pub fn color(&mut self) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -392,6 +374,25 @@ impl<'mc> Pattern<'mc> {
             )
         };
         Ok(ret)
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,

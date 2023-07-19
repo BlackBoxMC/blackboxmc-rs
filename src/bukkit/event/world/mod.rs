@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct WorldUnloadEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -894,12 +895,6 @@ impl<'mc> PortalCreateEvent<'mc> {
         };
         Ok(ret)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn reason(
         &mut self,
     ) -> Result<
@@ -918,6 +913,12 @@ impl<'mc> PortalCreateEvent<'mc> {
             })
         };
         Ok(ret)
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn entity(
         &mut self,
@@ -2958,20 +2959,6 @@ impl<'mc> GenericGameEvent<'mc> {
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn entity(
         &mut self,
     ) -> Result<crate::bukkit::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -3042,6 +3029,20 @@ impl<'mc> GenericGameEvent<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "()Lorg/bukkit/Location;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
         };
         Ok(ret)
     }
@@ -3419,20 +3420,6 @@ impl<'mc> StructureGrowEvent<'mc> {
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn player(
         &mut self,
     ) -> Result<crate::bukkit::entity::Player<'mc>, Box<dyn std::error::Error>> {
@@ -3506,6 +3493,20 @@ impl<'mc> StructureGrowEvent<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "isFromBonemeal", "()Z", &[])?;
         Ok(res.z().unwrap())
+    }
+    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "()Lorg/bukkit/Location;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn world(&mut self) -> Result<crate::bukkit::World<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(

@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements Palette. Needed for returning it from Java.
 pub struct Palette<'mc>(
@@ -73,24 +74,6 @@ impl<'mc> StructureManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn copy(
-        &mut self,
-        arg0: impl Into<crate::bukkit::structure::Structure<'mc>>,
-    ) -> Result<crate::bukkit::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            "(Lorg/bukkit/structure/Structure;)Lorg/bukkit/structure/Structure;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            crate::bukkit::structure::Structure(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn get_structure(
         &mut self,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
@@ -125,15 +108,15 @@ self.jni_ref().call_method(&self.jni_object(),"registerStructure","(Lorg/bukkit/
         };
         Ok(ret)
     }
-    pub fn load_structure_with_file(
+    pub fn unregister_structure(
         &mut self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = arg0.unwrap();
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "loadStructure",
-            "(Ljava/io/InputStream;)Lorg/bukkit/structure/Structure;",
+            "unregisterStructure",
+            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -167,25 +150,7 @@ self.jni_ref().call_method(&self.jni_object(),"registerStructure","(Lorg/bukkit/
         };
         Ok(ret)
     }
-    pub fn save_structure_with_namespaced_key(
-        &mut self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-        arg1: std::option::Option<impl Into<crate::bukkit::structure::Structure<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = arg0.unwrap();
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "saveStructure",
-            "(Ljava/io/OutputStream;Lorg/bukkit/structure/Structure;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn save_structure_with_file(
+    pub fn save_structure_with_output_stream(
         &mut self,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
         arg1: std::option::Option<impl Into<crate::bukkit::structure::Structure<'mc>>>,
@@ -238,15 +203,15 @@ self.jni_ref().call_method(&self.jni_object(),"registerStructure","(Lorg/bukkit/
         };
         Ok(ret)
     }
-    pub fn unregister_structure(
+    pub fn copy(
         &mut self,
-        arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
+        arg0: impl Into<crate::bukkit::structure::Structure<'mc>>,
     ) -> Result<crate::bukkit::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "unregisterStructure",
-            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;",
+            "copy",
+            "(Lorg/bukkit/structure/Structure;)Lorg/bukkit/structure/Structure;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -294,44 +259,6 @@ impl<'mc> Structure<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn fill_with_location(
-        &mut self,
-        arg0: impl Into<crate::bukkit::Location<'mc>>,
-        arg1: impl Into<crate::bukkit::Location<'mc>>,
-        arg2: std::option::Option<bool>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
-        // 2
-        let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "fill",
-            "(Lorg/bukkit/Location;Lorg/bukkit/Location;Z)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn size(
-        &mut self,
-    ) -> Result<crate::bukkit::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSize",
-            "()Lorg/bukkit/util/BlockVector;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::util::BlockVector(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn entity_count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -366,6 +293,44 @@ impl<'mc> Structure<'mc> {
         let val_7 = arg7.unwrap();
         self.jni_ref().call_method(&self.jni_object(),"place","(Lorg/bukkit/RegionAccessor;Lorg/bukkit/util/BlockVector;ZLorg/bukkit/block/structure/StructureRotation;Lorg/bukkit/block/structure/Mirror;IFLjava/util/Random;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7)])?;
         Ok(())
+    }
+    pub fn fill_with_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: impl Into<crate::bukkit::util::BlockVector<'mc>>,
+        arg2: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        // 2
+        let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "fill",
+            "(Lorg/bukkit/Location;Lorg/bukkit/util/BlockVector;Z)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn size(
+        &mut self,
+    ) -> Result<crate::bukkit::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getSize",
+            "()Lorg/bukkit/util/BlockVector;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::util::BlockVector(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn persistent_data_container(
         &mut self,

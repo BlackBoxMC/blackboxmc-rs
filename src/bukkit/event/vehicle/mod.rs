@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct VehicleUpdateEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,

@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements ChunkGeneratorChunkData. Needed for returning it from Java.
 pub struct ChunkGeneratorChunkData<'mc>(
@@ -30,43 +31,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn get_type(
-        &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = jni::objects::JValueGen::Int(arg1.into());
-        let val_2 = jni::objects::JValueGen::Int(arg2.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "(III)Lorg/bukkit/Material;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Material(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::Material::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
+    #[deprecated]
     pub fn get_data(
         &mut self,
         arg0: i32,
@@ -245,6 +210,43 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[])?;
         Ok(res.i().unwrap())
+    }
+    pub fn get_type(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "(III)Lorg/bukkit/Material;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Material(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::Material::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for ChunkGeneratorChunkData<'mc> {
@@ -882,43 +884,6 @@ impl<'mc> LimitedRegion<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn get_type_with_location(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "(III)Lorg/bukkit/Material;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Material(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::Material::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
     pub fn set_type_with_location(
         &mut self,
         arg0: i32,
@@ -1182,6 +1147,43 @@ self.jni_ref().call_method(&self.jni_object(),"spawn","(Lorg/bukkit/Location;Lja
         };
         Ok(ret)
     }
+    pub fn get_type_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "(III)Lorg/bukkit/Material;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Material(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::Material::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
 }
 impl<'mc> crate::JNIRaw<'mc> for LimitedRegion<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -1231,19 +1233,6 @@ impl<'mc> WorldInfo<'mc> {
             .call_method(&self.jni_object(), "getSeed", "()J", &[])?;
         Ok(res.j().unwrap())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn environment(
         &mut self,
     ) -> Result<crate::bukkit::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
@@ -1271,6 +1260,19 @@ impl<'mc> WorldInfo<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[])?;
         Ok(res.i().unwrap())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for WorldInfo<'mc> {
@@ -1458,6 +1460,7 @@ impl<'mc> ChunkGenerator<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+    #[deprecated]
     pub fn generate_chunk_data(
         &mut self,
         arg0: impl Into<crate::bukkit::World<'mc>>,
@@ -1525,6 +1528,7 @@ self.jni_ref().call_method(&self.jni_object(),"generateChunkData","(Lorg/bukkit/
         };
         Ok(ret)
     }
+    #[deprecated]
     pub fn is_parallel_capable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1579,6 +1583,7 @@ self.jni_ref().call_method(&self.jni_object(),"generateChunkData","(Lorg/bukkit/
         )?;
         Ok(res.z().unwrap())
     }
+    #[deprecated]
     pub fn should_generate_bedrock(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()

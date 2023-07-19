@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements ServerOperator. Needed for returning it from Java.
 pub struct ServerOperator<'mc>(
@@ -108,15 +109,15 @@ impl<'mc> PermissibleBase<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_permission_set_with_permission(
+    pub fn is_permission_set_with_string(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPermissionSet",
-            "(Ljava/lang/String;)Z",
+            "(Lorg/bukkit/permissions/Permission;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
@@ -611,6 +612,53 @@ impl<'mc> Permission<'mc> {
         )?;
         Ok(())
     }
+    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDescription",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn recalculate_permissibles(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "recalculatePermissibles", "()V", &[])?;
+        Ok(())
+    }
+    pub fn set_description(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDescription",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn add_parent_with_string(
+        &mut self,
+        arg0: impl Into<crate::bukkit::permissions::Permission<'mc>>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        // 1
+        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "addParent",
+            "(Lorg/bukkit/permissions/Permission;Z)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -649,58 +697,6 @@ impl<'mc> Permission<'mc> {
                 raw_obj,
                 crate::bukkit::permissions::PermissionDefault::from_string(variant_str).unwrap(),
             )
-        };
-        Ok(ret)
-    }
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn recalculate_permissibles(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "recalculatePermissibles", "()V", &[])?;
-        Ok(())
-    }
-    pub fn set_description(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "setDescription",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
-    pub fn add_parent_with_permission(
-        &mut self,
-        arg0: String,
-        arg1: std::option::Option<bool>,
-    ) -> Result<crate::bukkit::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        // 1
-        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addParent",
-            "(Ljava/lang/String;Z)Lorg/bukkit/permissions/Permission;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        let ret = {
-            crate::bukkit::permissions::Permission(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
         };
         Ok(ret)
     }
@@ -845,12 +841,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getValue", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn attachment(
         &mut self,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
@@ -883,6 +873,12 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             })
         };
         Ok(ret)
+    }
+    pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getValue", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -1012,12 +1008,6 @@ impl<'mc> PermissionAttachment<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn remove(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_permission_with_permission(
         &mut self,
         arg0: String,
@@ -1113,6 +1103,12 @@ impl<'mc> PermissionAttachment<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn remove(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,

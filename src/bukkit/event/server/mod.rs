@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct RemoteServerCommandEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -920,19 +921,6 @@ impl<'mc> BroadcastMessageEvent<'mc> {
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMessage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn set_message(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
         self.jni_ref().call_method(
@@ -969,6 +957,19 @@ impl<'mc> BroadcastMessageEvent<'mc> {
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
+    }
+    pub fn message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMessage",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1303,6 +1304,12 @@ impl<'mc> TabCompleteEvent<'mc> {
         };
         Ok(ret)
     }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn buffer(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1315,12 +1322,6 @@ impl<'mc> TabCompleteEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
-        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -2280,6 +2281,22 @@ impl<'mc> ServerLoadEvent<'mc> {
         };
         Ok(ret)
     }
+    pub fn handler_list(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let res = jni.call_static_method(
+            cls,
+            "getHandlerList",
+            "()Lorg/bukkit/event/HandlerList;",
+            &[],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::event::HandlerList(jni, obj)
+        };
+        Ok(ret)
+    }
     pub fn get_type(
         &mut self,
     ) -> Result<
@@ -2296,22 +2313,6 @@ impl<'mc> ServerLoadEvent<'mc> {
             crate::bukkit::event::server::ServerLoadEventLoadType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
-        };
-        Ok(ret)
-    }
-    pub fn handler_list(
-        jni: crate::SharedJNIEnv<'mc>,
-    ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
-        let res = jni.call_static_method(
-            cls,
-            "getHandlerList",
-            "()Lorg/bukkit/event/HandlerList;",
-            &[],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
     }
@@ -2836,6 +2837,7 @@ impl<'mc> ServerListPingEvent<'mc> {
         )?;
         Ok(())
     }
+    #[deprecated]
     pub fn should_send_chat_previews(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()

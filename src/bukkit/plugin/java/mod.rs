@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct JavaPluginLoader<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -13,6 +14,7 @@ impl<'mc> crate::JNIRaw<'mc> for JavaPluginLoader<'mc> {
     }
 }
 impl<'mc> JavaPluginLoader<'mc> {
+    #[deprecated]
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::Server<'mc>>,
@@ -196,41 +198,6 @@ impl<'mc> JavaPlugin<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn get_resource(
-        &mut self,
-        arg0: String,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResource",
-            "(Ljava/lang/String;)Ljava/io/InputStream;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.l().unwrap())
-    }
-    pub fn logger(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLogger",
-            "()Ljava/util/logging/Logger;",
-            &[],
-        )?;
-        Ok(res.l().unwrap())
     }
     pub fn server(&mut self) -> Result<crate::bukkit::Server<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -482,6 +449,41 @@ self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/
             crate::bukkit::plugin::java::JavaPlugin(jni, obj)
         };
         Ok(ret)
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toString",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_resource(
+        &mut self,
+        arg0: String,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResource",
+            "(Ljava/lang/String;)Ljava/io/InputStream;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.l().unwrap())
+    }
+    pub fn logger(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLogger",
+            "()Ljava/util/logging/Logger;",
+            &[],
+        )?;
+        Ok(res.l().unwrap())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(

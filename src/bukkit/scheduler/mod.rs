@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements BukkitTask. Needed for returning it from Java.
 pub struct BukkitTask<'mc>(
@@ -185,6 +186,7 @@ impl<'mc> BukkitScheduler<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    #[deprecated]
     pub fn schedule_sync_delayed_task_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
@@ -230,6 +232,7 @@ impl<'mc> BukkitScheduler<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+    #[deprecated]
     pub fn schedule_async_delayed_task_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
@@ -251,6 +254,7 @@ impl<'mc> BukkitScheduler<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+    #[deprecated]
     pub fn schedule_async_repeating_task(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,

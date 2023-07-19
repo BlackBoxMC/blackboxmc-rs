@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements PersistentDataHolder. Needed for returning it from Java.
 pub struct PersistentDataHolder<'mc>(
@@ -597,6 +598,25 @@ impl<'mc> PersistentDataContainer<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    pub fn adapter_context(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::persistence::PersistentDataAdapterContext<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAdapterContext",
+            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::persistence::PersistentDataAdapterContext(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove(
         &mut self,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
@@ -651,25 +671,6 @@ self.jni_ref().call_method(&self.jni_object(),"get","(Lorg/bukkit/NamespacedKey;
         let res =
 self.jni_ref().call_method(&self.jni_object(),"getOrDefault","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/persistence/PersistentDataType;Ljava/lang/Object;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(res.l().unwrap())
-    }
-    pub fn adapter_context(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::persistence::PersistentDataAdapterContext<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAdapterContext",
-            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::persistence::PersistentDataAdapterContext(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataContainer<'mc> {

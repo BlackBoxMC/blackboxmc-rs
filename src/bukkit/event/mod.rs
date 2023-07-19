@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct HandlerList<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -43,33 +44,7 @@ impl<'mc> HandlerList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<crate::bukkit::plugin::RegisteredListener<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/plugin/RegisteredListener;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
     pub fn unregister_with_registered_listener(
-        &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::event::Listener<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregister",
-            "(Lorg/bukkit/event/Listener;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
-    pub fn unregister_with_plugin(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -78,6 +53,19 @@ impl<'mc> HandlerList<'mc> {
             &self.jni_object(),
             "unregister",
             "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn unregister_with_listener(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::event::Listener<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregister",
+            "(Lorg/bukkit/event/Listener;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
@@ -104,6 +92,19 @@ impl<'mc> HandlerList<'mc> {
     pub fn bake(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "bake", "()V", &[])?;
+        Ok(())
+    }
+    pub fn register(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::RegisteredListener<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/plugin/RegisteredListener;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(())
     }
     pub fn wait(
@@ -274,6 +275,12 @@ impl<'mc> EventHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn ignore_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "ignoreCancelled", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn priority(
         &mut self,
     ) -> Result<crate::bukkit::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
@@ -300,12 +307,6 @@ impl<'mc> EventHandler<'mc> {
             )
         };
         Ok(ret)
-    }
-    pub fn ignore_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ignoreCancelled", "()Z", &[])?;
-        Ok(res.z().unwrap())
     }
     pub fn equals(
         &mut self,

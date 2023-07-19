@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements MetadataStore. Needed for returning it from Java.
 pub struct MetadataStore<'mc>(
@@ -159,12 +160,6 @@ impl<'mc> MetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -240,6 +235,12 @@ impl<'mc> MetadataValue<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "asBoolean", "()Z", &[])?;
         Ok(res.z().unwrap())
+    }
+    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for MetadataValue<'mc> {
@@ -758,16 +759,16 @@ impl<'mc> LazyMetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
+        Ok(())
+    }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
         Ok(res.l().unwrap())
-    }
-    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
-        Ok(())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -967,16 +968,16 @@ impl<'mc> FixedMetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
+        Ok(())
+    }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
         Ok(res.l().unwrap())
-    }
-    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
-        Ok(())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1297,16 +1298,16 @@ impl<'mc> MetadataValueAdapter<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
     }
+    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
+        Ok(())
+    }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
         Ok(res.l().unwrap())
-    }
-    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
-        Ok(())
     }
 }
 impl<'mc> Into<crate::bukkit::metadata::MetadataValue<'mc>> for MetadataValueAdapter<'mc> {

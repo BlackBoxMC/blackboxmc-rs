@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct HelpTopicComparator<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -243,24 +244,6 @@ impl<'mc> HelpTopicComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn compare_with_object(
-        &mut self,
-        arg0: impl Into<crate::bukkit::help::HelpTopic<'mc>>,
-        arg1: std::option::Option<impl Into<crate::bukkit::help::HelpTopic<'mc>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compare",
-            "(Lorg/bukkit/help/HelpTopic;Lorg/bukkit/help/HelpTopic;)I",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
     pub fn topic_name_comparator_instance(
         jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<
@@ -295,6 +278,24 @@ impl<'mc> HelpTopicComparator<'mc> {
             crate::bukkit::help::HelpTopicComparator(jni, obj)
         };
         Ok(ret)
+    }
+    pub fn compare_with_help_topic(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let val_1 = arg1.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compare",
+            "(Ljava/lang/Object;Ljava/lang/Object;)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -589,19 +590,6 @@ impl<'mc> HelpTopic<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn can_see(
         &mut self,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
@@ -672,6 +660,19 @@ impl<'mc> HelpTopic<'mc> {
             ],
         )?;
         Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn wait(
         &mut self,
@@ -771,11 +772,6 @@ impl<'mc> HelpMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "clear", "()V", &[])?;
-        Ok(())
-    }
     pub fn get_help_topic(
         &mut self,
         arg0: String,
@@ -823,6 +819,11 @@ impl<'mc> HelpMap<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         )?;
+        Ok(())
+    }
+    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "clear", "()V", &[])?;
         Ok(())
     }
 }
@@ -913,19 +914,6 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn short_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -956,6 +944,19 @@ impl<'mc> IndexHelpTopic<'mc> {
             ],
         )?;
         Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn wait(
         &mut self,
@@ -1093,19 +1094,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn amend_can_see(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
         self.jni_ref().call_method(
@@ -1163,6 +1151,19 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             ],
         )?;
         Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn wait(
         &mut self,

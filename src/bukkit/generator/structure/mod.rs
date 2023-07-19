@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct StructureType<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,

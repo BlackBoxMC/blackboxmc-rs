@@ -702,7 +702,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
     if is_enum and not is_trait and not is_constructor:
         for (v,val_proper) in variants:
             impl_signature.append("pub const "+v.upper()+": "+name+"Enum = "+name+"Enum::"+val_proper+";")
-            
+
         impl_signature.append("pub fn from_string(str: String) -> std::option::Option<"+name+"Enum> {\nmatch str.as_str() {")
         for (v,val_proper) in variants:
             impl_signature.append("\""+v+"\" => Some("+name+"Enum::"+val_proper+"),")
@@ -745,12 +745,12 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 continue
             if(method["modifiers"]&1024 == 1): # skip abstract methods
                 continue
-        
+
         if is_constructor:
             mname = "new"
         else:
             mname = method["name"]
-            
+
         og_mname = mname
 
         # camel case to snake case
@@ -830,8 +830,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                     last_method = None
                     method_first_arg = ""
                     options_start_at = 0
-                
-                
+
+
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
@@ -991,6 +991,9 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             generic_args_str = " where "+",".join(generic_args)
 
         func_signature_resolved = ",".join(func_signature_resolved_parts)
+
+        if "annotations" in method["method"]:
+            impl_signature += parse_annotations(method["method"]["annotations"])
         impl_signature.append(
             "\tpub fn "+name+generic_letters_str+"("+func_signature_resolved+") "
         )
@@ -1034,10 +1037,11 @@ def parse_classes(library, val, classes):
         parsed_classes[mod_path] = [full_name]
 
     if mod_path not in file_cache:
-        file_cache[mod_path] = ["use crate::JNIRaw;"]
+        file_cache[mod_path] = ["#![allow(deprecated)]\nuse crate::JNIRaw;"]
 
     if (name == ""):
         return
+
 
     if val["isEnum"]:  # enum generation
         file_cache[mod_path].append(
@@ -1048,6 +1052,9 @@ def parse_classes(library, val, classes):
             val_proper = val_proper[0].upper() + val_proper[1:]
             if val_proper.lower() in reserved_words:
                 val_proper = "Variant"+val_proper
+            if "annotations" in val:
+                if v in val["annotations"]:
+                    file_cache[mod_path] += parse_annotations(val["annotations"][v])
             file_cache[mod_path].append("\t"+val_proper+",")
 
 
@@ -1094,9 +1101,9 @@ def parse_classes(library, val, classes):
         if "classes" in val:
             for cl in val["classes"]:
                 parse_classes(library, cl, classes)
-        
+
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
-        
+
         if "methods" in val:
             parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False)
 
@@ -1162,7 +1169,7 @@ def parse_classes(library, val, classes):
                 if inter["packageName"].startswith("java"):
                     continue
                 inter_resolved = java_type_to_rust("", inter["packageName"]+"."+inter["name"], None, 0, library, False)
-                    
+
                 if inter_resolved is None:
                     continue
                 file_cache[mod_path].append("impl<'mc> Into<"+inter_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc> {\n"+
@@ -1171,6 +1178,17 @@ def parse_classes(library, val, classes):
                                         "   }\n"+
                                         "}")
 
+def parse_annotations(annotations):
+    strings = []
+    for annotation in annotations:
+        match(annotation[0]):
+            case "forRemoval":
+                strings.append("#[deprecated]")
+            case "since":
+                nop = 0
+            case _:
+                print("unbound annotation",annotation[0])
+    return strings
 # what we first want to do is collect any interfaces.
 for library in libraries:
     packages = libraries[library]

@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements ProfileBanList. Needed for returning it from Java.
 pub struct ProfileBanList<'mc>(
@@ -49,6 +50,27 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava
         };
         Ok(ret)
     }
+    pub fn add_ban_with_object(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: String,
+        arg2: jni::objects::JObject<'mc>,
+        arg3: std::option::Option<String>,
+    ) -> Result<crate::bukkit::BanEntry<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_2 = arg2;
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap()).unwrap());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/time/Duration;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::BanEntry(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    #[deprecated]
     pub fn add_ban_with_string(
         &mut self,
         arg0: String,
@@ -100,6 +122,7 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava
         )?;
         Ok(res.z().unwrap())
     }
+    #[deprecated]
     pub fn pardon_with_object(
         &mut self,
         arg0: std::option::Option<String>,
@@ -174,6 +197,7 @@ impl<'mc> IpBanList<'mc> {
         };
         Ok(ret)
     }
+    #[deprecated]
     pub fn add_ban_with_object(
         &mut self,
         arg0: String,
@@ -207,6 +231,7 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava
         )?;
         Ok(res.z().unwrap())
     }
+    #[deprecated]
     pub fn pardon_with_object(
         &mut self,
         arg0: std::option::Option<String>,

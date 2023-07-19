@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct Criterias<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -311,43 +312,6 @@ impl<'mc> Criteria<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn create(
-        jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
-    ) -> Result<crate::bukkit::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let cls = &jni.find_class("org/bukkit/scoreboard/Criteria")?;
-        let res = jni.call_static_method(
-            cls,
-            "create",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Criteria;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::scoreboard::Criteria(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn is_read_only(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isReadOnly", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn default_render_type(
         &mut self,
     ) -> Result<crate::bukkit::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
@@ -390,6 +354,43 @@ impl<'mc> Criteria<'mc> {
             crate::bukkit::scoreboard::Criteria(jni, obj)
         };
         Ok(ret)
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn create(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/scoreboard/Criteria")?;
+        let res = jni.call_static_method(
+            cls,
+            "create",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Criteria;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::scoreboard::Criteria(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn is_read_only(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isReadOnly", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Criteria<'mc> {
@@ -593,24 +594,12 @@ impl<'mc> Objective<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "unregister", "()V", &[])?;
         Ok(())
     }
+    #[deprecated]
     pub fn criteria(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -770,6 +759,19 @@ impl<'mc> Objective<'mc> {
         };
         Ok(ret)
     }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
 }
 impl<'mc> crate::JNIRaw<'mc> for Objective<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -821,6 +823,7 @@ impl<'mc> Score<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    #[deprecated]
     pub fn player(
         &mut self,
     ) -> Result<crate::bukkit::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -949,15 +952,15 @@ self.jni_ref().call_method(&self.jni_object(),"registerNewObjective","(Ljava/lan
         };
         Ok(ret)
     }
-    pub fn get_objective_with_string(
+    pub fn get_objective_with_display_slot(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::scoreboard::DisplaySlot<'mc>>>,
+        arg0: std::option::Option<String>,
     ) -> Result<crate::bukkit::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getObjective",
-            "(Lorg/bukkit/scoreboard/DisplaySlot;)Lorg/bukkit/scoreboard/Objective;",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Objective;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
@@ -980,6 +983,7 @@ self.jni_ref().call_method(&self.jni_object(),"registerNewObjective","(Ljava/lan
         )?;
         Ok(())
     }
+    #[deprecated]
     pub fn get_player_team(
         &mut self,
         arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
@@ -1327,6 +1331,16 @@ impl<'mc> Team<'mc> {
         )?;
         Ok(())
     }
+    pub fn remove_entry(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeEntry",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1339,45 +1353,6 @@ impl<'mc> Team<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn remove_entry(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeEntry",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn add_entry(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "addEntry",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSize", "()I", &[])?;
-        Ok(res.i().unwrap())
     }
     pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
@@ -1497,6 +1472,7 @@ impl<'mc> Team<'mc> {
         )?;
         Ok(())
     }
+    #[deprecated]
     pub fn name_tag_visibility(
         &mut self,
     ) -> Result<crate::bukkit::scoreboard::NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
@@ -1524,6 +1500,7 @@ impl<'mc> Team<'mc> {
         };
         Ok(ret)
     }
+    #[deprecated]
     pub fn set_name_tag_visibility(
         &mut self,
         arg0: impl Into<crate::bukkit::scoreboard::NameTagVisibility<'mc>>,
@@ -1553,6 +1530,7 @@ impl<'mc> Team<'mc> {
         };
         Ok(ret)
     }
+    #[deprecated]
     pub fn add_player(
         &mut self,
         arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
@@ -1566,6 +1544,7 @@ impl<'mc> Team<'mc> {
         )?;
         Ok(())
     }
+    #[deprecated]
     pub fn remove_player(
         &mut self,
         arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
@@ -1579,6 +1558,7 @@ impl<'mc> Team<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    #[deprecated]
     pub fn has_player(
         &mut self,
         arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
@@ -1637,6 +1617,35 @@ impl<'mc> Team<'mc> {
             ],
         )?;
         Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn add_entry(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "addEntry",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSize", "()I", &[])?;
+        Ok(res.i().unwrap())
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for Team<'mc> {

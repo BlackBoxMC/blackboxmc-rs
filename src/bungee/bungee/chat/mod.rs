@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct SelectorComponentSerializer<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -753,6 +754,20 @@ impl<'mc> TranslationRegistry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn translate(&mut self, arg0: String) -> Result<String, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "translate",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -784,20 +799,6 @@ impl<'mc> TranslationRegistry<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
         Ok(res.i().unwrap())
-    }
-    pub fn translate(&mut self, arg0: String) -> Result<String, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "translate",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     pub fn wait(
         &mut self,
@@ -901,17 +902,18 @@ impl<'mc> ComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn to_string_with_base_component(
+    pub fn to_string_with_base_components(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        _arg0: std::option::Option<
+            Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        >,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(
             cls,
             "toString",
             "(Lnet/md_5/bungee/api/chat/BaseComponent;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            &[],
         )?;
         Ok(jni
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?

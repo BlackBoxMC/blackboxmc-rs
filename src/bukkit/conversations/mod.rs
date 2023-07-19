@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements ConversationPrefix. Needed for returning it from Java.
 pub struct ConversationPrefix<'mc>(
@@ -476,12 +477,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<crate::bukkit::conversations::Conversation<'mc>>,
@@ -512,6 +507,12 @@ impl<'mc> InactivityConversationCanceller<'mc> {
             ],
         )?;
         Ok(res.z().unwrap())
+    }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -839,47 +840,6 @@ impl<'mc> Conversation<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn begin(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "begin", "()V", &[])?;
-        Ok(())
-    }
-    pub fn context(
-        &mut self,
-    ) -> Result<crate::bukkit::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getContext",
-            "()Lorg/bukkit/conversations/ConversationContext;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::conversations::ConversationContext(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn state(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::conversations::ConversationConversationState<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getState",
-            "()Lorg/bukkit/conversations/Conversation$ConversationState;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::conversations::ConversationConversationState(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn prefix(
         &mut self,
     ) -> Result<crate::bukkit::conversations::ConversationPrefix<'mc>, Box<dyn std::error::Error>>
@@ -991,6 +951,47 @@ impl<'mc> Conversation<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn begin(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "begin", "()V", &[])?;
+        Ok(())
+    }
+    pub fn context(
+        &mut self,
+    ) -> Result<crate::bukkit::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getContext",
+            "()Lorg/bukkit/conversations/ConversationContext;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::conversations::ConversationContext(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn state(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::conversations::ConversationConversationState<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getState",
+            "()Lorg/bukkit/conversations/Conversation$ConversationState;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::conversations::ConversationConversationState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn wait(
         &mut self,
@@ -1282,12 +1283,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<crate::bukkit::conversations::Conversation<'mc>>,
@@ -1318,6 +1313,12 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
             ],
         )?;
         Ok(res.z().unwrap())
+    }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -1924,23 +1925,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn context(
-        &mut self,
-    ) -> Result<crate::bukkit::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getContext",
-            "()Lorg/bukkit/conversations/ConversationContext;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::conversations::ConversationContext(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn canceller(
         &mut self,
     ) -> Result<crate::bukkit::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>>
@@ -1964,6 +1948,32 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             .call_method(&self.jni_object(), "gracefulExit", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn context(
+        &mut self,
+    ) -> Result<crate::bukkit::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getContext",
+            "()Lorg/bukkit/conversations/ConversationContext;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::conversations::ConversationContext(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn source(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getSource",
+            "()Ljava/lang/Object;",
+            &[],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1976,15 +1986,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn source(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSource",
-            "()Ljava/lang/Object;",
-            &[],
-        )?;
-        Ok(res.l().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -2259,12 +2260,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<crate::bukkit::conversations::Conversation<'mc>>,
@@ -2295,6 +2290,12 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
             ],
         )?;
         Ok(res.z().unwrap())
+    }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -2402,12 +2403,6 @@ impl<'mc> Conversable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_conversing(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isConversing", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn accept_conversation_input(
         &mut self,
         arg0: String,
@@ -2445,6 +2440,12 @@ impl<'mc> Conversable<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         self.jni_ref().call_method(&self.jni_object(),"abandonConversation","(Lorg/bukkit/conversations/Conversation;Lorg/bukkit/conversations/ConversationAbandonedEvent;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
         Ok(())
+    }
+    pub fn is_conversing(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isConversing", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn send_raw_message_with_string(
         &mut self,
@@ -2548,15 +2549,15 @@ impl<'mc> crate::JNIRaw<'mc> for RegexPrompt<'mc> {
     }
 }
 impl<'mc> RegexPrompt<'mc> {
-    pub fn new_with_pattern(
+    pub fn new_with_string(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::bukkit::conversations::RegexPrompt<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
+        let val_0 = arg0.unwrap();
         let cls = &jni.find_class("org/bukkit/conversations/RegexPrompt")?;
         let res = jni.new_object(
             cls,
-            "(Ljava/lang/String;)V",
+            "(Ljava/util/regex/Pattern;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = { crate::bukkit::conversations::RegexPrompt(jni, res) };
@@ -2910,23 +2911,6 @@ impl<'mc> ConversationCanceller<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/conversations/ConversationCanceller;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::conversations::ConversationCanceller(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<crate::bukkit::conversations::Conversation<'mc>>,
@@ -2957,6 +2941,23 @@ impl<'mc> ConversationCanceller<'mc> {
             ],
         )?;
         Ok(res.z().unwrap())
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/conversations/ConversationCanceller;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::conversations::ConversationCanceller(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for ConversationCanceller<'mc> {

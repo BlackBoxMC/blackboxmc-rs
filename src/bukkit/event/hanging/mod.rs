@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct HangingBreakEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -252,25 +253,6 @@ impl<'mc> HangingBreakEvent<'mc> {
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn cause(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
@@ -295,6 +277,25 @@ impl<'mc> HangingBreakEvent<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn cause(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
         };
         Ok(ret)
     }
@@ -505,25 +506,6 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn cause(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
@@ -548,6 +530,25 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn cause(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
         };
         Ok(ret)
     }

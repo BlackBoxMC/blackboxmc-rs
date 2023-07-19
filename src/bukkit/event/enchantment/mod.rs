@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct EnchantItemEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,

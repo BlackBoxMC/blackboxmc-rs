@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub enum BarStyleEnum {
     Solid,
@@ -302,11 +303,6 @@ impl<'mc> KeyedBossBar<'mc> {
         )?;
         Ok(())
     }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
-        Ok(())
-    }
     pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -482,14 +478,21 @@ impl<'mc> KeyedBossBar<'mc> {
             .call_method(&self.jni_object(), "getProgress", "()D", &[])?;
         Ok(res.d().unwrap())
     }
+    #[deprecated]
     pub fn show(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "show", "()V", &[])?;
         Ok(())
     }
+    #[deprecated]
     pub fn hide(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "hide", "()V", &[])?;
+        Ok(())
+    }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
         Ok(())
     }
     pub fn key(&mut self) -> Result<crate::bukkit::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
@@ -580,11 +583,6 @@ impl<'mc> BossBar<'mc> {
         )?;
         Ok(())
     }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
-        Ok(())
-    }
     pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -760,14 +758,21 @@ impl<'mc> BossBar<'mc> {
             .call_method(&self.jni_object(), "getProgress", "()D", &[])?;
         Ok(res.d().unwrap())
     }
+    #[deprecated]
     pub fn show(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "show", "()V", &[])?;
         Ok(())
     }
+    #[deprecated]
     pub fn hide(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "hide", "()V", &[])?;
+        Ok(())
+    }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[])?;
         Ok(())
     }
 }

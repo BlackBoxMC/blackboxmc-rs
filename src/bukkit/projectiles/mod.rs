@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 /// An instantiatable struct that implements ProjectileSource. Needed for returning it from Java.
 pub struct ProjectileSource<'mc>(

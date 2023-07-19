@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct DefaultPermissions<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -39,14 +40,16 @@ impl<'mc> DefaultPermissions<'mc> {
     }
     pub fn register_permission_with_permission(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
-        arg1: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+        arg0: String,
+        arg1: std::option::Option<String>,
+        arg2: std::option::Option<impl Into<crate::bukkit::permissions::PermissionDefault<'mc>>>,
     ) -> Result<crate::bukkit::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(cls,"registerPermission",
-"(Lorg/bukkit/permissions/Permission;Lorg/bukkit/permissions/Permission;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+"(Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/permissions/PermissionDefault;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         let ret = {
             let obj = res.l()?;
             crate::bukkit::permissions::Permission(jni, obj)

@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use crate::JNIRaw;
 pub struct ConfigurationSerialization<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -74,16 +75,16 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
-    pub fn unregister_class_with_string(
+    pub fn unregister_class_with_class(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg0: std::option::Option<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = arg0.unwrap();
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
             cls,
             "unregisterClass",
-            "(Ljava/lang/Class;)V",
+            "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
