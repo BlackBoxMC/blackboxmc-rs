@@ -324,7 +324,7 @@ self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/
         Ok(res.z().unwrap())
     }
     pub fn get_plugin(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<crate::bukkit::plugin::java::JavaPlugin<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -376,6 +376,7 @@ self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -431,6 +432,7 @@ self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/
         Ok(res.z().unwrap())
     }
     pub fn set_naggable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -464,7 +466,7 @@ self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/
         Ok(ret)
     }
     pub fn get_providing_plugin(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<crate::bukkit::plugin::java::JavaPlugin<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;

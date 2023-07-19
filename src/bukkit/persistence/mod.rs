@@ -444,6 +444,40 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         )?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    pub fn to_primitive_with_object(
+        &mut self,
+        arg0: bool,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::persistence::PersistentDataAdapterContext<'mc>>,
+        >,
+    ) -> Result<i8, Box<dyn std::error::Error>> {
+        // 1
+        let val_0 = jni::objects::JValueGen::Bool(arg0.into());
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toPrimitive",
+            "(ZLorg/bukkit/persistence/PersistentDataAdapterContext;)B",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.b().unwrap())
+    }
+    pub fn from_primitive_with_byte(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::persistence::PersistentDataAdapterContext<'mc>>,
+        >,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"fromPrimitive","(Ljava/lang/Object;Lorg/bukkit/persistence/PersistentDataAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        Ok(res.l().unwrap())
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,

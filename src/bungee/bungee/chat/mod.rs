@@ -884,6 +884,40 @@ impl<'mc> ComponentSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn to_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "toString",
+            "(Ljava/lang/Object;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string_with_base_component(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "toString",
+            "(Lnet/md_5/bungee/api/chat/BaseComponent;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,

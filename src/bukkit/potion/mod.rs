@@ -146,7 +146,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn get_by_name(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -164,7 +164,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(ret)
     }
     pub fn get_by_key(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -205,7 +205,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(ret)
     }
     pub fn get_by_id(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<crate::bukkit::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -223,7 +223,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(ret)
     }
     pub fn register_potion_effect_type(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -237,7 +237,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(())
     }
     pub fn stop_accepting_registrations(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
@@ -302,7 +302,9 @@ impl<'mc> PotionData<'mc> {
         arg2: std::option::Option<bool>,
     ) -> Result<crate::bukkit::potion::PotionData<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/potion/PotionData")?;
         let res = jni.new_object(
@@ -471,7 +473,9 @@ impl<'mc> Potion<'mc> {
     ) -> Result<crate::bukkit::potion::Potion<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
+        // 0
         let val_3 = jni::objects::JValueGen::Bool(arg3.unwrap().into());
         let cls = &jni.find_class("org/bukkit/potion/Potion")?;
         let res = jni.new_object(
@@ -537,6 +541,19 @@ impl<'mc> Potion<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
         Ok(res.i().unwrap())
+    }
+    pub fn apply_with_living_entity(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::inventory::ItemStack<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "apply",
+            "(Lorg/bukkit/inventory/ItemStack;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
     }
     pub fn get_type(
         &mut self,
@@ -619,6 +636,7 @@ impl<'mc> Potion<'mc> {
         Ok(ret)
     }
     pub fn set_splash(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -648,6 +666,7 @@ impl<'mc> Potion<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -658,7 +677,7 @@ impl<'mc> Potion<'mc> {
         Ok(())
     }
     pub fn brewer(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::potion::PotionBrewer<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/potion/PotionBrewer")?;
         let res =
@@ -688,7 +707,7 @@ impl<'mc> Potion<'mc> {
         Ok(res.s().unwrap())
     }
     pub fn from_damage(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<crate::bukkit::potion::Potion<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -706,7 +725,7 @@ impl<'mc> Potion<'mc> {
         Ok(ret)
     }
     pub fn from_item_stack(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<crate::bukkit::potion::Potion<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -724,7 +743,7 @@ impl<'mc> Potion<'mc> {
         Ok(ret)
     }
     pub fn set_potion_brewer(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::potion::PotionBrewer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -808,6 +827,62 @@ impl<'mc> crate::JNIRaw<'mc> for PotionEffect<'mc> {
     }
 }
 impl<'mc> PotionEffect<'mc> {
+    pub fn new_with_map(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::bukkit::potion::PotionEffectType<'mc>>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/potion/PotionEffect")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/potion/PotionEffectType;II)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::potion::PotionEffect(jni, res) };
+        Ok(ret)
+    }
+    pub fn new_with_potion_effect_type(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
+        arg1: i32,
+        arg2: i32,
+        arg3: bool,
+        arg4: bool,
+        arg5: std::option::Option<bool>,
+    ) -> Result<crate::bukkit::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        // 5
+        let val_3 = jni::objects::JValueGen::Bool(arg3.into());
+        // 5
+        let val_4 = jni::objects::JValueGen::Bool(arg4.into());
+        // 5
+        let val_5 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/potion/PotionEffect")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/potion/PotionEffectType;IIZZZ)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+            ],
+        )?;
+        let ret = { crate::bukkit::potion::PotionEffect(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1107,7 +1182,7 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn get_by_name(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -1139,7 +1214,7 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(ret)
     }
     pub fn get_by_key(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -1192,7 +1267,7 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(res.d().unwrap())
     }
     pub fn get_by_id(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<crate::bukkit::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -1210,7 +1285,7 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(ret)
     }
     pub fn register_potion_effect_type(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -1224,7 +1299,7 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(())
     }
     pub fn stop_accepting_registrations(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
@@ -1398,7 +1473,7 @@ impl<'mc> std::ops::Deref for PotionType<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for PotionType<'mc> {
+impl<'mc> JNIRaw<'mc> for PotionType<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1456,7 +1531,7 @@ impl<'mc> PotionType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::potion::PotionType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -1524,7 +1599,7 @@ impl<'mc> PotionType<'mc> {
         Ok(ret)
     }
     pub fn get_by_effect(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::potion::PotionEffectType<'mc>>,
     ) -> Result<crate::bukkit::potion::PotionType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };

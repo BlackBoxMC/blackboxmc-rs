@@ -1,4 +1,4 @@
-
+use crate::JNIRaw;
 pub enum StructureRotationEnum {
     None,
     Clockwise90,
@@ -26,7 +26,7 @@ impl<'mc> std::ops::Deref for StructureRotation<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for StructureRotation<'mc> {
+impl<'mc> JNIRaw<'mc> for StructureRotation<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -51,7 +51,7 @@ impl<'mc> StructureRotation<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::structure::StructureRotation<'mc>, Box<dyn std::error::Error>>
     {
@@ -108,7 +108,7 @@ impl<'mc> std::ops::Deref for UsageMode<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for UsageMode<'mc> {
+impl<'mc> JNIRaw<'mc> for UsageMode<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -132,7 +132,7 @@ impl<'mc> UsageMode<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::structure::UsageMode<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -185,7 +185,7 @@ impl<'mc> std::ops::Deref for Mirror<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for Mirror<'mc> {
+impl<'mc> JNIRaw<'mc> for Mirror<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -207,7 +207,7 @@ impl<'mc> Mirror<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::structure::Mirror<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());

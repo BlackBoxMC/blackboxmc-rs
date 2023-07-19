@@ -109,6 +109,19 @@ impl<'mc> Hatchable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -135,6 +148,7 @@ impl<'mc> Hatchable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -349,6 +363,7 @@ impl<'mc> Lightable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_lit(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -418,6 +433,19 @@ impl<'mc> Lightable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -444,6 +472,7 @@ impl<'mc> Lightable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -749,6 +778,19 @@ impl<'mc> Orientable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -775,6 +817,7 @@ impl<'mc> Orientable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1076,6 +1119,19 @@ impl<'mc> FaceAttachable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1102,6 +1158,7 @@ impl<'mc> FaceAttachable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1316,6 +1373,7 @@ impl<'mc> Powerable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1385,6 +1443,19 @@ impl<'mc> Powerable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1411,6 +1482,7 @@ impl<'mc> Powerable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1629,6 +1701,25 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1669,6 +1760,19 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -1847,6 +1951,19 @@ impl<'mc> Levelled<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1873,6 +1990,7 @@ impl<'mc> Levelled<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2162,6 +2280,19 @@ impl<'mc> Ageable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2188,6 +2319,7 @@ impl<'mc> Ageable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2403,6 +2535,7 @@ impl<'mc> MultipleFacing<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2488,6 +2621,19 @@ impl<'mc> MultipleFacing<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2514,6 +2660,7 @@ impl<'mc> MultipleFacing<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2729,6 +2876,25 @@ impl<'mc> RailShape<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2769,6 +2935,19 @@ impl<'mc> RailShape<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -2872,6 +3051,7 @@ impl<'mc> Snowable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_snowy(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2941,6 +3121,19 @@ impl<'mc> Snowable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2967,6 +3160,7 @@ impl<'mc> Snowable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3274,6 +3468,19 @@ impl<'mc> Directional<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3300,6 +3507,7 @@ impl<'mc> Directional<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3514,6 +3722,7 @@ impl<'mc> Openable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3583,6 +3792,19 @@ impl<'mc> Openable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3609,6 +3831,7 @@ impl<'mc> Openable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3916,6 +4139,19 @@ impl<'mc> Rotatable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3942,6 +4178,7 @@ impl<'mc> Rotatable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4156,6 +4393,7 @@ impl<'mc> Hangable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_hanging(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4225,6 +4463,19 @@ impl<'mc> Hangable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4251,6 +4502,7 @@ impl<'mc> Hangable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4494,6 +4746,7 @@ impl<'mc> Rail<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4563,6 +4816,19 @@ impl<'mc> Rail<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4589,6 +4855,7 @@ impl<'mc> Rail<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4803,6 +5070,7 @@ impl<'mc> Waterlogged<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4872,6 +5140,19 @@ impl<'mc> Waterlogged<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4898,6 +5179,7 @@ impl<'mc> Waterlogged<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5165,6 +5447,19 @@ impl<'mc> BlockData<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5191,6 +5486,7 @@ impl<'mc> BlockData<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5477,6 +5773,19 @@ impl<'mc> AnaloguePowerable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5503,6 +5812,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5792,6 +6102,19 @@ impl<'mc> Brushable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5818,6 +6141,7 @@ impl<'mc> Brushable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6032,6 +6356,7 @@ impl<'mc> Attachable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_attached(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6101,6 +6426,19 @@ impl<'mc> Attachable<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6127,6 +6465,7 @@ impl<'mc> Attachable<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6423,6 +6762,19 @@ impl<'mc> Bisected<'mc> {
         )?;
         Ok(())
     }
+    pub fn is_supported_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isSupported",
+            "(Lorg/bukkit/block/Block;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6449,6 +6801,7 @@ impl<'mc> Bisected<'mc> {
         Ok(ret)
     }
     pub fn get_as_string(&mut self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6664,6 +7017,25 @@ impl<'mc> BisectedHalf<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6704,6 +7076,19 @@ impl<'mc> BisectedHalf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(

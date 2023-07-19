@@ -195,7 +195,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(ret)
     }
     pub fn get_by_name(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -213,7 +213,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(ret)
     }
     pub fn register_enchantment(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -227,7 +227,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(())
     }
     pub fn get_by_key(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -245,14 +245,14 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(ret)
     }
     pub fn stop_accepting_registrations(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
         Ok(())
     }
     pub fn is_accepting_registrations(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "isAcceptingRegistrations", "()Z", &[])?;
@@ -526,6 +526,38 @@ impl<'mc> EnchantmentTarget<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
+    pub fn includes_with_item_stack(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "includes",
+            "(Lorg/bukkit/Material;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -566,6 +598,19 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -744,7 +789,7 @@ impl<'mc> Enchantment<'mc> {
         Ok(ret)
     }
     pub fn get_by_name(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -762,7 +807,7 @@ impl<'mc> Enchantment<'mc> {
         Ok(ret)
     }
     pub fn register_enchantment(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::enchantments::Enchantment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -776,7 +821,7 @@ impl<'mc> Enchantment<'mc> {
         Ok(())
     }
     pub fn get_by_key(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -819,7 +864,7 @@ impl<'mc> Enchantment<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn stop_accepting_registrations(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
@@ -868,7 +913,7 @@ impl<'mc> Enchantment<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn is_accepting_registrations(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "isAcceptingRegistrations", "()Z", &[])?;

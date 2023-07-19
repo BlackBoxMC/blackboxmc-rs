@@ -24,7 +24,7 @@ impl<'mc> std::ops::Deref for ChatMessageType<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for ChatMessageType<'mc> {
+impl<'mc> JNIRaw<'mc> for ChatMessageType<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -46,7 +46,7 @@ impl<'mc> ChatMessageType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bungee::bungee::api::ChatMessageType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -153,7 +153,7 @@ impl<'mc> ChatColor<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -161,6 +161,24 @@ impl<'mc> ChatColor<'mc> {
         let res = jni.call_static_method(
             cls,
             "valueOf",
+            "(Ljava/lang/String;)Lnet/md_5/bungee/api/ChatColor;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bungee::bungee::api::ChatColor(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn of_with_color(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<String>,
+    ) -> Result<crate::bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
+        let cls = &jni.find_class("net/md_5/bungee/api/ChatColor")?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
             "(Ljava/lang/String;)Lnet/md_5/bungee/api/ChatColor;",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
@@ -214,7 +232,7 @@ impl<'mc> ChatColor<'mc> {
         Ok((r, g, b))
     }
     pub fn get_by_char(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<crate::bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Char(arg0.into());
@@ -232,7 +250,7 @@ impl<'mc> ChatColor<'mc> {
         Ok(ret)
     }
     pub fn strip_color(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -249,7 +267,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string())
     }
     pub fn translate_alternate_color_codes(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: u16,
         arg1: String,
     ) -> Result<String, Box<dyn std::error::Error>> {

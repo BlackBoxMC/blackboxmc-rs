@@ -45,6 +45,43 @@ impl<'mc> CommandSenderSpigot<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn send_message_with_base_components(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Lnet/md_5/bungee/api/chat/BaseComponent;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Lnet/md_5/bungee/api/chat/BaseComponent;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -189,6 +226,90 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         };
         Ok(ret)
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -214,6 +335,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -304,6 +426,27 @@ impl<'mc> SimpleCommandMap<'mc> {
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register_with_string(
+        &mut self,
+        arg0: String,
+        arg1: std::option::Option<String>,
+        arg2: std::option::Option<impl Into<crate::bukkit::command::Command<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/command/Command;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
             ],
         )?;
         Ok(res.z().unwrap())
@@ -786,13 +929,14 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -1071,6 +1215,90 @@ impl<'mc> ConsoleCommandSender<'mc> {
         };
         Ok(ret)
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -1096,6 +1324,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1147,6 +1376,30 @@ impl<'mc> ConsoleCommandSender<'mc> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         self.jni_ref().call_method(&self.jni_object(),"abandonConversation","(Lorg/bukkit/conversations/Conversation;Lorg/bukkit/conversations/ConversationAbandonedEvent;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        Ok(())
+    }
+    pub fn send_raw_message_with_string(
+        &mut self,
+        arg0: std::option::Option<u128>,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0.unwrap() >> 64) as u64 as i64;
+        let lower = arg0.unwrap() as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendRawMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(())
     }
 }
@@ -1546,13 +1799,14 @@ impl<'mc> Command<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -1961,13 +2215,14 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -2262,6 +2517,90 @@ impl<'mc> ProxiedCommandSender<'mc> {
         };
         Ok(ret)
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -2287,6 +2626,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2465,6 +2805,90 @@ impl<'mc> CommandSender<'mc> {
         };
         Ok(ret)
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -2490,6 +2914,7 @@ impl<'mc> CommandSender<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2556,6 +2981,27 @@ impl<'mc> CommandMap<'mc> {
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register_with_string(
+        &mut self,
+        arg0: String,
+        arg1: std::option::Option<String>,
+        arg2: std::option::Option<impl Into<crate::bukkit::command::Command<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/command/Command;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
             ],
         )?;
         Ok(res.z().unwrap())
@@ -3018,13 +3464,14 @@ impl<'mc> PluginCommand<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -3191,6 +3638,90 @@ impl<'mc> BlockCommandSender<'mc> {
         };
         Ok(ret)
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -3216,6 +3747,7 @@ impl<'mc> BlockCommandSender<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),

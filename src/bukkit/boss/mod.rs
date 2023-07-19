@@ -28,7 +28,7 @@ impl<'mc> std::ops::Deref for BarStyle<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for BarStyle<'mc> {
+impl<'mc> JNIRaw<'mc> for BarStyle<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -54,7 +54,7 @@ impl<'mc> BarStyle<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -115,7 +115,7 @@ impl<'mc> std::ops::Deref for BarColor<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for BarColor<'mc> {
+impl<'mc> JNIRaw<'mc> for BarColor<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -145,7 +145,7 @@ impl<'mc> BarColor<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -198,7 +198,7 @@ impl<'mc> std::ops::Deref for BarFlag<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for BarFlag<'mc> {
+impl<'mc> JNIRaw<'mc> for BarFlag<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -220,7 +220,7 @@ impl<'mc> BarFlag<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::boss::BarFlag<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -314,6 +314,7 @@ impl<'mc> KeyedBossBar<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -591,6 +592,7 @@ impl<'mc> BossBar<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -872,6 +874,7 @@ impl<'mc> DragonBattle<'mc> {
         Ok(ret)
     }
     pub fn generate_end_portal(&mut self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -962,6 +965,25 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1002,6 +1024,19 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(

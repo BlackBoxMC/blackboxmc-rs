@@ -143,6 +143,25 @@ impl<'mc> TeamOptionStatus<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -183,6 +202,19 @@ impl<'mc> TeamOptionStatus<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -293,7 +325,7 @@ impl<'mc> Criteria<'mc> {
             .to_string())
     }
     pub fn create(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -343,6 +375,22 @@ impl<'mc> Criteria<'mc> {
         };
         Ok(ret)
     }
+    pub fn statistic_with_statistic(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::bukkit::Statistic<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::entity::EntityType<'mc>>>,
+    ) -> Result<crate::bukkit::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/scoreboard/Criteria")?;
+        let res = jni.call_static_method(cls,"statistic",
+"(Lorg/bukkit/Statistic;Lorg/bukkit/entity/EntityType;)Lorg/bukkit/scoreboard/Criteria;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::scoreboard::Criteria(jni, obj)
+        };
+        Ok(ret)
+    }
 }
 impl<'mc> crate::JNIRaw<'mc> for Criteria<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -380,7 +428,7 @@ impl<'mc> std::ops::Deref for NameTagVisibility<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for NameTagVisibility<'mc> {
+impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -405,7 +453,7 @@ impl<'mc> NameTagVisibility<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::scoreboard::NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -456,7 +504,7 @@ impl<'mc> std::ops::Deref for RenderType<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for RenderType<'mc> {
+impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -476,7 +524,7 @@ impl<'mc> RenderType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -597,6 +645,24 @@ impl<'mc> Objective<'mc> {
         )?;
         let ret = {
             crate::bukkit::scoreboard::Scoreboard(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_score_with_offline_player(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<crate::bukkit::scoreboard::Score<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScore",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Score;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::scoreboard::Score(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -863,6 +929,57 @@ impl<'mc> Scoreboard<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn register_new_objective_with_string(
+        &mut self,
+        arg0: String,
+        arg1: String,
+        arg2: String,
+        arg3: std::option::Option<impl Into<crate::bukkit::scoreboard::RenderType<'mc>>>,
+    ) -> Result<crate::bukkit::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg2).unwrap());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"registerNewObjective","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/scoreboard/RenderType;)Lorg/bukkit/scoreboard/Objective;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::scoreboard::Objective(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_objective_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::scoreboard::DisplaySlot<'mc>>>,
+    ) -> Result<crate::bukkit::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getObjective",
+            "(Lorg/bukkit/scoreboard/DisplaySlot;)Lorg/bukkit/scoreboard/Objective;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::scoreboard::Objective(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn reset_scores_with_offline_player(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "resetScores",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn get_player_team(
         &mut self,
         arg0: impl Into<crate::bukkit::OfflinePlayer<'mc>>,
@@ -1015,7 +1132,7 @@ impl<'mc> std::ops::Deref for DisplaySlot<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for DisplaySlot<'mc> {
+impl<'mc> JNIRaw<'mc> for DisplaySlot<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1069,7 +1186,7 @@ impl<'mc> DisplaySlot<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::scoreboard::DisplaySlot<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -1347,6 +1464,7 @@ impl<'mc> Team<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1369,6 +1487,7 @@ impl<'mc> Team<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1565,6 +1684,25 @@ impl<'mc> TeamOption<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1605,6 +1743,19 @@ impl<'mc> TeamOption<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(

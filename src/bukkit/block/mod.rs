@@ -97,7 +97,9 @@ impl<'mc> Chest<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -549,7 +551,7 @@ impl<'mc> std::ops::Deref for BlockFace<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for BlockFace<'mc> {
+impl<'mc> JNIRaw<'mc> for BlockFace<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -603,7 +605,7 @@ impl<'mc> BlockFace<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -750,7 +752,9 @@ impl<'mc> DaylightDetector<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1193,7 +1197,9 @@ impl<'mc> Lectern<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1709,7 +1715,9 @@ impl<'mc> CreatureSpawner<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2037,7 +2045,9 @@ impl<'mc> Comparator<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2379,6 +2389,7 @@ impl<'mc> EndGateway<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_exact_teleport(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2426,7 +2437,9 @@ impl<'mc> EndGateway<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2786,7 +2799,9 @@ impl<'mc> Container<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3261,7 +3276,9 @@ impl<'mc> BlastFurnace<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3620,7 +3637,7 @@ impl<'mc> std::ops::Deref for PistonMoveReaction<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for PistonMoveReaction<'mc> {
+impl<'mc> JNIRaw<'mc> for PistonMoveReaction<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3646,7 +3663,7 @@ impl<'mc> PistonMoveReaction<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -3680,7 +3697,7 @@ impl<'mc> PistonMoveReaction<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn get_by_id(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<crate::bukkit::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
@@ -3808,7 +3825,9 @@ impl<'mc> EnchantingTable<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4221,7 +4240,9 @@ impl<'mc> ShulkerBox<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4709,7 +4730,9 @@ impl<'mc> EntityBlockStorage<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5111,7 +5134,9 @@ impl<'mc> Beehive<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5439,7 +5464,9 @@ impl<'mc> SculkCatalyst<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5847,7 +5874,9 @@ impl<'mc> Furnace<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6264,7 +6293,9 @@ impl<'mc> Dropper<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6770,7 +6801,9 @@ impl<'mc> SuspiciousSand<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7098,7 +7131,9 @@ impl<'mc> Conduit<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7490,7 +7525,9 @@ impl<'mc> Beacon<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7939,6 +7976,7 @@ impl<'mc> Block<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8073,6 +8111,7 @@ impl<'mc> Block<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8173,6 +8212,32 @@ self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn get_relative_with_block_face(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getRelative",
+            "(III)Lorg/bukkit/block/Block;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::block::Block(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     pub fn temperature(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
@@ -8439,6 +8504,37 @@ impl<'mc> Bell<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn ring(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ring",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn ring_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::block::BlockFace<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ring",
+            "(Lorg/bukkit/entity/Entity;Lorg/bukkit/block/BlockFace;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn is_shaking(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8485,7 +8581,9 @@ impl<'mc> Bell<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8813,7 +8911,9 @@ impl<'mc> Jigsaw<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9196,7 +9296,9 @@ impl<'mc> Dispenser<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9707,7 +9809,9 @@ impl<'mc> BrushableBlock<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10056,7 +10160,9 @@ impl<'mc> SculkShrieker<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10384,7 +10490,9 @@ impl<'mc> DecoratedPot<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10810,7 +10918,9 @@ impl<'mc> Campfire<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11237,7 +11347,7 @@ impl<'mc> std::ops::Deref for Biome<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for Biome<'mc> {
+impl<'mc> JNIRaw<'mc> for Biome<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -11383,7 +11493,7 @@ impl<'mc> Biome<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::Biome<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -11555,7 +11665,9 @@ impl<'mc> Smoker<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11960,7 +12072,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12394,6 +12508,19 @@ impl<'mc> Structure<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn set_author_with_living_entity(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAuthor",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn set_relative_position(
         &mut self,
         arg0: impl Into<crate::bukkit::util::BlockVector<'mc>>,
@@ -12517,6 +12644,7 @@ impl<'mc> Structure<'mc> {
         Ok(ret)
     }
     pub fn set_ignore_entities(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -12533,6 +12661,7 @@ impl<'mc> Structure<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_show_air(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -12552,6 +12681,7 @@ impl<'mc> Structure<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -12605,7 +12735,9 @@ impl<'mc> Structure<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12925,7 +13057,9 @@ impl<'mc> EnderChest<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13258,7 +13392,9 @@ impl<'mc> Bed<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13757,7 +13893,9 @@ impl<'mc> Jukebox<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14229,7 +14367,9 @@ impl<'mc> Banner<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14589,7 +14729,9 @@ impl<'mc> Barrel<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15080,7 +15222,9 @@ impl<'mc> CommandBlock<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15430,7 +15574,9 @@ impl<'mc> SculkSensor<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15825,7 +15971,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16150,6 +16298,7 @@ impl<'mc> HangingSign<'mc> {
         Ok(())
     }
     pub fn set_editable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -16206,6 +16355,7 @@ impl<'mc> HangingSign<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_waxed(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -16216,6 +16366,7 @@ impl<'mc> HangingSign<'mc> {
         Ok(())
     }
     pub fn set_glowing_text(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -16290,7 +16441,9 @@ impl<'mc> HangingSign<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16618,7 +16771,9 @@ impl<'mc> TileState<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16934,7 +17089,9 @@ impl<'mc> BlockState<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17326,7 +17483,9 @@ impl<'mc> BrewingStand<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17902,7 +18061,9 @@ impl<'mc> Skull<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18262,7 +18423,9 @@ impl<'mc> Hopper<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18684,6 +18847,7 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
     pub fn set_editable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -18740,6 +18904,7 @@ impl<'mc> Sign<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_waxed(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -18750,6 +18915,7 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
     pub fn set_glowing_text(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -18824,7 +18990,9 @@ impl<'mc> Sign<'mc> {
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19351,7 +19519,7 @@ impl<'mc> std::ops::Deref for BlockSupport<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for BlockSupport<'mc> {
+impl<'mc> JNIRaw<'mc> for BlockSupport<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -19373,7 +19541,7 @@ impl<'mc> BlockSupport<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::BlockSupport<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());

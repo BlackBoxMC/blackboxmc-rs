@@ -237,6 +237,68 @@ impl<'mc> MapCursorCollection<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    pub fn add_cursor_with_map_cursor(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Byte(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addCursor",
+            "(IIB)Lorg/bukkit/map/MapCursor;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::map::MapCursor(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn add_cursor_with_int(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i8,
+        arg3: i8,
+        arg4: bool,
+        arg5: std::option::Option<String>,
+    ) -> Result<crate::bukkit::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Byte(arg2.into());
+        let val_3 = jni::objects::JValueGen::Byte(arg3.into());
+        // 5
+        let val_4 = jni::objects::JValueGen::Bool(arg4.into());
+        let val_5 = jni::objects::JObject::from(self.jni_ref().new_string(arg5.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addCursor",
+            "(IIBBZLjava/lang/String;)Lorg/bukkit/map/MapCursor;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::map::MapCursor(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -619,6 +681,7 @@ impl<'mc> MapRenderer<'mc> {
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::bukkit::map::MapRenderer<'mc>, Box<dyn std::error::Error>> {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let cls = &jni.find_class("org/bukkit/map/MapRenderer")?;
         let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_0)])?;
@@ -793,6 +856,43 @@ impl<'mc> MapViewScale<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::map::MapViewScale<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Byte(arg0.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/map/MapView$Scale")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(B)Lorg/bukkit/map/MapView$Scale;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::map::MapViewScale(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn value_of_with_class(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: jni::objects::JClass<'mc>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn value(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -839,6 +939,19 @@ impl<'mc> MapViewScale<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -1074,6 +1187,7 @@ impl<'mc> MapView<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_tracking_position(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1090,6 +1204,7 @@ impl<'mc> MapView<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unlimited_tracking(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1100,6 +1215,7 @@ impl<'mc> MapView<'mc> {
         Ok(())
     }
     pub fn set_locked(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1555,7 +1671,7 @@ impl<'mc> MapPalette<'mc> {
         }
     }
     pub fn get_color(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: i8,
     ) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Byte(arg0.into());
@@ -1593,8 +1709,30 @@ impl<'mc> MapPalette<'mc> {
         (r, g, b);
         Ok((r, g, b))
     }
+    pub fn match_color_with_color(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<i8, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let cls = &jni.find_class("byte")?;
+        let res = jni.call_static_method(
+            cls,
+            "matchColor",
+            "(III)B",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(res.b().unwrap())
+    }
     pub fn resize_image(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -1608,7 +1746,7 @@ impl<'mc> MapPalette<'mc> {
         Ok(res.l().unwrap())
     }
     pub fn set_map_color_cache(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::map::MapPaletteMapColorCache<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -1731,6 +1869,25 @@ impl<'mc> MapCursorType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn value(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1738,7 +1895,7 @@ impl<'mc> MapCursorType<'mc> {
         Ok(res.b().unwrap())
     }
     pub fn by_value(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: i8,
     ) -> Result<crate::bukkit::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Byte(arg0.into());
@@ -1795,6 +1952,19 @@ impl<'mc> MapCursorType<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -1873,6 +2043,38 @@ impl<'mc> crate::JNIRaw<'mc> for MapCursor<'mc> {
     }
 }
 impl<'mc> MapCursor<'mc> {
+    pub fn new_with_byte(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: i8,
+        arg1: i8,
+        arg2: i8,
+        arg3: i8,
+        arg4: bool,
+        arg5: std::option::Option<String>,
+    ) -> Result<crate::bukkit::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Byte(arg0.into());
+        let val_1 = jni::objects::JValueGen::Byte(arg1.into());
+        let val_2 = jni::objects::JValueGen::Byte(arg2.into());
+        let val_3 = jni::objects::JValueGen::Byte(arg3.into());
+        // 5
+        let val_4 = jni::objects::JValueGen::Bool(arg4.into());
+        let val_5 = jni::objects::JObject::from(jni.new_string(arg5.unwrap()).unwrap());
+        let cls = &jni.find_class("org/bukkit/map/MapCursor")?;
+        let res = jni.new_object(
+            cls,
+            "(BBBBZLjava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+            ],
+        )?;
+        let ret = { crate::bukkit::map::MapCursor(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1937,6 +2139,7 @@ impl<'mc> MapCursor<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),

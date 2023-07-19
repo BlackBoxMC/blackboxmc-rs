@@ -80,6 +80,7 @@ impl<'mc> MoistureChangeEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -90,7 +91,7 @@ impl<'mc> MoistureChangeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -346,6 +347,7 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -356,7 +358,7 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -602,6 +604,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -612,7 +615,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -780,6 +783,25 @@ impl<'mc> TNTPrimeEventPrimeCause<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -820,6 +842,19 @@ impl<'mc> TNTPrimeEventPrimeCause<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -977,6 +1012,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -987,7 +1023,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -1229,7 +1265,7 @@ impl<'mc> BellResonateEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -1459,6 +1495,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
         Ok(res.f().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1469,7 +1506,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -1637,6 +1674,25 @@ impl<'mc> CauldronLevelChangeEventChangeReason<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1677,6 +1733,19 @@ impl<'mc> CauldronLevelChangeEventChangeReason<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -1859,6 +1928,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1869,7 +1939,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -2069,6 +2139,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
+        // -2
         let val_4 = jni::objects::JValueGen::Bool(arg4.into());
         let cls = &jni.find_class("org/bukkit/event/block/BlockMultiPlaceEvent")?;
         let res = jni.new_object(cls,
@@ -2155,6 +2226,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2165,7 +2237,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -2262,6 +2334,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         Ok(ret)
     }
     pub fn set_build(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2405,7 +2478,7 @@ impl<'mc> std::ops::Deref for Action<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for Action<'mc> {
+impl<'mc> JNIRaw<'mc> for Action<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2431,7 +2504,7 @@ impl<'mc> Action<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::event::block::Action<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -2473,6 +2546,25 @@ impl<'mc> crate::JNIRaw<'mc> for BlockCanBuildEvent<'mc> {
     }
 }
 impl<'mc> BlockCanBuildEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
+        arg1: impl Into<crate::bukkit::entity::Player<'mc>>,
+        arg2: std::option::Option<impl Into<crate::bukkit::block::data::BlockData<'mc>>>,
+        arg3: std::option::Option<bool>,
+    ) -> Result<crate::bukkit::event::block::BlockCanBuildEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        // 2
+        let val_3 = jni::objects::JValueGen::Bool(arg3.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockCanBuildEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Lorg/bukkit/block/data/BlockData;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::block::BlockCanBuildEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2571,7 +2663,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -2593,6 +2685,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_buildable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2801,7 +2894,7 @@ impl<'mc> BlockSpreadEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -2823,6 +2916,7 @@ impl<'mc> BlockSpreadEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3064,7 +3158,7 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -3258,7 +3352,7 @@ impl<'mc> BlockFormEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -3280,6 +3374,7 @@ impl<'mc> BlockFormEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3499,7 +3594,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -3564,6 +3659,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3698,6 +3794,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockPistonExtendEvent<'mc> {
     }
 }
 impl<'mc> BlockPistonExtendEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
+        arg1: i32,
+        arg2: std::option::Option<impl Into<crate::bukkit::block::BlockFace<'mc>>>,
+    ) -> Result<crate::bukkit::event::block::BlockPistonExtendEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockPistonExtendEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;ILorg/bukkit/block/BlockFace;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockPistonExtendEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3746,7 +3865,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         Ok(res.i().unwrap())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -3795,6 +3914,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4025,6 +4145,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4035,7 +4156,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -4238,7 +4359,7 @@ impl<'mc> BrewingStartEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -4484,7 +4605,7 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -4684,6 +4805,7 @@ impl<'mc> BlockGrowEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4694,7 +4816,7 @@ impl<'mc> BlockGrowEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -4987,6 +5109,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4997,7 +5120,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -5238,6 +5361,7 @@ impl<'mc> BlockCookEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5248,7 +5372,7 @@ impl<'mc> BlockCookEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -5465,6 +5589,7 @@ impl<'mc> BlockPistonEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5686,6 +5811,7 @@ impl<'mc> BlockFadeEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5696,7 +5822,7 @@ impl<'mc> BlockFadeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -5866,6 +5992,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.into().1.clone()) };
+        // 5
         let val_5 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
         let val_6 = unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/event/block/BlockPlaceEvent")?;
@@ -5953,6 +6080,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5963,7 +6091,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -6060,6 +6188,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         Ok(ret)
     }
     pub fn set_build(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6263,6 +6392,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6273,7 +6403,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -6535,7 +6665,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -6557,6 +6687,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6778,6 +6909,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6788,7 +6920,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -6985,7 +7117,7 @@ impl<'mc> BlockExpEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -7144,10 +7276,10 @@ impl<'mc> SignChangeEvent<'mc> {
     ) -> Result<crate::bukkit::event::block::SignChangeEvent<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/event/block/SignChangeEvent")?;
         let res = jni.new_object(cls,
-"(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Ljava/lang/String;Lorg/bukkit/block/sign/Side;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+"(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Ljava/lang/String;Lorg/bukkit/block/sign/Side;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)])?;
         let ret = { crate::bukkit::event::block::SignChangeEvent(jni, res) };
         Ok(ret)
     }
@@ -7269,6 +7401,7 @@ impl<'mc> SignChangeEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7279,7 +7412,7 @@ impl<'mc> SignChangeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -7480,6 +7613,7 @@ impl<'mc> LeavesDecayEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7490,7 +7624,7 @@ impl<'mc> LeavesDecayEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -7629,6 +7763,26 @@ impl<'mc> crate::JNIRaw<'mc> for BlockFromToEvent<'mc> {
     }
 }
 impl<'mc> BlockFromToEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::block::BlockFace<'mc>>>,
+    ) -> Result<crate::bukkit::event::block::BlockFromToEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockFromToEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockFromToEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7703,6 +7857,7 @@ impl<'mc> BlockFromToEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7713,7 +7868,7 @@ impl<'mc> BlockFromToEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -7955,6 +8110,7 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7965,7 +8121,7 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -8204,6 +8360,7 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8214,7 +8371,7 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -8432,6 +8589,7 @@ impl<'mc> BlockBurnEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8442,7 +8600,7 @@ impl<'mc> BlockBurnEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -8725,6 +8883,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8735,7 +8894,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -8984,6 +9143,7 @@ impl<'mc> BellRingEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8994,7 +9154,7 @@ impl<'mc> BellRingEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -9144,6 +9304,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg3.into());
         let cls = &jni.find_class("org/bukkit/event/block/BlockDamageEvent")?;
         let res = jni.new_object(cls,
@@ -9230,6 +9391,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9240,7 +9402,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -9262,6 +9424,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_insta_break(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9468,7 +9631,7 @@ impl<'mc> CampfireStartEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -9700,6 +9863,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9710,6 +9874,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         Ok(())
     }
     pub fn set_drop_items(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9742,7 +9907,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -9961,7 +10126,7 @@ impl<'mc> BlockRedstoneEvent<'mc> {
         Ok(ret)
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -10146,6 +10311,25 @@ impl<'mc> BlockIgniteEventIgniteCause<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10186,6 +10370,19 @@ impl<'mc> BlockIgniteEventIgniteCause<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -10264,6 +10461,24 @@ impl<'mc> crate::JNIRaw<'mc> for BlockIgniteEvent<'mc> {
     }
 }
 impl<'mc> BlockIgniteEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
+        arg1: impl Into<crate::bukkit::event::block::BlockIgniteEventIgniteCause<'mc>>,
+        arg2: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg3: std::option::Option<impl Into<crate::bukkit::block::Block<'mc>>>,
+    ) -> Result<crate::bukkit::event::block::BlockIgniteEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockIgniteEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/event/block/BlockIgniteEvent$IgniteCause;Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::block::BlockIgniteEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -10346,6 +10561,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10356,7 +10572,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -10661,6 +10877,7 @@ impl<'mc> NotePlayEvent<'mc> {
         Ok(())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10671,7 +10888,7 @@ impl<'mc> NotePlayEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(

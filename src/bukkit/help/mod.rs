@@ -42,6 +42,24 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn compare_with_string(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let val_1 = arg1.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compare",
+            "(Ljava/lang/Object;Ljava/lang/Object;)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -110,6 +128,37 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+    pub fn then_comparing_with_comparator(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparing",
+            "(Ljava/util/function/Function;)Ljava/util/Comparator;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.l().unwrap())
+    }
+    pub fn then_comparing_with_function(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let val_1 = arg1.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparing",
+            "(Ljava/util/function/Function;Ljava/util/Comparator;)Ljava/util/Comparator;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
     }
     pub fn reversed(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -194,8 +243,26 @@ impl<'mc> HelpTopicComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn compare_with_object(
+        &mut self,
+        arg0: impl Into<crate::bukkit::help::HelpTopic<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::help::HelpTopic<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compare",
+            "(Lorg/bukkit/help/HelpTopic;Lorg/bukkit/help/HelpTopic;)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
     pub fn topic_name_comparator_instance(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<
         crate::bukkit::help::HelpTopicComparatorTopicNameComparator<'mc>,
         Box<dyn std::error::Error>,
@@ -214,7 +281,7 @@ impl<'mc> HelpTopicComparator<'mc> {
         Ok(ret)
     }
     pub fn help_topic_comparator_instance(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::help::HelpTopicComparator<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/help/HelpTopicComparator")?;
         let res = jni.call_static_method(
@@ -297,6 +364,37 @@ impl<'mc> HelpTopicComparator<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+    pub fn then_comparing_with_comparator(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparing",
+            "(Ljava/util/function/Function;)Ljava/util/Comparator;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.l().unwrap())
+    }
+    pub fn then_comparing_with_function(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let val_1 = arg1.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparing",
+            "(Ljava/util/function/Function;Ljava/util/Comparator;)Ljava/util/Comparator;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
     }
     pub fn reversed(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(

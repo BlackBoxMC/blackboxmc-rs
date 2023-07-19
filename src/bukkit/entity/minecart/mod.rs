@@ -108,6 +108,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_slow_when_empty(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -483,6 +484,39 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .call_method(&self.jni_object(), "isInWater", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn teleport_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -512,6 +546,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(())
     }
     pub fn set_visual_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -576,6 +611,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -832,6 +868,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -848,6 +885,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible_by_default(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -864,6 +902,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_glowing(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -880,6 +919,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_invulnerable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -896,6 +936,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_silent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -912,6 +953,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_gravity(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1081,6 +1123,90 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -1106,6 +1232,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1207,6 +1334,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_enabled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1255,6 +1383,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_slow_when_empty(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1630,6 +1759,39 @@ impl<'mc> HopperMinecart<'mc> {
             .call_method(&self.jni_object(), "isInWater", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn teleport_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1659,6 +1821,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(())
     }
     pub fn set_visual_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1723,6 +1886,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1979,6 +2143,7 @@ impl<'mc> HopperMinecart<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1995,6 +2160,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible_by_default(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2011,6 +2177,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_glowing(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2027,6 +2194,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_invulnerable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2043,6 +2211,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_silent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2059,6 +2228,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_gravity(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2228,6 +2398,90 @@ impl<'mc> HopperMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -2253,6 +2507,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2457,6 +2712,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_slow_when_empty(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2832,6 +3088,39 @@ impl<'mc> StorageMinecart<'mc> {
             .call_method(&self.jni_object(), "isInWater", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn teleport_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2861,6 +3150,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(())
     }
     pub fn set_visual_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2925,6 +3215,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3181,6 +3472,7 @@ impl<'mc> StorageMinecart<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3197,6 +3489,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible_by_default(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3213,6 +3506,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_glowing(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3229,6 +3523,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_invulnerable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3245,6 +3540,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_silent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3261,6 +3557,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_gravity(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3430,6 +3727,90 @@ impl<'mc> StorageMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -3455,6 +3836,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3659,6 +4041,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_slow_when_empty(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4034,6 +4417,39 @@ impl<'mc> SpawnerMinecart<'mc> {
             .call_method(&self.jni_object(), "isInWater", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn teleport_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4063,6 +4479,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(())
     }
     pub fn set_visual_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4127,6 +4544,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4383,6 +4801,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4399,6 +4818,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible_by_default(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4415,6 +4835,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_glowing(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4431,6 +4852,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_invulnerable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4447,6 +4869,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_silent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4463,6 +4886,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_gravity(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4632,6 +5056,90 @@ impl<'mc> SpawnerMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -4657,6 +5165,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4806,6 +5315,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_slow_when_empty(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5181,6 +5691,39 @@ impl<'mc> PoweredMinecart<'mc> {
             .call_method(&self.jni_object(), "isInWater", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn teleport_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5210,6 +5753,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(())
     }
     pub fn set_visual_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5274,6 +5818,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5530,6 +6075,7 @@ impl<'mc> PoweredMinecart<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5546,6 +6092,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible_by_default(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5562,6 +6109,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_glowing(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5578,6 +6126,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_invulnerable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5594,6 +6143,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_silent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5610,6 +6160,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_gravity(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5779,6 +6330,90 @@ impl<'mc> PoweredMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -5804,6 +6439,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5937,6 +6573,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_slow_when_empty(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6312,6 +6949,39 @@ impl<'mc> RideableMinecart<'mc> {
             .call_method(&self.jni_object(), "isInWater", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn teleport_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6341,6 +7011,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(())
     }
     pub fn set_visual_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6405,6 +7076,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6661,6 +7333,7 @@ impl<'mc> RideableMinecart<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6677,6 +7350,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible_by_default(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6693,6 +7367,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_glowing(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6709,6 +7384,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_invulnerable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6725,6 +7401,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_silent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6741,6 +7418,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_gravity(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6910,6 +7588,90 @@ impl<'mc> RideableMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -6935,6 +7697,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7101,6 +7864,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_slow_when_empty(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7476,6 +8240,39 @@ impl<'mc> CommandMinecart<'mc> {
             .call_method(&self.jni_object(), "isInWater", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn teleport_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
+        >,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7505,6 +8302,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(())
     }
     pub fn set_visual_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7569,6 +8367,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7825,6 +8624,7 @@ impl<'mc> CommandMinecart<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7841,6 +8641,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_visible_by_default(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7857,6 +8658,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_glowing(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7873,6 +8675,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_invulnerable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7889,6 +8692,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_silent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7905,6 +8709,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_gravity(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8074,6 +8879,90 @@ impl<'mc> CommandMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn is_permission_set_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isPermissionSet",
+            "(Lorg/bukkit/permissions/Permission;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_permission_with_permission(
+        &mut self,
+        arg0: std::option::Option<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPermission",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn add_attachment_with_plugin(
+        &mut self,
+        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: String,
+        arg2: bool,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        // 3
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;ZI)Lorg/bukkit/permissions/PermissionAttachment;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = {
+            crate::bukkit::permissions::PermissionAttachment(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<crate::bukkit::permissions::PermissionAttachment<'mc>>,
@@ -8099,6 +8988,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),

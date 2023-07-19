@@ -66,7 +66,7 @@ impl<'mc> SharedJNIEnv<'mc> {
         Ok(self.jni.borrow_mut().find_class(name)?)
     }
     pub fn call_static_method<'other_local, T, U, V>(
-        &mut self,
+        &self,
         class: T,
         name: U,
         sig: V,

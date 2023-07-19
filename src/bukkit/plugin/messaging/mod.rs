@@ -22,7 +22,7 @@ impl<'mc> std::ops::Deref for PluginChannelDirection<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for PluginChannelDirection<'mc> {
+impl<'mc> JNIRaw<'mc> for PluginChannelDirection<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -42,7 +42,7 @@ impl<'mc> PluginChannelDirection<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<
         crate::bukkit::plugin::messaging::PluginChannelDirection<'mc>,
@@ -557,7 +557,7 @@ impl<'mc> StandardMessenger<'mc> {
         }
     }
     pub fn validate_and_correct_channel(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -727,7 +727,7 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
         Ok(())
     }
     pub fn validate_channel(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -741,7 +741,7 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
         Ok(())
     }
     pub fn validate_plugin_message(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::plugin::messaging::Messenger<'mc>>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
         arg2: String,

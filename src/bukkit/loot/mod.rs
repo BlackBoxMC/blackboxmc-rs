@@ -505,7 +505,7 @@ impl<'mc> std::ops::Deref for LootTables<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for LootTables<'mc> {
+impl<'mc> JNIRaw<'mc> for LootTables<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -847,7 +847,7 @@ impl<'mc> LootTables<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::loot::LootTables<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());

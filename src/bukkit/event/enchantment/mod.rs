@@ -121,6 +121,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -131,7 +132,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(
@@ -378,10 +379,10 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
-        let val_4 = jni::objects::JValueGen::Int(arg5.into());
+        let val_5 = jni::objects::JValueGen::Int(arg5.into());
         let cls = &jni.find_class("org/bukkit/event/enchantment/PrepareItemEnchantEvent")?;
         let res = jni.new_object(cls,
-"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_5)])?;
         let ret = { crate::bukkit::event::enchantment::PrepareItemEnchantEvent(jni, res) };
         Ok(ret)
     }
@@ -449,6 +450,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         Ok(ret)
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -459,7 +461,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         Ok(())
     }
     pub fn handler_list(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
     ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
         let res = jni.call_static_method(

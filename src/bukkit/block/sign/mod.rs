@@ -22,7 +22,7 @@ impl<'mc> std::ops::Deref for Side<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for Side<'mc> {
+impl<'mc> JNIRaw<'mc> for Side<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -42,7 +42,7 @@ impl<'mc> Side<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -133,6 +133,7 @@ impl<'mc> SignSide<'mc> {
         Ok(())
     }
     pub fn set_glowing_text(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),

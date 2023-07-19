@@ -83,6 +83,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
         crate::bukkit::configuration::MemoryConfigurationOptions<'mc>,
         Box<dyn std::error::Error>,
     > {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -275,6 +276,7 @@ impl<'mc> MemorySection<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -347,6 +349,7 @@ impl<'mc> MemorySection<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -534,7 +537,7 @@ impl<'mc> MemorySection<'mc> {
         Ok(ret)
     }
     pub fn create_path_with_configuration_section(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::configuration::ConfigurationSection<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<
@@ -993,6 +996,36 @@ impl<'mc> Configuration<'mc> {
         };
         Ok(ret)
     }
+    pub fn add_defaults_with_configuration(
+        &mut self,
+        arg0: std::option::Option<std::collections::HashMap<String, jni::objects::JObject<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let raw_val_0 = self
+            .jni_ref()
+            .new_object("java/util/HashMap", "()V", &[])
+            .unwrap();
+        for (k, v) in arg0.unwrap() {
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(k).unwrap());
+            let map_val_1 = v;
+            self.jni_ref().call_method(
+                &raw_val_0,
+                "put",
+                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
+                &[
+                    jni::objects::JValueGen::from(&map_val_0),
+                    jni::objects::JValueGen::from(&map_val_1),
+                ],
+            )?;
+        }
+        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "addDefaults",
+            "(Ljava/util/Map;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn set_defaults(
         &mut self,
         arg0: impl Into<crate::bukkit::configuration::Configuration<'mc>>,
@@ -1065,6 +1098,7 @@ impl<'mc> Configuration<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1137,6 +1171,7 @@ impl<'mc> Configuration<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1743,6 +1778,19 @@ impl<'mc> MemoryConfiguration<'mc> {
         };
         Ok(ret)
     }
+    pub fn add_defaults_with_map(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::configuration::Configuration<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "addDefaults",
+            "(Lorg/bukkit/configuration/Configuration;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn set_defaults(
         &mut self,
         arg0: impl Into<crate::bukkit::configuration::Configuration<'mc>>,
@@ -1828,6 +1876,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1900,6 +1949,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2070,7 +2120,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         Ok(ret)
     }
     pub fn create_path_with_configuration_section(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::configuration::ConfigurationSection<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<
@@ -2509,6 +2559,7 @@ impl<'mc> ConfigurationOptions<'mc> {
         arg0: std::option::Option<bool>,
     ) -> Result<crate::bukkit::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
+        // -1
         let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2682,6 +2733,7 @@ impl<'mc> ConfigurationSection<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2754,6 +2806,7 @@ impl<'mc> ConfigurationSection<'mc> {
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        // 0
         let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

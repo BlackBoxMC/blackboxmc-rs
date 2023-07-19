@@ -150,6 +150,7 @@ self.jni_ref().call_method(&self.jni_object(),"withPrefix","(Lorg/bukkit/convers
         arg0: bool,
     ) -> Result<crate::bukkit::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>>
     {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -169,6 +170,7 @@ self.jni_ref().call_method(&self.jni_object(),"withPrefix","(Lorg/bukkit/convers
         arg0: bool,
     ) -> Result<crate::bukkit::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>>
     {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -632,6 +634,25 @@ impl<'mc> ConversationConversationState<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -672,6 +693,19 @@ impl<'mc> ConversationConversationState<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -893,6 +927,7 @@ impl<'mc> Conversation<'mc> {
         Ok(())
     }
     pub fn set_local_echo_enabled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2411,6 +2446,30 @@ impl<'mc> Conversable<'mc> {
         self.jni_ref().call_method(&self.jni_object(),"abandonConversation","(Lorg/bukkit/conversations/Conversation;Lorg/bukkit/conversations/ConversationAbandonedEvent;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
         Ok(())
     }
+    pub fn send_raw_message_with_string(
+        &mut self,
+        arg0: std::option::Option<u128>,
+        arg1: std::option::Option<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0.unwrap() >> 64) as u64 as i64;
+        let lower = arg0.unwrap() as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendRawMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
 }
 impl<'mc> crate::JNIRaw<'mc> for Conversable<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -2489,6 +2548,20 @@ impl<'mc> crate::JNIRaw<'mc> for RegexPrompt<'mc> {
     }
 }
 impl<'mc> RegexPrompt<'mc> {
+    pub fn new_with_pattern(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<String>,
+    ) -> Result<crate::bukkit::conversations::RegexPrompt<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
+        let cls = &jni.find_class("org/bukkit/conversations/RegexPrompt")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::conversations::RegexPrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

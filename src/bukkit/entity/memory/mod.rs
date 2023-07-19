@@ -50,7 +50,7 @@ impl<'mc> MemoryKey<'mc> {
         Ok(ret)
     }
     pub fn get_by_key(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
     ) -> Result<crate::bukkit::entity::memory::MemoryKey<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };

@@ -584,6 +584,18 @@ impl<'mc> crate::JNIRaw<'mc> for Text<'mc> {
     }
 }
 impl<'mc> Text<'mc> {
+	pub fn new_with_base_components(jni: crate::SharedJNIEnv<'mc>,arg0: std::option::Option<String>) 
+-> Result<crate::bungee::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
+
+{let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
+let cls = &jni.find_class("net/md_5/bungee/api/chat/hover/content/Text")?;
+let res = jni.new_object(cls,
+"(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_0)])?;
+let ret = {
+crate::bungee::bungee::api::chat::hover::content::Text(jni,res
+)
+};
+Ok(ret)}
 pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {
 if obj.is_null() {
     return Err(eyre::eyre!(

@@ -334,13 +334,14 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -763,13 +764,14 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -1161,13 +1163,14 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -1576,13 +1579,14 @@ impl<'mc> VersionCommand<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -1983,13 +1987,14 @@ impl<'mc> HelpCommand<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
@@ -2398,13 +2403,14 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string())
     }
     pub fn broadcast_command_message_with_command_sender(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
         arg1: std::option::Option<String>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(

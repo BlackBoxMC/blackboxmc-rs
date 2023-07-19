@@ -1,4 +1,4 @@
-
+use crate::JNIRaw;
 pub enum CookingBookCategoryEnum {
     Food,
     Blocks,
@@ -24,7 +24,7 @@ impl<'mc> std::ops::Deref for CookingBookCategory<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for CookingBookCategory<'mc> {
+impl<'mc> JNIRaw<'mc> for CookingBookCategory<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -46,7 +46,7 @@ impl<'mc> CookingBookCategory<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<
         crate::bukkit::inventory::recipe::CookingBookCategory<'mc>,
@@ -105,7 +105,7 @@ impl<'mc> std::ops::Deref for CraftingBookCategory<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for CraftingBookCategory<'mc> {
+impl<'mc> JNIRaw<'mc> for CraftingBookCategory<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -129,7 +129,7 @@ impl<'mc> CraftingBookCategory<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<
         crate::bukkit::inventory::recipe::CraftingBookCategory<'mc>,

@@ -37,6 +37,25 @@ impl<'mc> BookMetaGeneration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.l().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -77,6 +96,19 @@ impl<'mc> BookMetaGeneration<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -378,6 +410,7 @@ impl<'mc> BlockDataMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -461,6 +494,7 @@ impl<'mc> BlockDataMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -486,6 +520,24 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -797,6 +849,7 @@ impl<'mc> ArmorMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -880,6 +933,7 @@ impl<'mc> ArmorMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -905,6 +959,24 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -1207,6 +1279,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1290,6 +1363,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1315,6 +1389,24 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -1706,6 +1798,7 @@ impl<'mc> SkullMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1789,6 +1882,7 @@ impl<'mc> SkullMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1814,6 +1908,24 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -1959,6 +2071,7 @@ impl<'mc> CompassMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_lodestone_tracked(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2130,6 +2243,7 @@ impl<'mc> CompassMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2213,6 +2327,7 @@ impl<'mc> CompassMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2238,6 +2353,24 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -2355,6 +2488,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2561,6 +2695,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2644,6 +2779,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2669,6 +2805,24 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -2979,6 +3133,7 @@ impl<'mc> CrossbowMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3062,6 +3217,7 @@ impl<'mc> CrossbowMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3087,6 +3243,24 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -3352,6 +3526,7 @@ impl<'mc> ItemMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3435,6 +3610,7 @@ impl<'mc> ItemMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3460,6 +3636,24 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -3768,6 +3962,7 @@ impl<'mc> Repairable<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3851,6 +4046,7 @@ impl<'mc> Repairable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3876,6 +4072,24 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -4280,6 +4494,7 @@ impl<'mc> BannerMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4363,6 +4578,7 @@ impl<'mc> BannerMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4388,6 +4604,24 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -4698,6 +4932,7 @@ impl<'mc> BundleMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4781,6 +5016,7 @@ impl<'mc> BundleMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4806,6 +5042,24 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -5120,6 +5374,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5203,6 +5458,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5228,6 +5484,24 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -5575,6 +5849,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5658,6 +5933,7 @@ impl<'mc> SpawnEggMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -5683,6 +5959,24 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -5980,6 +6274,7 @@ impl<'mc> Damageable<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6063,6 +6358,7 @@ impl<'mc> Damageable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6088,6 +6384,24 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -6409,6 +6723,7 @@ impl<'mc> FireworkMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6492,6 +6807,7 @@ impl<'mc> FireworkMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6517,6 +6833,24 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -6669,6 +7003,7 @@ impl<'mc> PotionMeta<'mc> {
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6923,6 +7258,7 @@ impl<'mc> PotionMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7006,6 +7342,7 @@ impl<'mc> PotionMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7031,6 +7368,24 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -7333,6 +7688,7 @@ impl<'mc> BlockStateMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7416,6 +7772,7 @@ impl<'mc> BlockStateMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7441,6 +7798,24 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -7581,6 +7956,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7788,6 +8164,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7871,6 +8248,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7896,6 +8274,24 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -8207,6 +8603,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8290,6 +8687,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8315,6 +8713,24 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -8525,6 +8941,7 @@ impl<'mc> MapMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_scaling(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8725,6 +9142,7 @@ impl<'mc> MapMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8808,6 +9226,7 @@ impl<'mc> MapMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8833,6 +9252,24 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -8960,6 +9397,20 @@ impl<'mc> BookMetaSpigot<'mc> {
             "setPage",
             "(ILnet/md_5/bungee/api/chat/BaseComponent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn set_pages_with_list(
+        &mut self,
+        _arg0: std::option::Option<
+            Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        >,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPages",
+            "(Lnet/md_5/bungee/api/chat/BaseComponent;)V",
+            &[],
         )?;
         Ok(())
     }
@@ -9281,6 +9732,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9364,6 +9816,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9389,6 +9842,24 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -9702,6 +10173,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9785,6 +10257,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -9810,6 +10283,24 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -10193,6 +10684,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10276,6 +10768,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10301,6 +10794,24 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -10491,6 +11002,32 @@ impl<'mc> BookMeta<'mc> {
             &self.jni_object(),
             "setAuthor",
             "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn set_pages_with_strings(
+        &mut self,
+        arg0: std::option::Option<Vec<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let raw_val_0 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", &[])
+            .unwrap();
+        for v in arg0.unwrap() {
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            self.jni_ref().call_method(
+                &raw_val_0,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPages",
+            "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
@@ -10732,6 +11269,7 @@ impl<'mc> BookMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10815,6 +11353,7 @@ impl<'mc> BookMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -10840,6 +11379,24 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),
@@ -11147,6 +11704,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11230,6 +11788,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -11255,6 +11814,24 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAttributeModifier",
+            "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn remove_attribute_modifier_with_attribute(
+        &mut self,
+        arg0: impl Into<crate::bukkit::attribute::Attribute<'mc>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::attribute::AttributeModifier<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAttributeModifier",
             "(Lorg/bukkit/attribute/Attribute;Lorg/bukkit/attribute/AttributeModifier;)Z",
             &[
                 jni::objects::JValueGen::from(&val_0),

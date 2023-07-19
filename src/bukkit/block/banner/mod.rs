@@ -100,7 +100,7 @@ impl<'mc> std::ops::Deref for PatternType<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for PatternType<'mc> {
+impl<'mc> JNIRaw<'mc> for PatternType<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -211,7 +211,7 @@ impl<'mc> PatternType<'mc> {
             .to_string())
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -239,7 +239,7 @@ impl<'mc> PatternType<'mc> {
         Ok(ret)
     }
     pub fn get_by_identifier(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
@@ -281,6 +281,25 @@ impl<'mc> crate::JNIRaw<'mc> for Pattern<'mc> {
     }
 }
 impl<'mc> Pattern<'mc> {
+    pub fn new_with_map(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::bukkit::DyeColor<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::block::banner::PatternType<'mc>>>,
+    ) -> Result<crate::bukkit::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/block/banner/Pattern")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/DyeColor;Lorg/bukkit/block/banner/PatternType;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::block::banner::Pattern(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

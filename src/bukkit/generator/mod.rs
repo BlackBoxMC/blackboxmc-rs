@@ -151,6 +151,63 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         };
         Ok(ret)
     }
+    pub fn set_block_with_int(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+        arg3: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBlock",
+            "(IIILorg/bukkit/Material;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn set_region_with_int(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+        arg3: i32,
+        arg4: i32,
+        arg5: i32,
+        arg6: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.into());
+        let val_4 = jni::objects::JValueGen::Int(arg4.into());
+        let val_5 = jni::objects::JValueGen::Int(arg5.into());
+        let val_6 = unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRegion",
+            "(IIIIIILorg/bukkit/Material;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+                jni::objects::JValueGen::from(&val_6),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn get_type_and_data(
         &mut self,
         arg0: i32,
@@ -435,6 +492,30 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
         };
         Ok(ret)
     }
+    pub fn set_biome_with_int(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<impl Into<crate::bukkit::block::Biome<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBiome",
+            "(IIILorg/bukkit/block/Biome;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        Ok(())
+    }
 }
 impl<'mc> crate::JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -660,6 +741,22 @@ impl<'mc> BlockPopulator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn populate_with_world(
+        &mut self,
+        arg0: impl Into<crate::bukkit::generator::WorldInfo<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<i32>,
+        arg4: std::option::Option<impl Into<crate::bukkit::generator::LimitedRegion<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = arg1;
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(&self.jni_object(),"populate","(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;IILorg/bukkit/generator/LimitedRegion;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        Ok(())
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -764,6 +861,279 @@ impl<'mc> LimitedRegion<'mc> {
             .call_method(&self.jni_object(), "getBuffer", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    pub fn is_in_region_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isInRegion",
+            "(III)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_type_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "(III)Lorg/bukkit/Material;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Material(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::Material::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn set_type_with_location(
+        &mut self,
+        arg0: i32,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<impl Into<crate::bukkit::Material<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setType",
+            "(IIILorg/bukkit/Material;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn get_block_data_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBlockData",
+            "(III)Lorg/bukkit/block/data/BlockData;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn set_block_data_with_location(
+        &mut self,
+        arg0: i32,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<impl Into<crate::bukkit::block::data::BlockData<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBlockData",
+            "(IIILorg/bukkit/block/data/BlockData;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn get_highest_block_yat_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHighestBlockYAt",
+            "(II)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_highest_block_yat_with_int(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: std::option::Option<impl Into<crate::bukkit::HeightMap<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHighestBlockYAt",
+            "(IILorg/bukkit/HeightMap;)I",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_biome_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::block::Biome<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBiome",
+            "(III)Lorg/bukkit/block/Biome;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::block::Biome(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::block::Biome::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn set_biome_with_location(
+        &mut self,
+        arg0: i32,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<impl Into<crate::bukkit::block::Biome<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBiome",
+            "(IIILorg/bukkit/block/Biome;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        Ok(())
+    }
+    pub fn get_block_state_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBlockState",
+            "(III)Lorg/bukkit/block/BlockState;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn generate_tree_with_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: std::option::Option<impl Into<crate::bukkit::TreeType<'mc>>>,
+        arg3: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = arg1;
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let val_3 = arg3.unwrap();
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"generateTree","(Lorg/bukkit/Location;Ljava/util/Random;Lorg/bukkit/TreeType;Ljava/util/function/Predicate;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        Ok(res.z().unwrap())
+    }
     pub fn spawn_entity_with_location(
         &mut self,
         arg0: impl Into<crate::bukkit::Location<'mc>>,
@@ -772,6 +1142,7 @@ impl<'mc> LimitedRegion<'mc> {
     ) -> Result<crate::bukkit::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -783,6 +1154,27 @@ impl<'mc> LimitedRegion<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         )?;
+        let ret = {
+            crate::bukkit::entity::Entity(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn spawn_with_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<impl Into<crate::bukkit::util::Consumer<'mc>>>,
+    ) -> Result<crate::bukkit::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_1 = arg1.unwrap();
+        // 1
+        let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
+        let res =
+self.jni_ref().call_method(&self.jni_object(),"spawn","(Lorg/bukkit/Location;Ljava/lang/Class;ZLorg/bukkit/util/Consumer;)Lorg/bukkit/entity/Entity;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         let ret = {
             crate::bukkit::entity::Entity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())

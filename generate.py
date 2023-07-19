@@ -156,7 +156,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
     if type["is_array"]:
         return None
 
-    if options_start_at != -1:
+    if options_start_at > -1:
         if n >= options_start_at-1:
             arg += ".unwrap()"
 
@@ -178,7 +178,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 if class_name != "":
                     match(type["type_name_alone"]):
                         case "bool":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+arg+".into());"]
+                            return ["// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+arg+".into());"]
                         case "i8":
                             return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+arg+".into());"]
                         case "char" | "u16":
@@ -739,12 +739,13 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
     names = {}
     methods_ = {}
     for method in methods:
+
         if "modifiers" in method:
             if(method["modifiers"]&1 != 1): # skip private methods
                 continue
             if(method["modifiers"]&1024 == 1): # skip abstract methods
                 continue
-
+        
         if is_constructor:
             mname = "new"
         else:
@@ -761,10 +762,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         if mname in reserved_words:
             mname = "get_"+mname
 
-        # i just want to fast forward past this one bug, todo: deal with this later
-        # (the bug is that this isn't picked up when the trait is being generated, only the trait decl)
-        if mname == "create_section":
-            continue
 
         names[og_mname] = mname
         if mname in methods_:
@@ -777,7 +774,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
         name = names[k]
         method = methods_[name]
-
         # are there more then one method with this name?
         if len(methods_[name]) > 1:
 
@@ -813,26 +809,29 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                             can_use_options = False
                             break
 
-                    if can_use_options:
-                        m["options_start_at"] = options_start_at
-                        method_buildup.append(m)
-                        last_method = m
-                    else:
+                    m["options_start_at"] = options_start_at
+                    method_buildup.append(m)
+
+                    if not can_use_options:
                         breaking = True
-                        break
+                    else:
+                        last_method = m
                     i += 1
                 n += 1
 
                 if n == len(methods__) and breaking is not True:
+                    method_buildup.append(m)
                     breaking = True
+
                 if breaking:
                     identifier = method_first_arg.split(".")[len(method_first_arg.split("."))-1].lower()
-                    method_map[identifier] = method_buildup
+                    method_map[identifier] = method_buildup.copy()
                     method_buildup = []
                     last_method = None
                     method_first_arg = ""
                     options_start_at = 0
-
+                
+                
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
@@ -876,7 +875,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             })
         else:
             func_signature.append({
-                "type_name_resolved": "mut jni: crate::SharedJNIEnv<'mc>",
+                "type_name_resolved": "jni: crate::SharedJNIEnv<'mc>",
                 "type_name_lhand": "",
                 "is_array": False,
                 "is_interface": False,
@@ -922,6 +921,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             if(type["type_name_lhand"] == ""):
                 continue
             if(type["is_array"]):
+                n += 1
                 continue
             else:
                 ty = code_format(type, prefix, n, class_name=og_name, options_start_at=options_start_at)
@@ -936,7 +936,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             continue
 
         if is_constructor:
-            print(method)
             return_group = java_type_to_rust("", method["method"]["name"], method, i, True, library, True)
         else:
             return_group = java_type_to_rust("", method["method"]["returnType"], method, i,True, library, False)
@@ -1082,7 +1081,7 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("       return &self.2;")
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
-        file_cache[mod_path].append("impl<'mc> crate::JNIRaw<'mc> for "+name+"<'mc> {")
+        file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
         file_cache[mod_path].append("    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {")
         file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
@@ -1166,7 +1165,7 @@ def parse_classes(library, val, classes):
                     
                 if inter_resolved is None:
                     continue
-                file_cache[mod_path].append(" impl<'mc> Into<"+inter_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc> {\n"+
+                file_cache[mod_path].append("impl<'mc> Into<"+inter_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc> {\n"+
                                         "   fn into(self) -> "+inter_resolved["type_name_resolved"]+"<'mc> {\n"+
                                         "       "+inter_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+
                                         "   }\n"+

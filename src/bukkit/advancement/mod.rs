@@ -119,7 +119,7 @@ impl<'mc> std::ops::Deref for AdvancementDisplayType<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for AdvancementDisplayType<'mc> {
+impl<'mc> JNIRaw<'mc> for AdvancementDisplayType<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -141,7 +141,7 @@ impl<'mc> AdvancementDisplayType<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
     {

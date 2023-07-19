@@ -44,7 +44,7 @@ impl<'mc> std::ops::Deref for MushroomBlockTexture<'mc> {
         return &self.2;
     }
 }
-impl<'mc> crate::JNIRaw<'mc> for MushroomBlockTexture<'mc> {
+impl<'mc> JNIRaw<'mc> for MushroomBlockTexture<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -86,7 +86,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
         }
     }
     pub fn value_of(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {
@@ -122,7 +122,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
         Ok(res.b().unwrap())
     }
     pub fn get_by_data(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: i8,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {
@@ -152,7 +152,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
         Ok(ret)
     }
     pub fn get_cap_by_face(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {

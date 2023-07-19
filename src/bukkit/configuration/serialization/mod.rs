@@ -39,7 +39,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         }
     }
     pub fn get_alias(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -56,7 +56,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
             .to_string())
     }
     pub fn register_class_with_class(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -74,8 +74,22 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
+    pub fn unregister_class_with_string(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = arg0.unwrap();
+        let cls = &jni.find_class("void")?;
+        let _res = jni.call_static_method(
+            cls,
+            "unregisterClass",
+            "(Ljava/lang/Class;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn get_class_by_alias(
-        mut jni: crate::SharedJNIEnv<'mc>,
+        jni: crate::SharedJNIEnv<'mc>,
         arg0: String,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
