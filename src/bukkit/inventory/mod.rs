@@ -1924,6 +1924,23 @@ impl<'mc> crate::JNIRaw<'mc> for SmithingRecipe<'mc> {
     }
 }
 impl<'mc> SmithingRecipe<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::RecipeChoice<'mc>,
+        arg3: crate::bukkit::inventory::RecipeChoice<'mc>,
+    ) -> Result<crate::bukkit::inventory::SmithingRecipe<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/inventory/SmithingRecipe")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::inventory::SmithingRecipe(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2275,6 +2292,14 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryView<'mc> {
     }
 }
 impl<'mc> InventoryView<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/inventory/InventoryView")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::inventory::InventoryView(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3675,14 +3700,14 @@ impl<'mc> crate::JNIRaw<'mc> for ItemFlag<'mc> {
     }
 }
 impl<'mc> ItemFlag<'mc> {
-    pub const HIDEENCHANTS: ItemFlagEnum = ItemFlagEnum::HideEnchants;
-    pub const HIDEATTRIBUTES: ItemFlagEnum = ItemFlagEnum::HideAttributes;
-    pub const HIDEUNBREAKABLE: ItemFlagEnum = ItemFlagEnum::HideUnbreakable;
-    pub const HIDEDESTROYS: ItemFlagEnum = ItemFlagEnum::HideDestroys;
-    pub const HIDEPLACEDON: ItemFlagEnum = ItemFlagEnum::HidePlacedOn;
-    pub const HIDEPOTIONEFFECTS: ItemFlagEnum = ItemFlagEnum::HidePotionEffects;
-    pub const HIDEDYE: ItemFlagEnum = ItemFlagEnum::HideDye;
-    pub const HIDEARMORTRIM: ItemFlagEnum = ItemFlagEnum::HideArmorTrim;
+    pub const HIDE_ENCHANTS: ItemFlagEnum = ItemFlagEnum::HideEnchants;
+    pub const HIDE_ATTRIBUTES: ItemFlagEnum = ItemFlagEnum::HideAttributes;
+    pub const HIDE_UNBREAKABLE: ItemFlagEnum = ItemFlagEnum::HideUnbreakable;
+    pub const HIDE_DESTROYS: ItemFlagEnum = ItemFlagEnum::HideDestroys;
+    pub const HIDE_PLACED_ON: ItemFlagEnum = ItemFlagEnum::HidePlacedOn;
+    pub const HIDE_POTION_EFFECTS: ItemFlagEnum = ItemFlagEnum::HidePotionEffects;
+    pub const HIDE_DYE: ItemFlagEnum = ItemFlagEnum::HideDye;
+    pub const HIDE_ARMOR_TRIM: ItemFlagEnum = ItemFlagEnum::HideArmorTrim;
     pub fn from_string(str: String) -> std::option::Option<ItemFlagEnum> {
         match str.as_str() {
             "HIDE_ENCHANTS" => Some(ItemFlagEnum::HideEnchants),
@@ -5274,6 +5299,26 @@ impl<'mc> crate::JNIRaw<'mc> for SmithingTransformRecipe<'mc> {
     }
 }
 impl<'mc> SmithingTransformRecipe<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::RecipeChoice<'mc>,
+        arg3: crate::bukkit::inventory::RecipeChoice<'mc>,
+        arg4: crate::bukkit::inventory::RecipeChoice<'mc>,
+    ) -> Result<crate::bukkit::inventory::SmithingTransformRecipe<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/inventory/SmithingTransformRecipe")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        let ret = { crate::bukkit::inventory::SmithingTransformRecipe(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5489,7 +5534,7 @@ impl<'mc> crate::JNIRaw<'mc> for EquipmentSlot<'mc> {
 }
 impl<'mc> EquipmentSlot<'mc> {
     pub const HAND: EquipmentSlotEnum = EquipmentSlotEnum::Hand;
-    pub const OFFHAND: EquipmentSlotEnum = EquipmentSlotEnum::OffHand;
+    pub const OFF_HAND: EquipmentSlotEnum = EquipmentSlotEnum::OffHand;
     pub const FEET: EquipmentSlotEnum = EquipmentSlotEnum::Feet;
     pub const LEGS: EquipmentSlotEnum = EquipmentSlotEnum::Legs;
     pub const CHEST: EquipmentSlotEnum = EquipmentSlotEnum::Chest;
@@ -8490,6 +8535,43 @@ impl<'mc> crate::JNIRaw<'mc> for MerchantRecipe<'mc> {
     }
 }
 impl<'mc> MerchantRecipe<'mc> {
+    pub fn new_with_item_stack(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::ItemStack<'mc>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<bool>,
+        arg4: std::option::Option<i32>,
+        arg5: std::option::Option<f32>,
+        arg6: std::option::Option<i32>,
+        arg7: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::inventory::MerchantRecipe<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Bool(arg3.unwrap().into());
+        let val_4 = jni::objects::JValueGen::Int(arg4.unwrap().into());
+        let val_5 = jni::objects::JValueGen::Float(arg5.unwrap().into());
+        let val_6 = jni::objects::JValueGen::Int(arg6.unwrap().into());
+        let val_7 = jni::objects::JValueGen::Int(arg7.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/inventory/MerchantRecipe")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/ItemStack;IIZIFII)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+                jni::objects::JValueGen::from(&val_6),
+                jni::objects::JValueGen::from(&val_7),
+            ],
+        )?;
+        let ret = { crate::bukkit::inventory::MerchantRecipe(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -10320,7 +10402,7 @@ impl<'mc> crate::JNIRaw<'mc> for CreativeCategory<'mc> {
     }
 }
 impl<'mc> CreativeCategory<'mc> {
-    pub const BUILDINGBLOCKS: CreativeCategoryEnum = CreativeCategoryEnum::BuildingBlocks;
+    pub const BUILDING_BLOCKS: CreativeCategoryEnum = CreativeCategoryEnum::BuildingBlocks;
     pub const DECORATIONS: CreativeCategoryEnum = CreativeCategoryEnum::Decorations;
     pub const REDSTONE: CreativeCategoryEnum = CreativeCategoryEnum::Redstone;
     pub const TRANSPORTATION: CreativeCategoryEnum = CreativeCategoryEnum::Transportation;
@@ -12092,6 +12174,23 @@ impl<'mc> crate::JNIRaw<'mc> for SmithingTrimRecipe<'mc> {
     }
 }
 impl<'mc> SmithingTrimRecipe<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::NamespacedKey<'mc>,
+        arg1: crate::bukkit::inventory::RecipeChoice<'mc>,
+        arg2: crate::bukkit::inventory::RecipeChoice<'mc>,
+        arg3: crate::bukkit::inventory::RecipeChoice<'mc>,
+    ) -> Result<crate::bukkit::inventory::SmithingTrimRecipe<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/inventory/SmithingTrimRecipe")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::inventory::SmithingTrimRecipe(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

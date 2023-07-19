@@ -349,6 +349,14 @@ impl<'mc> crate::JNIRaw<'mc> for MetadataStoreBase<'mc> {
     }
 }
 impl<'mc> MetadataStoreBase<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::metadata::MetadataStoreBase<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/metadata/MetadataStoreBase")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::metadata::MetadataStoreBase(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -867,6 +875,25 @@ impl<'mc> crate::JNIRaw<'mc> for FixedMetadataValue<'mc> {
     }
 }
 impl<'mc> FixedMetadataValue<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<crate::bukkit::metadata::FixedMetadataValue<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = arg1;
+        let cls = &jni.find_class("org/bukkit/metadata/FixedMetadataValue")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;Ljava/lang/Object;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::metadata::FixedMetadataValue(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

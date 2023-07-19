@@ -385,6 +385,19 @@ impl<'mc> crate::JNIRaw<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc
     }
 }
 impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::bukkit::persistence::PersistentDataTypeBooleanPersistentDataType<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let cls =
+            &jni.find_class("org/bukkit/persistence/PersistentDataType$BooleanPersistentDataType")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret =
+            { crate::bukkit::persistence::PersistentDataTypeBooleanPersistentDataType(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

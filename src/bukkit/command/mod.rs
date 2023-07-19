@@ -13,6 +13,14 @@ impl<'mc> crate::JNIRaw<'mc> for CommandSenderSpigot<'mc> {
     }
 }
 impl<'mc> CommandSenderSpigot<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/command/CommandSender$Spigot")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::command::CommandSenderSpigot(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -239,6 +247,20 @@ impl<'mc> crate::JNIRaw<'mc> for SimpleCommandMap<'mc> {
     }
 }
 impl<'mc> SimpleCommandMap<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::Server<'mc>,
+    ) -> Result<crate::bukkit::command::SimpleCommandMap<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/command/SimpleCommandMap")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Server;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::command::SimpleCommandMap(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -429,6 +451,22 @@ impl<'mc> crate::JNIRaw<'mc> for FormattedCommandAlias<'mc> {
     }
 }
 impl<'mc> FormattedCommandAlias<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+        _arg1: Vec<String>,
+    ) -> Result<crate::bukkit::command::FormattedCommandAlias<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/command/FormattedCommandAlias")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::command::FormattedCommandAlias(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1578,6 +1616,21 @@ impl<'mc> crate::JNIRaw<'mc> for MultipleCommandAlias<'mc> {
     }
 }
 impl<'mc> MultipleCommandAlias<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+        _arg1: Vec<crate::bukkit::command::Command<'mc>>,
+    ) -> Result<crate::bukkit::command::MultipleCommandAlias<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/command/MultipleCommandAlias")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;Lorg/bukkit/command/Command;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::command::MultipleCommandAlias(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1978,6 +2031,15 @@ impl<'mc> crate::JNIRaw<'mc> for PluginCommandYamlParser<'mc> {
     }
 }
 impl<'mc> PluginCommandYamlParser<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::command::PluginCommandYamlParser<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/command/PluginCommandYamlParser")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::command::PluginCommandYamlParser(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

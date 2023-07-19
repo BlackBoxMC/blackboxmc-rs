@@ -13,6 +13,48 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantItemEvent<'mc> {
     }
 }
 impl<'mc> EnchantItemEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Player<'mc>,
+        arg1: crate::bukkit::inventory::InventoryView<'mc>,
+        arg2: crate::bukkit::block::Block<'mc>,
+        arg3: crate::bukkit::inventory::ItemStack<'mc>,
+        arg4: i32,
+        arg5: std::collections::HashMap<crate::bukkit::enchantments::Enchantment<'mc>, i32>,
+        arg6: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg7: i32,
+        arg8: i32,
+    ) -> Result<crate::bukkit::event::enchantment::EnchantItemEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = jni::objects::JValueGen::Int(arg4.into());
+        let raw_val_5 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
+        for (k, v) in arg5 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(k.1.clone()) };
+            let map_val_1 = jni::objects::JValueGen::Int(v.into());
+            jni.call_method(
+                &raw_val_5,
+                "put",
+                "(Ljava/Lang/ObjectLjava/lang/Integer)V",
+                &[
+                    jni::objects::JValueGen::from(&map_val_0),
+                    jni::objects::JValueGen::from(&map_val_1),
+                ],
+            )?;
+        }
+        let val_5 = jni::objects::JValueGen::Object(raw_val_5);
+        let val_6 = unsafe { jni::objects::JObject::from_raw(arg6.1.clone()) };
+        let val_7 = jni::objects::JValueGen::Int(arg7.into());
+        let val_8 = jni::objects::JValueGen::Int(arg8.into());
+        let cls = &jni.find_class("org/bukkit/event/enchantment/EnchantItemEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;ILjava/util/Map;Lorg/bukkit/enchantments/Enchantment;II)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8)])?;
+        let ret = { crate::bukkit::event::enchantment::EnchantItemEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -312,6 +354,29 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareItemEnchantEvent<'mc> {
     }
 }
 impl<'mc> PrepareItemEnchantEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Player<'mc>,
+        arg1: crate::bukkit::inventory::InventoryView<'mc>,
+        arg2: crate::bukkit::block::Block<'mc>,
+        arg3: crate::bukkit::inventory::ItemStack<'mc>,
+        _arg4: Vec<crate::bukkit::enchantments::EnchantmentOffer<'mc>>,
+        arg5: i32,
+    ) -> Result<
+        crate::bukkit::event::enchantment::PrepareItemEnchantEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = jni::objects::JValueGen::Int(arg5.into());
+        let cls = &jni.find_class("org/bukkit/event/enchantment/PrepareItemEnchantEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        let ret = { crate::bukkit::event::enchantment::PrepareItemEnchantEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

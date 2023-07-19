@@ -550,19 +550,19 @@ impl<'mc> BlockFace<'mc> {
     pub const WEST: BlockFaceEnum = BlockFaceEnum::West;
     pub const UP: BlockFaceEnum = BlockFaceEnum::Up;
     pub const DOWN: BlockFaceEnum = BlockFaceEnum::Down;
-    pub const NORTHEAST: BlockFaceEnum = BlockFaceEnum::NorthEast;
-    pub const NORTHWEST: BlockFaceEnum = BlockFaceEnum::NorthWest;
-    pub const SOUTHEAST: BlockFaceEnum = BlockFaceEnum::SouthEast;
-    pub const SOUTHWEST: BlockFaceEnum = BlockFaceEnum::SouthWest;
-    pub const WESTNORTHWEST: BlockFaceEnum = BlockFaceEnum::WestNorthWest;
-    pub const NORTHNORTHWEST: BlockFaceEnum = BlockFaceEnum::NorthNorthWest;
-    pub const NORTHNORTHEAST: BlockFaceEnum = BlockFaceEnum::NorthNorthEast;
-    pub const EASTNORTHEAST: BlockFaceEnum = BlockFaceEnum::EastNorthEast;
-    pub const EASTSOUTHEAST: BlockFaceEnum = BlockFaceEnum::EastSouthEast;
-    pub const SOUTHSOUTHEAST: BlockFaceEnum = BlockFaceEnum::SouthSouthEast;
-    pub const SOUTHSOUTHWEST: BlockFaceEnum = BlockFaceEnum::SouthSouthWest;
-    pub const WESTSOUTHWEST: BlockFaceEnum = BlockFaceEnum::WestSouthWest;
-    pub const VARIANTSELF: BlockFaceEnum = BlockFaceEnum::VariantSelf;
+    pub const NORTH_EAST: BlockFaceEnum = BlockFaceEnum::NorthEast;
+    pub const NORTH_WEST: BlockFaceEnum = BlockFaceEnum::NorthWest;
+    pub const SOUTH_EAST: BlockFaceEnum = BlockFaceEnum::SouthEast;
+    pub const SOUTH_WEST: BlockFaceEnum = BlockFaceEnum::SouthWest;
+    pub const WEST_NORTH_WEST: BlockFaceEnum = BlockFaceEnum::WestNorthWest;
+    pub const NORTH_NORTH_WEST: BlockFaceEnum = BlockFaceEnum::NorthNorthWest;
+    pub const NORTH_NORTH_EAST: BlockFaceEnum = BlockFaceEnum::NorthNorthEast;
+    pub const EAST_NORTH_EAST: BlockFaceEnum = BlockFaceEnum::EastNorthEast;
+    pub const EAST_SOUTH_EAST: BlockFaceEnum = BlockFaceEnum::EastSouthEast;
+    pub const SOUTH_SOUTH_EAST: BlockFaceEnum = BlockFaceEnum::SouthSouthEast;
+    pub const SOUTH_SOUTH_WEST: BlockFaceEnum = BlockFaceEnum::SouthSouthWest;
+    pub const WEST_SOUTH_WEST: BlockFaceEnum = BlockFaceEnum::WestSouthWest;
+    pub const SELF: BlockFaceEnum = BlockFaceEnum::VariantSelf;
     pub fn from_string(str: String) -> std::option::Option<BlockFaceEnum> {
         match str.as_str() {
             "NORTH" => Some(BlockFaceEnum::North),
@@ -3560,11 +3560,11 @@ impl<'mc> crate::JNIRaw<'mc> for PistonMoveReaction<'mc> {
     }
 }
 impl<'mc> PistonMoveReaction<'mc> {
-    pub const VARIANTMOVE: PistonMoveReactionEnum = PistonMoveReactionEnum::VariantMove;
-    pub const VARIANTBREAK: PistonMoveReactionEnum = PistonMoveReactionEnum::VariantBreak;
+    pub const MOVE: PistonMoveReactionEnum = PistonMoveReactionEnum::VariantMove;
+    pub const BREAK: PistonMoveReactionEnum = PistonMoveReactionEnum::VariantBreak;
     pub const BLOCK: PistonMoveReactionEnum = PistonMoveReactionEnum::Block;
     pub const IGNORE: PistonMoveReactionEnum = PistonMoveReactionEnum::Ignore;
-    pub const PUSHONLY: PistonMoveReactionEnum = PistonMoveReactionEnum::PushOnly;
+    pub const PUSH_ONLY: PistonMoveReactionEnum = PistonMoveReactionEnum::PushOnly;
     pub fn from_string(str: String) -> std::option::Option<PistonMoveReactionEnum> {
         match str.as_str() {
             "MOVE" => Some(PistonMoveReactionEnum::VariantMove),
@@ -11040,67 +11040,67 @@ impl<'mc> Biome<'mc> {
     pub const OCEAN: BiomeEnum = BiomeEnum::Ocean;
     pub const PLAINS: BiomeEnum = BiomeEnum::Plains;
     pub const DESERT: BiomeEnum = BiomeEnum::Desert;
-    pub const WINDSWEPTHILLS: BiomeEnum = BiomeEnum::WindsweptHills;
+    pub const WINDSWEPT_HILLS: BiomeEnum = BiomeEnum::WindsweptHills;
     pub const FOREST: BiomeEnum = BiomeEnum::Forest;
     pub const TAIGA: BiomeEnum = BiomeEnum::Taiga;
     pub const SWAMP: BiomeEnum = BiomeEnum::Swamp;
-    pub const MANGROVESWAMP: BiomeEnum = BiomeEnum::MangroveSwamp;
+    pub const MANGROVE_SWAMP: BiomeEnum = BiomeEnum::MangroveSwamp;
     pub const RIVER: BiomeEnum = BiomeEnum::River;
-    pub const NETHERWASTES: BiomeEnum = BiomeEnum::NetherWastes;
-    pub const THEEND: BiomeEnum = BiomeEnum::TheEnd;
-    pub const FROZENOCEAN: BiomeEnum = BiomeEnum::FrozenOcean;
-    pub const FROZENRIVER: BiomeEnum = BiomeEnum::FrozenRiver;
-    pub const SNOWYPLAINS: BiomeEnum = BiomeEnum::SnowyPlains;
-    pub const MUSHROOMFIELDS: BiomeEnum = BiomeEnum::MushroomFields;
+    pub const NETHER_WASTES: BiomeEnum = BiomeEnum::NetherWastes;
+    pub const THE_END: BiomeEnum = BiomeEnum::TheEnd;
+    pub const FROZEN_OCEAN: BiomeEnum = BiomeEnum::FrozenOcean;
+    pub const FROZEN_RIVER: BiomeEnum = BiomeEnum::FrozenRiver;
+    pub const SNOWY_PLAINS: BiomeEnum = BiomeEnum::SnowyPlains;
+    pub const MUSHROOM_FIELDS: BiomeEnum = BiomeEnum::MushroomFields;
     pub const BEACH: BiomeEnum = BiomeEnum::Beach;
     pub const JUNGLE: BiomeEnum = BiomeEnum::Jungle;
-    pub const SPARSEJUNGLE: BiomeEnum = BiomeEnum::SparseJungle;
-    pub const DEEPOCEAN: BiomeEnum = BiomeEnum::DeepOcean;
-    pub const STONYSHORE: BiomeEnum = BiomeEnum::StonyShore;
-    pub const SNOWYBEACH: BiomeEnum = BiomeEnum::SnowyBeach;
-    pub const BIRCHFOREST: BiomeEnum = BiomeEnum::BirchForest;
-    pub const DARKFOREST: BiomeEnum = BiomeEnum::DarkForest;
-    pub const SNOWYTAIGA: BiomeEnum = BiomeEnum::SnowyTaiga;
-    pub const OLDGROWTHPINETAIGA: BiomeEnum = BiomeEnum::OldGrowthPineTaiga;
-    pub const WINDSWEPTFOREST: BiomeEnum = BiomeEnum::WindsweptForest;
+    pub const SPARSE_JUNGLE: BiomeEnum = BiomeEnum::SparseJungle;
+    pub const DEEP_OCEAN: BiomeEnum = BiomeEnum::DeepOcean;
+    pub const STONY_SHORE: BiomeEnum = BiomeEnum::StonyShore;
+    pub const SNOWY_BEACH: BiomeEnum = BiomeEnum::SnowyBeach;
+    pub const BIRCH_FOREST: BiomeEnum = BiomeEnum::BirchForest;
+    pub const DARK_FOREST: BiomeEnum = BiomeEnum::DarkForest;
+    pub const SNOWY_TAIGA: BiomeEnum = BiomeEnum::SnowyTaiga;
+    pub const OLD_GROWTH_PINE_TAIGA: BiomeEnum = BiomeEnum::OldGrowthPineTaiga;
+    pub const WINDSWEPT_FOREST: BiomeEnum = BiomeEnum::WindsweptForest;
     pub const SAVANNA: BiomeEnum = BiomeEnum::Savanna;
-    pub const SAVANNAPLATEAU: BiomeEnum = BiomeEnum::SavannaPlateau;
+    pub const SAVANNA_PLATEAU: BiomeEnum = BiomeEnum::SavannaPlateau;
     pub const BADLANDS: BiomeEnum = BiomeEnum::Badlands;
-    pub const WOODEDBADLANDS: BiomeEnum = BiomeEnum::WoodedBadlands;
-    pub const SMALLENDISLANDS: BiomeEnum = BiomeEnum::SmallEndIslands;
-    pub const ENDMIDLANDS: BiomeEnum = BiomeEnum::EndMidlands;
-    pub const ENDHIGHLANDS: BiomeEnum = BiomeEnum::EndHighlands;
-    pub const ENDBARRENS: BiomeEnum = BiomeEnum::EndBarrens;
-    pub const WARMOCEAN: BiomeEnum = BiomeEnum::WarmOcean;
-    pub const LUKEWARMOCEAN: BiomeEnum = BiomeEnum::LukewarmOcean;
-    pub const COLDOCEAN: BiomeEnum = BiomeEnum::ColdOcean;
-    pub const DEEPLUKEWARMOCEAN: BiomeEnum = BiomeEnum::DeepLukewarmOcean;
-    pub const DEEPCOLDOCEAN: BiomeEnum = BiomeEnum::DeepColdOcean;
-    pub const DEEPFROZENOCEAN: BiomeEnum = BiomeEnum::DeepFrozenOcean;
-    pub const THEVOID: BiomeEnum = BiomeEnum::TheVoid;
-    pub const SUNFLOWERPLAINS: BiomeEnum = BiomeEnum::SunflowerPlains;
-    pub const WINDSWEPTGRAVELLYHILLS: BiomeEnum = BiomeEnum::WindsweptGravellyHills;
-    pub const FLOWERFOREST: BiomeEnum = BiomeEnum::FlowerForest;
-    pub const ICESPIKES: BiomeEnum = BiomeEnum::IceSpikes;
-    pub const OLDGROWTHBIRCHFOREST: BiomeEnum = BiomeEnum::OldGrowthBirchForest;
-    pub const OLDGROWTHSPRUCETAIGA: BiomeEnum = BiomeEnum::OldGrowthSpruceTaiga;
-    pub const WINDSWEPTSAVANNA: BiomeEnum = BiomeEnum::WindsweptSavanna;
-    pub const ERODEDBADLANDS: BiomeEnum = BiomeEnum::ErodedBadlands;
-    pub const BAMBOOJUNGLE: BiomeEnum = BiomeEnum::BambooJungle;
-    pub const SOULSANDVALLEY: BiomeEnum = BiomeEnum::SoulSandValley;
-    pub const CRIMSONFOREST: BiomeEnum = BiomeEnum::CrimsonForest;
-    pub const WARPEDFOREST: BiomeEnum = BiomeEnum::WarpedForest;
-    pub const BASALTDELTAS: BiomeEnum = BiomeEnum::BasaltDeltas;
-    pub const DRIPSTONECAVES: BiomeEnum = BiomeEnum::DripstoneCaves;
-    pub const LUSHCAVES: BiomeEnum = BiomeEnum::LushCaves;
-    pub const DEEPDARK: BiomeEnum = BiomeEnum::DeepDark;
+    pub const WOODED_BADLANDS: BiomeEnum = BiomeEnum::WoodedBadlands;
+    pub const SMALL_END_ISLANDS: BiomeEnum = BiomeEnum::SmallEndIslands;
+    pub const END_MIDLANDS: BiomeEnum = BiomeEnum::EndMidlands;
+    pub const END_HIGHLANDS: BiomeEnum = BiomeEnum::EndHighlands;
+    pub const END_BARRENS: BiomeEnum = BiomeEnum::EndBarrens;
+    pub const WARM_OCEAN: BiomeEnum = BiomeEnum::WarmOcean;
+    pub const LUKEWARM_OCEAN: BiomeEnum = BiomeEnum::LukewarmOcean;
+    pub const COLD_OCEAN: BiomeEnum = BiomeEnum::ColdOcean;
+    pub const DEEP_LUKEWARM_OCEAN: BiomeEnum = BiomeEnum::DeepLukewarmOcean;
+    pub const DEEP_COLD_OCEAN: BiomeEnum = BiomeEnum::DeepColdOcean;
+    pub const DEEP_FROZEN_OCEAN: BiomeEnum = BiomeEnum::DeepFrozenOcean;
+    pub const THE_VOID: BiomeEnum = BiomeEnum::TheVoid;
+    pub const SUNFLOWER_PLAINS: BiomeEnum = BiomeEnum::SunflowerPlains;
+    pub const WINDSWEPT_GRAVELLY_HILLS: BiomeEnum = BiomeEnum::WindsweptGravellyHills;
+    pub const FLOWER_FOREST: BiomeEnum = BiomeEnum::FlowerForest;
+    pub const ICE_SPIKES: BiomeEnum = BiomeEnum::IceSpikes;
+    pub const OLD_GROWTH_BIRCH_FOREST: BiomeEnum = BiomeEnum::OldGrowthBirchForest;
+    pub const OLD_GROWTH_SPRUCE_TAIGA: BiomeEnum = BiomeEnum::OldGrowthSpruceTaiga;
+    pub const WINDSWEPT_SAVANNA: BiomeEnum = BiomeEnum::WindsweptSavanna;
+    pub const ERODED_BADLANDS: BiomeEnum = BiomeEnum::ErodedBadlands;
+    pub const BAMBOO_JUNGLE: BiomeEnum = BiomeEnum::BambooJungle;
+    pub const SOUL_SAND_VALLEY: BiomeEnum = BiomeEnum::SoulSandValley;
+    pub const CRIMSON_FOREST: BiomeEnum = BiomeEnum::CrimsonForest;
+    pub const WARPED_FOREST: BiomeEnum = BiomeEnum::WarpedForest;
+    pub const BASALT_DELTAS: BiomeEnum = BiomeEnum::BasaltDeltas;
+    pub const DRIPSTONE_CAVES: BiomeEnum = BiomeEnum::DripstoneCaves;
+    pub const LUSH_CAVES: BiomeEnum = BiomeEnum::LushCaves;
+    pub const DEEP_DARK: BiomeEnum = BiomeEnum::DeepDark;
     pub const MEADOW: BiomeEnum = BiomeEnum::Meadow;
     pub const GROVE: BiomeEnum = BiomeEnum::Grove;
-    pub const SNOWYSLOPES: BiomeEnum = BiomeEnum::SnowySlopes;
-    pub const FROZENPEAKS: BiomeEnum = BiomeEnum::FrozenPeaks;
-    pub const JAGGEDPEAKS: BiomeEnum = BiomeEnum::JaggedPeaks;
-    pub const STONYPEAKS: BiomeEnum = BiomeEnum::StonyPeaks;
-    pub const CHERRYGROVE: BiomeEnum = BiomeEnum::CherryGrove;
+    pub const SNOWY_SLOPES: BiomeEnum = BiomeEnum::SnowySlopes;
+    pub const FROZEN_PEAKS: BiomeEnum = BiomeEnum::FrozenPeaks;
+    pub const JAGGED_PEAKS: BiomeEnum = BiomeEnum::JaggedPeaks;
+    pub const STONY_PEAKS: BiomeEnum = BiomeEnum::StonyPeaks;
+    pub const CHERRY_GROVE: BiomeEnum = BiomeEnum::CherryGrove;
     pub const CUSTOM: BiomeEnum = BiomeEnum::Custom;
     pub fn from_string(str: String) -> std::option::Option<BiomeEnum> {
         match str.as_str() {
@@ -18776,6 +18776,20 @@ impl<'mc> crate::JNIRaw<'mc> for DoubleChest<'mc> {
     }
 }
 impl<'mc> DoubleChest<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::DoubleChestInventory<'mc>,
+    ) -> Result<crate::bukkit::block::DoubleChest<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/block/DoubleChest")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/DoubleChestInventory;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::block::DoubleChest(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

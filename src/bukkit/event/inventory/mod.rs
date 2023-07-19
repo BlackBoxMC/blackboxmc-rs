@@ -13,6 +13,21 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryOpenEvent<'mc> {
     }
 }
 impl<'mc> InventoryOpenEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+    ) -> Result<crate::bukkit::event::inventory::InventoryOpenEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryOpenEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::inventory::InventoryOpenEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -236,6 +251,31 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareItemCraftEvent<'mc> {
     }
 }
 impl<'mc> PrepareItemCraftEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::CraftingInventory<'mc>,
+        arg1: crate::bukkit::inventory::InventoryView<'mc>,
+        arg2: bool,
+    ) -> Result<
+        crate::bukkit::event::inventory::PrepareItemCraftEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Bool(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/PrepareItemCraftEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/CraftingInventory;Lorg/bukkit/inventory/InventoryView;Z)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::PrepareItemCraftEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -450,6 +490,26 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareAnvilEvent<'mc> {
     }
 }
 impl<'mc> PrepareAnvilEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<crate::bukkit::event::inventory::PrepareAnvilEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/PrepareAnvilEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::PrepareAnvilEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -741,6 +801,41 @@ impl<'mc> crate::JNIRaw<'mc> for BrewEvent<'mc> {
     }
 }
 impl<'mc> BrewEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::BrewerInventory<'mc>,
+        arg2: Vec<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg3: i32,
+    ) -> Result<crate::bukkit::event::inventory::BrewEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg2 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_2,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let val_3 = jni::objects::JValueGen::Int(arg3.into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/BrewEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/BrewerInventory;Ljava/util/List;I)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::BrewEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -952,6 +1047,26 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryMoveItemEvent<'mc> {
     }
 }
 impl<'mc> InventoryMoveItemEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::Inventory<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::Inventory<'mc>,
+        arg3: bool,
+    ) -> Result<
+        crate::bukkit::event::inventory::InventoryMoveItemEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = jni::objects::JValueGen::Bool(arg3.into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryMoveItemEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/Inventory;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/Inventory;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::inventory::InventoryMoveItemEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1205,6 +1320,22 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceSmeltEvent<'mc> {
     }
 }
 impl<'mc> FurnaceSmeltEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<crate::bukkit::event::inventory::FurnaceSmeltEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/FurnaceSmeltEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/ItemStack;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::inventory::FurnaceSmeltEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1441,6 +1572,28 @@ impl<'mc> crate::JNIRaw<'mc> for SmithItemEvent<'mc> {
     }
 }
 impl<'mc> SmithItemEvent<'mc> {
+    pub fn new_with_inventory_view(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>,
+        arg2: i32,
+        arg3: crate::bukkit::event::inventory::ClickType<'mc>,
+        arg4: std::option::Option<crate::bukkit::event::inventory::InventoryAction<'mc>>,
+        arg5: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::event::inventory::SmithItemEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().1.clone()) };
+        let val_5 = jni::objects::JValueGen::Int(arg5.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/SmithItemEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/event/inventory/InventoryType$SlotType;ILorg/bukkit/event/inventory/ClickType;Lorg/bukkit/event/inventory/InventoryAction;I)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
+        let ret = { crate::bukkit::event::inventory::SmithItemEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1921,18 +2074,18 @@ impl<'mc> crate::JNIRaw<'mc> for ClickType<'mc> {
 }
 impl<'mc> ClickType<'mc> {
     pub const LEFT: ClickTypeEnum = ClickTypeEnum::Left;
-    pub const SHIFTLEFT: ClickTypeEnum = ClickTypeEnum::ShiftLeft;
+    pub const SHIFT_LEFT: ClickTypeEnum = ClickTypeEnum::ShiftLeft;
     pub const RIGHT: ClickTypeEnum = ClickTypeEnum::Right;
-    pub const SHIFTRIGHT: ClickTypeEnum = ClickTypeEnum::ShiftRight;
-    pub const WINDOWBORDERLEFT: ClickTypeEnum = ClickTypeEnum::WindowBorderLeft;
-    pub const WINDOWBORDERRIGHT: ClickTypeEnum = ClickTypeEnum::WindowBorderRight;
+    pub const SHIFT_RIGHT: ClickTypeEnum = ClickTypeEnum::ShiftRight;
+    pub const WINDOW_BORDER_LEFT: ClickTypeEnum = ClickTypeEnum::WindowBorderLeft;
+    pub const WINDOW_BORDER_RIGHT: ClickTypeEnum = ClickTypeEnum::WindowBorderRight;
     pub const MIDDLE: ClickTypeEnum = ClickTypeEnum::Middle;
-    pub const NUMBERKEY: ClickTypeEnum = ClickTypeEnum::NumberKey;
-    pub const DOUBLECLICK: ClickTypeEnum = ClickTypeEnum::DoubleClick;
+    pub const NUMBER_KEY: ClickTypeEnum = ClickTypeEnum::NumberKey;
+    pub const DOUBLE_CLICK: ClickTypeEnum = ClickTypeEnum::DoubleClick;
     pub const DROP: ClickTypeEnum = ClickTypeEnum::Drop;
-    pub const CONTROLDROP: ClickTypeEnum = ClickTypeEnum::ControlDrop;
+    pub const CONTROL_DROP: ClickTypeEnum = ClickTypeEnum::ControlDrop;
     pub const CREATIVE: ClickTypeEnum = ClickTypeEnum::Creative;
-    pub const SWAPOFFHAND: ClickTypeEnum = ClickTypeEnum::SwapOffhand;
+    pub const SWAP_OFFHAND: ClickTypeEnum = ClickTypeEnum::SwapOffhand;
     pub const UNKNOWN: ClickTypeEnum = ClickTypeEnum::Unknown;
     pub fn from_string(str: String) -> std::option::Option<ClickTypeEnum> {
         match str.as_str() {
@@ -2032,6 +2185,31 @@ impl<'mc> crate::JNIRaw<'mc> for BrewingStandFuelEvent<'mc> {
     }
 }
 impl<'mc> BrewingStandFuelEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: i32,
+    ) -> Result<
+        crate::bukkit::event::inventory::BrewingStandFuelEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/BrewingStandFuelEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;I)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::BrewingStandFuelEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2272,6 +2450,28 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareGrindstoneEvent<'mc> {
     }
 }
 impl<'mc> PrepareGrindstoneEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::PrepareGrindstoneEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/PrepareGrindstoneEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::PrepareGrindstoneEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2640,6 +2840,26 @@ impl<'mc> crate::JNIRaw<'mc> for HopperInventorySearchEvent<'mc> {
     }
 }
 impl<'mc> HopperInventorySearchEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::Inventory<'mc>,
+        arg1: crate::bukkit::event::inventory::HopperInventorySearchEventContainerType<'mc>,
+        arg2: crate::bukkit::block::Block<'mc>,
+        arg3: crate::bukkit::block::Block<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::HopperInventorySearchEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/HopperInventorySearchEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/Inventory;Lorg/bukkit/event/inventory/HopperInventorySearchEvent$ContainerType;Lorg/bukkit/block/Block;Lorg/bukkit/block/Block;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::inventory::HopperInventorySearchEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2881,6 +3101,30 @@ impl<'mc> crate::JNIRaw<'mc> for CraftItemEvent<'mc> {
     }
 }
 impl<'mc> CraftItemEvent<'mc> {
+    pub fn new_with_recipe(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::Recipe<'mc>,
+        arg1: crate::bukkit::inventory::InventoryView<'mc>,
+        arg2: crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>,
+        arg3: i32,
+        arg4: crate::bukkit::event::inventory::ClickType<'mc>,
+        arg5: std::option::Option<crate::bukkit::event::inventory::InventoryAction<'mc>>,
+        arg6: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::event::inventory::CraftItemEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = jni::objects::JValueGen::Int(arg3.into());
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.1.clone()) };
+        let val_5 = unsafe { jni::objects::JObject::from_raw(arg5.unwrap().1.clone()) };
+        let val_6 = jni::objects::JValueGen::Int(arg6.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/CraftItemEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/Recipe;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/event/inventory/InventoryType$SlotType;ILorg/bukkit/event/inventory/ClickType;Lorg/bukkit/event/inventory/InventoryAction;I)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6)])?;
+        let ret = { crate::bukkit::event::inventory::CraftItemEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3333,6 +3577,24 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceStartSmeltEvent<'mc> {
     }
 }
 impl<'mc> FurnaceStartSmeltEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::CookingRecipe<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::FurnaceStartSmeltEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/FurnaceStartSmeltEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/CookingRecipe;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::inventory::FurnaceStartSmeltEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3557,6 +3819,28 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryPickupItemEvent<'mc> {
     }
 }
 impl<'mc> InventoryPickupItemEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::Inventory<'mc>,
+        arg1: crate::bukkit::entity::Item<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::InventoryPickupItemEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryPickupItemEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/Inventory;Lorg/bukkit/entity/Item;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::InventoryPickupItemEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3763,6 +4047,23 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryInteractEvent<'mc> {
     }
 }
 impl<'mc> InventoryInteractEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::InventoryInteractEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryInteractEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::inventory::InventoryInteractEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4016,6 +4317,21 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryEvent<'mc> {
     }
 }
 impl<'mc> InventoryEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+    ) -> Result<crate::bukkit::event::inventory::InventoryEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::inventory::InventoryEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4207,6 +4523,26 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryCreativeEvent<'mc> {
     }
 }
 impl<'mc> InventoryCreativeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>,
+        arg2: i32,
+        arg3: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::InventoryCreativeEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryCreativeEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/event/inventory/InventoryType$SlotType;ILorg/bukkit/inventory/ItemStack;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::inventory::InventoryCreativeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4644,6 +4980,35 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceExtractEvent<'mc> {
     }
 }
 impl<'mc> FurnaceExtractEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Player<'mc>,
+        arg1: crate::bukkit::block::Block<'mc>,
+        arg2: crate::bukkit::Material<'mc>,
+        arg3: i32,
+        arg4: i32,
+    ) -> Result<crate::bukkit::event::inventory::FurnaceExtractEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = jni::objects::JValueGen::Int(arg3.into());
+        let val_4 = jni::objects::JValueGen::Int(arg4.into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/FurnaceExtractEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/Material;II)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::FurnaceExtractEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5115,14 +5480,14 @@ impl<'mc> InventoryType<'mc> {
     pub const PLAYER: InventoryTypeEnum = InventoryTypeEnum::Player;
     pub const CREATIVE: InventoryTypeEnum = InventoryTypeEnum::Creative;
     pub const MERCHANT: InventoryTypeEnum = InventoryTypeEnum::Merchant;
-    pub const ENDERCHEST: InventoryTypeEnum = InventoryTypeEnum::EnderChest;
+    pub const ENDER_CHEST: InventoryTypeEnum = InventoryTypeEnum::EnderChest;
     pub const ANVIL: InventoryTypeEnum = InventoryTypeEnum::Anvil;
     pub const SMITHING: InventoryTypeEnum = InventoryTypeEnum::Smithing;
     pub const BEACON: InventoryTypeEnum = InventoryTypeEnum::Beacon;
     pub const HOPPER: InventoryTypeEnum = InventoryTypeEnum::Hopper;
-    pub const SHULKERBOX: InventoryTypeEnum = InventoryTypeEnum::ShulkerBox;
+    pub const SHULKER_BOX: InventoryTypeEnum = InventoryTypeEnum::ShulkerBox;
     pub const BARREL: InventoryTypeEnum = InventoryTypeEnum::Barrel;
-    pub const BLASTFURNACE: InventoryTypeEnum = InventoryTypeEnum::BlastFurnace;
+    pub const BLAST_FURNACE: InventoryTypeEnum = InventoryTypeEnum::BlastFurnace;
     pub const LECTERN: InventoryTypeEnum = InventoryTypeEnum::Lectern;
     pub const SMOKER: InventoryTypeEnum = InventoryTypeEnum::Smoker;
     pub const LOOM: InventoryTypeEnum = InventoryTypeEnum::Loom;
@@ -5130,9 +5495,9 @@ impl<'mc> InventoryType<'mc> {
     pub const GRINDSTONE: InventoryTypeEnum = InventoryTypeEnum::Grindstone;
     pub const STONECUTTER: InventoryTypeEnum = InventoryTypeEnum::Stonecutter;
     pub const COMPOSTER: InventoryTypeEnum = InventoryTypeEnum::Composter;
-    pub const CHISELEDBOOKSHELF: InventoryTypeEnum = InventoryTypeEnum::ChiseledBookshelf;
+    pub const CHISELED_BOOKSHELF: InventoryTypeEnum = InventoryTypeEnum::ChiseledBookshelf;
     pub const JUKEBOX: InventoryTypeEnum = InventoryTypeEnum::Jukebox;
-    pub const SMITHINGNEW: InventoryTypeEnum = InventoryTypeEnum::SmithingNew;
+    pub const SMITHING_NEW: InventoryTypeEnum = InventoryTypeEnum::SmithingNew;
     pub fn from_string(str: String) -> std::option::Option<InventoryTypeEnum> {
         match str.as_str() {
             "CHEST" => Some(InventoryTypeEnum::Chest),
@@ -5236,6 +5601,28 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareSmithingEvent<'mc> {
     }
 }
 impl<'mc> PrepareSmithingEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::PrepareSmithingEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/PrepareSmithingEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::PrepareSmithingEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5456,6 +5843,26 @@ impl<'mc> crate::JNIRaw<'mc> for TradeSelectEvent<'mc> {
     }
 }
 impl<'mc> TradeSelectEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: i32,
+    ) -> Result<crate::bukkit::event::inventory::TradeSelectEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/TradeSelectEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;I)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::TradeSelectEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5784,23 +6191,24 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryAction<'mc> {
 }
 impl<'mc> InventoryAction<'mc> {
     pub const NOTHING: InventoryActionEnum = InventoryActionEnum::Nothing;
-    pub const PICKUPALL: InventoryActionEnum = InventoryActionEnum::PickupAll;
-    pub const PICKUPSOME: InventoryActionEnum = InventoryActionEnum::PickupSome;
-    pub const PICKUPHALF: InventoryActionEnum = InventoryActionEnum::PickupHalf;
-    pub const PICKUPONE: InventoryActionEnum = InventoryActionEnum::PickupOne;
-    pub const PLACEALL: InventoryActionEnum = InventoryActionEnum::PlaceAll;
-    pub const PLACESOME: InventoryActionEnum = InventoryActionEnum::PlaceSome;
-    pub const PLACEONE: InventoryActionEnum = InventoryActionEnum::PlaceOne;
-    pub const SWAPWITHCURSOR: InventoryActionEnum = InventoryActionEnum::SwapWithCursor;
-    pub const DROPALLCURSOR: InventoryActionEnum = InventoryActionEnum::DropAllCursor;
-    pub const DROPONECURSOR: InventoryActionEnum = InventoryActionEnum::DropOneCursor;
-    pub const DROPALLSLOT: InventoryActionEnum = InventoryActionEnum::DropAllSlot;
-    pub const DROPONESLOT: InventoryActionEnum = InventoryActionEnum::DropOneSlot;
-    pub const MOVETOOTHERINVENTORY: InventoryActionEnum = InventoryActionEnum::MoveToOtherInventory;
-    pub const HOTBARMOVEANDREADD: InventoryActionEnum = InventoryActionEnum::HotbarMoveAndReadd;
-    pub const HOTBARSWAP: InventoryActionEnum = InventoryActionEnum::HotbarSwap;
-    pub const CLONESTACK: InventoryActionEnum = InventoryActionEnum::CloneStack;
-    pub const COLLECTTOCURSOR: InventoryActionEnum = InventoryActionEnum::CollectToCursor;
+    pub const PICKUP_ALL: InventoryActionEnum = InventoryActionEnum::PickupAll;
+    pub const PICKUP_SOME: InventoryActionEnum = InventoryActionEnum::PickupSome;
+    pub const PICKUP_HALF: InventoryActionEnum = InventoryActionEnum::PickupHalf;
+    pub const PICKUP_ONE: InventoryActionEnum = InventoryActionEnum::PickupOne;
+    pub const PLACE_ALL: InventoryActionEnum = InventoryActionEnum::PlaceAll;
+    pub const PLACE_SOME: InventoryActionEnum = InventoryActionEnum::PlaceSome;
+    pub const PLACE_ONE: InventoryActionEnum = InventoryActionEnum::PlaceOne;
+    pub const SWAP_WITH_CURSOR: InventoryActionEnum = InventoryActionEnum::SwapWithCursor;
+    pub const DROP_ALL_CURSOR: InventoryActionEnum = InventoryActionEnum::DropAllCursor;
+    pub const DROP_ONE_CURSOR: InventoryActionEnum = InventoryActionEnum::DropOneCursor;
+    pub const DROP_ALL_SLOT: InventoryActionEnum = InventoryActionEnum::DropAllSlot;
+    pub const DROP_ONE_SLOT: InventoryActionEnum = InventoryActionEnum::DropOneSlot;
+    pub const MOVE_TO_OTHER_INVENTORY: InventoryActionEnum =
+        InventoryActionEnum::MoveToOtherInventory;
+    pub const HOTBAR_MOVE_AND_READD: InventoryActionEnum = InventoryActionEnum::HotbarMoveAndReadd;
+    pub const HOTBAR_SWAP: InventoryActionEnum = InventoryActionEnum::HotbarSwap;
+    pub const CLONE_STACK: InventoryActionEnum = InventoryActionEnum::CloneStack;
+    pub const COLLECT_TO_CURSOR: InventoryActionEnum = InventoryActionEnum::CollectToCursor;
     pub const UNKNOWN: InventoryActionEnum = InventoryActionEnum::Unknown;
     pub fn from_string(str: String) -> std::option::Option<InventoryActionEnum> {
         match str.as_str() {
@@ -5870,6 +6278,28 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryClickEvent<'mc> {
     }
 }
 impl<'mc> InventoryClickEvent<'mc> {
+    pub fn new_with_inventory_view(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>,
+        arg2: i32,
+        arg3: crate::bukkit::event::inventory::ClickType<'mc>,
+        arg4: std::option::Option<crate::bukkit::event::inventory::InventoryAction<'mc>>,
+        arg5: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::event::inventory::InventoryClickEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().1.clone()) };
+        let val_5 = jni::objects::JValueGen::Int(arg5.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryClickEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/event/inventory/InventoryType$SlotType;ILorg/bukkit/event/inventory/ClickType;Lorg/bukkit/event/inventory/InventoryAction;I)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
+        let ret = { crate::bukkit::event::inventory::InventoryClickEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6306,6 +6736,40 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryDragEvent<'mc> {
     }
 }
 impl<'mc> InventoryDragEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::ItemStack<'mc>,
+        arg3: bool,
+        arg4: std::collections::HashMap<i32, crate::bukkit::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::bukkit::event::inventory::InventoryDragEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = jni::objects::JValueGen::Bool(arg3.into());
+        let raw_val_4 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
+        for (k, v) in arg4 {
+            let map_val_0 = jni::objects::JValueGen::Int(k.into());
+            let map_val_1 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_4,
+                "put",
+                "(Ljava/lang/IntegerLjava/Lang/Object)V",
+                &[
+                    jni::objects::JValueGen::from(&map_val_0),
+                    jni::objects::JValueGen::from(&map_val_1),
+                ],
+            )?;
+        }
+        let val_4 = jni::objects::JValueGen::Object(raw_val_4);
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryDragEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/ItemStack;ZLjava/util/Map;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        let ret = { crate::bukkit::event::inventory::InventoryDragEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6630,6 +7094,29 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceBurnEvent<'mc> {
     }
 }
 impl<'mc> FurnaceBurnEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: i32,
+    ) -> Result<crate::bukkit::event::inventory::FurnaceBurnEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/inventory/FurnaceBurnEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;I)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::FurnaceBurnEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6869,6 +7356,21 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryCloseEvent<'mc> {
     }
 }
 impl<'mc> InventoryCloseEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+    ) -> Result<crate::bukkit::event::inventory::InventoryCloseEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/InventoryCloseEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::inventory::InventoryCloseEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7076,6 +7578,28 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareInventoryResultEvent<'mc> {
     }
 }
 impl<'mc> PrepareInventoryResultEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::InventoryView<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<
+        crate::bukkit::event::inventory::PrepareInventoryResultEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/inventory/PrepareInventoryResultEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::inventory::PrepareInventoryResultEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

@@ -543,7 +543,8 @@ impl<'mc> MemorySection<'mc> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
         let cls = &jni.find_class("java/lang/String")?;
-        let res =jni.call_static_method(cls,"createPath","(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = jni.call_static_method(cls,"createPath",
+"(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(jni
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
@@ -1619,6 +1620,21 @@ impl<'mc> crate::JNIRaw<'mc> for MemoryConfiguration<'mc> {
     }
 }
 impl<'mc> MemoryConfiguration<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::configuration::Configuration<'mc>>,
+    ) -> Result<crate::bukkit::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/configuration/MemoryConfiguration")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/configuration/Configuration;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::configuration::MemoryConfiguration(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2049,7 +2065,8 @@ impl<'mc> MemoryConfiguration<'mc> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
         let cls = &jni.find_class("java/lang/String")?;
-        let res =jni.call_static_method(cls,"createPath","(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = jni.call_static_method(cls,"createPath",
+"(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(jni
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()

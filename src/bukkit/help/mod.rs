@@ -461,6 +461,14 @@ impl<'mc> HelpTopic<'mc> {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
     }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/help/HelpTopic")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::help::HelpTopic(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -935,6 +943,20 @@ impl<'mc> crate::JNIRaw<'mc> for GenericCommandHelpTopic<'mc> {
     }
 }
 impl<'mc> GenericCommandHelpTopic<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::command::Command<'mc>,
+    ) -> Result<crate::bukkit::help::GenericCommandHelpTopic<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/help/GenericCommandHelpTopic")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/command/Command;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::help::GenericCommandHelpTopic(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

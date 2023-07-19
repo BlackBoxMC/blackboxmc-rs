@@ -13,6 +13,26 @@ impl<'mc> crate::JNIRaw<'mc> for MoistureChangeEvent<'mc> {
     }
 }
 impl<'mc> MoistureChangeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockState<'mc>,
+    ) -> Result<crate::bukkit::event::block::MoistureChangeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/MoistureChangeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::MoistureChangeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -220,6 +240,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockReceiveGameEvent<'mc> {
     }
 }
 impl<'mc> BlockReceiveGameEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::GameEvent<'mc>,
+        arg1: crate::bukkit::block::Block<'mc>,
+        arg2: crate::bukkit::entity::Entity<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockReceiveGameEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockReceiveGameEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/GameEvent;Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockReceiveGameEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -442,6 +485,34 @@ impl<'mc> crate::JNIRaw<'mc> for BlockDropItemEvent<'mc> {
     }
 }
 impl<'mc> BlockDropItemEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockState<'mc>,
+        arg2: crate::bukkit::entity::Player<'mc>,
+        arg3: Vec<crate::bukkit::entity::Item<'mc>>,
+    ) -> Result<crate::bukkit::event::block::BlockDropItemEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let raw_val_3 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg3 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_3,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(raw_val_3);
+        let cls = &jni.find_class("org/bukkit/event/block/BlockDropItemEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;Lorg/bukkit/entity/Player;Ljava/util/List;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::block::BlockDropItemEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -812,6 +883,23 @@ impl<'mc> crate::JNIRaw<'mc> for TNTPrimeEvent<'mc> {
     }
 }
 impl<'mc> TNTPrimeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::event::block::TNTPrimeEventPrimeCause<'mc>,
+        arg2: crate::bukkit::entity::Entity<'mc>,
+        arg3: crate::bukkit::block::Block<'mc>,
+    ) -> Result<crate::bukkit::event::block::TNTPrimeEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/TNTPrimeEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::block::TNTPrimeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1050,6 +1138,36 @@ impl<'mc> crate::JNIRaw<'mc> for BellResonateEvent<'mc> {
     }
 }
 impl<'mc> BellResonateEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: Vec<crate::bukkit::entity::LivingEntity<'mc>>,
+    ) -> Result<crate::bukkit::event::block::BellResonateEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let raw_val_1 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg1 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let cls = &jni.find_class("org/bukkit/event/block/BellResonateEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BellResonateEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1225,6 +1343,39 @@ impl<'mc> crate::JNIRaw<'mc> for BlockExplodeEvent<'mc> {
     }
 }
 impl<'mc> BlockExplodeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: Vec<crate::bukkit::block::Block<'mc>>,
+        arg2: f32,
+    ) -> Result<crate::bukkit::event::block::BlockExplodeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let raw_val_1 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg1 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let val_2 = jni::objects::JValueGen::Float(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockExplodeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;F)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockExplodeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1579,6 +1730,26 @@ impl<'mc> crate::JNIRaw<'mc> for CauldronLevelChangeEvent<'mc> {
     }
 }
 impl<'mc> CauldronLevelChangeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::entity::Entity<'mc>,
+        arg2: crate::bukkit::event::block::CauldronLevelChangeEventChangeReason<'mc>,
+        arg3: crate::bukkit::block::BlockState<'mc>,
+    ) -> Result<
+        crate::bukkit::event::block::CauldronLevelChangeEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/CauldronLevelChangeEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason;Lorg/bukkit/block/BlockState;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::block::CauldronLevelChangeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1845,6 +2016,36 @@ impl<'mc> crate::JNIRaw<'mc> for BlockMultiPlaceEvent<'mc> {
     }
 }
 impl<'mc> BlockMultiPlaceEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: Vec<crate::bukkit::block::BlockState<'mc>>,
+        arg1: crate::bukkit::block::Block<'mc>,
+        arg2: crate::bukkit::inventory::ItemStack<'mc>,
+        arg3: crate::bukkit::entity::Player<'mc>,
+        arg4: bool,
+    ) -> Result<crate::bukkit::event::block::BlockMultiPlaceEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let raw_val_0 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg0 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_0,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = jni::objects::JValueGen::Bool(arg4.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockMultiPlaceEvent")?;
+        let res = jni.new_object(cls,
+"(Ljava/util/List;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/Player;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        let ret = { crate::bukkit::event::block::BlockMultiPlaceEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2184,10 +2385,10 @@ impl<'mc> crate::JNIRaw<'mc> for Action<'mc> {
     }
 }
 impl<'mc> Action<'mc> {
-    pub const LEFTCLICKBLOCK: ActionEnum = ActionEnum::LeftClickBlock;
-    pub const RIGHTCLICKBLOCK: ActionEnum = ActionEnum::RightClickBlock;
-    pub const LEFTCLICKAIR: ActionEnum = ActionEnum::LeftClickAir;
-    pub const RIGHTCLICKAIR: ActionEnum = ActionEnum::RightClickAir;
+    pub const LEFT_CLICK_BLOCK: ActionEnum = ActionEnum::LeftClickBlock;
+    pub const RIGHT_CLICK_BLOCK: ActionEnum = ActionEnum::RightClickBlock;
+    pub const LEFT_CLICK_AIR: ActionEnum = ActionEnum::LeftClickAir;
+    pub const RIGHT_CLICK_AIR: ActionEnum = ActionEnum::RightClickAir;
     pub const PHYSICAL: ActionEnum = ActionEnum::Physical;
     pub fn from_string(str: String) -> std::option::Option<ActionEnum> {
         match str.as_str() {
@@ -2490,6 +2691,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockSpreadEvent<'mc> {
     }
 }
 impl<'mc> BlockSpreadEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::Block<'mc>,
+        arg2: crate::bukkit::block::BlockState<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockSpreadEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockSpreadEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockSpreadEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2713,6 +2937,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockDamageAbortEvent<'mc> {
     }
 }
 impl<'mc> BlockDamageAbortEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Player<'mc>,
+        arg1: crate::bukkit::block::Block<'mc>,
+        arg2: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockDamageAbortEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockDamageAbortEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockDamageAbortEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2921,6 +3168,25 @@ impl<'mc> crate::JNIRaw<'mc> for BlockFormEvent<'mc> {
     }
 }
 impl<'mc> BlockFormEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockState<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockFormEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockFormEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockFormEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3128,6 +3394,39 @@ impl<'mc> crate::JNIRaw<'mc> for BlockPistonRetractEvent<'mc> {
     }
 }
 impl<'mc> BlockPistonRetractEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: Vec<crate::bukkit::block::Block<'mc>>,
+        arg2: crate::bukkit::block::BlockFace<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockPistonRetractEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let raw_val_1 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg1 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockPistonRetractEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;Lorg/bukkit/block/BlockFace;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockPistonRetractEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3600,6 +3899,39 @@ impl<'mc> crate::JNIRaw<'mc> for BlockFertilizeEvent<'mc> {
     }
 }
 impl<'mc> BlockFertilizeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::entity::Player<'mc>,
+        arg2: Vec<crate::bukkit::block::BlockState<'mc>>,
+    ) -> Result<crate::bukkit::event::block::BlockFertilizeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg2 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_2,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let cls = &jni.find_class("org/bukkit/event/block/BlockFertilizeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockFertilizeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3807,6 +4139,29 @@ impl<'mc> crate::JNIRaw<'mc> for BrewingStartEvent<'mc> {
     }
 }
 impl<'mc> BrewingStartEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: i32,
+    ) -> Result<crate::bukkit::event::block::BrewingStartEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BrewingStartEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;I)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BrewingStartEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4014,6 +4369,28 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryBlockStartEvent<'mc> {
     }
 }
 impl<'mc> InventoryBlockStartEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<
+        crate::bukkit::event::block::InventoryBlockStartEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/InventoryBlockStartEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::InventoryBlockStartEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4206,6 +4583,25 @@ impl<'mc> crate::JNIRaw<'mc> for BlockGrowEvent<'mc> {
     }
 }
 impl<'mc> BlockGrowEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockState<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockGrowEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockGrowEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockGrowEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4413,6 +4809,22 @@ impl<'mc> crate::JNIRaw<'mc> for BlockDispenseArmorEvent<'mc> {
     }
 }
 impl<'mc> BlockDispenseArmorEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::entity::LivingEntity<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockDispenseArmorEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockDispenseArmorEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/LivingEntity;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::block::BlockDispenseArmorEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4679,6 +5091,21 @@ impl<'mc> crate::JNIRaw<'mc> for BlockCookEvent<'mc> {
     }
 }
 impl<'mc> BlockCookEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockCookEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockCookEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/ItemStack;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::block::BlockCookEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4915,6 +5342,26 @@ impl<'mc> crate::JNIRaw<'mc> for BlockPistonEvent<'mc> {
     }
 }
 impl<'mc> BlockPistonEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockFace<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockPistonEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockPistonEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockPistonEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5123,6 +5570,25 @@ impl<'mc> crate::JNIRaw<'mc> for BlockFadeEvent<'mc> {
     }
 }
 impl<'mc> BlockFadeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockState<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockFadeEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockFadeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockFadeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5330,6 +5796,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockPlaceEvent<'mc> {
     }
 }
 impl<'mc> BlockPlaceEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockState<'mc>,
+        arg2: crate::bukkit::block::Block<'mc>,
+        arg3: crate::bukkit::inventory::ItemStack<'mc>,
+        arg4: crate::bukkit::entity::Player<'mc>,
+        arg5: std::option::Option<bool>,
+        arg6: std::option::Option<crate::bukkit::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<crate::bukkit::event::block::BlockPlaceEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.1.clone()) };
+        let val_5 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
+        let val_6 = unsafe { jni::objects::JObject::from_raw(arg6.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockPlaceEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/Player;ZLorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6)])?;
+        let ret = { crate::bukkit::event::block::BlockPlaceEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5644,6 +6133,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockPhysicsEvent<'mc> {
     }
 }
 impl<'mc> BlockPhysicsEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: std::option::Option<crate::bukkit::block::data::BlockData<'mc>>,
+        arg2: std::option::Option<crate::bukkit::block::Block<'mc>>,
+    ) -> Result<crate::bukkit::event::block::BlockPhysicsEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockPhysicsEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/data/BlockData;Lorg/bukkit/block/Block;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockPhysicsEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5878,6 +6390,29 @@ impl<'mc> crate::JNIRaw<'mc> for EntityBlockFormEvent<'mc> {
     }
 }
 impl<'mc> EntityBlockFormEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Entity<'mc>,
+        arg1: crate::bukkit::block::Block<'mc>,
+        arg2: crate::bukkit::block::BlockState<'mc>,
+    ) -> Result<crate::bukkit::event::block::EntityBlockFormEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/EntityBlockFormEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::EntityBlockFormEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6101,6 +6636,36 @@ impl<'mc> crate::JNIRaw<'mc> for SpongeAbsorbEvent<'mc> {
     }
 }
 impl<'mc> SpongeAbsorbEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: Vec<crate::bukkit::block::BlockState<'mc>>,
+    ) -> Result<crate::bukkit::event::block::SpongeAbsorbEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let raw_val_1 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg1 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        let cls = &jni.find_class("org/bukkit/event/block/SpongeAbsorbEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::SpongeAbsorbEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6292,6 +6857,25 @@ impl<'mc> crate::JNIRaw<'mc> for BlockExpEvent<'mc> {
     }
 }
 impl<'mc> BlockExpEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: i32,
+    ) -> Result<crate::bukkit::event::block::BlockExpEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockExpEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;I)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockExpEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6481,6 +7065,22 @@ impl<'mc> crate::JNIRaw<'mc> for SignChangeEvent<'mc> {
     }
 }
 impl<'mc> SignChangeEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::entity::Player<'mc>,
+        _arg2: std::option::Option<Vec<String>>,
+        arg3: std::option::Option<crate::bukkit::block::sign::Side<'mc>>,
+    ) -> Result<crate::bukkit::event::block::SignChangeEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/SignChangeEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Ljava/lang/String;Lorg/bukkit/block/sign/Side;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::block::SignChangeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6743,6 +7343,21 @@ impl<'mc> crate::JNIRaw<'mc> for LeavesDecayEvent<'mc> {
     }
 }
 impl<'mc> LeavesDecayEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+    ) -> Result<crate::bukkit::event::block::LeavesDecayEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/LeavesDecayEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::block::LeavesDecayEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7168,6 +7783,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockShearEntityEvent<'mc> {
     }
 }
 impl<'mc> BlockShearEntityEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::entity::Entity<'mc>,
+        arg2: crate::bukkit::inventory::ItemStack<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockShearEntityEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockShearEntityEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;Lorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockShearEntityEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7392,6 +8030,26 @@ impl<'mc> crate::JNIRaw<'mc> for FluidLevelChangeEvent<'mc> {
     }
 }
 impl<'mc> FluidLevelChangeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::data::BlockData<'mc>,
+    ) -> Result<crate::bukkit::event::block::FluidLevelChangeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/FluidLevelChangeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/data/BlockData;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::FluidLevelChangeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7613,6 +8271,25 @@ impl<'mc> crate::JNIRaw<'mc> for BlockBurnEvent<'mc> {
     }
 }
 impl<'mc> BlockBurnEvent<'mc> {
+    pub fn new_with_block(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::block::Block<'mc>>,
+        arg1: std::option::Option<crate::bukkit::block::Block<'mc>>,
+    ) -> Result<crate::bukkit::event::block::BlockBurnEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockBurnEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/Block;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockBurnEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7820,6 +8497,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockDispenseEvent<'mc> {
     }
 }
 impl<'mc> BlockDispenseEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::util::Vector<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockDispenseEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockDispenseEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/util/Vector;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockDispenseEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -8069,6 +8769,28 @@ impl<'mc> crate::JNIRaw<'mc> for BellRingEvent<'mc> {
     }
 }
 impl<'mc> BellRingEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::block::BlockFace<'mc>,
+        arg2: crate::bukkit::entity::Entity<'mc>,
+    ) -> Result<crate::bukkit::event::block::BellRingEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BellRingEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;Lorg/bukkit/entity/Entity;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BellRingEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -8301,6 +9023,24 @@ impl<'mc> crate::JNIRaw<'mc> for BlockDamageEvent<'mc> {
     }
 }
 impl<'mc> BlockDamageEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Player<'mc>,
+        arg1: crate::bukkit::block::Block<'mc>,
+        arg2: crate::bukkit::inventory::ItemStack<'mc>,
+        arg3: bool,
+    ) -> Result<crate::bukkit::event::block::BlockDamageEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = jni::objects::JValueGen::Bool(arg3.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockDamageEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::event::block::BlockDamageEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -8540,6 +9280,22 @@ impl<'mc> crate::JNIRaw<'mc> for CampfireStartEvent<'mc> {
     }
 }
 impl<'mc> CampfireStartEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::inventory::ItemStack<'mc>,
+        arg2: crate::bukkit::inventory::CampfireRecipe<'mc>,
+    ) -> Result<crate::bukkit::event::block::CampfireStartEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/CampfireStartEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/CampfireRecipe;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::block::CampfireStartEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -8763,6 +9519,25 @@ impl<'mc> crate::JNIRaw<'mc> for BlockBreakEvent<'mc> {
     }
 }
 impl<'mc> BlockBreakEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::entity::Player<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockBreakEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockBreakEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockBreakEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -9002,6 +9777,29 @@ impl<'mc> crate::JNIRaw<'mc> for BlockRedstoneEvent<'mc> {
     }
 }
 impl<'mc> BlockRedstoneEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::bukkit::event::block::BlockRedstoneEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockRedstoneEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;II)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockRedstoneEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -9604,6 +10402,28 @@ impl<'mc> crate::JNIRaw<'mc> for NotePlayEvent<'mc> {
     }
 }
 impl<'mc> NotePlayEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+        arg1: crate::bukkit::Instrument<'mc>,
+        arg2: crate::bukkit::Note<'mc>,
+    ) -> Result<crate::bukkit::event::block::NotePlayEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/NotePlayEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/Instrument;Lorg/bukkit/Note;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::block::NotePlayEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -9860,6 +10680,20 @@ impl<'mc> crate::JNIRaw<'mc> for BlockEvent<'mc> {
     }
 }
 impl<'mc> BlockEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::block::Block<'mc>,
+    ) -> Result<crate::bukkit::event::block::BlockEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::block::BlockEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

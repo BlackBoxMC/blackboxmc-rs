@@ -13,6 +13,21 @@ impl<'mc> crate::JNIRaw<'mc> for JavaPluginLoader<'mc> {
     }
 }
 impl<'mc> JavaPluginLoader<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::Server<'mc>,
+    ) -> Result<crate::bukkit::plugin::java::JavaPluginLoader<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/plugin/java/JavaPluginLoader")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Server;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::plugin::java::JavaPluginLoader(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -147,6 +162,14 @@ impl<'mc> crate::JNIRaw<'mc> for JavaPlugin<'mc> {
     }
 }
 impl<'mc> JavaPlugin<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::plugin::java::JavaPlugin<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/plugin/java/JavaPlugin")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::plugin::java::JavaPlugin(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

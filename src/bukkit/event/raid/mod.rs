@@ -182,6 +182,42 @@ impl<'mc> crate::JNIRaw<'mc> for RaidSpawnWaveEvent<'mc> {
     }
 }
 impl<'mc> RaidSpawnWaveEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::Raid<'mc>,
+        arg1: crate::bukkit::World<'mc>,
+        arg2: crate::bukkit::entity::Raider<'mc>,
+        arg3: Vec<crate::bukkit::entity::Raider<'mc>>,
+    ) -> Result<crate::bukkit::event::raid::RaidSpawnWaveEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let raw_val_3 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg3 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_3,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(raw_val_3);
+        let cls = &jni.find_class("org/bukkit/event/raid/RaidSpawnWaveEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Raid;Lorg/bukkit/World;Lorg/bukkit/entity/Raider;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::raid::RaidSpawnWaveEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -385,6 +421,28 @@ impl<'mc> crate::JNIRaw<'mc> for RaidTriggerEvent<'mc> {
     }
 }
 impl<'mc> RaidTriggerEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::Raid<'mc>,
+        arg1: crate::bukkit::World<'mc>,
+        arg2: crate::bukkit::entity::Player<'mc>,
+    ) -> Result<crate::bukkit::event::raid::RaidTriggerEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/raid/RaidTriggerEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Raid;Lorg/bukkit/World;Lorg/bukkit/entity/Player;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::raid::RaidTriggerEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -604,6 +662,38 @@ impl<'mc> crate::JNIRaw<'mc> for RaidFinishEvent<'mc> {
     }
 }
 impl<'mc> RaidFinishEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::Raid<'mc>,
+        arg1: crate::bukkit::World<'mc>,
+        arg2: Vec<crate::bukkit::entity::Player<'mc>>,
+    ) -> Result<crate::bukkit::event::raid::RaidFinishEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg2 {
+            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.1.clone()) };
+            jni.call_method(
+                &raw_val_2,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let cls = &jni.find_class("org/bukkit/event/raid/RaidFinishEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Raid;Lorg/bukkit/World;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::raid::RaidFinishEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -937,6 +1027,28 @@ impl<'mc> crate::JNIRaw<'mc> for RaidStopEvent<'mc> {
     }
 }
 impl<'mc> RaidStopEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::Raid<'mc>,
+        arg1: crate::bukkit::World<'mc>,
+        arg2: crate::bukkit::event::raid::RaidStopEventReason<'mc>,
+    ) -> Result<crate::bukkit::event::raid::RaidStopEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/raid/RaidStopEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Raid;Lorg/bukkit/World;Lorg/bukkit/event/raid/RaidStopEvent$Reason;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::raid::RaidStopEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

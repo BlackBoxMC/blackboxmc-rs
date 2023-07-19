@@ -13,6 +13,15 @@ impl<'mc> crate::JNIRaw<'mc> for StructureType<'mc> {
     }
 }
 impl<'mc> StructureType<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::generator::structure::StructureType<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/generator/structure/StructureType")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::generator::structure::StructureType(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -133,6 +142,15 @@ impl<'mc> crate::JNIRaw<'mc> for Structure<'mc> {
     }
 }
 impl<'mc> Structure<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::generator::structure::Structure<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/generator/structure/Structure")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::generator::structure::Structure(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

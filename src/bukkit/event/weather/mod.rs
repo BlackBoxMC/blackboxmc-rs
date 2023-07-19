@@ -160,6 +160,22 @@ impl<'mc> crate::JNIRaw<'mc> for LightningStrikeEvent<'mc> {
     }
 }
 impl<'mc> LightningStrikeEvent<'mc> {
+    pub fn new_with_world(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::World<'mc>,
+        arg1: std::option::Option<crate::bukkit::entity::LightningStrike<'mc>>,
+        arg2: std::option::Option<crate::bukkit::event::weather::LightningStrikeEventCause<'mc>>,
+    ) -> Result<crate::bukkit::event::weather::LightningStrikeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/weather/LightningStrikeEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/World;Lorg/bukkit/entity/LightningStrike;Lorg/bukkit/event/weather/LightningStrikeEvent$Cause;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::weather::LightningStrikeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -384,6 +400,26 @@ impl<'mc> crate::JNIRaw<'mc> for ThunderChangeEvent<'mc> {
     }
 }
 impl<'mc> ThunderChangeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::World<'mc>,
+        arg1: bool,
+    ) -> Result<crate::bukkit::event::weather::ThunderChangeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Bool(arg1.into());
+        let cls = &jni.find_class("org/bukkit/event/weather/ThunderChangeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/World;Z)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::weather::ThunderChangeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -579,6 +615,26 @@ impl<'mc> crate::JNIRaw<'mc> for WeatherChangeEvent<'mc> {
     }
 }
 impl<'mc> WeatherChangeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::World<'mc>,
+        arg1: bool,
+    ) -> Result<crate::bukkit::event::weather::WeatherChangeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Bool(arg1.into());
+        let cls = &jni.find_class("org/bukkit/event/weather/WeatherChangeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/World;Z)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::weather::WeatherChangeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -774,6 +830,20 @@ impl<'mc> crate::JNIRaw<'mc> for WeatherEvent<'mc> {
     }
 }
 impl<'mc> WeatherEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::World<'mc>,
+    ) -> Result<crate::bukkit::event::weather::WeatherEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/weather/WeatherEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/World;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::weather::WeatherEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

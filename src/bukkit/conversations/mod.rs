@@ -91,6 +91,21 @@ impl<'mc> crate::JNIRaw<'mc> for ConversationFactory<'mc> {
     }
 }
 impl<'mc> ConversationFactory<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+    ) -> Result<crate::bukkit::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/conversations/ConversationFactory")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::conversations::ConversationFactory(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -412,6 +427,28 @@ impl<'mc> crate::JNIRaw<'mc> for InactivityConversationCanceller<'mc> {
     }
 }
 impl<'mc> InactivityConversationCanceller<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: i32,
+    ) -> Result<
+        crate::bukkit::conversations::InactivityConversationCanceller<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let cls = &jni.find_class("org/bukkit/conversations/InactivityConversationCanceller")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;I)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::conversations::InactivityConversationCanceller(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -705,6 +742,39 @@ impl<'mc> crate::JNIRaw<'mc> for Conversation<'mc> {
     }
 }
 impl<'mc> Conversation<'mc> {
+    pub fn new_with_plugin(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: crate::bukkit::conversations::Conversable<'mc>,
+        arg2: std::option::Option<crate::bukkit::conversations::Prompt<'mc>>,
+        arg3: std::option::Option<
+            std::collections::HashMap<jni::objects::JObject<'mc>, jni::objects::JObject<'mc>>,
+        >,
+    ) -> Result<crate::bukkit::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let raw_val_3 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
+        for (k, v) in arg3.unwrap() {
+            let map_val_0 = k;
+            let map_val_1 = v;
+            jni.call_method(
+                &raw_val_3,
+                "put",
+                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
+                &[
+                    jni::objects::JValueGen::from(&map_val_0),
+                    jni::objects::JValueGen::from(&map_val_1),
+                ],
+            )?;
+        }
+        let val_3 = jni::objects::JValueGen::Object(raw_val_3);
+        let cls = &jni.find_class("org/bukkit/conversations/Conversation")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/plugin/Plugin;Lorg/bukkit/conversations/Conversable;Lorg/bukkit/conversations/Prompt;Ljava/util/Map;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::conversations::Conversation(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -961,6 +1031,15 @@ impl<'mc> crate::JNIRaw<'mc> for ValidatingPrompt<'mc> {
     }
 }
 impl<'mc> ValidatingPrompt<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::conversations::ValidatingPrompt<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/conversations/ValidatingPrompt")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::conversations::ValidatingPrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1115,6 +1194,19 @@ impl<'mc> crate::JNIRaw<'mc> for ManuallyAbandonedConversationCanceller<'mc> {
     }
 }
 impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::bukkit::conversations::ManuallyAbandonedConversationCanceller<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let cls =
+            &jni.find_class("org/bukkit/conversations/ManuallyAbandonedConversationCanceller")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret =
+            { crate::bukkit::conversations::ManuallyAbandonedConversationCanceller(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1261,6 +1353,14 @@ impl<'mc> crate::JNIRaw<'mc> for StringPrompt<'mc> {
     }
 }
 impl<'mc> StringPrompt<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::conversations::StringPrompt<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/conversations/StringPrompt")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::conversations::StringPrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1413,6 +1513,15 @@ impl<'mc> crate::JNIRaw<'mc> for FixedSetPrompt<'mc> {
     }
 }
 impl<'mc> FixedSetPrompt<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        _arg0: Vec<String>,
+    ) -> Result<crate::bukkit::conversations::FixedSetPrompt<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/conversations/FixedSetPrompt")?;
+        let res = jni.new_object(cls, "(Ljava/lang/String;)V", &[])?;
+        let ret = { crate::bukkit::conversations::FixedSetPrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1567,6 +1676,15 @@ impl<'mc> crate::JNIRaw<'mc> for NullConversationPrefix<'mc> {
     }
 }
 impl<'mc> NullConversationPrefix<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::conversations::NullConversationPrefix<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/conversations/NullConversationPrefix")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::conversations::NullConversationPrefix(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1693,6 +1811,22 @@ impl<'mc> crate::JNIRaw<'mc> for ConversationAbandonedEvent<'mc> {
     }
 }
 impl<'mc> ConversationAbandonedEvent<'mc> {
+    pub fn new_with_conversation(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::conversations::Conversation<'mc>>,
+        arg1: std::option::Option<crate::bukkit::conversations::ConversationCanceller<'mc>>,
+    ) -> Result<
+        crate::bukkit::conversations::ConversationAbandonedEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/conversations/ConversationAbandonedEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/conversations/Conversation;Lorg/bukkit/conversations/ConversationCanceller;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let ret = { crate::bukkit::conversations::ConversationAbandonedEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1851,6 +1985,14 @@ impl<'mc> crate::JNIRaw<'mc> for NumericPrompt<'mc> {
     }
 }
 impl<'mc> NumericPrompt<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::conversations::NumericPrompt<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/conversations/NumericPrompt")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::conversations::NumericPrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2003,6 +2145,23 @@ impl<'mc> crate::JNIRaw<'mc> for ExactMatchConversationCanceller<'mc> {
     }
 }
 impl<'mc> ExactMatchConversationCanceller<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<
+        crate::bukkit::conversations::ExactMatchConversationCanceller<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/conversations/ExactMatchConversationCanceller")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::conversations::ExactMatchConversationCanceller(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2435,6 +2594,31 @@ impl<'mc> crate::JNIRaw<'mc> for PluginNameConversationPrefix<'mc> {
     }
 }
 impl<'mc> PluginNameConversationPrefix<'mc> {
+    pub fn new_with_plugin(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: std::option::Option<String>,
+        arg2: std::option::Option<crate::bukkit::ChatColor<'mc>>,
+    ) -> Result<
+        crate::bukkit::conversations::PluginNameConversationPrefix<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/conversations/PluginNameConversationPrefix")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/ChatColor;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::conversations::PluginNameConversationPrefix(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2776,6 +2960,43 @@ impl<'mc> crate::JNIRaw<'mc> for ConversationContext<'mc> {
     }
 }
 impl<'mc> ConversationContext<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: crate::bukkit::conversations::Conversable<'mc>,
+        arg2: std::collections::HashMap<jni::objects::JObject<'mc>, jni::objects::JObject<'mc>>,
+    ) -> Result<crate::bukkit::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let raw_val_2 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
+        for (k, v) in arg2 {
+            let map_val_0 = k;
+            let map_val_1 = v;
+            jni.call_method(
+                &raw_val_2,
+                "put",
+                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
+                &[
+                    jni::objects::JValueGen::from(&map_val_0),
+                    jni::objects::JValueGen::from(&map_val_1),
+                ],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let cls = &jni.find_class("org/bukkit/conversations/ConversationContext")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;Lorg/bukkit/conversations/Conversable;Ljava/util/Map;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::conversations::ConversationContext(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2947,6 +3168,21 @@ impl<'mc> crate::JNIRaw<'mc> for PlayerNamePrompt<'mc> {
     }
 }
 impl<'mc> PlayerNamePrompt<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+    ) -> Result<crate::bukkit::conversations::PlayerNamePrompt<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/conversations/PlayerNamePrompt")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::conversations::PlayerNamePrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3101,6 +3337,14 @@ impl<'mc> crate::JNIRaw<'mc> for BooleanPrompt<'mc> {
     }
 }
 impl<'mc> BooleanPrompt<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::conversations::BooleanPrompt<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/conversations/BooleanPrompt")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::conversations::BooleanPrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3253,6 +3497,14 @@ impl<'mc> crate::JNIRaw<'mc> for MessagePrompt<'mc> {
     }
 }
 impl<'mc> MessagePrompt<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::conversations::MessagePrompt<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/conversations/MessagePrompt")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::conversations::MessagePrompt(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

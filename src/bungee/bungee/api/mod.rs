@@ -36,7 +36,7 @@ impl<'mc> crate::JNIRaw<'mc> for ChatMessageType<'mc> {
 impl<'mc> ChatMessageType<'mc> {
     pub const CHAT: ChatMessageTypeEnum = ChatMessageTypeEnum::Chat;
     pub const SYSTEM: ChatMessageTypeEnum = ChatMessageTypeEnum::System;
-    pub const ACTIONBAR: ChatMessageTypeEnum = ChatMessageTypeEnum::ActionBar;
+    pub const ACTION_BAR: ChatMessageTypeEnum = ChatMessageTypeEnum::ActionBar;
     pub fn from_string(str: String) -> std::option::Option<ChatMessageTypeEnum> {
         match str.as_str() {
             "CHAT" => Some(ChatMessageTypeEnum::Chat),

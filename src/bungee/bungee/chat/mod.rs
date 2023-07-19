@@ -13,6 +13,17 @@ impl<'mc> crate::JNIRaw<'mc> for SelectorComponentSerializer<'mc> {
     }
 }
 impl<'mc> SelectorComponentSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::bungee::bungee::chat::SelectorComponentSerializer<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let cls = &jni.find_class("net/md_5/bungee/chat/SelectorComponentSerializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::chat::SelectorComponentSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -122,6 +133,15 @@ impl<'mc> crate::JNIRaw<'mc> for TextComponentSerializer<'mc> {
     }
 }
 impl<'mc> TextComponentSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bungee::bungee::chat::TextComponentSerializer<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("net/md_5/bungee/chat/TextComponentSerializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::chat::TextComponentSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -231,6 +251,15 @@ impl<'mc> crate::JNIRaw<'mc> for BaseComponentSerializer<'mc> {
     }
 }
 impl<'mc> BaseComponentSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bungee::bungee::chat::BaseComponentSerializer<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("net/md_5/bungee/chat/BaseComponentSerializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::chat::BaseComponentSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -340,6 +369,17 @@ impl<'mc> crate::JNIRaw<'mc> for ScoreComponentSerializer<'mc> {
     }
 }
 impl<'mc> ScoreComponentSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::bungee::bungee::chat::ScoreComponentSerializer<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let cls = &jni.find_class("net/md_5/bungee/chat/ScoreComponentSerializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::chat::ScoreComponentSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -449,6 +489,17 @@ impl<'mc> crate::JNIRaw<'mc> for TranslatableComponentSerializer<'mc> {
     }
 }
 impl<'mc> TranslatableComponentSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::bungee::bungee::chat::TranslatableComponentSerializer<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let cls = &jni.find_class("net/md_5/bungee/chat/TranslatableComponentSerializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::chat::TranslatableComponentSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -558,6 +609,17 @@ impl<'mc> crate::JNIRaw<'mc> for KeybindComponentSerializer<'mc> {
     }
 }
 impl<'mc> KeybindComponentSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<
+        crate::bungee::bungee::chat::KeybindComponentSerializer<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let cls = &jni.find_class("net/md_5/bungee/chat/KeybindComponentSerializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::chat::KeybindComponentSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -789,6 +851,15 @@ impl<'mc> crate::JNIRaw<'mc> for ComponentSerializer<'mc> {
     }
 }
 impl<'mc> ComponentSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bungee::bungee::chat::ComponentSerializer<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("net/md_5/bungee/chat/ComponentSerializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::chat::ComponentSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

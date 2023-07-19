@@ -285,17 +285,20 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 print("Untranslated argument:\t\t"+type["type_name_alone"],"\t\t",type["type_name_original"])
                 return None
 
-def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at):
+def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at, is_constructor=False):
     if return_group["is_array"]:
         return None
     else:
         end_line = "?"
     code = []
     if static:
-        code.append("let cls = &jni.find_class(\""+return_group["type_name_original"].replace(".","/")+"\")"+end_line+"; let res ="+
-            prefix+".call_static_method(cls,"+
-                    "\""+method["original_name"]+"\",\""+
-                    java_call_signature_format(func_signature, return_group["type_name_original"])+"\",&["+
+        code.append("let cls = &jni.find_class(\""+return_group["type_name_original"].replace(".","/")+"\")"+end_line+";")
+        if is_constructor:
+            code.append("let res = "+prefix+".new_object(cls,")
+        else:
+            code.append("let res = "+prefix+".call_static_method(cls,\""+method["original_name"]+"\",")
+
+        code.append("\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\",&["+
                     ",".join(types)+
                     "])"+end_line+";")
     else:
@@ -369,9 +372,12 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
 
 
                 if static:
-                    code.append("let mut obj = res.l()"+end_line+";")
                     val_1 = "jni"
-                    val_2 = "obj"
+                    if is_constructor:
+                        val_2 = "res"
+                    else:
+                        code.append("let mut obj = res.l()"+end_line+";")
+                        val_2 = "obj"
                 else:
                     if is_trait:
                         val_1 = "self.jni_ref()"
@@ -408,14 +414,17 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     code.append("Ok("+return_val+")")
     return "\n".join(code)
 
-def java_call_signature_format(types, return_type):
+def java_call_signature_format(types, return_type, is_constructor=False):
     results = []
     for ty in types:
         results.append(java_letter_from_rust(ty["type_name_original"]))
-    return "("+"".join(results)+")"+java_letter_from_rust(return_type)
+    if is_constructor:
+        return "("+"".join(results)+")V"
+    else:
+        return "("+"".join(results)+")"+java_letter_from_rust(return_type)
 
-def java_type_to_rust(argname, ty, method, i, returning, library):
-    if method is not None:
+def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False):
+    if method is not None and not is_constructor:
         if returning:
             parameter_type = method["method"]["genericReturnType"]
         else:
@@ -667,12 +676,10 @@ def java_letter_from_rust(type):
 def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor):
     og_name = name
     impl_signature = []
-    if not is_trait:
-        impl_signature.append("impl<'mc> "+name+"<'mc> {")
 
-    if is_enum and not is_trait:
+    if is_enum and not is_trait and not is_constructor:
         for (v,val_proper) in variants:
-            impl_signature.append("pub const "+val_proper.upper()+": "+name+"Enum = "+name+"Enum::"+val_proper+";")
+            impl_signature.append("pub const "+v.upper()+": "+name+"Enum = "+name+"Enum::"+val_proper+";")
             
         impl_signature.append("pub fn from_string(str: String) -> std::option::Option<"+name+"Enum> {\nmatch str.as_str() {")
         for (v,val_proper) in variants:
@@ -680,7 +687,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         impl_signature.append("_ => None}}")
 
 
-    if not is_enum:
+    if not is_enum and not is_constructor:
         impl_signature.append("pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {")
         impl_signature.append(
                     "if obj.is_null() {\n"+
@@ -720,6 +727,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             mname = "new"
         else:
             mname = method["name"]
+            
         og_mname = mname
 
         # camel case to snake case
@@ -905,7 +913,11 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         if(not should_continue):
             continue
 
-        return_group = java_type_to_rust("", method["method"]["returnType"], method, i,True, library)
+        if is_constructor:
+            print(method)
+            return_group = java_type_to_rust("", method["method"]["name"], method, i, True, library, True)
+        else:
+            return_group = java_type_to_rust("", method["method"]["returnType"], method, i,True, library, False)
 
         if return_group is None:
             continue
@@ -927,7 +939,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             continue
 
         # execute the function.
-        m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at)
+        m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor)
         if m is None:
             continue
         code.append(m)
@@ -971,9 +983,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         else:
             impl_signature.append("{"+"\n".join(code)+"}")
 
-
-    if not is_trait:
-        impl_signature.append("}")
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
@@ -1069,9 +1078,13 @@ def parse_classes(library, val, classes):
         if "classes" in val:
             for cl in val["classes"]:
                 parse_classes(library, cl, classes)
-
+        
+        file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
+        
         if "methods" in val:
             parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False)
+
+        file_cache[mod_path].append("}")
 
     elif val["isInterface"]: # interface generation
         file_cache[mod_path].append(
@@ -1117,11 +1130,15 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("}")
 
-        #if "constructors" in val:
-        #    parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True)
+        file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
+
+        if "constructors" in val:
+            parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True)
 
         if "methods" in val:
             parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False)
+
+        file_cache[mod_path].append("}")
 
 
 # what we first want to do is collect any interfaces.

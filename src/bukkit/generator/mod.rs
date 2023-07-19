@@ -234,6 +234,14 @@ impl<'mc> BiomeProvider<'mc> {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
     }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/generator/BiomeProvider")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::generator::BiomeProvider(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -620,6 +628,14 @@ impl<'mc> BlockPopulator<'mc> {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
     }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::generator::BlockPopulator<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/generator/BlockPopulator")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::generator::BlockPopulator(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -903,6 +919,14 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(Self(env.clone(), unsafe {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
+    }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/generator/ChunkGenerator")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::generator::ChunkGenerator(jni, res) };
+        Ok(ret)
     }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,

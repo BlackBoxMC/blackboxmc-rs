@@ -13,6 +13,26 @@ impl<'mc> crate::JNIRaw<'mc> for MapFontCharacterSprite<'mc> {
     }
 }
 impl<'mc> MapFontCharacterSprite<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: i32,
+        _arg2: Vec<bool>,
+    ) -> Result<crate::bukkit::map::MapFontCharacterSprite<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let cls = &jni.find_class("org/bukkit/map/MapFont$CharacterSprite")?;
+        let res = jni.new_object(
+            cls,
+            "(IIZ)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::map::MapFontCharacterSprite(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -148,6 +168,14 @@ impl<'mc> crate::JNIRaw<'mc> for MapCursorCollection<'mc> {
     }
 }
 impl<'mc> MapCursorCollection<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::map::MapCursorCollection<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/map/MapCursorCollection")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::map::MapCursorCollection(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -586,6 +614,16 @@ impl<'mc> MapRenderer<'mc> {
         Ok(Self(env.clone(), unsafe {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
+    }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<bool>,
+    ) -> Result<crate::bukkit::map::MapRenderer<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/map/MapRenderer")?;
+        let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_0)])?;
+        let ret = { crate::bukkit::map::MapRenderer(jni, res) };
+        Ok(ret)
     }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
@@ -1095,6 +1133,14 @@ impl<'mc> crate::JNIRaw<'mc> for MapFont<'mc> {
     }
 }
 impl<'mc> MapFont<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::map::MapFont<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/map/MapFont")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::map::MapFont(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1263,6 +1309,14 @@ impl<'mc> crate::JNIRaw<'mc> for MinecraftFont<'mc> {
     }
 }
 impl<'mc> MinecraftFont<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::map::MinecraftFont<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/map/MinecraftFont")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::map::MinecraftFont(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

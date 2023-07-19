@@ -54,19 +54,19 @@ impl<'mc> crate::JNIRaw<'mc> for MushroomBlockTexture<'mc> {
     }
 }
 impl<'mc> MushroomBlockTexture<'mc> {
-    pub const ALLPORES: MushroomBlockTextureEnum = MushroomBlockTextureEnum::AllPores;
-    pub const CAPNORTHWEST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorthWest;
-    pub const CAPNORTH: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorth;
-    pub const CAPNORTHEAST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorthEast;
-    pub const CAPWEST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapWest;
-    pub const CAPTOP: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapTop;
-    pub const CAPEAST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapEast;
-    pub const CAPSOUTHWEST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapSouthWest;
-    pub const CAPSOUTH: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapSouth;
-    pub const CAPSOUTHEAST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapSouthEast;
-    pub const STEMSIDES: MushroomBlockTextureEnum = MushroomBlockTextureEnum::StemSides;
-    pub const ALLCAP: MushroomBlockTextureEnum = MushroomBlockTextureEnum::AllCap;
-    pub const ALLSTEM: MushroomBlockTextureEnum = MushroomBlockTextureEnum::AllStem;
+    pub const ALL_PORES: MushroomBlockTextureEnum = MushroomBlockTextureEnum::AllPores;
+    pub const CAP_NORTH_WEST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorthWest;
+    pub const CAP_NORTH: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorth;
+    pub const CAP_NORTH_EAST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorthEast;
+    pub const CAP_WEST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapWest;
+    pub const CAP_TOP: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapTop;
+    pub const CAP_EAST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapEast;
+    pub const CAP_SOUTH_WEST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapSouthWest;
+    pub const CAP_SOUTH: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapSouth;
+    pub const CAP_SOUTH_EAST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapSouthEast;
+    pub const STEM_SIDES: MushroomBlockTextureEnum = MushroomBlockTextureEnum::StemSides;
+    pub const ALL_CAP: MushroomBlockTextureEnum = MushroomBlockTextureEnum::AllCap;
+    pub const ALL_STEM: MushroomBlockTextureEnum = MushroomBlockTextureEnum::AllStem;
     pub fn from_string(str: String) -> std::option::Option<MushroomBlockTextureEnum> {
         match str.as_str() {
             "ALL_PORES" => Some(MushroomBlockTextureEnum::AllPores),

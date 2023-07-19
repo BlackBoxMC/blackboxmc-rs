@@ -319,6 +319,14 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
     }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::scheduler::BukkitRunnable<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/scheduler/BukkitRunnable")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::scheduler::BukkitRunnable(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

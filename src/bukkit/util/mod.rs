@@ -690,6 +690,26 @@ impl<'mc> crate::JNIRaw<'mc> for ChatPaginatorChatPage<'mc> {
     }
 }
 impl<'mc> ChatPaginatorChatPage<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        _arg0: Vec<String>,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::bukkit::util::ChatPaginatorChatPage<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Int(arg2.into());
+        let cls = &jni.find_class("org/bukkit/util/ChatPaginator$ChatPage")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;II)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::util::ChatPaginatorChatPage(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1006,6 +1026,37 @@ impl<'mc> crate::JNIRaw<'mc> for BoundingBox<'mc> {
     }
 }
 impl<'mc> BoundingBox<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
+        arg3: std::option::Option<f64>,
+        arg4: std::option::Option<f64>,
+        arg5: std::option::Option<f64>,
+    ) -> Result<crate::bukkit::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(arg3.unwrap().into());
+        let val_4 = jni::objects::JValueGen::Double(arg4.unwrap().into());
+        let val_5 = jni::objects::JValueGen::Double(arg5.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/util/BoundingBox")?;
+        let res = jni.new_object(
+            cls,
+            "(DDDDDD)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+            ],
+        )?;
+        let ret = { crate::bukkit::util::BoundingBox(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2064,6 +2115,28 @@ impl<'mc> crate::JNIRaw<'mc> for EulerAngle<'mc> {
     }
 }
 impl<'mc> EulerAngle<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<crate::bukkit::util::EulerAngle<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.into());
+        let cls = &jni.find_class("org/bukkit/util/EulerAngle")?;
+        let res = jni.new_object(
+            cls,
+            "(DDD)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::util::EulerAngle(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2294,6 +2367,14 @@ impl<'mc> crate::JNIRaw<'mc> for StringUtil<'mc> {
     }
 }
 impl<'mc> StringUtil<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::util::StringUtil<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/util/StringUtil")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::util::StringUtil(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2419,6 +2500,14 @@ impl<'mc> crate::JNIRaw<'mc> for ChatPaginator<'mc> {
     }
 }
 impl<'mc> ChatPaginator<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::util::ChatPaginator<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/util/ChatPaginator")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::util::ChatPaginator(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3239,6 +3328,14 @@ impl<'mc> crate::JNIRaw<'mc> for FileUtil<'mc> {
     }
 }
 impl<'mc> FileUtil<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::util::FileUtil<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/util/FileUtil")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::util::FileUtil(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

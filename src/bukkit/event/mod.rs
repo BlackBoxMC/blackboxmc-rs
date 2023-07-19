@@ -13,6 +13,14 @@ impl<'mc> crate::JNIRaw<'mc> for HandlerList<'mc> {
     }
 }
 impl<'mc> HandlerList<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::event::HandlerList(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -469,6 +477,16 @@ impl<'mc> crate::JNIRaw<'mc> for Event<'mc> {
     }
 }
 impl<'mc> Event<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<bool>,
+    ) -> Result<crate::bukkit::event::Event<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/event/Event")?;
+        let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_0)])?;
+        let ret = { crate::bukkit::event::Event(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

@@ -13,6 +13,28 @@ impl<'mc> crate::JNIRaw<'mc> for RemoteServerCommandEvent<'mc> {
     }
 }
 impl<'mc> RemoteServerCommandEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg1: String,
+    ) -> Result<
+        crate::bukkit::event::server::RemoteServerCommandEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let cls = &jni.find_class("org/bukkit/event/server/RemoteServerCommandEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::server::RemoteServerCommandEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -228,6 +250,21 @@ impl<'mc> crate::JNIRaw<'mc> for PluginEnableEvent<'mc> {
     }
 }
 impl<'mc> PluginEnableEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+    ) -> Result<crate::bukkit::event::server::PluginEnableEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/PluginEnableEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::PluginEnableEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -403,6 +440,26 @@ impl<'mc> crate::JNIRaw<'mc> for ServerCommandEvent<'mc> {
     }
 }
 impl<'mc> ServerCommandEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg1: String,
+    ) -> Result<crate::bukkit::event::server::ServerCommandEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let cls = &jni.find_class("org/bukkit/event/server/ServerCommandEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::server::ServerCommandEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -617,6 +674,21 @@ impl<'mc> crate::JNIRaw<'mc> for ServiceUnregisterEvent<'mc> {
     }
 }
 impl<'mc> ServiceUnregisterEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::RegisteredServiceProvider<'mc>,
+    ) -> Result<crate::bukkit::event::server::ServiceUnregisterEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/ServiceUnregisterEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/RegisteredServiceProvider;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::ServiceUnregisterEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -993,6 +1065,16 @@ impl<'mc> crate::JNIRaw<'mc> for ServerEvent<'mc> {
     }
 }
 impl<'mc> ServerEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<bool>,
+    ) -> Result<crate::bukkit::event::server::ServerEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/event/server/ServerEvent")?;
+        let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_0)])?;
+        let ret = { crate::bukkit::event::server::ServerEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1134,6 +1216,39 @@ impl<'mc> crate::JNIRaw<'mc> for TabCompleteEvent<'mc> {
     }
 }
 impl<'mc> TabCompleteEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::command::CommandSender<'mc>,
+        arg1: String,
+        arg2: Vec<String>,
+    ) -> Result<crate::bukkit::event::server::TabCompleteEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
+        for v in arg2 {
+            let map_val_0 = jni::objects::JObject::from(jni.new_string(v).unwrap());
+            jni.call_method(
+                &raw_val_2,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
+        let cls = &jni.find_class("org/bukkit/event/server/TabCompleteEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::server::TabCompleteEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1361,6 +1476,21 @@ impl<'mc> crate::JNIRaw<'mc> for PluginDisableEvent<'mc> {
     }
 }
 impl<'mc> PluginDisableEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+    ) -> Result<crate::bukkit::event::server::PluginDisableEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/PluginDisableEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::PluginDisableEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1536,6 +1666,21 @@ impl<'mc> crate::JNIRaw<'mc> for MapInitializeEvent<'mc> {
     }
 }
 impl<'mc> MapInitializeEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::map::MapView<'mc>,
+    ) -> Result<crate::bukkit::event::server::MapInitializeEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/MapInitializeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/map/MapView;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::MapInitializeEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1709,6 +1854,20 @@ impl<'mc> crate::JNIRaw<'mc> for ServiceEvent<'mc> {
     }
 }
 impl<'mc> ServiceEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::RegisteredServiceProvider<'mc>,
+    ) -> Result<crate::bukkit::event::server::ServiceEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/ServiceEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/RegisteredServiceProvider;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::ServiceEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2014,6 +2173,21 @@ impl<'mc> crate::JNIRaw<'mc> for ServerLoadEvent<'mc> {
     }
 }
 impl<'mc> ServerLoadEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::event::server::ServerLoadEventLoadType<'mc>,
+    ) -> Result<crate::bukkit::event::server::ServerLoadEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/ServerLoadEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/event/server/ServerLoadEvent$LoadType;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::ServerLoadEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2192,6 +2366,21 @@ impl<'mc> crate::JNIRaw<'mc> for ServiceRegisterEvent<'mc> {
     }
 }
 impl<'mc> ServiceRegisterEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::RegisteredServiceProvider<'mc>,
+    ) -> Result<crate::bukkit::event::server::ServiceRegisterEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/ServiceRegisterEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/RegisteredServiceProvider;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::ServiceRegisterEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2368,6 +2557,20 @@ impl<'mc> crate::JNIRaw<'mc> for PluginEvent<'mc> {
     }
 }
 impl<'mc> PluginEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+    ) -> Result<crate::bukkit::event::server::PluginEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/server/PluginEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::server::PluginEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

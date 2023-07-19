@@ -830,6 +830,14 @@ impl<'mc> NoiseGenerator<'mc> {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
     }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::util::noise::NoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/util/noise/NoiseGenerator")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::util::noise::NoiseGenerator(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

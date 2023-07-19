@@ -524,6 +524,24 @@ impl<'mc> crate::JNIRaw<'mc> for RegisteredServiceProvider<'mc> {
     }
 }
 impl<'mc> RegisteredServiceProvider<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: jni::objects::JClass<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: crate::bukkit::plugin::ServicePriority<'mc>,
+        arg3: crate::bukkit::plugin::Plugin<'mc>,
+    ) -> Result<crate::bukkit::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = arg0;
+        let val_1 = arg1;
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/plugin/RegisteredServiceProvider")?;
+        let res = jni.new_object(cls,
+"(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::plugin::RegisteredServiceProvider(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1141,6 +1159,14 @@ impl<'mc> PluginBase<'mc> {
             jni::objects::JObject::from_raw(obj.l()?.clone())
         }))
     }
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::plugin::PluginBase<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/plugin/PluginBase")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::plugin::PluginBase(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1645,6 +1671,14 @@ impl<'mc> crate::JNIRaw<'mc> for SimpleServicesManager<'mc> {
     }
 }
 impl<'mc> SimpleServicesManager<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::plugin::SimpleServicesManager<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/plugin/SimpleServicesManager")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::plugin::SimpleServicesManager(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1826,6 +1860,26 @@ impl<'mc> crate::JNIRaw<'mc> for TimedRegisteredListener<'mc> {
     }
 }
 impl<'mc> TimedRegisteredListener<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::event::Listener<'mc>,
+        arg1: crate::bukkit::plugin::EventExecutor<'mc>,
+        arg2: crate::bukkit::event::EventPriority<'mc>,
+        arg3: crate::bukkit::plugin::Plugin<'mc>,
+        arg4: bool,
+    ) -> Result<crate::bukkit::plugin::TimedRegisteredListener<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = jni::objects::JValueGen::Bool(arg4.into());
+        let cls = &jni.find_class("org/bukkit/plugin/TimedRegisteredListener")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        let ret = { crate::bukkit::plugin::TimedRegisteredListener(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2130,6 +2184,25 @@ impl<'mc> crate::JNIRaw<'mc> for RegisteredListener<'mc> {
     }
 }
 impl<'mc> RegisteredListener<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::event::Listener<'mc>,
+        arg1: crate::bukkit::plugin::EventExecutor<'mc>,
+        arg2: crate::bukkit::event::EventPriority<'mc>,
+        arg3: crate::bukkit::plugin::Plugin<'mc>,
+        arg4: bool,
+    ) -> Result<crate::bukkit::plugin::RegisteredListener<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = jni::objects::JValueGen::Bool(arg4.into());
+        let cls = &jni.find_class("org/bukkit/plugin/RegisteredListener")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        let ret = { crate::bukkit::plugin::RegisteredListener(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

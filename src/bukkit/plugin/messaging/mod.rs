@@ -148,6 +148,27 @@ impl<'mc> crate::JNIRaw<'mc> for PluginMessageListenerRegistration<'mc> {
     }
 }
 impl<'mc> PluginMessageListenerRegistration<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::messaging::Messenger<'mc>,
+        arg1: crate::bukkit::plugin::Plugin<'mc>,
+        arg2: String,
+        arg3: crate::bukkit::plugin::messaging::PluginMessageListener<'mc>,
+    ) -> Result<
+        crate::bukkit::plugin::messaging::PluginMessageListenerRegistration<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg2).unwrap());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let cls =
+            &jni.find_class("org/bukkit/plugin/messaging/PluginMessageListenerRegistration")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::plugin::messaging::PluginMessageListenerRegistration(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -500,6 +521,15 @@ impl<'mc> crate::JNIRaw<'mc> for StandardMessenger<'mc> {
     }
 }
 impl<'mc> StandardMessenger<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::plugin::messaging::StandardMessenger<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/plugin/messaging/StandardMessenger")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::plugin::messaging::StandardMessenger(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -717,7 +747,8 @@ self.jni_ref().call_method(&self.jni_object(),"registerIncomingPluginChannel","(
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
         let val_2 = jni::objects::JObject::from(jni.new_string(arg2).unwrap());
         let cls = &jni.find_class("void")?;
-        let _res =jni.call_static_method(cls,"validatePluginMessage","(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;B)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let _res = jni.call_static_method(cls,"validatePluginMessage",
+"(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;B)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(())
     }
     pub fn wait(

@@ -13,6 +13,21 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleUpdateEvent<'mc> {
     }
 }
 impl<'mc> VehicleUpdateEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleUpdateEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleUpdateEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleUpdateEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -188,6 +203,26 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleEnterEvent<'mc> {
     }
 }
 impl<'mc> VehicleEnterEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+        arg1: crate::bukkit::entity::Entity<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleEnterEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleEnterEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleEnterEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -395,6 +430,28 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleEntityCollisionEvent<'mc> {
     }
 }
 impl<'mc> VehicleEntityCollisionEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+        arg1: crate::bukkit::entity::Entity<'mc>,
+    ) -> Result<
+        crate::bukkit::event::vehicle::VehicleEntityCollisionEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleEntityCollisionEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleEntityCollisionEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -638,6 +695,26 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleExitEvent<'mc> {
     }
 }
 impl<'mc> VehicleExitEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+        arg1: crate::bukkit::entity::LivingEntity<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleExitEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleExitEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/LivingEntity;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleExitEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -845,6 +922,21 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleCollisionEvent<'mc> {
     }
 }
 impl<'mc> VehicleCollisionEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleCollisionEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleCollisionEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleCollisionEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1005,6 +1097,28 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleBlockCollisionEvent<'mc> {
     }
 }
 impl<'mc> VehicleBlockCollisionEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+        arg1: crate::bukkit::block::Block<'mc>,
+    ) -> Result<
+        crate::bukkit::event::vehicle::VehicleBlockCollisionEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleBlockCollisionEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/block/Block;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleBlockCollisionEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1197,6 +1311,21 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleCreateEvent<'mc> {
     }
 }
 impl<'mc> VehicleCreateEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleCreateEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleCreateEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleCreateEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1388,6 +1517,29 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleMoveEvent<'mc> {
     }
 }
 impl<'mc> VehicleMoveEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+        arg1: crate::bukkit::Location<'mc>,
+        arg2: crate::bukkit::Location<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleMoveEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleMoveEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/Location;Lorg/bukkit/Location;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleMoveEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1591,6 +1743,26 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleDestroyEvent<'mc> {
     }
 }
 impl<'mc> VehicleDestroyEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+        arg1: crate::bukkit::entity::Entity<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleDestroyEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleDestroyEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleDestroyEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1798,6 +1970,29 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleDamageEvent<'mc> {
     }
 }
 impl<'mc> VehicleDamageEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+        arg1: crate::bukkit::entity::Entity<'mc>,
+        arg2: f64,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleDamageEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = jni::objects::JValueGen::Double(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleDamageEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;D)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleDamageEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2021,6 +2216,20 @@ impl<'mc> crate::JNIRaw<'mc> for VehicleEvent<'mc> {
     }
 }
 impl<'mc> VehicleEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Vehicle<'mc>,
+    ) -> Result<crate::bukkit::event::vehicle::VehicleEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/entity/Vehicle;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::event::vehicle::VehicleEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

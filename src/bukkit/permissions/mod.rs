@@ -69,6 +69,20 @@ impl<'mc> crate::JNIRaw<'mc> for PermissibleBase<'mc> {
     }
 }
 impl<'mc> PermissibleBase<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::permissions::ServerOperator<'mc>,
+    ) -> Result<crate::bukkit::permissions::PermissibleBase<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/permissions/PermissibleBase")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/permissions/ServerOperator;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::permissions::PermissibleBase(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -239,10 +253,10 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionDefault<'mc> {
     }
 }
 impl<'mc> PermissionDefault<'mc> {
-    pub const VARIANTTRUE: PermissionDefaultEnum = PermissionDefaultEnum::VariantTrue;
-    pub const VARIANTFALSE: PermissionDefaultEnum = PermissionDefaultEnum::VariantFalse;
+    pub const TRUE: PermissionDefaultEnum = PermissionDefaultEnum::VariantTrue;
+    pub const FALSE: PermissionDefaultEnum = PermissionDefaultEnum::VariantFalse;
     pub const OP: PermissionDefaultEnum = PermissionDefaultEnum::Op;
-    pub const NOTOP: PermissionDefaultEnum = PermissionDefaultEnum::NotOp;
+    pub const NOT_OP: PermissionDefaultEnum = PermissionDefaultEnum::NotOp;
     pub fn from_string(str: String) -> std::option::Option<PermissionDefaultEnum> {
         match str.as_str() {
             "TRUE" => Some(PermissionDefaultEnum::VariantTrue),
@@ -608,6 +622,24 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
     }
 }
 impl<'mc> PermissionAttachmentInfo<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::permissions::Permissible<'mc>,
+        arg1: String,
+        arg2: crate::bukkit::permissions::PermissionAttachment<'mc>,
+        arg3: bool,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachmentInfo<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = jni::objects::JValueGen::Bool(arg3.into());
+        let cls = &jni.find_class("org/bukkit/permissions/PermissionAttachmentInfo")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/permissions/Permissible;Ljava/lang/String;Lorg/bukkit/permissions/PermissionAttachment;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let ret = { crate::bukkit::permissions::PermissionAttachmentInfo(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -769,6 +801,26 @@ impl<'mc> crate::JNIRaw<'mc> for PermissionAttachment<'mc> {
     }
 }
 impl<'mc> PermissionAttachment<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::plugin::Plugin<'mc>,
+        arg1: crate::bukkit::permissions::Permissible<'mc>,
+    ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/permissions/PermissionAttachment")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/plugin/Plugin;Lorg/bukkit/permissions/Permissible;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::permissions::PermissionAttachment(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

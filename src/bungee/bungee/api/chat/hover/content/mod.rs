@@ -10,6 +10,20 @@ impl<'mc> crate::JNIRaw<'mc> for Item<'mc> {
     }
 }
 impl<'mc> Item<'mc> {
+	pub fn new(jni: crate::SharedJNIEnv<'mc>,arg0: String,arg1: i32,arg2: crate::bungee::bungee::api::chat::ItemTag<'mc>) 
+-> Result<crate::bungee::bungee::api::chat::hover::content::Item<'mc>, Box<dyn std::error::Error>>
+
+{let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+let val_1 = jni::objects::JValueGen::Int(arg1.into());
+let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone())};
+let cls = &jni.find_class("net/md_5/bungee/api/chat/hover/content/Item")?;
+let res = jni.new_object(cls,
+"(Ljava/lang/String;ILnet/md_5/bungee/api/chat/ItemTag;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+let ret = {
+crate::bungee::bungee::api::chat::hover::content::Item(jni,res
+)
+};
+Ok(ret)}
 pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {
 if obj.is_null() {
     return Err(eyre::eyre!(
@@ -143,6 +157,20 @@ impl<'mc> crate::JNIRaw<'mc> for Entity<'mc> {
     }
 }
 impl<'mc> Entity<'mc> {
+	pub fn new(jni: crate::SharedJNIEnv<'mc>,arg0: String,arg1: String,arg2: crate::bungee::bungee::api::chat::BaseComponent<'mc>) 
+-> Result<crate::bungee::bungee::api::chat::hover::content::Entity<'mc>, Box<dyn std::error::Error>>
+
+{let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone())};
+let cls = &jni.find_class("net/md_5/bungee/api/chat/hover/content/Entity")?;
+let res = jni.new_object(cls,
+"(Ljava/lang/String;Ljava/lang/String;Lnet/md_5/bungee/api/chat/BaseComponent;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+let ret = {
+crate::bungee::bungee::api::chat::hover::content::Entity(jni,res
+)
+};
+Ok(ret)}
 pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {
 if obj.is_null() {
     return Err(eyre::eyre!(
@@ -276,6 +304,17 @@ impl<'mc> crate::JNIRaw<'mc> for ItemSerializer<'mc> {
     }
 }
 impl<'mc> ItemSerializer<'mc> {
+	pub fn new(jni: crate::SharedJNIEnv<'mc>) 
+-> Result<crate::bungee::bungee::api::chat::hover::content::ItemSerializer<'mc>, Box<dyn std::error::Error>>
+
+{let cls = &jni.find_class("net/md_5/bungee/api/chat/hover/content/ItemSerializer")?;
+let res = jni.new_object(cls,
+"()V",&[])?;
+let ret = {
+crate::bungee::bungee::api::chat::hover::content::ItemSerializer(jni,res
+)
+};
+Ok(ret)}
 pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {
 if obj.is_null() {
     return Err(eyre::eyre!(
@@ -353,6 +392,17 @@ impl<'mc> crate::JNIRaw<'mc> for TextSerializer<'mc> {
     }
 }
 impl<'mc> TextSerializer<'mc> {
+	pub fn new(jni: crate::SharedJNIEnv<'mc>) 
+-> Result<crate::bungee::bungee::api::chat::hover::content::TextSerializer<'mc>, Box<dyn std::error::Error>>
+
+{let cls = &jni.find_class("net/md_5/bungee/api/chat/hover/content/TextSerializer")?;
+let res = jni.new_object(cls,
+"()V",&[])?;
+let ret = {
+crate::bungee::bungee::api::chat::hover::content::TextSerializer(jni,res
+)
+};
+Ok(ret)}
 pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {
 if obj.is_null() {
     return Err(eyre::eyre!(
@@ -430,6 +480,17 @@ impl<'mc> crate::JNIRaw<'mc> for Content<'mc> {
     }
 }
 impl<'mc> Content<'mc> {
+	pub fn new(jni: crate::SharedJNIEnv<'mc>) 
+-> Result<crate::bungee::bungee::api::chat::hover::content::Content<'mc>, Box<dyn std::error::Error>>
+
+{let cls = &jni.find_class("net/md_5/bungee/api/chat/hover/content/Content")?;
+let res = jni.new_object(cls,
+"()V",&[])?;
+let ret = {
+crate::bungee::bungee::api::chat::hover::content::Content(jni,res
+)
+};
+Ok(ret)}
 pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {
 if obj.is_null() {
     return Err(eyre::eyre!(
@@ -622,6 +683,17 @@ impl<'mc> crate::JNIRaw<'mc> for EntitySerializer<'mc> {
     }
 }
 impl<'mc> EntitySerializer<'mc> {
+	pub fn new(jni: crate::SharedJNIEnv<'mc>) 
+-> Result<crate::bungee::bungee::api::chat::hover::content::EntitySerializer<'mc>, Box<dyn std::error::Error>>
+
+{let cls = &jni.find_class("net/md_5/bungee/api/chat/hover/content/EntitySerializer")?;
+let res = jni.new_object(cls,
+"()V",&[])?;
+let ret = {
+crate::bungee::bungee::api::chat::hover::content::EntitySerializer(jni,res
+)
+};
+Ok(ret)}
 pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {
 if obj.is_null() {
     return Err(eyre::eyre!(

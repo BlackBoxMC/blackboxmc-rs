@@ -8800,6 +8800,15 @@ impl<'mc> crate::JNIRaw<'mc> for BookMetaSpigot<'mc> {
     }
 }
 impl<'mc> BookMetaSpigot<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::inventory::meta::BookMetaSpigot<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/inventory/meta/BookMeta$Spigot")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::inventory::meta::BookMetaSpigot(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

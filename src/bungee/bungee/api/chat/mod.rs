@@ -823,6 +823,15 @@ impl<'mc> crate::JNIRaw<'mc> for BaseComponent<'mc> {
     }
 }
 impl<'mc> BaseComponent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bungee::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("net/md_5/bungee/api/chat/BaseComponent")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::api::chat::BaseComponent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2532,6 +2541,25 @@ impl<'mc> crate::JNIRaw<'mc> for ClickEvent<'mc> {
     }
 }
 impl<'mc> ClickEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bungee::bungee::api::chat::ClickEventAction<'mc>,
+        arg1: String,
+    ) -> Result<crate::bungee::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let cls = &jni.find_class("net/md_5/bungee/api/chat/ClickEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lnet/md_5/bungee/api/chat/ClickEvent$Action;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bungee::bungee::api::chat::ClickEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2683,6 +2711,15 @@ impl<'mc> crate::JNIRaw<'mc> for ItemTagSerializer<'mc> {
     }
 }
 impl<'mc> ItemTagSerializer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bungee::bungee::api::chat::ItemTagSerializer<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("net/md_5/bungee/api/chat/ItemTag$Serializer")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bungee::bungee::api::chat::ItemTagSerializer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

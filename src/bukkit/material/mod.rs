@@ -690,6 +690,25 @@ impl<'mc> crate::JNIRaw<'mc> for FlowerPot<'mc> {
     }
 }
 impl<'mc> FlowerPot<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::FlowerPot<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/FlowerPot")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::FlowerPot(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -892,6 +911,25 @@ impl<'mc> crate::JNIRaw<'mc> for PoweredRail<'mc> {
     }
 }
 impl<'mc> PoweredRail<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::PoweredRail<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/PoweredRail")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::PoweredRail(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1743,6 +1781,25 @@ impl<'mc> crate::JNIRaw<'mc> for Torch<'mc> {
     }
 }
 impl<'mc> Torch<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Torch<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Torch")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Torch(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2244,6 +2301,25 @@ impl<'mc> crate::JNIRaw<'mc> for Button<'mc> {
     }
 }
 impl<'mc> Button<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Button<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Button")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Button(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3050,6 +3126,25 @@ impl<'mc> crate::JNIRaw<'mc> for PistonBaseMaterial<'mc> {
     }
 }
 impl<'mc> PistonBaseMaterial<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::PistonBaseMaterial<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/PistonBaseMaterial")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::PistonBaseMaterial(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -3297,6 +3392,25 @@ impl<'mc> crate::JNIRaw<'mc> for TrapDoor<'mc> {
     }
 }
 impl<'mc> TrapDoor<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::TrapDoor<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/TrapDoor")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::TrapDoor(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4003,6 +4117,25 @@ impl<'mc> crate::JNIRaw<'mc> for MonsterEggs<'mc> {
     }
 }
 impl<'mc> MonsterEggs<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::MonsterEggs<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/MonsterEggs")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::MonsterEggs(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4447,6 +4580,25 @@ impl<'mc> crate::JNIRaw<'mc> for Rails<'mc> {
     }
 }
 impl<'mc> Rails<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Rails<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Rails")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Rails(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -4963,6 +5115,26 @@ impl<'mc> crate::JNIRaw<'mc> for PistonExtensionMaterial<'mc> {
     }
 }
 impl<'mc> PistonExtensionMaterial<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::PistonExtensionMaterial<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/PistonExtensionMaterial")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::PistonExtensionMaterial(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5233,6 +5405,25 @@ impl<'mc> crate::JNIRaw<'mc> for Lever<'mc> {
     }
 }
 impl<'mc> Lever<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Lever<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Lever")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Lever(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5499,6 +5690,26 @@ impl<'mc> crate::JNIRaw<'mc> for DirectionalContainer<'mc> {
     }
 }
 impl<'mc> DirectionalContainer<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::DirectionalContainer<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/DirectionalContainer")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::DirectionalContainer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -5947,6 +6158,25 @@ impl<'mc> crate::JNIRaw<'mc> for MaterialData<'mc> {
     }
 }
 impl<'mc> MaterialData<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/MaterialData")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::MaterialData(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6343,6 +6573,25 @@ impl<'mc> crate::JNIRaw<'mc> for Tripwire<'mc> {
     }
 }
 impl<'mc> Tripwire<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Tripwire<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Tripwire")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Tripwire(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -6548,6 +6797,25 @@ impl<'mc> crate::JNIRaw<'mc> for TexturedMaterial<'mc> {
     }
 }
 impl<'mc> TexturedMaterial<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::TexturedMaterial<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/TexturedMaterial")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::TexturedMaterial(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7040,6 +7308,25 @@ impl<'mc> crate::JNIRaw<'mc> for Cake<'mc> {
     }
 }
 impl<'mc> Cake<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Cake<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Cake")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Cake(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7484,6 +7771,25 @@ impl<'mc> crate::JNIRaw<'mc> for Step<'mc> {
     }
 }
 impl<'mc> Step<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Step<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Step")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Step(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -7721,6 +8027,25 @@ impl<'mc> crate::JNIRaw<'mc> for SmoothBrick<'mc> {
     }
 }
 impl<'mc> SmoothBrick<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::SmoothBrick<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/SmoothBrick")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::SmoothBrick(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -8418,6 +8743,25 @@ impl<'mc> crate::JNIRaw<'mc> for PressurePlate<'mc> {
     }
 }
 impl<'mc> PressurePlate<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::PressurePlate<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/PressurePlate")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::PressurePlate(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -8826,6 +9170,25 @@ impl<'mc> crate::JNIRaw<'mc> for Stairs<'mc> {
     }
 }
 impl<'mc> Stairs<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Stairs<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Stairs")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Stairs(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -9555,6 +9918,25 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceAndDispenser<'mc> {
     }
 }
 impl<'mc> FurnaceAndDispenser<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::FurnaceAndDispenser<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/FurnaceAndDispenser")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::FurnaceAndDispenser(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -10019,6 +10401,25 @@ impl<'mc> crate::JNIRaw<'mc> for RedstoneWire<'mc> {
     }
 }
 impl<'mc> RedstoneWire<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::RedstoneWire<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/RedstoneWire")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::RedstoneWire(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -10892,6 +11293,25 @@ impl<'mc> crate::JNIRaw<'mc> for Banner<'mc> {
     }
 }
 impl<'mc> Banner<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Banner<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Banner")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Banner(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -11395,6 +11815,25 @@ impl<'mc> crate::JNIRaw<'mc> for RedstoneTorch<'mc> {
     }
 }
 impl<'mc> RedstoneTorch<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::RedstoneTorch<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/RedstoneTorch")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::RedstoneTorch(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -12462,6 +12901,25 @@ impl<'mc> crate::JNIRaw<'mc> for ExtendedRails<'mc> {
     }
 }
 impl<'mc> ExtendedRails<'mc> {
+    pub fn new_with_material(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::ExtendedRails<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/ExtendedRails")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::ExtendedRails(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -12887,6 +13345,25 @@ impl<'mc> crate::JNIRaw<'mc> for Ladder<'mc> {
     }
 }
 impl<'mc> Ladder<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Ladder<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Ladder")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Ladder(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -13137,6 +13614,25 @@ impl<'mc> crate::JNIRaw<'mc> for Command<'mc> {
     }
 }
 impl<'mc> Command<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Command<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Command")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Command(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -13326,6 +13822,25 @@ impl<'mc> crate::JNIRaw<'mc> for DetectorRail<'mc> {
     }
 }
 impl<'mc> DetectorRail<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::DetectorRail<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/DetectorRail")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::DetectorRail(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -14030,6 +14545,25 @@ impl<'mc> crate::JNIRaw<'mc> for Sign<'mc> {
     }
 }
 impl<'mc> Sign<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::Material<'mc>>,
+        arg1: std::option::Option<i8>,
+    ) -> Result<crate::bukkit::material::Sign<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Byte(arg1.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/material/Sign")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Material;B)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let ret = { crate::bukkit::material::Sign(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

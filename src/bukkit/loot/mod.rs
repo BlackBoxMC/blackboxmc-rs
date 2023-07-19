@@ -511,56 +511,56 @@ impl<'mc> crate::JNIRaw<'mc> for LootTables<'mc> {
 }
 impl<'mc> LootTables<'mc> {
     pub const EMPTY: LootTablesEnum = LootTablesEnum::Empty;
-    pub const ABANDONEDMINESHAFT: LootTablesEnum = LootTablesEnum::AbandonedMineshaft;
-    pub const BURIEDTREASURE: LootTablesEnum = LootTablesEnum::BuriedTreasure;
-    pub const DESERTPYRAMID: LootTablesEnum = LootTablesEnum::DesertPyramid;
-    pub const ENDCITYTREASURE: LootTablesEnum = LootTablesEnum::EndCityTreasure;
-    pub const IGLOOCHEST: LootTablesEnum = LootTablesEnum::IglooChest;
-    pub const JUNGLETEMPLE: LootTablesEnum = LootTablesEnum::JungleTemple;
-    pub const JUNGLETEMPLEDISPENSER: LootTablesEnum = LootTablesEnum::JungleTempleDispenser;
-    pub const NETHERBRIDGE: LootTablesEnum = LootTablesEnum::NetherBridge;
-    pub const PILLAGEROUTPOST: LootTablesEnum = LootTablesEnum::PillagerOutpost;
-    pub const BASTIONTREASURE: LootTablesEnum = LootTablesEnum::BastionTreasure;
-    pub const BASTIONOTHER: LootTablesEnum = LootTablesEnum::BastionOther;
-    pub const BASTIONBRIDGE: LootTablesEnum = LootTablesEnum::BastionBridge;
-    pub const BASTIONHOGLINSTABLE: LootTablesEnum = LootTablesEnum::BastionHoglinStable;
-    pub const ANCIENTCITY: LootTablesEnum = LootTablesEnum::AncientCity;
-    pub const ANCIENTCITYICEBOX: LootTablesEnum = LootTablesEnum::AncientCityIceBox;
-    pub const RUINEDPORTAL: LootTablesEnum = LootTablesEnum::RuinedPortal;
-    pub const SHIPWRECKMAP: LootTablesEnum = LootTablesEnum::ShipwreckMap;
-    pub const SHIPWRECKSUPPLY: LootTablesEnum = LootTablesEnum::ShipwreckSupply;
-    pub const SHIPWRECKTREASURE: LootTablesEnum = LootTablesEnum::ShipwreckTreasure;
-    pub const SIMPLEDUNGEON: LootTablesEnum = LootTablesEnum::SimpleDungeon;
-    pub const SPAWNBONUSCHEST: LootTablesEnum = LootTablesEnum::SpawnBonusChest;
-    pub const STRONGHOLDCORRIDOR: LootTablesEnum = LootTablesEnum::StrongholdCorridor;
-    pub const STRONGHOLDCROSSING: LootTablesEnum = LootTablesEnum::StrongholdCrossing;
-    pub const STRONGHOLDLIBRARY: LootTablesEnum = LootTablesEnum::StrongholdLibrary;
-    pub const UNDERWATERRUINBIG: LootTablesEnum = LootTablesEnum::UnderwaterRuinBig;
-    pub const UNDERWATERRUINSMALL: LootTablesEnum = LootTablesEnum::UnderwaterRuinSmall;
-    pub const VILLAGEARMORER: LootTablesEnum = LootTablesEnum::VillageArmorer;
-    pub const VILLAGEBUTCHER: LootTablesEnum = LootTablesEnum::VillageButcher;
-    pub const VILLAGECARTOGRAPHER: LootTablesEnum = LootTablesEnum::VillageCartographer;
-    pub const VILLAGEDESERTHOUSE: LootTablesEnum = LootTablesEnum::VillageDesertHouse;
-    pub const VILLAGEFISHER: LootTablesEnum = LootTablesEnum::VillageFisher;
-    pub const VILLAGEFLETCHER: LootTablesEnum = LootTablesEnum::VillageFletcher;
-    pub const VILLAGEMASON: LootTablesEnum = LootTablesEnum::VillageMason;
-    pub const VILLAGEPLAINSHOUSE: LootTablesEnum = LootTablesEnum::VillagePlainsHouse;
-    pub const VILLAGESAVANNAHOUSE: LootTablesEnum = LootTablesEnum::VillageSavannaHouse;
-    pub const VILLAGESHEPHERD: LootTablesEnum = LootTablesEnum::VillageShepherd;
-    pub const VILLAGESNOWYHOUSE: LootTablesEnum = LootTablesEnum::VillageSnowyHouse;
-    pub const VILLAGETAIGAHOUSE: LootTablesEnum = LootTablesEnum::VillageTaigaHouse;
-    pub const VILLAGETANNERY: LootTablesEnum = LootTablesEnum::VillageTannery;
-    pub const VILLAGETEMPLE: LootTablesEnum = LootTablesEnum::VillageTemple;
-    pub const VILLAGETOOLSMITH: LootTablesEnum = LootTablesEnum::VillageToolsmith;
-    pub const VILLAGEWEAPONSMITH: LootTablesEnum = LootTablesEnum::VillageWeaponsmith;
-    pub const WOODLANDMANSION: LootTablesEnum = LootTablesEnum::WoodlandMansion;
-    pub const ARMORSTAND: LootTablesEnum = LootTablesEnum::ArmorStand;
+    pub const ABANDONED_MINESHAFT: LootTablesEnum = LootTablesEnum::AbandonedMineshaft;
+    pub const BURIED_TREASURE: LootTablesEnum = LootTablesEnum::BuriedTreasure;
+    pub const DESERT_PYRAMID: LootTablesEnum = LootTablesEnum::DesertPyramid;
+    pub const END_CITY_TREASURE: LootTablesEnum = LootTablesEnum::EndCityTreasure;
+    pub const IGLOO_CHEST: LootTablesEnum = LootTablesEnum::IglooChest;
+    pub const JUNGLE_TEMPLE: LootTablesEnum = LootTablesEnum::JungleTemple;
+    pub const JUNGLE_TEMPLE_DISPENSER: LootTablesEnum = LootTablesEnum::JungleTempleDispenser;
+    pub const NETHER_BRIDGE: LootTablesEnum = LootTablesEnum::NetherBridge;
+    pub const PILLAGER_OUTPOST: LootTablesEnum = LootTablesEnum::PillagerOutpost;
+    pub const BASTION_TREASURE: LootTablesEnum = LootTablesEnum::BastionTreasure;
+    pub const BASTION_OTHER: LootTablesEnum = LootTablesEnum::BastionOther;
+    pub const BASTION_BRIDGE: LootTablesEnum = LootTablesEnum::BastionBridge;
+    pub const BASTION_HOGLIN_STABLE: LootTablesEnum = LootTablesEnum::BastionHoglinStable;
+    pub const ANCIENT_CITY: LootTablesEnum = LootTablesEnum::AncientCity;
+    pub const ANCIENT_CITY_ICE_BOX: LootTablesEnum = LootTablesEnum::AncientCityIceBox;
+    pub const RUINED_PORTAL: LootTablesEnum = LootTablesEnum::RuinedPortal;
+    pub const SHIPWRECK_MAP: LootTablesEnum = LootTablesEnum::ShipwreckMap;
+    pub const SHIPWRECK_SUPPLY: LootTablesEnum = LootTablesEnum::ShipwreckSupply;
+    pub const SHIPWRECK_TREASURE: LootTablesEnum = LootTablesEnum::ShipwreckTreasure;
+    pub const SIMPLE_DUNGEON: LootTablesEnum = LootTablesEnum::SimpleDungeon;
+    pub const SPAWN_BONUS_CHEST: LootTablesEnum = LootTablesEnum::SpawnBonusChest;
+    pub const STRONGHOLD_CORRIDOR: LootTablesEnum = LootTablesEnum::StrongholdCorridor;
+    pub const STRONGHOLD_CROSSING: LootTablesEnum = LootTablesEnum::StrongholdCrossing;
+    pub const STRONGHOLD_LIBRARY: LootTablesEnum = LootTablesEnum::StrongholdLibrary;
+    pub const UNDERWATER_RUIN_BIG: LootTablesEnum = LootTablesEnum::UnderwaterRuinBig;
+    pub const UNDERWATER_RUIN_SMALL: LootTablesEnum = LootTablesEnum::UnderwaterRuinSmall;
+    pub const VILLAGE_ARMORER: LootTablesEnum = LootTablesEnum::VillageArmorer;
+    pub const VILLAGE_BUTCHER: LootTablesEnum = LootTablesEnum::VillageButcher;
+    pub const VILLAGE_CARTOGRAPHER: LootTablesEnum = LootTablesEnum::VillageCartographer;
+    pub const VILLAGE_DESERT_HOUSE: LootTablesEnum = LootTablesEnum::VillageDesertHouse;
+    pub const VILLAGE_FISHER: LootTablesEnum = LootTablesEnum::VillageFisher;
+    pub const VILLAGE_FLETCHER: LootTablesEnum = LootTablesEnum::VillageFletcher;
+    pub const VILLAGE_MASON: LootTablesEnum = LootTablesEnum::VillageMason;
+    pub const VILLAGE_PLAINS_HOUSE: LootTablesEnum = LootTablesEnum::VillagePlainsHouse;
+    pub const VILLAGE_SAVANNA_HOUSE: LootTablesEnum = LootTablesEnum::VillageSavannaHouse;
+    pub const VILLAGE_SHEPHERD: LootTablesEnum = LootTablesEnum::VillageShepherd;
+    pub const VILLAGE_SNOWY_HOUSE: LootTablesEnum = LootTablesEnum::VillageSnowyHouse;
+    pub const VILLAGE_TAIGA_HOUSE: LootTablesEnum = LootTablesEnum::VillageTaigaHouse;
+    pub const VILLAGE_TANNERY: LootTablesEnum = LootTablesEnum::VillageTannery;
+    pub const VILLAGE_TEMPLE: LootTablesEnum = LootTablesEnum::VillageTemple;
+    pub const VILLAGE_TOOLSMITH: LootTablesEnum = LootTablesEnum::VillageToolsmith;
+    pub const VILLAGE_WEAPONSMITH: LootTablesEnum = LootTablesEnum::VillageWeaponsmith;
+    pub const WOODLAND_MANSION: LootTablesEnum = LootTablesEnum::WoodlandMansion;
+    pub const ARMOR_STAND: LootTablesEnum = LootTablesEnum::ArmorStand;
     pub const AXOLOTL: LootTablesEnum = LootTablesEnum::Axolotl;
     pub const BAT: LootTablesEnum = LootTablesEnum::Bat;
     pub const BEE: LootTablesEnum = LootTablesEnum::Bee;
     pub const BLAZE: LootTablesEnum = LootTablesEnum::Blaze;
     pub const CAT: LootTablesEnum = LootTablesEnum::Cat;
-    pub const CAVESPIDER: LootTablesEnum = LootTablesEnum::CaveSpider;
+    pub const CAVE_SPIDER: LootTablesEnum = LootTablesEnum::CaveSpider;
     pub const CHICKEN: LootTablesEnum = LootTablesEnum::Chicken;
     pub const COD: LootTablesEnum = LootTablesEnum::Cod;
     pub const COW: LootTablesEnum = LootTablesEnum::Cow;
@@ -568,24 +568,24 @@ impl<'mc> LootTables<'mc> {
     pub const DOLPHIN: LootTablesEnum = LootTablesEnum::Dolphin;
     pub const DONKEY: LootTablesEnum = LootTablesEnum::Donkey;
     pub const DROWNED: LootTablesEnum = LootTablesEnum::Drowned;
-    pub const ELDERGUARDIAN: LootTablesEnum = LootTablesEnum::ElderGuardian;
-    pub const ENDERDRAGON: LootTablesEnum = LootTablesEnum::EnderDragon;
+    pub const ELDER_GUARDIAN: LootTablesEnum = LootTablesEnum::ElderGuardian;
+    pub const ENDER_DRAGON: LootTablesEnum = LootTablesEnum::EnderDragon;
     pub const ENDERMAN: LootTablesEnum = LootTablesEnum::Enderman;
     pub const ENDERMITE: LootTablesEnum = LootTablesEnum::Endermite;
     pub const EVOKER: LootTablesEnum = LootTablesEnum::Evoker;
     pub const FOX: LootTablesEnum = LootTablesEnum::Fox;
     pub const GHAST: LootTablesEnum = LootTablesEnum::Ghast;
     pub const GIANT: LootTablesEnum = LootTablesEnum::Giant;
-    pub const GLOWSQUID: LootTablesEnum = LootTablesEnum::GlowSquid;
+    pub const GLOW_SQUID: LootTablesEnum = LootTablesEnum::GlowSquid;
     pub const GOAT: LootTablesEnum = LootTablesEnum::Goat;
     pub const GUARDIAN: LootTablesEnum = LootTablesEnum::Guardian;
     pub const HOGLIN: LootTablesEnum = LootTablesEnum::Hoglin;
     pub const HORSE: LootTablesEnum = LootTablesEnum::Horse;
     pub const HUSK: LootTablesEnum = LootTablesEnum::Husk;
     pub const ILLUSIONER: LootTablesEnum = LootTablesEnum::Illusioner;
-    pub const IRONGOLEM: LootTablesEnum = LootTablesEnum::IronGolem;
+    pub const IRON_GOLEM: LootTablesEnum = LootTablesEnum::IronGolem;
     pub const LLAMA: LootTablesEnum = LootTablesEnum::Llama;
-    pub const MAGMACUBE: LootTablesEnum = LootTablesEnum::MagmaCube;
+    pub const MAGMA_CUBE: LootTablesEnum = LootTablesEnum::MagmaCube;
     pub const MOOSHROOM: LootTablesEnum = LootTablesEnum::Mooshroom;
     pub const MULE: LootTablesEnum = LootTablesEnum::Mule;
     pub const OCELOT: LootTablesEnum = LootTablesEnum::Ocelot;
@@ -594,10 +594,10 @@ impl<'mc> LootTables<'mc> {
     pub const PHANTOM: LootTablesEnum = LootTablesEnum::Phantom;
     pub const PIG: LootTablesEnum = LootTablesEnum::Pig;
     pub const PIGLIN: LootTablesEnum = LootTablesEnum::Piglin;
-    pub const PIGLINBRUTE: LootTablesEnum = LootTablesEnum::PiglinBrute;
+    pub const PIGLIN_BRUTE: LootTablesEnum = LootTablesEnum::PiglinBrute;
     pub const PILLAGER: LootTablesEnum = LootTablesEnum::Pillager;
     pub const PLAYER: LootTablesEnum = LootTablesEnum::Player;
-    pub const POLARBEAR: LootTablesEnum = LootTablesEnum::PolarBear;
+    pub const POLAR_BEAR: LootTablesEnum = LootTablesEnum::PolarBear;
     pub const PUFFERFISH: LootTablesEnum = LootTablesEnum::Pufferfish;
     pub const RABBIT: LootTablesEnum = LootTablesEnum::Rabbit;
     pub const RAVAGER: LootTablesEnum = LootTablesEnum::Ravager;
@@ -605,73 +605,76 @@ impl<'mc> LootTables<'mc> {
     pub const SHULKER: LootTablesEnum = LootTablesEnum::Shulker;
     pub const SILVERFISH: LootTablesEnum = LootTablesEnum::Silverfish;
     pub const SKELETON: LootTablesEnum = LootTablesEnum::Skeleton;
-    pub const SKELETONHORSE: LootTablesEnum = LootTablesEnum::SkeletonHorse;
+    pub const SKELETON_HORSE: LootTablesEnum = LootTablesEnum::SkeletonHorse;
     pub const SLIME: LootTablesEnum = LootTablesEnum::Slime;
-    pub const SNOWGOLEM: LootTablesEnum = LootTablesEnum::SnowGolem;
+    pub const SNOW_GOLEM: LootTablesEnum = LootTablesEnum::SnowGolem;
     pub const SPIDER: LootTablesEnum = LootTablesEnum::Spider;
     pub const SQUID: LootTablesEnum = LootTablesEnum::Squid;
     pub const STRAY: LootTablesEnum = LootTablesEnum::Stray;
     pub const STRIDER: LootTablesEnum = LootTablesEnum::Strider;
-    pub const TRADERLLAMA: LootTablesEnum = LootTablesEnum::TraderLlama;
-    pub const TROPICALFISH: LootTablesEnum = LootTablesEnum::TropicalFish;
+    pub const TRADER_LLAMA: LootTablesEnum = LootTablesEnum::TraderLlama;
+    pub const TROPICAL_FISH: LootTablesEnum = LootTablesEnum::TropicalFish;
     pub const TURTLE: LootTablesEnum = LootTablesEnum::Turtle;
     pub const VEX: LootTablesEnum = LootTablesEnum::Vex;
     pub const VILLAGER: LootTablesEnum = LootTablesEnum::Villager;
     pub const VINDICATOR: LootTablesEnum = LootTablesEnum::Vindicator;
-    pub const WANDERINGTRADER: LootTablesEnum = LootTablesEnum::WanderingTrader;
+    pub const WANDERING_TRADER: LootTablesEnum = LootTablesEnum::WanderingTrader;
     pub const WITCH: LootTablesEnum = LootTablesEnum::Witch;
     pub const WITHER: LootTablesEnum = LootTablesEnum::Wither;
-    pub const WITHERSKELETON: LootTablesEnum = LootTablesEnum::WitherSkeleton;
+    pub const WITHER_SKELETON: LootTablesEnum = LootTablesEnum::WitherSkeleton;
     pub const WOLF: LootTablesEnum = LootTablesEnum::Wolf;
     pub const ZOGLIN: LootTablesEnum = LootTablesEnum::Zoglin;
     pub const ZOMBIE: LootTablesEnum = LootTablesEnum::Zombie;
-    pub const ZOMBIEHORSE: LootTablesEnum = LootTablesEnum::ZombieHorse;
-    pub const ZOMBIEVILLAGER: LootTablesEnum = LootTablesEnum::ZombieVillager;
-    pub const ZOMBIFIEDPIGLIN: LootTablesEnum = LootTablesEnum::ZombifiedPiglin;
-    pub const ARMORERGIFT: LootTablesEnum = LootTablesEnum::ArmorerGift;
-    pub const BUTCHERGIFT: LootTablesEnum = LootTablesEnum::ButcherGift;
-    pub const CARTOGRAPHERGIFT: LootTablesEnum = LootTablesEnum::CartographerGift;
-    pub const CATMORNINGGIFT: LootTablesEnum = LootTablesEnum::CatMorningGift;
-    pub const CLERICGIFT: LootTablesEnum = LootTablesEnum::ClericGift;
-    pub const FARMERGIFT: LootTablesEnum = LootTablesEnum::FarmerGift;
-    pub const FISHERMANGIFT: LootTablesEnum = LootTablesEnum::FishermanGift;
+    pub const ZOMBIE_HORSE: LootTablesEnum = LootTablesEnum::ZombieHorse;
+    pub const ZOMBIE_VILLAGER: LootTablesEnum = LootTablesEnum::ZombieVillager;
+    pub const ZOMBIFIED_PIGLIN: LootTablesEnum = LootTablesEnum::ZombifiedPiglin;
+    pub const ARMORER_GIFT: LootTablesEnum = LootTablesEnum::ArmorerGift;
+    pub const BUTCHER_GIFT: LootTablesEnum = LootTablesEnum::ButcherGift;
+    pub const CARTOGRAPHER_GIFT: LootTablesEnum = LootTablesEnum::CartographerGift;
+    pub const CAT_MORNING_GIFT: LootTablesEnum = LootTablesEnum::CatMorningGift;
+    pub const CLERIC_GIFT: LootTablesEnum = LootTablesEnum::ClericGift;
+    pub const FARMER_GIFT: LootTablesEnum = LootTablesEnum::FarmerGift;
+    pub const FISHERMAN_GIFT: LootTablesEnum = LootTablesEnum::FishermanGift;
     pub const FISHING: LootTablesEnum = LootTablesEnum::Fishing;
-    pub const FISHINGFISH: LootTablesEnum = LootTablesEnum::FishingFish;
-    pub const FISHINGJUNK: LootTablesEnum = LootTablesEnum::FishingJunk;
-    pub const FISHINGTREASURE: LootTablesEnum = LootTablesEnum::FishingTreasure;
-    pub const FLETCHERGIFT: LootTablesEnum = LootTablesEnum::FletcherGift;
-    pub const LEATHERWORKERGIFT: LootTablesEnum = LootTablesEnum::LeatherworkerGift;
-    pub const LIBRARIANGIFT: LootTablesEnum = LootTablesEnum::LibrarianGift;
-    pub const MASONGIFT: LootTablesEnum = LootTablesEnum::MasonGift;
-    pub const SHEPHERDGIFT: LootTablesEnum = LootTablesEnum::ShepherdGift;
-    pub const TOOLSMITHGIFT: LootTablesEnum = LootTablesEnum::ToolsmithGift;
-    pub const WEAPONSMITHGIFT: LootTablesEnum = LootTablesEnum::WeaponsmithGift;
-    pub const SNIFFERDIGGING: LootTablesEnum = LootTablesEnum::SnifferDigging;
-    pub const PIGLINBARTERING: LootTablesEnum = LootTablesEnum::PiglinBartering;
-    pub const DESERTWELLARCHAEOLOGY: LootTablesEnum = LootTablesEnum::DesertWellArchaeology;
-    pub const DESERTPYRAMIDARCHAEOLOGY: LootTablesEnum = LootTablesEnum::DesertPyramidArchaeology;
-    pub const TRAILRUINSARCHAEOLOGYCOMMON: LootTablesEnum =
+    pub const FISHING_FISH: LootTablesEnum = LootTablesEnum::FishingFish;
+    pub const FISHING_JUNK: LootTablesEnum = LootTablesEnum::FishingJunk;
+    pub const FISHING_TREASURE: LootTablesEnum = LootTablesEnum::FishingTreasure;
+    pub const FLETCHER_GIFT: LootTablesEnum = LootTablesEnum::FletcherGift;
+    pub const LEATHERWORKER_GIFT: LootTablesEnum = LootTablesEnum::LeatherworkerGift;
+    pub const LIBRARIAN_GIFT: LootTablesEnum = LootTablesEnum::LibrarianGift;
+    pub const MASON_GIFT: LootTablesEnum = LootTablesEnum::MasonGift;
+    pub const SHEPHERD_GIFT: LootTablesEnum = LootTablesEnum::ShepherdGift;
+    pub const TOOLSMITH_GIFT: LootTablesEnum = LootTablesEnum::ToolsmithGift;
+    pub const WEAPONSMITH_GIFT: LootTablesEnum = LootTablesEnum::WeaponsmithGift;
+    pub const SNIFFER_DIGGING: LootTablesEnum = LootTablesEnum::SnifferDigging;
+    pub const PIGLIN_BARTERING: LootTablesEnum = LootTablesEnum::PiglinBartering;
+    pub const DESERT_WELL_ARCHAEOLOGY: LootTablesEnum = LootTablesEnum::DesertWellArchaeology;
+    pub const DESERT_PYRAMID_ARCHAEOLOGY: LootTablesEnum = LootTablesEnum::DesertPyramidArchaeology;
+    pub const TRAIL_RUINS_ARCHAEOLOGY_COMMON: LootTablesEnum =
         LootTablesEnum::TrailRuinsArchaeologyCommon;
-    pub const TRAILRUINSARCHAEOLOGYRARE: LootTablesEnum = LootTablesEnum::TrailRuinsArchaeologyRare;
-    pub const OCEANRUINWARMARCHAEOLOGY: LootTablesEnum = LootTablesEnum::OceanRuinWarmArchaeology;
-    pub const OCEANRUINCOLDARCHAEOLOGY: LootTablesEnum = LootTablesEnum::OceanRuinColdArchaeology;
+    pub const TRAIL_RUINS_ARCHAEOLOGY_RARE: LootTablesEnum =
+        LootTablesEnum::TrailRuinsArchaeologyRare;
+    pub const OCEAN_RUIN_WARM_ARCHAEOLOGY: LootTablesEnum =
+        LootTablesEnum::OceanRuinWarmArchaeology;
+    pub const OCEAN_RUIN_COLD_ARCHAEOLOGY: LootTablesEnum =
+        LootTablesEnum::OceanRuinColdArchaeology;
     pub const SHEEP: LootTablesEnum = LootTablesEnum::Sheep;
-    pub const SHEEPBLACK: LootTablesEnum = LootTablesEnum::SheepBlack;
-    pub const SHEEPBLUE: LootTablesEnum = LootTablesEnum::SheepBlue;
-    pub const SHEEPBROWN: LootTablesEnum = LootTablesEnum::SheepBrown;
-    pub const SHEEPCYAN: LootTablesEnum = LootTablesEnum::SheepCyan;
-    pub const SHEEPGRAY: LootTablesEnum = LootTablesEnum::SheepGray;
-    pub const SHEEPGREEN: LootTablesEnum = LootTablesEnum::SheepGreen;
-    pub const SHEEPLIGHTBLUE: LootTablesEnum = LootTablesEnum::SheepLightBlue;
-    pub const SHEEPLIGHTGRAY: LootTablesEnum = LootTablesEnum::SheepLightGray;
-    pub const SHEEPLIME: LootTablesEnum = LootTablesEnum::SheepLime;
-    pub const SHEEPMAGENTA: LootTablesEnum = LootTablesEnum::SheepMagenta;
-    pub const SHEEPORANGE: LootTablesEnum = LootTablesEnum::SheepOrange;
-    pub const SHEEPPINK: LootTablesEnum = LootTablesEnum::SheepPink;
-    pub const SHEEPPURPLE: LootTablesEnum = LootTablesEnum::SheepPurple;
-    pub const SHEEPRED: LootTablesEnum = LootTablesEnum::SheepRed;
-    pub const SHEEPWHITE: LootTablesEnum = LootTablesEnum::SheepWhite;
-    pub const SHEEPYELLOW: LootTablesEnum = LootTablesEnum::SheepYellow;
+    pub const SHEEP_BLACK: LootTablesEnum = LootTablesEnum::SheepBlack;
+    pub const SHEEP_BLUE: LootTablesEnum = LootTablesEnum::SheepBlue;
+    pub const SHEEP_BROWN: LootTablesEnum = LootTablesEnum::SheepBrown;
+    pub const SHEEP_CYAN: LootTablesEnum = LootTablesEnum::SheepCyan;
+    pub const SHEEP_GRAY: LootTablesEnum = LootTablesEnum::SheepGray;
+    pub const SHEEP_GREEN: LootTablesEnum = LootTablesEnum::SheepGreen;
+    pub const SHEEP_LIGHT_BLUE: LootTablesEnum = LootTablesEnum::SheepLightBlue;
+    pub const SHEEP_LIGHT_GRAY: LootTablesEnum = LootTablesEnum::SheepLightGray;
+    pub const SHEEP_LIME: LootTablesEnum = LootTablesEnum::SheepLime;
+    pub const SHEEP_MAGENTA: LootTablesEnum = LootTablesEnum::SheepMagenta;
+    pub const SHEEP_ORANGE: LootTablesEnum = LootTablesEnum::SheepOrange;
+    pub const SHEEP_PINK: LootTablesEnum = LootTablesEnum::SheepPink;
+    pub const SHEEP_PURPLE: LootTablesEnum = LootTablesEnum::SheepPurple;
+    pub const SHEEP_RED: LootTablesEnum = LootTablesEnum::SheepRed;
+    pub const SHEEP_WHITE: LootTablesEnum = LootTablesEnum::SheepWhite;
+    pub const SHEEP_YELLOW: LootTablesEnum = LootTablesEnum::SheepYellow;
     pub fn from_string(str: String) -> std::option::Option<LootTablesEnum> {
         match str.as_str() {
             "EMPTY" => Some(LootTablesEnum::Empty),
@@ -915,6 +918,20 @@ impl<'mc> crate::JNIRaw<'mc> for LootContextBuilder<'mc> {
     }
 }
 impl<'mc> LootContextBuilder<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::Location<'mc>,
+    ) -> Result<crate::bukkit::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/loot/LootContext$Builder")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/Location;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::loot::LootContextBuilder(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

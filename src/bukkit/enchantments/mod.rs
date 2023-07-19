@@ -13,6 +13,21 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantmentWrapper<'mc> {
     }
 }
 impl<'mc> EnchantmentWrapper<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::enchantments::EnchantmentWrapper<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/enchantments/EnchantmentWrapper")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::enchantments::EnchantmentWrapper(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -295,6 +310,29 @@ impl<'mc> crate::JNIRaw<'mc> for EnchantmentOffer<'mc> {
     }
 }
 impl<'mc> EnchantmentOffer<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::enchantments::Enchantment<'mc>,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::bukkit::enchantments::EnchantmentOffer<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let cls = &jni.find_class("org/bukkit/enchantments/EnchantmentOffer")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/enchantments/Enchantment;II)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::enchantments::EnchantmentOffer(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -610,6 +648,20 @@ impl<'mc> crate::JNIRaw<'mc> for Enchantment<'mc> {
     }
 }
 impl<'mc> Enchantment<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::NamespacedKey<'mc>,
+    ) -> Result<crate::bukkit::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/enchantments/Enchantment")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/NamespacedKey;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::enchantments::Enchantment(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

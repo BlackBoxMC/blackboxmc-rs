@@ -112,19 +112,20 @@ impl<'mc> crate::JNIRaw<'mc> for Attribute<'mc> {
     }
 }
 impl<'mc> Attribute<'mc> {
-    pub const GENERICMAXHEALTH: AttributeEnum = AttributeEnum::GenericMaxHealth;
-    pub const GENERICFOLLOWRANGE: AttributeEnum = AttributeEnum::GenericFollowRange;
-    pub const GENERICKNOCKBACKRESISTANCE: AttributeEnum = AttributeEnum::GenericKnockbackResistance;
-    pub const GENERICMOVEMENTSPEED: AttributeEnum = AttributeEnum::GenericMovementSpeed;
-    pub const GENERICFLYINGSPEED: AttributeEnum = AttributeEnum::GenericFlyingSpeed;
-    pub const GENERICATTACKDAMAGE: AttributeEnum = AttributeEnum::GenericAttackDamage;
-    pub const GENERICATTACKKNOCKBACK: AttributeEnum = AttributeEnum::GenericAttackKnockback;
-    pub const GENERICATTACKSPEED: AttributeEnum = AttributeEnum::GenericAttackSpeed;
-    pub const GENERICARMOR: AttributeEnum = AttributeEnum::GenericArmor;
-    pub const GENERICARMORTOUGHNESS: AttributeEnum = AttributeEnum::GenericArmorToughness;
-    pub const GENERICLUCK: AttributeEnum = AttributeEnum::GenericLuck;
-    pub const HORSEJUMPSTRENGTH: AttributeEnum = AttributeEnum::HorseJumpStrength;
-    pub const ZOMBIESPAWNREINFORCEMENTS: AttributeEnum = AttributeEnum::ZombieSpawnReinforcements;
+    pub const GENERIC_MAX_HEALTH: AttributeEnum = AttributeEnum::GenericMaxHealth;
+    pub const GENERIC_FOLLOW_RANGE: AttributeEnum = AttributeEnum::GenericFollowRange;
+    pub const GENERIC_KNOCKBACK_RESISTANCE: AttributeEnum =
+        AttributeEnum::GenericKnockbackResistance;
+    pub const GENERIC_MOVEMENT_SPEED: AttributeEnum = AttributeEnum::GenericMovementSpeed;
+    pub const GENERIC_FLYING_SPEED: AttributeEnum = AttributeEnum::GenericFlyingSpeed;
+    pub const GENERIC_ATTACK_DAMAGE: AttributeEnum = AttributeEnum::GenericAttackDamage;
+    pub const GENERIC_ATTACK_KNOCKBACK: AttributeEnum = AttributeEnum::GenericAttackKnockback;
+    pub const GENERIC_ATTACK_SPEED: AttributeEnum = AttributeEnum::GenericAttackSpeed;
+    pub const GENERIC_ARMOR: AttributeEnum = AttributeEnum::GenericArmor;
+    pub const GENERIC_ARMOR_TOUGHNESS: AttributeEnum = AttributeEnum::GenericArmorToughness;
+    pub const GENERIC_LUCK: AttributeEnum = AttributeEnum::GenericLuck;
+    pub const HORSE_JUMP_STRENGTH: AttributeEnum = AttributeEnum::HorseJumpStrength;
+    pub const ZOMBIE_SPAWN_REINFORCEMENTS: AttributeEnum = AttributeEnum::ZombieSpawnReinforcements;
     pub fn from_string(str: String) -> std::option::Option<AttributeEnum> {
         match str.as_str() {
             "GENERIC_MAX_HEALTH" => Some(AttributeEnum::GenericMaxHealth),

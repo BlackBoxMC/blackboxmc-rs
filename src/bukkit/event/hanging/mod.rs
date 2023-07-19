@@ -160,6 +160,20 @@ impl<'mc> crate::JNIRaw<'mc> for HangingBreakEvent<'mc> {
     }
 }
 impl<'mc> HangingBreakEvent<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Hanging<'mc>,
+        arg1: crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
+    ) -> Result<crate::bukkit::event::hanging::HangingBreakEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/hanging/HangingBreakEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/entity/Hanging;Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let ret = { crate::bukkit::event::hanging::HangingBreakEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -370,6 +384,24 @@ impl<'mc> crate::JNIRaw<'mc> for HangingBreakByEntityEvent<'mc> {
     }
 }
 impl<'mc> HangingBreakByEntityEvent<'mc> {
+    pub fn new_with_hanging(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Hanging<'mc>,
+        arg1: std::option::Option<crate::bukkit::entity::Entity<'mc>>,
+        arg2: std::option::Option<crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>>,
+    ) -> Result<
+        crate::bukkit::event::hanging::HangingBreakByEntityEvent<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/hanging/HangingBreakByEntityEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/entity/Hanging;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let ret = { crate::bukkit::event::hanging::HangingBreakByEntityEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -597,6 +629,28 @@ impl<'mc> crate::JNIRaw<'mc> for HangingPlaceEvent<'mc> {
     }
 }
 impl<'mc> HangingPlaceEvent<'mc> {
+    pub fn new_with_hanging(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::entity::Hanging<'mc>,
+        arg1: crate::bukkit::entity::Player<'mc>,
+        arg2: crate::bukkit::block::Block<'mc>,
+        arg3: crate::bukkit::block::BlockFace<'mc>,
+        arg4: std::option::Option<crate::bukkit::inventory::EquipmentSlot<'mc>>,
+        arg5: std::option::Option<crate::bukkit::inventory::ItemStack<'mc>>,
+    ) -> Result<crate::bukkit::event::hanging::HangingPlaceEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.1.clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.1.clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().1.clone()) };
+        let val_5 = unsafe { jni::objects::JObject::from_raw(arg5.unwrap().1.clone()) };
+        let cls = &jni.find_class("org/bukkit/event/hanging/HangingPlaceEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/entity/Hanging;Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;Lorg/bukkit/inventory/EquipmentSlot;Lorg/bukkit/inventory/ItemStack;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
+        let ret = { crate::bukkit::event::hanging::HangingPlaceEvent(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

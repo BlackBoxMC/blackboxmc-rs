@@ -13,6 +13,21 @@ impl<'mc> crate::JNIRaw<'mc> for ReloadCommand<'mc> {
     }
 }
 impl<'mc> ReloadCommand<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::command::defaults::ReloadCommand<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/command/defaults/ReloadCommand")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::command::defaults::ReloadCommand(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -411,6 +426,21 @@ impl<'mc> crate::JNIRaw<'mc> for TimingsCommand<'mc> {
     }
 }
 impl<'mc> TimingsCommand<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::command::defaults::TimingsCommand<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/command/defaults/TimingsCommand")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::command::defaults::TimingsCommand(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1223,6 +1253,21 @@ impl<'mc> crate::JNIRaw<'mc> for VersionCommand<'mc> {
     }
 }
 impl<'mc> VersionCommand<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::command::defaults::VersionCommand<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/command/defaults/VersionCommand")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::command::defaults::VersionCommand(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1623,6 +1668,15 @@ impl<'mc> crate::JNIRaw<'mc> for HelpCommand<'mc> {
     }
 }
 impl<'mc> HelpCommand<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::command::defaults::HelpCommand<'mc>, Box<dyn std::error::Error>>
+    {
+        let cls = &jni.find_class("org/bukkit/command/defaults/HelpCommand")?;
+        let res = jni.new_object(cls, "()V", &[])?;
+        let ret = { crate::bukkit::command::defaults::HelpCommand(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2021,6 +2075,21 @@ impl<'mc> crate::JNIRaw<'mc> for PluginsCommand<'mc> {
     }
 }
 impl<'mc> PluginsCommand<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: String,
+    ) -> Result<crate::bukkit::command::defaults::PluginsCommand<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let cls = &jni.find_class("org/bukkit/command/defaults/PluginsCommand")?;
+        let res = jni.new_object(
+            cls,
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = { crate::bukkit::command::defaults::PluginsCommand(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

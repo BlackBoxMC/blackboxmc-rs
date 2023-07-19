@@ -13,6 +13,20 @@ impl<'mc> crate::JNIRaw<'mc> for ArmorTrim<'mc> {
     }
 }
 impl<'mc> ArmorTrim<'mc> {
+    pub fn new(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: crate::bukkit::inventory::meta::trim::TrimMaterial<'mc>,
+        arg1: crate::bukkit::inventory::meta::trim::TrimPattern<'mc>,
+    ) -> Result<crate::bukkit::inventory::meta::trim::ArmorTrim<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.1.clone()) };
+        let cls = &jni.find_class("org/bukkit/inventory/meta/trim/ArmorTrim")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let ret = { crate::bukkit::inventory::meta::trim::ArmorTrim(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,

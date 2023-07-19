@@ -295,6 +295,28 @@ impl<'mc> crate::JNIRaw<'mc> for PotionData<'mc> {
     }
 }
 impl<'mc> PotionData<'mc> {
+    pub fn new_with_potion_type(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::potion::PotionType<'mc>>,
+        arg1: std::option::Option<bool>,
+        arg2: std::option::Option<bool>,
+    ) -> Result<crate::bukkit::potion::PotionData<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/potion/PotionData")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/potion/PotionType;ZZ)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = { crate::bukkit::potion::PotionData(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -440,6 +462,31 @@ impl<'mc> crate::JNIRaw<'mc> for Potion<'mc> {
     }
 }
 impl<'mc> Potion<'mc> {
+    pub fn new_with_potion_type(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<crate::bukkit::potion::PotionType<'mc>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<bool>,
+    ) -> Result<crate::bukkit::potion::Potion<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().1.clone()) };
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Bool(arg3.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/potion/Potion")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/potion/PotionType;IZZ)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        let ret = { crate::bukkit::potion::Potion(jni, res) };
+        Ok(ret)
+    }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1350,22 +1397,22 @@ impl<'mc> PotionType<'mc> {
     pub const MUNDANE: PotionTypeEnum = PotionTypeEnum::Mundane;
     pub const THICK: PotionTypeEnum = PotionTypeEnum::Thick;
     pub const AWKWARD: PotionTypeEnum = PotionTypeEnum::Awkward;
-    pub const NIGHTVISION: PotionTypeEnum = PotionTypeEnum::NightVision;
+    pub const NIGHT_VISION: PotionTypeEnum = PotionTypeEnum::NightVision;
     pub const INVISIBILITY: PotionTypeEnum = PotionTypeEnum::Invisibility;
     pub const JUMP: PotionTypeEnum = PotionTypeEnum::Jump;
-    pub const FIRERESISTANCE: PotionTypeEnum = PotionTypeEnum::FireResistance;
+    pub const FIRE_RESISTANCE: PotionTypeEnum = PotionTypeEnum::FireResistance;
     pub const SPEED: PotionTypeEnum = PotionTypeEnum::Speed;
     pub const SLOWNESS: PotionTypeEnum = PotionTypeEnum::Slowness;
-    pub const WATERBREATHING: PotionTypeEnum = PotionTypeEnum::WaterBreathing;
-    pub const INSTANTHEAL: PotionTypeEnum = PotionTypeEnum::InstantHeal;
-    pub const INSTANTDAMAGE: PotionTypeEnum = PotionTypeEnum::InstantDamage;
+    pub const WATER_BREATHING: PotionTypeEnum = PotionTypeEnum::WaterBreathing;
+    pub const INSTANT_HEAL: PotionTypeEnum = PotionTypeEnum::InstantHeal;
+    pub const INSTANT_DAMAGE: PotionTypeEnum = PotionTypeEnum::InstantDamage;
     pub const POISON: PotionTypeEnum = PotionTypeEnum::Poison;
     pub const REGEN: PotionTypeEnum = PotionTypeEnum::Regen;
     pub const STRENGTH: PotionTypeEnum = PotionTypeEnum::Strength;
     pub const WEAKNESS: PotionTypeEnum = PotionTypeEnum::Weakness;
     pub const LUCK: PotionTypeEnum = PotionTypeEnum::Luck;
-    pub const TURTLEMASTER: PotionTypeEnum = PotionTypeEnum::TurtleMaster;
-    pub const SLOWFALLING: PotionTypeEnum = PotionTypeEnum::SlowFalling;
+    pub const TURTLE_MASTER: PotionTypeEnum = PotionTypeEnum::TurtleMaster;
+    pub const SLOW_FALLING: PotionTypeEnum = PotionTypeEnum::SlowFalling;
     pub fn from_string(str: String) -> std::option::Option<PotionTypeEnum> {
         match str.as_str() {
             "UNCRAFTABLE" => Some(PotionTypeEnum::Uncraftable),
