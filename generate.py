@@ -70,6 +70,7 @@ def snake_case_to_camel_case(string):
 def func_signature_format(ty, increment, returning, options_start_at=-1):
     thing = ""
     internal_do_into = ty["type_name_resolved"].startswith("crate") or ty["type_name_resolved"].startswith("bukkit") or ty["type_name_resolved"].startswith("blackbox")
+    is_string = ty["type_name_resolved"] == "String"
     internal = internal_do_into or ty["type_name_resolved"].startswith("jni")
     generic_letters = []
     generic_args = []
@@ -92,27 +93,27 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
 
         if ty["is_array"]:
             thing += "Vec<"
-            if internal_do_into and not returning:
+            if (internal_do_into or is_string) and not returning:
                 thing += "impl Into<"
             thing += ty["type_name_resolved"]
             if(internal):
                 thing += "<'mc>"
-            if internal_do_into and not returning:
+            if (internal_do_into or is_string) and not returning:
                 thing += ">"
             thing += ">"
         else:
-            if internal_do_into and not returning:
+            if (internal_do_into or is_string) and not returning:
                 thing += "impl Into<"
             if len(ty["generics"]) >= 1:
                 thing += ty["type_name_alone"]+"<"
                 j = []
                 for g in ty["generics"]:
                     if len(g) >= 2:
-                        if g.startswith("crate") or g.startswith("bukkit") or g.startswith("jni") or g.startswith("blackbox"):
+                        if g.startswith("crate") or g.startswith("bukkit") or g.startswith("jni") or g.startswith("blackbox") or g == "String":
                             k = ""
                             if not returning and not g.startswith("jni"):
                                 k += "impl Into<"
-                            if not g.endswith("<'mc>"):
+                            if not g.endswith("<'mc>") and g != "String":
                                 k += g+"<'mc>"
                             else:
                                 k += g
@@ -129,7 +130,7 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
                 thing += ty["type_name_resolved"]
                 if(internal):
                     thing += "<'mc>"
-            if internal_do_into and not returning:
+            if (internal_do_into or is_string) and not returning:
                 thing += ">"
         if(options_start_at != -1):
             if increment >= options_start_at:
@@ -202,7 +203,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 	                "let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+prefix+".new_object(\"java/util/UUID\", \"(JJ)V\", &[upper.into(), lower.into()]).unwrap());"
                 ]
             case "String":
-                return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JObject::from("+prefix+".new_string("+arg+").unwrap());"]
+                return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JObject::from("+prefix+".new_string("+arg+".into()).unwrap());"]
             case "jni::objects::JObject" | "jni::objects::JClass":
                 # nothing to do
                 return ["let "+var_prefix+"_"+str(n)+" = "+arg+";"]
@@ -1012,6 +1013,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
 
 def parse_classes(library, val, classes):
+
     if "modifiers" in val:
         modifiers = int(val["modifiers"])
         if (modifiers&1 != 1):
@@ -1177,7 +1179,19 @@ def parse_classes(library, val, classes):
                                         "       "+inter_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+
                                         "   }\n"+
                                         "}")
+        if "superClass" in val:
+            super_class = val["superClass"]
+            if super_class["packageName"].startswith("java"):
+                return
+            super_class_resolved = java_type_to_rust("", super_class["packageName"]+"."+super_class["name"], None, 0, library, False)
 
+            if super_class_resolved is None:
+                return
+            file_cache[mod_path].append("impl<'mc> Into<"+super_class_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc> {\n"+
+                                    "   fn into(self) -> "+super_class_resolved["type_name_resolved"]+"<'mc> {\n"+
+                                    "       "+super_class_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+
+                                    "   }\n"+
+                                    "}")
 def parse_annotations(annotations):
     strings = []
     for annotation in annotations:

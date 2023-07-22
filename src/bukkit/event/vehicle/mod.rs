@@ -190,6 +190,11 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleUpdateEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct VehicleEnterEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -421,6 +426,11 @@ impl<'mc> VehicleEnterEvent<'mc> {
 impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for VehicleEnterEvent<'mc> {
     fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleEnterEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleEntityCollisionEvent<'mc>(
@@ -696,6 +706,14 @@ impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for VehicleEntityCollisio
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleCollisionEvent<'mc>>
+    for VehicleEntityCollisionEvent<'mc>
+{
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleCollisionEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1)
+            .unwrap()
+    }
+}
 pub struct VehicleExitEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -929,6 +947,11 @@ impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for VehicleExitEvent<'mc>
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleExitEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct VehicleCollisionEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1102,6 +1125,11 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleCollisionEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleBlockCollisionEvent<'mc>(
@@ -1318,6 +1346,14 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleCollisionEvent<'mc>>
+    for VehicleBlockCollisionEvent<'mc>
+{
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleCollisionEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1)
+            .unwrap()
+    }
+}
 pub struct VehicleCreateEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1528,6 +1564,11 @@ impl<'mc> VehicleCreateEvent<'mc> {
 impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for VehicleCreateEvent<'mc> {
     fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleCreateEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleMoveEvent<'mc>(
@@ -1754,6 +1795,11 @@ impl<'mc> VehicleMoveEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleMoveEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleDestroyEvent<'mc>(
@@ -1987,6 +2033,11 @@ impl<'mc> VehicleDestroyEvent<'mc> {
 impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for VehicleDestroyEvent<'mc> {
     fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleDestroyEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleDamageEvent<'mc>(
@@ -2241,6 +2292,11 @@ impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for VehicleDamageEvent<'m
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+impl<'mc> Into<crate::bukkit::event::vehicle::VehicleEvent<'mc>> for VehicleDamageEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::vehicle::VehicleEvent<'mc> {
+        crate::bukkit::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct VehicleEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2410,5 +2466,10 @@ impl<'mc> VehicleEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::Event<'mc>> for VehicleEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Event<'mc> {
+        crate::bukkit::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

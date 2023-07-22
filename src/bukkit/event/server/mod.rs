@@ -17,13 +17,13 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
     ) -> Result<
         crate::bukkit::event::server::RemoteServerCommandEvent<'mc>,
         Box<dyn std::error::Error>,
     > {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/event/server/RemoteServerCommandEvent")?;
         let res = jni.new_object(
             cls,
@@ -112,8 +112,11 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_command(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_command(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCommand",
@@ -236,6 +239,13 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::server::ServerCommandEvent<'mc>>
+    for RemoteServerCommandEvent<'mc>
+{
+    fn into(self) -> crate::bukkit::event::server::ServerCommandEvent<'mc> {
+        crate::bukkit::event::server::ServerCommandEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct PluginEnableEvent<'mc>(
@@ -428,6 +438,11 @@ impl<'mc> PluginEnableEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::server::PluginEvent<'mc>> for PluginEnableEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::PluginEvent<'mc> {
+        crate::bukkit::event::server::PluginEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct ServerCommandEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -445,11 +460,11 @@ impl<'mc> ServerCommandEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
     ) -> Result<crate::bukkit::event::server::ServerCommandEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/event/server/ServerCommandEvent")?;
         let res = jni.new_object(
             cls,
@@ -521,8 +536,11 @@ impl<'mc> ServerCommandEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_command(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_command(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCommand",
@@ -666,6 +684,11 @@ impl<'mc> ServerCommandEvent<'mc> {
 impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for ServerCommandEvent<'mc> {
     fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::event::server::ServerEvent<'mc>> for ServerCommandEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServerEvent<'mc> {
+        crate::bukkit::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct ServiceUnregisterEvent<'mc>(
@@ -860,6 +883,11 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::server::ServiceEvent<'mc>> for ServiceUnregisterEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServiceEvent<'mc> {
+        crate::bukkit::event::server::ServiceEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct BroadcastMessageEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -915,14 +943,30 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         };
         Ok(ret)
     }
+    pub fn message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMessage",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_message(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_message(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMessage",
@@ -957,19 +1001,6 @@ impl<'mc> BroadcastMessageEvent<'mc> {
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
-    }
-    pub fn message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMessage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1063,6 +1094,11 @@ impl<'mc> BroadcastMessageEvent<'mc> {
 impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for BroadcastMessageEvent<'mc> {
     fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::event::server::ServerEvent<'mc>> for BroadcastMessageEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServerEvent<'mc> {
+        crate::bukkit::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct ServerEvent<'mc>(
@@ -1217,6 +1253,11 @@ impl<'mc> ServerEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::Event<'mc>> for ServerEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Event<'mc> {
+        crate::bukkit::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct TabCompleteEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1234,15 +1275,15 @@ impl<'mc> TabCompleteEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: String,
-        arg2: Vec<String>,
+        arg1: impl Into<String>,
+        arg2: Vec<impl Into<String>>,
     ) -> Result<crate::bukkit::event::server::TabCompleteEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
         let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", &[]).unwrap();
         for v in arg2 {
-            let map_val_0 = jni::objects::JObject::from(jni.new_string(v).unwrap());
+            let map_val_0 = jni::objects::JObject::from(jni.new_string(v.into()).unwrap());
             jni.call_method(
                 &raw_val_2,
                 "add",
@@ -1304,12 +1345,6 @@ impl<'mc> TabCompleteEvent<'mc> {
         };
         Ok(ret)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn buffer(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1322,6 +1357,12 @@ impl<'mc> TabCompleteEvent<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -1366,13 +1407,17 @@ impl<'mc> TabCompleteEvent<'mc> {
         };
         Ok(ret)
     }
-    pub fn set_completions(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_completions(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -1481,6 +1526,11 @@ impl<'mc> TabCompleteEvent<'mc> {
 impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for TabCompleteEvent<'mc> {
     fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::event::Event<'mc>> for TabCompleteEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Event<'mc> {
+        crate::bukkit::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct PluginDisableEvent<'mc>(
@@ -1673,6 +1723,11 @@ impl<'mc> PluginDisableEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::server::PluginEvent<'mc>> for PluginDisableEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::PluginEvent<'mc> {
+        crate::bukkit::event::server::PluginEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct MapInitializeEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1861,6 +1916,11 @@ impl<'mc> MapInitializeEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::server::ServerEvent<'mc>> for MapInitializeEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServerEvent<'mc> {
+        crate::bukkit::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct ServiceEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2033,6 +2093,11 @@ impl<'mc> ServiceEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::server::ServerEvent<'mc>> for ServiceEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServerEvent<'mc> {
+        crate::bukkit::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct ServerLoadEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2079,10 +2144,10 @@ impl<'mc> ServerLoadEventLoadType<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("java/lang/Enum")?;
         let res = jni.call_static_method(
             cls,
@@ -2281,22 +2346,6 @@ impl<'mc> ServerLoadEvent<'mc> {
         };
         Ok(ret)
     }
-    pub fn handler_list(
-        jni: crate::SharedJNIEnv<'mc>,
-    ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
-        let res = jni.call_static_method(
-            cls,
-            "getHandlerList",
-            "()Lorg/bukkit/event/HandlerList;",
-            &[],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::event::HandlerList(jni, obj)
-        };
-        Ok(ret)
-    }
     pub fn get_type(
         &mut self,
     ) -> Result<
@@ -2313,6 +2362,22 @@ impl<'mc> ServerLoadEvent<'mc> {
             crate::bukkit::event::server::ServerLoadEventLoadType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
+        };
+        Ok(ret)
+    }
+    pub fn handler_list(
+        jni: crate::SharedJNIEnv<'mc>,
+    ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let res = jni.call_static_method(
+            cls,
+            "getHandlerList",
+            "()Lorg/bukkit/event/HandlerList;",
+            &[],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
     }
@@ -2403,6 +2468,11 @@ impl<'mc> ServerLoadEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::server::ServerEvent<'mc>> for ServerLoadEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServerEvent<'mc> {
+        crate::bukkit::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct ServiceRegisterEvent<'mc>(
@@ -2596,6 +2666,11 @@ impl<'mc> ServiceRegisterEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::server::ServiceEvent<'mc>> for ServiceRegisterEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServiceEvent<'mc> {
+        crate::bukkit::event::server::ServiceEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct PluginEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2767,6 +2842,11 @@ impl<'mc> PluginEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::server::ServerEvent<'mc>> for PluginEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServerEvent<'mc> {
+        crate::bukkit::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct ServerListPingEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2857,8 +2937,8 @@ impl<'mc> ServerListPingEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_motd(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_motd(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setMotd",
@@ -3013,5 +3093,10 @@ impl<'mc> ServerListPingEvent<'mc> {
             &[],
         )?;
         Ok(res.l().unwrap())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::server::ServerEvent<'mc>> for ServerListPingEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::server::ServerEvent<'mc> {
+        crate::bukkit::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

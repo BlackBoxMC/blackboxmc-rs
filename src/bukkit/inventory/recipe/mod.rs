@@ -48,12 +48,12 @@ impl<'mc> CookingBookCategory<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<
         crate::bukkit::inventory::recipe::CookingBookCategory<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/inventory/recipe/CookingBookCategory")?;
         let res = jni.call_static_method(
             cls,
@@ -131,12 +131,12 @@ impl<'mc> CraftingBookCategory<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<
         crate::bukkit::inventory::recipe::CraftingBookCategory<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/inventory/recipe/CraftingBookCategory")?;
         let res = jni.call_static_method(
             cls,

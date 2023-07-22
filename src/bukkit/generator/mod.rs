@@ -31,6 +31,43 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn get_type(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "(III)Lorg/bukkit/Material;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Material(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::Material::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
     #[deprecated]
     pub fn get_data(
         &mut self,
@@ -211,43 +248,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn get_type(
-        &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = jni::objects::JValueGen::Int(arg1.into());
-        let val_2 = jni::objects::JValueGen::Int(arg2.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "(III)Lorg/bukkit/Material;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Material(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::Material::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for ChunkGeneratorChunkData<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -274,24 +274,12 @@ impl<'mc> crate::JNIRaw<'mc> for BiomeProvider<'mc> {
 impl<'mc> BiomeProvider<'mc> {
     pub fn from_extendable(
         env: &crate::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::bukkit::plugin::Plugin,
         lib_name: String,
         name: String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = jni::objects::JValueGen::Object(env.new_object(
-            "net/ioixd/blackbox/extendables/ExtendableBiomeProvider",
-            "(Ljava/lang/String;Ljava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(name).unwrap(),
-                )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(lib_name).unwrap(),
-                )),
-            ],
-        )?);
-        Ok(Self(env.clone(), unsafe {
-            jni::objects::JObject::from_raw(obj.l()?.clone())
-        }))
+        let obj = unsafe { plugin.new_extendable("BiomeProvider", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
@@ -692,24 +680,12 @@ impl<'mc> crate::JNIRaw<'mc> for BlockPopulator<'mc> {
 impl<'mc> BlockPopulator<'mc> {
     pub fn from_extendable(
         env: &crate::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::bukkit::plugin::Plugin,
         lib_name: String,
         name: String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = jni::objects::JValueGen::Object(env.new_object(
-            "net/ioixd/blackbox/extendables/ExtendableBlockPopulator",
-            "(Ljava/lang/String;Ljava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(name).unwrap(),
-                )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(lib_name).unwrap(),
-                )),
-            ],
-        )?);
-        Ok(Self(env.clone(), unsafe {
-            jni::objects::JObject::from_raw(obj.l()?.clone())
-        }))
+        let obj = unsafe { plugin.new_extendable("BlockPopulator", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
@@ -883,6 +859,43 @@ impl<'mc> LimitedRegion<'mc> {
             ],
         )?;
         Ok(res.z().unwrap())
+    }
+    pub fn get_type_with_location(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "(III)Lorg/bukkit/Material;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::Material(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::Material::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
     }
     pub fn set_type_with_location(
         &mut self,
@@ -1147,43 +1160,6 @@ self.jni_ref().call_method(&self.jni_object(),"spawn","(Lorg/bukkit/Location;Lja
         };
         Ok(ret)
     }
-    pub fn get_type_with_location(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "(III)Lorg/bukkit/Material;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::Material(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::Material::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for LimitedRegion<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -1233,6 +1209,19 @@ impl<'mc> WorldInfo<'mc> {
             .call_method(&self.jni_object(), "getSeed", "()J", &[])?;
         Ok(res.j().unwrap())
     }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getName",
+            "()Ljava/lang/String;",
+            &[],
+        )?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn environment(
         &mut self,
     ) -> Result<crate::bukkit::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
@@ -1261,19 +1250,6 @@ impl<'mc> WorldInfo<'mc> {
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
 }
 impl<'mc> crate::JNIRaw<'mc> for WorldInfo<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {
@@ -1300,24 +1276,12 @@ impl<'mc> crate::JNIRaw<'mc> for ChunkGenerator<'mc> {
 impl<'mc> ChunkGenerator<'mc> {
     pub fn from_extendable(
         env: &crate::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::bukkit::plugin::Plugin,
         lib_name: String,
         name: String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = jni::objects::JValueGen::Object(env.new_object(
-            "net/ioixd/blackbox/extendables/ExtendableChunkGenerator",
-            "(Ljava/lang/String;Ljava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(name).unwrap(),
-                )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(lib_name).unwrap(),
-                )),
-            ],
-        )?);
-        Ok(Self(env.clone(), unsafe {
-            jni::objects::JObject::from_raw(obj.l()?.clone())
-        }))
+        let obj = unsafe { plugin.new_extendable("ChunkGenerator", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,

@@ -28,17 +28,6 @@ impl<'mc> BukkitTask<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "cancel", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn is_sync(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -60,6 +49,17 @@ impl<'mc> BukkitTask<'mc> {
             })
         };
         Ok(ret)
+    }
+    pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "cancel", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -505,24 +505,12 @@ impl<'mc> crate::JNIRaw<'mc> for BukkitRunnable<'mc> {
 impl<'mc> BukkitRunnable<'mc> {
     pub fn from_extendable(
         env: &crate::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::bukkit::plugin::Plugin,
         lib_name: String,
         name: String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = jni::objects::JValueGen::Object(env.new_object(
-            "net/ioixd/blackbox/extendables/ExtendableBukkitRunnable",
-            "(Ljava/lang/String;Ljava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(name).unwrap(),
-                )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(lib_name).unwrap(),
-                )),
-            ],
-        )?);
-        Ok(Self(env.clone(), unsafe {
-            jni::objects::JObject::from_raw(obj.l()?.clone())
-        }))
+        let obj = unsafe { plugin.new_extendable("Runnable", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,

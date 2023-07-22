@@ -41,10 +41,10 @@ impl<'mc> BookMetaGeneration<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("java/lang/Enum")?;
         let res = jni.call_static_method(
             cls,
@@ -256,6 +256,12 @@ impl<'mc> BlockDataMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -275,8 +281,11 @@ impl<'mc> BlockDataMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -304,8 +313,11 @@ impl<'mc> BlockDataMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -320,13 +332,17 @@ impl<'mc> BlockDataMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -572,12 +588,6 @@ impl<'mc> BlockDataMeta<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn persistent_data_container(
         &mut self,
     ) -> Result<crate::bukkit::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>>
@@ -638,6 +648,22 @@ impl<'mc> ArmorMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::ArmorMeta<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/ArmorMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::ArmorMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn has_trim(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -669,22 +695,6 @@ impl<'mc> ArmorMeta<'mc> {
         )?;
         let ret = {
             crate::bukkit::inventory::meta::trim::ArmorTrim(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::ArmorMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/ArmorMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::ArmorMeta(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -722,8 +732,11 @@ impl<'mc> ArmorMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -751,8 +764,11 @@ impl<'mc> ArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -767,13 +783,17 @@ impl<'mc> ArmorMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -1097,6 +1117,12 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         };
         Ok(ret)
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn set_variant(
         &mut self,
         arg0: impl Into<crate::bukkit::entity::AxolotlVariant<'mc>>,
@@ -1115,23 +1141,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "hasVariant", "()Z", &[])?;
         Ok(res.z().unwrap())
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::AxolotlBucketMeta<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/AxolotlBucketMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::AxolotlBucketMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1165,8 +1174,11 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -1194,8 +1206,11 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -1210,13 +1225,17 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -1523,8 +1542,11 @@ impl<'mc> SkullMeta<'mc> {
         }
     }
     #[deprecated]
-    pub fn set_owner(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_owner(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setOwner",
@@ -1532,6 +1554,22 @@ impl<'mc> SkullMeta<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.z().unwrap())
+    }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/ItemMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::ItemMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
     #[deprecated]
     pub fn owner(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1640,22 +1678,6 @@ impl<'mc> SkullMeta<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::SkullMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/SkullMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::SkullMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1688,8 +1710,11 @@ impl<'mc> SkullMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -1717,8 +1742,11 @@ impl<'mc> SkullMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -1733,13 +1761,17 @@ impl<'mc> SkullMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -2045,6 +2077,12 @@ impl<'mc> CompassMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn has_lodestone(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2097,12 +2135,6 @@ impl<'mc> CompassMeta<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2135,8 +2167,11 @@ impl<'mc> CompassMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -2164,8 +2199,11 @@ impl<'mc> CompassMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -2180,13 +2218,17 @@ impl<'mc> CompassMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -2494,6 +2536,12 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn has_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2551,23 +2599,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
                 .call_method(&self.jni_object(), "clearCustomEffects", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::SuspiciousStewMeta<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/SuspiciousStewMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::SuspiciousStewMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2600,8 +2631,11 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -2629,8 +2663,11 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -2645,13 +2682,17 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -3015,6 +3056,12 @@ impl<'mc> CrossbowMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3034,8 +3081,11 @@ impl<'mc> CrossbowMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -3063,8 +3113,11 @@ impl<'mc> CrossbowMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -3079,13 +3132,17 @@ impl<'mc> CrossbowMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -3330,12 +3387,6 @@ impl<'mc> CrossbowMeta<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
     }
     pub fn persistent_data_container(
         &mut self,
@@ -3410,6 +3461,12 @@ impl<'mc> ItemMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3429,8 +3486,11 @@ impl<'mc> ItemMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -3458,8 +3518,11 @@ impl<'mc> ItemMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -3474,13 +3537,17 @@ impl<'mc> ItemMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -3726,12 +3793,6 @@ impl<'mc> ItemMeta<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn persistent_data_container(
         &mut self,
     ) -> Result<crate::bukkit::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>>
@@ -3803,6 +3864,22 @@ impl<'mc> Repairable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::Repairable<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/Repairable;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::Repairable(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn repair_cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3824,22 +3901,6 @@ impl<'mc> Repairable<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "hasRepairCost", "()Z", &[])?;
         Ok(res.z().unwrap())
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::Repairable<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/Repairable;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::Repairable(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3873,8 +3934,11 @@ impl<'mc> Repairable<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -3902,8 +3966,11 @@ impl<'mc> Repairable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -3918,13 +3985,17 @@ impl<'mc> Repairable<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -4384,6 +4455,12 @@ impl<'mc> BannerMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4403,8 +4480,11 @@ impl<'mc> BannerMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -4432,8 +4512,11 @@ impl<'mc> BannerMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -4448,13 +4531,17 @@ impl<'mc> BannerMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -4699,12 +4786,6 @@ impl<'mc> BannerMeta<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
     }
     pub fn persistent_data_container(
         &mut self,
@@ -4824,6 +4905,12 @@ impl<'mc> BundleMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4843,8 +4930,11 @@ impl<'mc> BundleMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -4872,8 +4962,11 @@ impl<'mc> BundleMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -4888,13 +4981,17 @@ impl<'mc> BundleMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -5139,12 +5236,6 @@ impl<'mc> BundleMeta<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
     }
     pub fn persistent_data_container(
         &mut self,
@@ -5293,8 +5384,11 @@ impl<'mc> ColorableArmorMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -5322,8 +5416,11 @@ impl<'mc> ColorableArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -5338,13 +5435,17 @@ impl<'mc> ColorableArmorMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -5682,6 +5783,22 @@ impl<'mc> SpawnEggMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::SpawnEggMeta<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/SpawnEggMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::SpawnEggMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     #[deprecated]
     pub fn spawned_type(
         &mut self,
@@ -5724,22 +5841,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::SpawnEggMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/SpawnEggMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::SpawnEggMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5772,8 +5873,11 @@ impl<'mc> SpawnEggMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -5801,8 +5905,11 @@ impl<'mc> SpawnEggMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -5817,13 +5924,17 @@ impl<'mc> SpawnEggMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -6129,6 +6240,22 @@ impl<'mc> Damageable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::Damageable<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/Damageable;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::Damageable(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn set_damage(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
         self.jni_ref().call_method(
@@ -6150,22 +6277,6 @@ impl<'mc> Damageable<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "hasDamage", "()Z", &[])?;
         Ok(res.z().unwrap())
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::Damageable<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/Damageable;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::Damageable(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -6199,8 +6310,11 @@ impl<'mc> Damageable<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -6228,8 +6342,11 @@ impl<'mc> Damageable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -6244,13 +6361,17 @@ impl<'mc> Damageable<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -6556,6 +6677,12 @@ impl<'mc> FireworkMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6612,22 +6739,6 @@ impl<'mc> FireworkMeta<'mc> {
             .call_method(&self.jni_object(), "hasEffects", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::FireworkMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/FireworkMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::FireworkMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6660,8 +6771,11 @@ impl<'mc> FireworkMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -6689,8 +6803,11 @@ impl<'mc> FireworkMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -6705,13 +6822,17 @@ impl<'mc> FireworkMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -7017,6 +7138,22 @@ impl<'mc> PotionMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::PotionMeta<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/PotionMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::PotionMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn set_color(
         &mut self,
         arg0: impl Into<crate::bukkit::Color<'mc>>,
@@ -7150,22 +7287,6 @@ impl<'mc> PotionMeta<'mc> {
             .call_method(&self.jni_object(), "hasColor", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::PotionMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/PotionMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::PotionMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7198,8 +7319,11 @@ impl<'mc> PotionMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -7227,8 +7351,11 @@ impl<'mc> PotionMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -7243,13 +7370,17 @@ impl<'mc> PotionMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -7605,6 +7736,12 @@ impl<'mc> BlockStateMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7624,8 +7761,11 @@ impl<'mc> BlockStateMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -7653,8 +7793,11 @@ impl<'mc> BlockStateMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -7669,13 +7812,17 @@ impl<'mc> BlockStateMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -7921,12 +8068,6 @@ impl<'mc> BlockStateMeta<'mc> {
         )?;
         Ok(())
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn persistent_data_container(
         &mut self,
     ) -> Result<crate::bukkit::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>>
@@ -7989,6 +8130,12 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
     }
     pub fn has_stored_enchant(
         &mut self,
@@ -8070,25 +8217,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
                 .call_method(&self.jni_object(), "hasStoredEnchants", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::inventory::meta::EnchantmentStorageMeta<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/EnchantmentStorageMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::EnchantmentStorageMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8121,8 +8249,11 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -8150,8 +8281,11 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -8166,13 +8300,17 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -8480,6 +8618,12 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn set_recipes(
         &mut self,
         arg0: Vec<impl Into<crate::bukkit::NamespacedKey<'mc>>>,
@@ -8524,12 +8668,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .call_method(&self.jni_object(), "hasRecipes", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8562,8 +8700,11 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -8591,8 +8732,11 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -8607,13 +8751,17 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -8919,6 +9067,12 @@ impl<'mc> MapMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn set_color(
         &mut self,
         arg0: impl Into<crate::bukkit::Color<'mc>>,
@@ -9051,8 +9205,11 @@ impl<'mc> MapMeta<'mc> {
             .to_string())
     }
     #[deprecated]
-    pub fn set_location_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_location_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocationName",
@@ -9060,22 +9217,6 @@ impl<'mc> MapMeta<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::MapMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/MapMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::MapMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -9109,8 +9250,11 @@ impl<'mc> MapMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -9138,8 +9282,11 @@ impl<'mc> MapMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -9154,13 +9301,17 @@ impl<'mc> MapMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -9499,31 +9650,17 @@ impl<'mc> BookMetaSpigot<'mc> {
         )?;
         Ok(())
     }
-    pub fn set_pages_with_base_componentss(
+    pub fn set_pages_with_list(
         &mut self,
-        arg0: std::option::Option<
+        _arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let raw_val_0 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
-        for v in arg0.unwrap() {
-            let map_val_0 = unsafe { jni::objects::JObject::from_raw(v.into().1.clone()) };
-            self.jni_ref().call_method(
-                &raw_val_0,
-                "add",
-                "(Ljava/Lang/Object)V",
-                &[jni::objects::JValueGen::from(&map_val_0)],
-            )?;
-        }
-        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPages",
-            "(Ljava/util/List;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "(Lnet/md_5/bungee/api/chat/BaseComponent;)V",
+            &[],
         )?;
         Ok(())
     }
@@ -9639,6 +9776,23 @@ impl<'mc> LeatherArmorMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::LeatherArmorMeta<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/LeatherArmorMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::LeatherArmorMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn set_color(
         &mut self,
         arg0: impl Into<crate::bukkit::Color<'mc>>,
@@ -9661,23 +9815,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         )?;
         let ret = {
             crate::bukkit::Color(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::LeatherArmorMeta<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/LeatherArmorMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::LeatherArmorMeta(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -9715,8 +9852,11 @@ impl<'mc> LeatherArmorMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -9744,8 +9884,11 @@ impl<'mc> LeatherArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -9760,13 +9903,17 @@ impl<'mc> LeatherArmorMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -10074,6 +10221,23 @@ impl<'mc> FireworkEffectMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::FireworkEffectMeta<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/FireworkEffectMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::FireworkEffectMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn set_effect(
         &mut self,
         arg0: impl Into<crate::bukkit::FireworkEffect<'mc>>,
@@ -10104,23 +10268,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         )?;
         let ret = {
             crate::bukkit::FireworkEffect(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::FireworkEffectMeta<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/FireworkEffectMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::FireworkEffectMeta(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -10158,8 +10305,11 @@ impl<'mc> FireworkEffectMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -10187,8 +10337,11 @@ impl<'mc> FireworkEffectMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -10203,13 +10356,17 @@ impl<'mc> FireworkEffectMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -10518,6 +10675,12 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
+        Ok(res.l().unwrap())
+    }
     pub fn pattern(
         &mut self,
     ) -> Result<crate::bukkit::entity::TropicalFishPattern<'mc>, Box<dyn std::error::Error>> {
@@ -10633,12 +10796,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .call_method(&self.jni_object(), "hasVariant", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[])?;
-        Ok(res.l().unwrap())
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10671,8 +10828,11 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -10700,8 +10860,11 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -10716,13 +10879,17 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -11028,6 +11195,22 @@ impl<'mc> BookMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::BookMeta<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/BookMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::BookMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn spigot(
         &mut self,
     ) -> Result<crate::bukkit::inventory::meta::BookMetaSpigot<'mc>, Box<dyn std::error::Error>>
@@ -11059,9 +11242,13 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_page(&mut self, arg0: i32, arg1: String) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_page(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setPage",
@@ -11099,8 +11286,11 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_author(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_author(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setAuthor",
@@ -11109,21 +11299,46 @@ impl<'mc> BookMeta<'mc> {
         )?;
         Ok(())
     }
-    pub fn set_pages_with_list(
+    pub fn set_pages_with_strings(
         &mut self,
-        _arg0: std::option::Option<Vec<String>>,
+        arg0: std::option::Option<Vec<impl Into<String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "setPages", "(Ljava/lang/String;)V", &[])?;
+        let raw_val_0 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", &[])
+            .unwrap();
+        for v in arg0.unwrap() {
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            self.jni_ref().call_method(
+                &raw_val_0,
+                "add",
+                "(Ljava/Lang/Object)V",
+                &[jni::objects::JValueGen::from(&map_val_0)],
+            )?;
+        }
+        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPages",
+            "(Ljava/util/List;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
         Ok(())
     }
-    pub fn add_page(&mut self, _arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add_page(
+        &mut self,
+        _arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "addPage", "(Ljava/lang/String;)V", &[])?;
         Ok(())
     }
-    pub fn set_title(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_title(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTitle",
@@ -11192,22 +11407,6 @@ impl<'mc> BookMeta<'mc> {
             .call_method(&self.jni_object(), "getPageCount", "()I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::BookMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/BookMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::BookMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11240,8 +11439,11 @@ impl<'mc> BookMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -11269,8 +11471,11 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -11285,13 +11490,17 @@ impl<'mc> BookMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",
@@ -11599,6 +11808,23 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::bukkit::inventory::meta::MusicInstrumentMeta<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/inventory/meta/MusicInstrumentMeta;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::inventory::meta::MusicInstrumentMeta(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn instrument(
         &mut self,
     ) -> Result<crate::bukkit::MusicInstrument<'mc>, Box<dyn std::error::Error>> {
@@ -11627,23 +11853,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::bukkit::inventory::meta::MusicInstrumentMeta<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/MusicInstrumentMeta;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::inventory::meta::MusicInstrumentMeta(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -11677,8 +11886,11 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             .call_method(&self.jni_object(), "hasDisplayName", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_display_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -11706,8 +11918,11 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_localized_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_localized_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLocalizedName",
@@ -11722,13 +11937,17 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             .call_method(&self.jni_object(), "hasLore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
-    pub fn set_lore(&mut self, arg0: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(
+        &mut self,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let raw_val_0 = self
             .jni_ref()
             .new_object("java/util/ArrayList", "()V", &[])
             .unwrap();
         for v in arg0 {
-            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v).unwrap());
+            let map_val_0 =
+                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
             self.jni_ref().call_method(
                 &raw_val_0,
                 "add",

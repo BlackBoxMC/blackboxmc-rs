@@ -59,10 +59,10 @@ impl<'mc> ConfigurationSerialization<'mc> {
     pub fn register_class_with_class(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
             cls,
@@ -75,25 +75,25 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
-    pub fn unregister_class_with_class(
+    pub fn unregister_class_with_string(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap()).unwrap());
+        let val_0 = arg0.unwrap();
         let cls = &jni.find_class("void")?;
         let _res = jni.call_static_method(
             cls,
             "unregisterClass",
-            "(Ljava/lang/String;)V",
+            "(Ljava/lang/Class;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
     }
     pub fn get_class_by_alias(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("java/lang/Class")?;
         let res = jni.call_static_method(
             cls,
@@ -180,26 +180,13 @@ pub struct ConfigurationSerializable<'mc>(
 );
 impl<'mc> ConfigurationSerializable<'mc> {
     pub fn from_extendable(
-        _plugin: &crate::bukkit::plugin::Plugin,
         env: &crate::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::bukkit::plugin::Plugin,
         lib_name: String,
         name: String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = jni::objects::JValueGen::Object(env.new_object(
-            "net/ioixd/blackbox/extendables/ExtendableConfigurationSerializable",
-            "(Ljava/lang/String;Ljava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(name).unwrap(),
-                )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(lib_name).unwrap(),
-                )),
-            ],
-        )?);
-        Ok(Self(env.clone(), unsafe {
-            jni::objects::JObject::from_raw(obj.l()?.clone())
-        }))
+        let obj = unsafe { plugin.new_extendable("ConfigSerializable", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,

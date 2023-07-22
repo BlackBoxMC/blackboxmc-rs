@@ -40,16 +40,14 @@ impl<'mc> DefaultPermissions<'mc> {
     }
     pub fn register_permission_with_permission(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
-        arg1: std::option::Option<String>,
-        arg2: std::option::Option<impl Into<crate::bukkit::permissions::PermissionDefault<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
     ) -> Result<crate::bukkit::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(cls,"registerPermission",
-"(Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/permissions/PermissionDefault;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+"(Lorg/bukkit/permissions/Permission;Lorg/bukkit/permissions/Permission;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
         let ret = {
             let obj = res.l()?;
             crate::bukkit::permissions::Permission(jni, obj)
@@ -58,18 +56,18 @@ impl<'mc> DefaultPermissions<'mc> {
     }
     pub fn register_permission_with_string(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
-        arg1: String,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
         arg2: impl Into<crate::bukkit::permissions::PermissionDefault<'mc>>,
-        arg3: std::option::Option<std::collections::HashMap<String, bool>>,
+        arg3: std::option::Option<std::collections::HashMap<impl Into<String>, bool>>,
         arg4: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
     ) -> Result<crate::bukkit::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
         let raw_val_3 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
         for (k, v) in arg3.unwrap() {
-            let map_val_0 = jni::objects::JObject::from(jni.new_string(k).unwrap());
+            let map_val_0 = jni::objects::JObject::from(jni.new_string(k.into()).unwrap());
             // -2
             let map_val_1 = jni::objects::JValueGen::Bool(v.into());
             jni.call_method(

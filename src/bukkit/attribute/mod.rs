@@ -147,9 +147,9 @@ impl<'mc> Attribute<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<crate::bukkit::attribute::Attribute<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/attribute/Attribute")?;
         let res = jni.call_static_method(
             cls,
@@ -245,6 +245,18 @@ impl<'mc> AttributeInstance<'mc> {
         };
         Ok(ret)
     }
+    pub fn value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getValue", "()D", &[])?;
+        Ok(res.d().unwrap())
+    }
+    pub fn default_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDefaultValue", "()D", &[])?;
+        Ok(res.d().unwrap())
+    }
     pub fn base_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -286,18 +298,6 @@ impl<'mc> AttributeInstance<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getValue", "()D", &[])?;
-        Ok(res.d().unwrap())
-    }
-    pub fn default_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDefaultValue", "()D", &[])?;
-        Ok(res.d().unwrap())
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for AttributeInstance<'mc> {
@@ -355,10 +355,10 @@ impl<'mc> AttributeModifierOperation<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("java/lang/Enum")?;
         let res = jni.call_static_method(
             cls,
@@ -505,7 +505,7 @@ impl<'mc> AttributeModifier<'mc> {
     pub fn new_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: u128,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: std::option::Option<f64>,
         arg3: std::option::Option<
             impl Into<crate::bukkit::attribute::AttributeModifierOperation<'mc>>,
@@ -517,7 +517,7 @@ impl<'mc> AttributeModifier<'mc> {
             jni.new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
                 .unwrap(),
         );
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
         let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
         let cls = &jni.find_class("org/bukkit/attribute/AttributeModifier")?;
@@ -529,7 +529,7 @@ impl<'mc> AttributeModifier<'mc> {
     pub fn new_with_uuid(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: u128,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: f64,
         arg3: impl Into<crate::bukkit::attribute::AttributeModifierOperation<'mc>>,
         arg4: std::option::Option<impl Into<crate::bukkit::inventory::EquipmentSlot<'mc>>>,
@@ -540,7 +540,7 @@ impl<'mc> AttributeModifier<'mc> {
             jni.new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
                 .unwrap(),
         );
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
         let val_2 = jni::objects::JValueGen::Double(arg2.into());
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.into().1.clone()) };
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().1.clone()) };
@@ -573,61 +573,6 @@ impl<'mc> AttributeModifier<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn deserialize(
-        jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::collections::HashMap<String, jni::objects::JObject<'mc>>,
-    ) -> Result<crate::bukkit::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
-        let raw_val_0 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
-        for (k, v) in arg0 {
-            let map_val_0 = jni::objects::JObject::from(jni.new_string(k).unwrap());
-            let map_val_1 = v;
-            jni.call_method(
-                &raw_val_0,
-                "put",
-                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
-                &[
-                    jni::objects::JValueGen::from(&map_val_0),
-                    jni::objects::JValueGen::from(&map_val_1),
-                ],
-            )?;
-        }
-        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        let cls = &jni.find_class("org/bukkit/attribute/AttributeModifier")?;
-        let res = jni.call_static_method(
-            cls,
-            "deserialize",
-            "(Ljava/util/Map;)Lorg/bukkit/attribute/AttributeModifier;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let ret = {
-            let obj = res.l()?;
-            crate::bukkit::attribute::AttributeModifier(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAmount", "()D", &[])?;
-        Ok(res.d().unwrap())
-    }
-    pub fn operation(
-        &mut self,
-    ) -> Result<crate::bukkit::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOperation",
-            "()Lorg/bukkit/attribute/AttributeModifier$Operation;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::attribute::AttributeModifierOperation(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -698,6 +643,61 @@ impl<'mc> AttributeModifier<'mc> {
                 raw_obj,
                 crate::bukkit::inventory::EquipmentSlot::from_string(variant_str).unwrap(),
             )
+        };
+        Ok(ret)
+    }
+    pub fn deserialize(
+        jni: crate::SharedJNIEnv<'mc>,
+        arg0: std::collections::HashMap<impl Into<String>, jni::objects::JObject<'mc>>,
+    ) -> Result<crate::bukkit::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
+        let raw_val_0 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
+        for (k, v) in arg0 {
+            let map_val_0 = jni::objects::JObject::from(jni.new_string(k.into()).unwrap());
+            let map_val_1 = v;
+            jni.call_method(
+                &raw_val_0,
+                "put",
+                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
+                &[
+                    jni::objects::JValueGen::from(&map_val_0),
+                    jni::objects::JValueGen::from(&map_val_1),
+                ],
+            )?;
+        }
+        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
+        let cls = &jni.find_class("org/bukkit/attribute/AttributeModifier")?;
+        let res = jni.call_static_method(
+            cls,
+            "deserialize",
+            "(Ljava/util/Map;)Lorg/bukkit/attribute/AttributeModifier;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            let obj = res.l()?;
+            crate::bukkit::attribute::AttributeModifier(jni, obj)
+        };
+        Ok(ret)
+    }
+    pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAmount", "()D", &[])?;
+        Ok(res.d().unwrap())
+    }
+    pub fn operation(
+        &mut self,
+    ) -> Result<crate::bukkit::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOperation",
+            "()Lorg/bukkit/attribute/AttributeModifier$Operation;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::attribute::AttributeModifierOperation(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
         };
         Ok(ret)
     }

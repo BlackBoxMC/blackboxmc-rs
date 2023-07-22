@@ -46,10 +46,10 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("java/lang/Enum")?;
         let res = jni.call_static_method(
             cls,
@@ -247,6 +247,25 @@ impl<'mc> HangingBreakEvent<'mc> {
         };
         Ok(ret)
     }
+    pub fn cause(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -277,25 +296,6 @@ impl<'mc> HangingBreakEvent<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn cause(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
         };
         Ok(ret)
     }
@@ -409,6 +409,11 @@ impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for HangingBreakEvent<'mc
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+impl<'mc> Into<crate::bukkit::event::hanging::HangingEvent<'mc>> for HangingBreakEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::hanging::HangingEvent<'mc> {
+        crate::bukkit::event::hanging::HangingEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct HangingBreakByEntityEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -500,6 +505,25 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         };
         Ok(ret)
     }
+    pub fn cause(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -530,25 +554,6 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         let ret = {
             let obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
-        };
-        Ok(ret)
-    }
-    pub fn cause(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::event::hanging::HangingBreakEventRemoveCause<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::event::hanging::HangingBreakEventRemoveCause(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
         };
         Ok(ret)
     }
@@ -655,6 +660,13 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::hanging::HangingBreakEvent<'mc>>
+    for HangingBreakByEntityEvent<'mc>
+{
+    fn into(self) -> crate::bukkit::event::hanging::HangingBreakEvent<'mc> {
+        crate::bukkit::event::hanging::HangingBreakEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct HangingPlaceEvent<'mc>(
@@ -978,6 +990,11 @@ impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for HangingPlaceEvent<'mc
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+impl<'mc> Into<crate::bukkit::event::hanging::HangingEvent<'mc>> for HangingPlaceEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::hanging::HangingEvent<'mc> {
+        crate::bukkit::event::hanging::HangingEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct HangingEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1133,5 +1150,10 @@ impl<'mc> HangingEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::Event<'mc>> for HangingEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::Event<'mc> {
+        crate::bukkit::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

@@ -326,6 +326,12 @@ impl<'mc> CustomItemTagContainer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn adapter_context(
         &mut self,
     ) -> Result<
@@ -398,12 +404,6 @@ self.jni_ref().call_method(&self.jni_object(),"getCustomTag","(Lorg/bukkit/Names
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for CustomItemTagContainer<'mc> {

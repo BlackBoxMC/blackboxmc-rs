@@ -93,7 +93,6 @@ impl<'mc> SharedJNIEnv<'mc> {
     }
 }
 
-// hand-written type
 pub trait JNIRaw<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc>;
     fn jni_object(&self) -> jni::objects::JObject<'mc>;

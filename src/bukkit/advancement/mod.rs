@@ -52,8 +52,11 @@ impl<'mc> AdvancementProgress<'mc> {
         };
         Ok(ret)
     }
-    pub fn award_criteria(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn award_criteria(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "awardCriteria",
@@ -62,8 +65,11 @@ impl<'mc> AdvancementProgress<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn revoke_criteria(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn revoke_criteria(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "revokeCriteria",
@@ -74,9 +80,9 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     pub fn get_date_awarded(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDateAwarded",
@@ -141,26 +147,12 @@ impl<'mc> AdvancementDisplayType<'mc> {
             _ => None,
         }
     }
-    pub fn color(&mut self) -> Result<crate::bukkit::ChatColor<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getColor",
-            "()Lorg/bukkit/ChatColor;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::ChatColor(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
     {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/advancement/AdvancementDisplayType")?;
         let res = jni.call_static_method(
             cls,
@@ -182,6 +174,20 @@ impl<'mc> AdvancementDisplayType<'mc> {
                 crate::bukkit::advancement::AdvancementDisplayType::from_string(variant_str)
                     .unwrap(),
             )
+        };
+        Ok(ret)
+    }
+    pub fn color(&mut self) -> Result<crate::bukkit::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getColor",
+            "()Lorg/bukkit/ChatColor;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::ChatColor(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
         };
         Ok(ret)
     }
@@ -215,6 +221,41 @@ impl<'mc> AdvancementDisplay<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+    pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isHidden", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/advancement/AdvancementDisplayType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::advancement::AdvancementDisplayType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::advancement::AdvancementDisplayType::from_string(variant_str)
+                    .unwrap(),
+            )
+        };
+        Ok(ret)
     }
     pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
@@ -281,41 +322,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "shouldAnnounceChat", "()Z", &[])?;
         Ok(res.z().unwrap())
-    }
-    pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isHidden", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/advancement/AdvancementDisplayType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::advancement::AdvancementDisplayType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::advancement::AdvancementDisplayType::from_string(variant_str)
-                    .unwrap(),
-            )
-        };
-        Ok(ret)
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for AdvancementDisplay<'mc> {

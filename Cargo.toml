@@ -8,3 +8,6 @@ edition = "2021"
 [dependencies]
 eyre = "0.6.8"
 jni = "0.21.1"
+blackbox_rs_proc = {path = "./blackbox-rs-proc"}
+parking_lot = "0.12.1"
+syn = { version = "2.0.27", features = ["full"] }

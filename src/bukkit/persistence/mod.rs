@@ -275,24 +275,12 @@ pub struct PersistentDataType<'mc>(
 impl<'mc> PersistentDataType<'mc> {
     pub fn from_extendable(
         env: &crate::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::bukkit::plugin::Plugin,
         lib_name: String,
         name: String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = jni::objects::JValueGen::Object(env.new_object(
-            "net/ioixd/blackbox/extendables/ExtendablePersistentDataType",
-            "(Ljava/lang/String;Ljava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(name).unwrap(),
-                )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
-                    env.new_string(lib_name).unwrap(),
-                )),
-            ],
-        )?);
-        Ok(Self(env.clone(), unsafe {
-            jni::objects::JObject::from_raw(obj.l()?.clone())
-        }))
+        let obj = unsafe { plugin.new_extendable("PersistentDataType", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn from_raw(
         env: &crate::SharedJNIEnv<'mc>,
@@ -598,25 +586,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
-    pub fn adapter_context(
-        &mut self,
-    ) -> Result<
-        crate::bukkit::persistence::PersistentDataAdapterContext<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAdapterContext",
-            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::persistence::PersistentDataAdapterContext(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn remove(
         &mut self,
         arg0: impl Into<crate::bukkit::NamespacedKey<'mc>>,
@@ -671,6 +640,25 @@ self.jni_ref().call_method(&self.jni_object(),"get","(Lorg/bukkit/NamespacedKey;
         let res =
 self.jni_ref().call_method(&self.jni_object(),"getOrDefault","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/persistence/PersistentDataType;Ljava/lang/Object;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         Ok(res.l().unwrap())
+    }
+    pub fn adapter_context(
+        &mut self,
+    ) -> Result<
+        crate::bukkit::persistence::PersistentDataAdapterContext<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAdapterContext",
+            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::persistence::PersistentDataAdapterContext(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
     }
 }
 impl<'mc> crate::JNIRaw<'mc> for PersistentDataContainer<'mc> {

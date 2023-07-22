@@ -289,6 +289,68 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/entity/EntityType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::entity::EntityType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -425,15 +487,35 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn teleport_with_location(
         &mut self,
-        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(res.z().unwrap())
     }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -894,8 +976,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn add_scoreboard_tag(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn add_scoreboard_tag(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addScoreboardTag",
@@ -906,9 +991,9 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_scoreboard_tag(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeScoreboardTag",
@@ -985,70 +1070,12 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         };
         Ok(ret)
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/entity/EntityType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::entity::EntityType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -1061,8 +1088,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn has_metadata(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn has_metadata(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -1073,51 +1103,15 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_string(
-        &mut self,
-        _arg0: std::option::Option<Vec<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/lang/String;)V",
-            &[],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_uuid(
-        &mut self,
-        arg0: u128,
-        arg1: std::option::Option<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_0 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/util/UUID;Ljava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -1138,6 +1132,43 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<impl Into<String>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
@@ -1153,9 +1184,10 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn has_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPermission",
@@ -1167,13 +1199,13 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: bool,
         arg3: std::option::Option<i32>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
@@ -1234,8 +1266,11 @@ self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plug
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_custom_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_custom_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomName",
@@ -1542,6 +1577,68 @@ impl<'mc> HopperMinecart<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/entity/EntityType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::entity::EntityType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -1678,15 +1775,35 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn teleport_with_location(
         &mut self,
-        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(res.z().unwrap())
     }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2147,8 +2264,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn add_scoreboard_tag(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn add_scoreboard_tag(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addScoreboardTag",
@@ -2159,9 +2279,9 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_scoreboard_tag(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeScoreboardTag",
@@ -2238,70 +2358,12 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         };
         Ok(ret)
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/entity/EntityType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::entity::EntityType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -2314,8 +2376,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn has_metadata(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn has_metadata(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -2326,51 +2391,15 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_string(
-        &mut self,
-        _arg0: std::option::Option<Vec<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/lang/String;)V",
-            &[],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_uuid(
-        &mut self,
-        arg0: u128,
-        arg1: std::option::Option<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_0 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/util/UUID;Ljava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -2391,6 +2420,43 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<impl Into<String>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
@@ -2406,9 +2472,10 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn has_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPermission",
@@ -2420,13 +2487,13 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: bool,
         arg3: std::option::Option<i32>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
@@ -2487,8 +2554,11 @@ self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plug
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_custom_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_custom_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomName",
@@ -2849,6 +2919,68 @@ impl<'mc> StorageMinecart<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/entity/EntityType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::entity::EntityType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -2985,15 +3117,35 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn teleport_with_location(
         &mut self,
-        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(res.z().unwrap())
     }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3454,8 +3606,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn add_scoreboard_tag(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn add_scoreboard_tag(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addScoreboardTag",
@@ -3466,9 +3621,9 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_scoreboard_tag(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeScoreboardTag",
@@ -3545,70 +3700,12 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         };
         Ok(ret)
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/entity/EntityType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::entity::EntityType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -3621,8 +3718,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn has_metadata(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn has_metadata(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -3633,51 +3733,15 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_string(
-        &mut self,
-        _arg0: std::option::Option<Vec<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/lang/String;)V",
-            &[],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_uuid(
-        &mut self,
-        arg0: u128,
-        arg1: std::option::Option<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_0 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/util/UUID;Ljava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -3698,6 +3762,43 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<impl Into<String>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
@@ -3713,9 +3814,10 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn has_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPermission",
@@ -3727,13 +3829,13 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: bool,
         arg3: std::option::Option<i32>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
@@ -3794,8 +3896,11 @@ self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plug
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_custom_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_custom_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomName",
@@ -4156,6 +4261,68 @@ impl<'mc> SpawnerMinecart<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/entity/EntityType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::entity::EntityType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -4292,15 +4459,35 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn teleport_with_location(
         &mut self,
-        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(res.z().unwrap())
     }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4761,8 +4948,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn add_scoreboard_tag(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn add_scoreboard_tag(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addScoreboardTag",
@@ -4773,9 +4963,9 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_scoreboard_tag(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeScoreboardTag",
@@ -4852,70 +5042,12 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         };
         Ok(ret)
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/entity/EntityType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::entity::EntityType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -4928,8 +5060,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn has_metadata(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn has_metadata(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -4940,51 +5075,15 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_string(
-        &mut self,
-        _arg0: std::option::Option<Vec<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/lang/String;)V",
-            &[],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_uuid(
-        &mut self,
-        arg0: u128,
-        arg1: std::option::Option<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_0 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/util/UUID;Ljava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -5005,6 +5104,43 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<impl Into<String>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
@@ -5020,9 +5156,10 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn has_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPermission",
@@ -5034,13 +5171,13 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: bool,
         arg3: std::option::Option<i32>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
@@ -5101,8 +5238,11 @@ self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plug
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_custom_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_custom_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomName",
@@ -5408,6 +5548,68 @@ impl<'mc> PoweredMinecart<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/entity/EntityType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::entity::EntityType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -5544,15 +5746,35 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn teleport_with_location(
         &mut self,
-        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(res.z().unwrap())
     }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -6013,8 +6235,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn add_scoreboard_tag(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn add_scoreboard_tag(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addScoreboardTag",
@@ -6025,9 +6250,9 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_scoreboard_tag(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeScoreboardTag",
@@ -6104,70 +6329,12 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         };
         Ok(ret)
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/entity/EntityType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::entity::EntityType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -6180,8 +6347,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn has_metadata(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn has_metadata(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -6192,51 +6362,15 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_string(
-        &mut self,
-        _arg0: std::option::Option<Vec<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/lang/String;)V",
-            &[],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_uuid(
-        &mut self,
-        arg0: u128,
-        arg1: std::option::Option<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_0 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/util/UUID;Ljava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -6257,6 +6391,43 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<impl Into<String>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
@@ -6272,9 +6443,10 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn has_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPermission",
@@ -6286,13 +6458,13 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: bool,
         arg3: std::option::Option<i32>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
@@ -6353,8 +6525,11 @@ self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plug
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_custom_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_custom_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomName",
@@ -6644,6 +6819,68 @@ impl<'mc> RideableMinecart<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/entity/EntityType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::entity::EntityType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -6780,15 +7017,35 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn teleport_with_location(
         &mut self,
-        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(res.z().unwrap())
     }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -7249,8 +7506,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn add_scoreboard_tag(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn add_scoreboard_tag(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addScoreboardTag",
@@ -7261,9 +7521,9 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_scoreboard_tag(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeScoreboardTag",
@@ -7340,70 +7600,12 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         };
         Ok(ret)
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/entity/EntityType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::entity::EntityType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -7416,8 +7618,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn has_metadata(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn has_metadata(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -7428,51 +7633,15 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_string(
-        &mut self,
-        _arg0: std::option::Option<Vec<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/lang/String;)V",
-            &[],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_uuid(
-        &mut self,
-        arg0: u128,
-        arg1: std::option::Option<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_0 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/util/UUID;Ljava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -7493,6 +7662,43 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<impl Into<String>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
@@ -7508,9 +7714,10 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn has_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPermission",
@@ -7522,13 +7729,13 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: bool,
         arg3: std::option::Option<i32>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
@@ -7589,8 +7796,11 @@ self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plug
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_custom_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_custom_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomName",
@@ -7661,6 +7871,16 @@ impl<'mc> CommandMinecart<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn set_name(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
     pub fn command(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7674,21 +7894,14 @@ impl<'mc> CommandMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_command(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_command(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCommand",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(())
-    }
-    pub fn set_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
@@ -7913,6 +8126,68 @@ impl<'mc> CommandMinecart<'mc> {
             .call_method(&self.jni_object(), "isValid", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref()
+            .call_method(&self.jni_object(), "remove", "()V", &[])?;
+        Ok(())
+    }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
+    pub fn get_location(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
+    ) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let ret = {
+            crate::bukkit::Location(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/entity/EntityType;",
+            &[],
+        )?;
+        let ret = {
+            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+            let variant =
+                self.jni_ref()
+                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            let variant_str = self
+                .jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+                .to_string_lossy()
+                .to_string();
+            crate::bukkit::entity::EntityType(
+                self.jni_ref(),
+                raw_obj,
+                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
+            )
+        };
+        Ok(ret)
+    }
+    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
+        Ok(res.z().unwrap())
+    }
     pub fn facing(
         &mut self,
     ) -> Result<crate::bukkit::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -8049,15 +8324,35 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn teleport_with_location(
         &mut self,
-        arg0: impl Into<crate::bukkit::entity::Entity<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bukkit::entity::Entity<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/entity/Entity;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
+    }
+    pub fn teleport_with_entity(
+        &mut self,
+        arg0: impl Into<crate::bukkit::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::bukkit::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "teleport",
+            "(Lorg/bukkit/Location;Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
         Ok(res.z().unwrap())
     }
     pub fn entity_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -8518,8 +8813,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn add_scoreboard_tag(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn add_scoreboard_tag(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addScoreboardTag",
@@ -8530,9 +8828,9 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_scoreboard_tag(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeScoreboardTag",
@@ -8609,70 +8907,12 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         };
         Ok(ret)
     }
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "remove", "()V", &[])?;
-        Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn location(&mut self) -> Result<crate::bukkit::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::Location(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::bukkit::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/entity/EntityType;",
-            &[],
-        )?;
-        let ret = {
-            let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-            let variant =
-                self.jni_ref()
-                    .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-            let variant_str = self
-                .jni_ref()
-                .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-                .to_string_lossy()
-                .to_string();
-            crate::bukkit::entity::EntityType(
-                self.jni_ref(),
-                raw_obj,
-                crate::bukkit::entity::EntityType::from_string(variant_str).unwrap(),
-            )
-        };
-        Ok(ret)
-    }
-    pub fn is_frozen(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
@@ -8685,8 +8925,11 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
         )?;
         Ok(())
     }
-    pub fn has_metadata(&mut self, arg0: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn has_metadata(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -8697,51 +8940,15 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: String,
+        arg0: impl Into<String>,
         arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_string(
-        &mut self,
-        _arg0: std::option::Option<Vec<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/lang/String;)V",
-            &[],
-        )?;
-        Ok(())
-    }
-    pub fn send_message_with_uuid(
-        &mut self,
-        arg0: u128,
-        arg1: std::option::Option<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_0 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap()).unwrap());
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "sendMessage",
-            "(Ljava/util/UUID;Ljava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -8762,6 +8969,43 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
             .to_string_lossy()
             .to_string())
     }
+    pub fn send_message_with_string(
+        &mut self,
+        _arg0: std::option::Option<Vec<impl Into<String>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/lang/String;)V",
+            &[],
+        )?;
+        Ok(())
+    }
+    pub fn send_message_with_uuid(
+        &mut self,
+        arg0: u128,
+        arg1: std::option::Option<impl Into<String>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let upper = (arg0 >> 64) as u64 as i64;
+        let lower = arg0 as u64 as i64;
+        let val_0 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "sendMessage",
+            "(Ljava/util/UUID;Ljava/lang/String;)V",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        Ok(())
+    }
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::permissions::Permission<'mc>>>,
@@ -8777,9 +9021,10 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     }
     pub fn has_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<String>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap()).unwrap());
+        let val_0 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasPermission",
@@ -8791,13 +9036,13 @@ self.jni_ref().call_method(&self.jni_object(),"teleport","(Lorg/bukkit/entity/En
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
-        arg1: String,
+        arg1: impl Into<String>,
         arg2: bool,
         arg3: std::option::Option<i32>,
     ) -> Result<crate::bukkit::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg2.into());
         let val_3 = jni::objects::JValueGen::Int(arg3.unwrap().into());
@@ -8858,8 +9103,11 @@ self.jni_ref().call_method(&self.jni_object(),"addAttachment","(Lorg/bukkit/plug
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_custom_name(&mut self, arg0: String) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0).unwrap());
+    pub fn set_custom_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomName",

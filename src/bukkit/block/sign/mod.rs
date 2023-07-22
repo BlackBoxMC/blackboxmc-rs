@@ -44,9 +44,9 @@ impl<'mc> Side<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<crate::bukkit::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/block/sign/Side")?;
         let res = jni.call_static_method(
             cls,
@@ -119,9 +119,13 @@ impl<'mc> SignSide<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_line(&mut self, arg0: i32, arg1: String) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_line(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         self.jni_ref().call_method(
             &self.jni_object(),
             "setLine",

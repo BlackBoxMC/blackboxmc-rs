@@ -169,6 +169,11 @@ impl<'mc> RaidEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::world::WorldEvent<'mc>> for RaidEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::world::WorldEvent<'mc> {
+        crate::bukkit::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct RaidSpawnWaveEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -406,6 +411,11 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::raid::RaidEvent<'mc>> for RaidSpawnWaveEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::raid::RaidEvent<'mc> {
+        crate::bukkit::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct RaidTriggerEvent<'mc>(
@@ -655,6 +665,11 @@ impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for RaidTriggerEvent<'mc>
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+impl<'mc> Into<crate::bukkit::event::raid::RaidEvent<'mc>> for RaidTriggerEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::raid::RaidEvent<'mc> {
+        crate::bukkit::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct RaidFinishEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -874,6 +889,11 @@ impl<'mc> RaidFinishEvent<'mc> {
         Ok(())
     }
 }
+impl<'mc> Into<crate::bukkit::event::raid::RaidEvent<'mc>> for RaidFinishEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::raid::RaidEvent<'mc> {
+        crate::bukkit::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct RaidStopEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -919,10 +939,10 @@ impl<'mc> RaidStopEventReason<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("java/lang/Enum")?;
         let res = jni.call_static_method(
             cls,
@@ -1110,22 +1130,6 @@ impl<'mc> RaidStopEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getHandlers",
-            "()Lorg/bukkit/event/HandlerList;",
-            &[],
-        )?;
-        let ret = {
-            crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
-                jni::objects::JObject::from_raw(res.l()?.clone())
-            })
-        };
-        Ok(ret)
-    }
     pub fn reason(
         &mut self,
     ) -> Result<crate::bukkit::event::raid::RaidStopEventReason<'mc>, Box<dyn std::error::Error>>
@@ -1138,6 +1142,22 @@ impl<'mc> RaidStopEvent<'mc> {
         )?;
         let ret = {
             crate::bukkit::event::raid::RaidStopEventReason(self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })
+        };
+        Ok(ret)
+    }
+    pub fn handlers(
+        &mut self,
+    ) -> Result<crate::bukkit::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHandlers",
+            "()Lorg/bukkit/event/HandlerList;",
+            &[],
+        )?;
+        let ret = {
+            crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
             })
         };
@@ -1274,5 +1294,10 @@ impl<'mc> RaidStopEvent<'mc> {
         self.jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
         Ok(())
+    }
+}
+impl<'mc> Into<crate::bukkit::event::raid::RaidEvent<'mc>> for RaidStopEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::raid::RaidEvent<'mc> {
+        crate::bukkit::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

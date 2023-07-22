@@ -44,20 +44,20 @@ impl<'mc> HandlerList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn unregister_with_registered_listener(
+    pub fn register(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
+        arg0: impl Into<crate::bukkit::plugin::RegisteredListener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         self.jni_ref().call_method(
             &self.jni_object(),
-            "unregister",
-            "(Lorg/bukkit/plugin/Plugin;)V",
+            "register",
+            "(Lorg/bukkit/plugin/RegisteredListener;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
     }
-    pub fn unregister_with_listener(
+    pub fn unregister_with_registered_listener(
         &mut self,
         arg0: std::option::Option<impl Into<crate::bukkit::event::Listener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -66,6 +66,19 @@ impl<'mc> HandlerList<'mc> {
             &self.jni_object(),
             "unregister",
             "(Lorg/bukkit/event/Listener;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(())
+    }
+    pub fn unregister_with_plugin(
+        &mut self,
+        arg0: std::option::Option<impl Into<crate::bukkit::plugin::Plugin<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregister",
+            "(Lorg/bukkit/plugin/Plugin;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
@@ -92,19 +105,6 @@ impl<'mc> HandlerList<'mc> {
     pub fn bake(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         self.jni_ref()
             .call_method(&self.jni_object(), "bake", "()V", &[])?;
-        Ok(())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<crate::bukkit::plugin::RegisteredListener<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/plugin/RegisteredListener;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
         Ok(())
     }
     pub fn wait(
@@ -275,12 +275,6 @@ impl<'mc> EventHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn ignore_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ignoreCancelled", "()Z", &[])?;
-        Ok(res.z().unwrap())
-    }
     pub fn priority(
         &mut self,
     ) -> Result<crate::bukkit::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
@@ -307,6 +301,12 @@ impl<'mc> EventHandler<'mc> {
             )
         };
         Ok(ret)
+    }
+    pub fn ignore_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "ignoreCancelled", "()Z", &[])?;
+        Ok(res.z().unwrap())
     }
     pub fn equals(
         &mut self,
@@ -404,10 +404,10 @@ impl<'mc> EventResult<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("java/lang/Enum")?;
         let res = jni.call_static_method(
             cls,
@@ -749,9 +749,9 @@ impl<'mc> EventPriority<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: String,
+        arg0: impl Into<String>,
     ) -> Result<crate::bukkit::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0).unwrap());
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/event/EventPriority")?;
         let res = jni.call_static_method(
             cls,

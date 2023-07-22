@@ -350,6 +350,11 @@ impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for EnchantItemEvent<'mc>
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+impl<'mc> Into<crate::bukkit::event::inventory::InventoryEvent<'mc>> for EnchantItemEvent<'mc> {
+    fn into(self) -> crate::bukkit::event::inventory::InventoryEvent<'mc> {
+        crate::bukkit::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
 pub struct PrepareItemEnchantEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -639,5 +644,12 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
 impl<'mc> Into<crate::bukkit::event::Cancellable<'mc>> for PrepareItemEnchantEvent<'mc> {
     fn into(self) -> crate::bukkit::event::Cancellable<'mc> {
         crate::bukkit::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+    }
+}
+impl<'mc> Into<crate::bukkit::event::inventory::InventoryEvent<'mc>>
+    for PrepareItemEnchantEvent<'mc>
+{
+    fn into(self) -> crate::bukkit::event::inventory::InventoryEvent<'mc> {
+        crate::bukkit::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

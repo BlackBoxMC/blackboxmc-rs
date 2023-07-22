@@ -1,7 +1,9 @@
 {
     "rust-analyzer.linkedProjects": [
-        "./blackbox-bukkit/Cargo.toml",
-        "./blackbox-bungee/Cargo.toml",
+        "./Cargo.toml",
+        "./proc/Cargo.toml",
         "./examples/block-break-event/Cargo.toml",
+        "./examples/mc-classic-mode/Cargo.toml",
     ],
+    "rust-analyzer.experimental.procAttrMacros" :false
 }
