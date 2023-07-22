@@ -26,6 +26,21 @@ impl Parse for Args {
     }
 }
 
+/**
+    ## extends_blackbox
+    Procedural macro that lets you extend BlackBox structs in a Rust-idomatic manner, although the way it is done is not Rust-idomatic at all. It enforces a set of rules on your struct and then creates the proper external facing functions according to the standard that the BlackBoxMC plugin expects.
+
+    ### Caveats
+    Java requires an object representation of your struct to be created, and in order for the macro to work, the "new" method has to take a special set of arguments and do something specific. It is implicitly created for you, and to avoid confusion and other conflicts, you lose the ability to make it yourself (however, an alternative macro that doesn't create the `new` method may be created). You can, however, create a method titled `_new`. If you do so, the generated new function will call that one while it is creating the struct, and any arguments that `_new` takes will be added to `new`.
+
+    `__finalize` is also a reserved function name, because it is used in dynamic structs as explained below.
+
+    You have control over whether the overridden functions have `self` (or a immutable/mutable reference to it) as the first parameter or not. This leads to the macro supporting two types of structs:
+    * Static structs: Structs in which none of the functions call `self`. You do still have to instantiate the struct via the aformentioned generated `new` method, but none of the pitfalls of dynamic structs apply.
+    * Dynamic structs: Struct in which some, or all, of the functions use `self`. This creates many logistical challenges because Java needs to be able to work with a dynamic struct via static functions. The solution is very much not in the name of Rust, but this is a sacrifice to be made: for these structs, the macro will generate a static [MemoryMap](blackbox_rs::macros::memory::MemoryMap) of any instantiated structs that lasts the lifetime of the program, or until Java's GC drops the object that is bound to your struct (a behavior which this macro implements for you), whichever comes first. The static functions will then reference this memory map. There is a lot of room for error here, and if this makes you feel uncomfortable, you should probably use static structs. However, this evil is required for this functionality to actually be useful for many extendable structs.
+
+    *TODO: table of what can be overwritten and what the functions to be extended are*
+*/
 #[proc_macro_attribute]
 pub fn extends_blackbox(
     attr: OriginalTokenStream,
@@ -210,9 +225,43 @@ fn extends_general(
     let abstract_functions_with_args =
         ExtendRequirements::from_type(&ty).abstract_functions_with_args;
 
-    // Do a sanity check on the impl.
     let struct_name = type_name(&*item.self_ty, false, false, false);
 
+    // Do a sanity check on the impl.
+    function_sanity_check(
+        ty,
+        attr,
+        item,
+        &abstract_functions_with_args,
+        &mut errors,
+        &mut notes,
+    );
+
+    // Generate the real deal.
+
+    // ...
+
+    if errors.len() >= 1 || notes.len() >= 1 {
+        let mut final_errors: Vec<Diagnostic> = vec![];
+        for (span, error) in errors {
+            final_errors.push(span.error(error))
+        }
+        for (span, note) in notes {
+            final_errors.push(span.note(note))
+        }
+        return Err(final_errors);
+    }
+    Ok(basis.parse().unwrap())
+}
+
+fn function_sanity_check(
+    ty: ExtendType,
+    attr: TokenStream,
+    item: ItemImpl,
+    abstract_functions_with_args: &Vec<(&str, Vec<&str>, &str)>,
+    errors: &mut Vec<(Span, String)>,
+    notes: &mut Vec<(Span, String)>,
+) {
     let mut corr_functions = vec![];
 
     for item in item.items.clone() {
@@ -227,7 +276,7 @@ fn extends_general(
                     }
                 });
                 // It has the name. Does it have the correct amount of arguments?
-                let mut args = f
+                let args = f
                     .sig
                     .inputs
                     .iter()
@@ -314,18 +363,6 @@ fn extends_general(
         ));
         notes.push((item.span(), format!("{}", functions)));
     }
-
-    if errors.len() >= 1 || notes.len() >= 1 {
-        let mut final_errors: Vec<Diagnostic> = vec![];
-        for (span, error) in errors {
-            final_errors.push(span.error(error))
-        }
-        for (span, note) in notes {
-            final_errors.push(span.note(note))
-        }
-        return Err(final_errors);
-    }
-    Ok(basis.parse().unwrap())
 }
 
 fn function_signature_from_extend_requirement(

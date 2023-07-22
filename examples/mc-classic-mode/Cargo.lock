@@ -21,6 +21,7 @@ dependencies = [
  "blackbox_rs_proc",
  "eyre",
  "jni",
+ "once_cell",
  "parking_lot",
  "syn",
 ]

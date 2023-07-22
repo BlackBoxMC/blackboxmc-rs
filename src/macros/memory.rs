@@ -1,14 +1,18 @@
 use std::ops::{Deref, DerefMut};
 
+use once_cell::sync::Lazy;
 use parking_lot::{Mutex, MutexGuard};
 
+/// Thread-safe wrapper of [Vec](std::vec::Vec) that lasts for the lifetime of the program. Used by the [extends_blackbox](blackbox_rs::macros::extends_blackbox) macros to allow for dynamic structs that extend Java classes.
 pub struct MemoryMap<T> {
-    parts: Vec<Mutex<T>>,
+    parts: Lazy<Vec<Mutex<T>>>,
 }
 
 impl<T> MemoryMap<T> {
-    pub fn new() -> Self {
-        Self { parts: Vec::new() }
+    pub const fn new() -> Self {
+        Self {
+            parts: Lazy::new(|| Vec::new()),
+        }
     }
     pub fn get(&self, index: usize) -> Option<MutexGuard<T>> {
         match self.parts.get(index) {
