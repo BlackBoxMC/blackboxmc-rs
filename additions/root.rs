@@ -86,6 +86,10 @@ impl<'mc> SharedJNIEnv<'mc> {
     pub fn exception_occurred(&self) -> Result<jni::objects::JThrowable<'mc>, jni::errors::Error> {
         self.jni.borrow_mut().exception_occurred()
     }
+
+    pub fn exception_clear(&self) -> Result<(), jni::errors::Error> {
+        self.jni.borrow_mut().exception_clear()
+    }
 }
 
 impl<'mc> Clone for SharedJNIEnv<'mc> {
