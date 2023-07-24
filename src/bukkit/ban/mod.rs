@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ProfileBanList. Needed for returning it from Java.
 pub struct ProfileBanList<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -33,17 +34,17 @@ impl<'mc> ProfileBanList<'mc> {
     pub fn add_ban_with_player_profile(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
+        arg1: impl Into<&'mc String>,
         arg2: jni::objects::JObject<'mc>,
-        arg3: std::option::Option<impl Into<String>>,
+        arg3: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bukkit::BanEntry<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = arg2;
         let val_3 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::BanEntry(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -54,17 +55,17 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava
     pub fn add_ban_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
+        arg1: impl Into<&'mc String>,
         arg2: jni::objects::JObject<'mc>,
-        arg3: std::option::Option<impl Into<String>>,
+        arg3: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bukkit::BanEntry<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = arg2;
         let val_3 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/time/Instant;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/time/Instant;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::BanEntry(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -75,18 +76,18 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava
     #[deprecated]
     pub fn add_ban_with_string(
         &mut self,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
+        arg0: impl Into<&'mc String>,
+        arg1: impl Into<&'mc String>,
         arg2: jni::objects::JObject<'mc>,
-        arg3: std::option::Option<impl Into<String>>,
+        arg3: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bukkit::BanEntry<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = arg2;
         let val_3 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::BanEntry(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -104,7 +105,8 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava
             "getBanEntry",
             "(Ljava/lang/Object;)Lorg/bukkit/BanEntry;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::BanEntry(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -122,22 +124,24 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava
             "isBanned",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     #[deprecated]
     pub fn pardon_with_object(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pardon",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -193,7 +197,8 @@ impl<'mc> IpBanList<'mc> {
             "getBanEntry",
             "(Ljava/lang/Object;)Lorg/bukkit/BanEntry;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::BanEntry(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -204,18 +209,18 @@ impl<'mc> IpBanList<'mc> {
     #[deprecated]
     pub fn add_ban_with_object(
         &mut self,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
+        arg0: impl Into<&'mc String>,
+        arg1: impl Into<&'mc String>,
         arg2: jni::objects::JObject<'mc>,
-        arg3: std::option::Option<impl Into<String>>,
+        arg3: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bukkit::BanEntry<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = arg2;
         let val_3 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::BanEntry(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -233,22 +238,24 @@ self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava
             "isBanned",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     #[deprecated]
     pub fn pardon_with_object(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pardon",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }

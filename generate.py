@@ -103,7 +103,7 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
             thing += ">"
         else:
             if (internal_do_into or is_string) and not returning:
-                thing += "impl Into<"
+                thing += "impl Into<&'mc "
             if len(ty["generics"]) >= 1:
                 thing += ty["type_name_alone"]+"<"
                 j = []
@@ -320,15 +320,14 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     ",".join(types)+
                     "])"+end_line+";")
     else:
-        if return_group["type_name_resolved"] != "()":
-            code.append("let res =")
         code.append(
-            prefix+".call_method("+
+            "let res = "+prefix+".call_method("+
                     "&"+obj_call+","+
                     "\""+method["original_name"]+"\",\""+
                     java_call_signature_format(func_signature, return_group["type_name_original"])+"\",&["+
                     ",".join(types)+
-                    "])"+end_line+";")
+                    "]);"+
+            "let res = crate::java_error_throw("+prefix+", res)?;")
 
     match return_group["type_name_resolved"]:
         case "()": code.append("Ok(())")
@@ -1039,7 +1038,7 @@ def parse_classes(library, val, classes):
         parsed_classes[mod_path] = [full_name]
 
     if mod_path not in file_cache:
-        file_cache[mod_path] = ["#![allow(deprecated)]\nuse crate::JNIRaw;"]
+        file_cache[mod_path] = ["#![allow(deprecated)]\nuse crate::JNIRaw;\nuse color_eyre::eyre::Result;"]
 
     if (name == ""):
         return

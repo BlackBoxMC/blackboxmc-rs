@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct TextComponent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16,7 +17,7 @@ impl<'mc> crate::JNIRaw<'mc> for TextComponent<'mc> {
 impl<'mc> TextComponent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bungee::bungee::api::chat::TextComponent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
@@ -31,7 +32,9 @@ impl<'mc> TextComponent<'mc> {
     }
     pub fn new_with_text_component(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::TextComponent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::TextComponent<'mc>>,
+        >,
     ) -> Result<crate::bungee::bungee::api::chat::TextComponent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
@@ -76,16 +79,15 @@ impl<'mc> TextComponent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -95,7 +97,8 @@ impl<'mc> TextComponent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn duplicate(
@@ -107,7 +110,8 @@ impl<'mc> TextComponent<'mc> {
             "duplicate",
             "()Lnet/md_5/bungee/api/chat/TextComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::TextComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -116,26 +120,28 @@ impl<'mc> TextComponent<'mc> {
         Ok(ret)
     }
     pub fn text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getText",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getText", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_text(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_text(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setText",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_extra(
@@ -156,32 +162,36 @@ impl<'mc> TextComponent<'mc> {
             )?;
         }
         let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setExtra",
             "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_color(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::ChatColor<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
             "(Lnet/md_5/bungee/api/ChatColor;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn copy_formatting_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        >,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -189,7 +199,8 @@ impl<'mc> TextComponent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn color(
@@ -200,7 +211,8 @@ impl<'mc> TextComponent<'mc> {
             "getColor",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -210,15 +222,16 @@ impl<'mc> TextComponent<'mc> {
     }
     pub fn retain(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "retain",
             "(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     #[deprecated]
@@ -231,7 +244,8 @@ impl<'mc> TextComponent<'mc> {
             "duplicateWithoutFormatting",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -241,7 +255,7 @@ impl<'mc> TextComponent<'mc> {
     }
     pub fn to_legacy_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -259,7 +273,7 @@ impl<'mc> TextComponent<'mc> {
     }
     pub fn to_plain_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -283,7 +297,8 @@ impl<'mc> TextComponent<'mc> {
             "getColorRaw",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -292,12 +307,10 @@ impl<'mc> TextComponent<'mc> {
         Ok(ret)
     }
     pub fn font(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFont",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFont", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -310,7 +323,8 @@ impl<'mc> TextComponent<'mc> {
             "getFontRaw",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -320,185 +334,209 @@ impl<'mc> TextComponent<'mc> {
     pub fn is_bold(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBold", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBold", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_bold_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalic", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalic", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn add_extra_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addExtra",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_formatting(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[])?;
+            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_font(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_font(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setFont",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_bold(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_italic(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_underlined(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_strikethrough(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_obfuscated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_insertion(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInsertion",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_click_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setClickEvent",
             "(Lnet/md_5/bungee/api/chat/ClickEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_hover_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setHoverEvent",
             "(Lnet/md_5/bungee/api/chat/HoverEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn insertion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -507,7 +545,8 @@ impl<'mc> TextComponent<'mc> {
             "getInsertion",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -522,7 +561,8 @@ impl<'mc> TextComponent<'mc> {
             "getClickEvent",
             "()Lnet/md_5/bungee/api/chat/ClickEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ClickEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -538,7 +578,8 @@ impl<'mc> TextComponent<'mc> {
             "getHoverEvent",
             "()Lnet/md_5/bungee/api/chat/HoverEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::HoverEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -553,7 +594,7 @@ impl<'mc> TextComponent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -561,26 +602,29 @@ impl<'mc> TextComponent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -634,7 +678,7 @@ impl<'mc> HoverEventAction<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
@@ -653,7 +697,8 @@ impl<'mc> HoverEventAction<'mc> {
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[])?;
+                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -670,16 +715,15 @@ impl<'mc> HoverEventAction<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -689,7 +733,8 @@ impl<'mc> HoverEventAction<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -702,7 +747,8 @@ impl<'mc> HoverEventAction<'mc> {
             "compareTo",
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -713,7 +759,8 @@ impl<'mc> HoverEventAction<'mc> {
             "describeConstable",
             "()Ljava/util/Optional;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -724,13 +771,15 @@ impl<'mc> HoverEventAction<'mc> {
             "getDeclaringClass",
             "()Ljava/lang/Class;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[])?;
+            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -740,7 +789,7 @@ impl<'mc> HoverEventAction<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -748,26 +797,29 @@ impl<'mc> HoverEventAction<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -783,7 +835,7 @@ impl<'mc> crate::JNIRaw<'mc> for HoverEvent<'mc> {
 impl<'mc> HoverEvent<'mc> {
     pub fn new_with_hover_eventaction(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bungee::bungee::api::chat::HoverEventAction<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::HoverEventAction<'mc>>,
         arg1: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::hover::content::Content<'mc>>>,
         >,
@@ -844,16 +896,15 @@ impl<'mc> HoverEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -863,22 +914,22 @@ impl<'mc> HoverEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn is_legacy(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isLegacy", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isLegacy", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn action(
@@ -890,7 +941,8 @@ impl<'mc> HoverEvent<'mc> {
             "getAction",
             "()Lnet/md_5/bungee/api/chat/HoverEvent$Action;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::HoverEventAction(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -900,26 +952,28 @@ impl<'mc> HoverEvent<'mc> {
     }
     pub fn add_content(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::hover::content::Content<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::hover::content::Content<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addContent",
             "(Lnet/md_5/bungee/api/chat/hover/content/Content;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_legacy(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setLegacy",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn wait(
@@ -929,7 +983,7 @@ impl<'mc> HoverEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -937,17 +991,22 @@ impl<'mc> HoverEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1007,16 +1066,15 @@ impl<'mc> BaseComponent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1026,7 +1084,8 @@ impl<'mc> BaseComponent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn duplicate(
@@ -1038,7 +1097,8 @@ impl<'mc> BaseComponent<'mc> {
             "duplicate",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1064,32 +1124,36 @@ impl<'mc> BaseComponent<'mc> {
             )?;
         }
         let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setExtra",
             "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_color(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::ChatColor<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
             "(Lnet/md_5/bungee/api/ChatColor;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn copy_formatting_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        >,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1097,7 +1161,8 @@ impl<'mc> BaseComponent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn color(
@@ -1108,7 +1173,8 @@ impl<'mc> BaseComponent<'mc> {
             "getColor",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1118,15 +1184,16 @@ impl<'mc> BaseComponent<'mc> {
     }
     pub fn retain(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "retain",
             "(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     #[deprecated]
@@ -1139,7 +1206,8 @@ impl<'mc> BaseComponent<'mc> {
             "duplicateWithoutFormatting",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1149,7 +1217,7 @@ impl<'mc> BaseComponent<'mc> {
     }
     pub fn to_legacy_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1167,7 +1235,7 @@ impl<'mc> BaseComponent<'mc> {
     }
     pub fn to_plain_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1191,7 +1259,8 @@ impl<'mc> BaseComponent<'mc> {
             "getColorRaw",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1200,12 +1269,10 @@ impl<'mc> BaseComponent<'mc> {
         Ok(ret)
     }
     pub fn font(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFont",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFont", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1218,7 +1285,8 @@ impl<'mc> BaseComponent<'mc> {
             "getFontRaw",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1228,185 +1296,209 @@ impl<'mc> BaseComponent<'mc> {
     pub fn is_bold(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBold", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBold", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_bold_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalic", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalic", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn add_extra_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addExtra",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_formatting(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[])?;
+            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_font(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_font(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setFont",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_bold(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_italic(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_underlined(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_strikethrough(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_obfuscated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_insertion(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInsertion",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_click_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setClickEvent",
             "(Lnet/md_5/bungee/api/chat/ClickEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_hover_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setHoverEvent",
             "(Lnet/md_5/bungee/api/chat/HoverEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn insertion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1415,7 +1507,8 @@ impl<'mc> BaseComponent<'mc> {
             "getInsertion",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1430,7 +1523,8 @@ impl<'mc> BaseComponent<'mc> {
             "getClickEvent",
             "()Lnet/md_5/bungee/api/chat/ClickEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ClickEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1446,7 +1540,8 @@ impl<'mc> BaseComponent<'mc> {
             "getHoverEvent",
             "()Lnet/md_5/bungee/api/chat/HoverEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::HoverEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1461,7 +1556,7 @@ impl<'mc> BaseComponent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1469,26 +1564,29 @@ impl<'mc> BaseComponent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1509,7 +1607,7 @@ impl<'mc> SelectorComponent<'mc> {
     pub fn new_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::SelectorComponent<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::SelectorComponent<'mc>>,
         >,
     ) -> Result<crate::bungee::bungee::api::chat::SelectorComponent<'mc>, Box<dyn std::error::Error>>
     {
@@ -1557,16 +1655,15 @@ impl<'mc> SelectorComponent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1576,7 +1673,8 @@ impl<'mc> SelectorComponent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn duplicate(
@@ -1588,7 +1686,8 @@ impl<'mc> SelectorComponent<'mc> {
             "duplicate",
             "()Lnet/md_5/bungee/api/chat/SelectorComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::SelectorComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1602,7 +1701,8 @@ impl<'mc> SelectorComponent<'mc> {
             "getSelector",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1611,15 +1711,16 @@ impl<'mc> SelectorComponent<'mc> {
     }
     pub fn set_selector(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setSelector",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_extra(
@@ -1640,32 +1741,36 @@ impl<'mc> SelectorComponent<'mc> {
             )?;
         }
         let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setExtra",
             "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_color(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::ChatColor<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
             "(Lnet/md_5/bungee/api/ChatColor;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn copy_formatting_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        >,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1673,7 +1778,8 @@ impl<'mc> SelectorComponent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn color(
@@ -1684,7 +1790,8 @@ impl<'mc> SelectorComponent<'mc> {
             "getColor",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1694,15 +1801,16 @@ impl<'mc> SelectorComponent<'mc> {
     }
     pub fn retain(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "retain",
             "(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     #[deprecated]
@@ -1715,7 +1823,8 @@ impl<'mc> SelectorComponent<'mc> {
             "duplicateWithoutFormatting",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1725,7 +1834,7 @@ impl<'mc> SelectorComponent<'mc> {
     }
     pub fn to_legacy_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1743,7 +1852,7 @@ impl<'mc> SelectorComponent<'mc> {
     }
     pub fn to_plain_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1767,7 +1876,8 @@ impl<'mc> SelectorComponent<'mc> {
             "getColorRaw",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1776,12 +1886,10 @@ impl<'mc> SelectorComponent<'mc> {
         Ok(ret)
     }
     pub fn font(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFont",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFont", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1794,7 +1902,8 @@ impl<'mc> SelectorComponent<'mc> {
             "getFontRaw",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1804,185 +1913,209 @@ impl<'mc> SelectorComponent<'mc> {
     pub fn is_bold(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBold", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBold", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_bold_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalic", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalic", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn add_extra_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addExtra",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_formatting(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[])?;
+            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_font(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_font(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setFont",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_bold(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_italic(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_underlined(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_strikethrough(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_obfuscated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_insertion(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInsertion",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_click_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setClickEvent",
             "(Lnet/md_5/bungee/api/chat/ClickEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_hover_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setHoverEvent",
             "(Lnet/md_5/bungee/api/chat/HoverEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn insertion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1991,7 +2124,8 @@ impl<'mc> SelectorComponent<'mc> {
             "getInsertion",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2006,7 +2140,8 @@ impl<'mc> SelectorComponent<'mc> {
             "getClickEvent",
             "()Lnet/md_5/bungee/api/chat/ClickEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ClickEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2022,7 +2157,8 @@ impl<'mc> SelectorComponent<'mc> {
             "getHoverEvent",
             "()Lnet/md_5/bungee/api/chat/HoverEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::HoverEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2037,7 +2173,7 @@ impl<'mc> SelectorComponent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2045,26 +2181,29 @@ impl<'mc> SelectorComponent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2089,8 +2228,8 @@ impl<'mc> crate::JNIRaw<'mc> for ScoreComponent<'mc> {
 impl<'mc> ScoreComponent<'mc> {
     pub fn new_with_score_component(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<String>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bungee::bungee::api::chat::ScoreComponent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
@@ -2109,9 +2248,9 @@ impl<'mc> ScoreComponent<'mc> {
     }
     pub fn new_with_string(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
-        arg2: std::option::Option<impl Into<String>>,
+        arg0: impl Into<&'mc String>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bungee::bungee::api::chat::ScoreComponent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -2155,12 +2294,10 @@ impl<'mc> ScoreComponent<'mc> {
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2177,16 +2314,15 @@ impl<'mc> ScoreComponent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2196,40 +2332,47 @@ impl<'mc> ScoreComponent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn value(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getValue",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getValue", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
     }
-    pub fn set_name(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_name(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setName",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
-    pub fn set_value(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_value(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setValue",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn duplicate(
@@ -2241,7 +2384,8 @@ impl<'mc> ScoreComponent<'mc> {
             "duplicate",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2255,7 +2399,8 @@ impl<'mc> ScoreComponent<'mc> {
             "getObjective",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2264,15 +2409,16 @@ impl<'mc> ScoreComponent<'mc> {
     }
     pub fn set_objective(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObjective",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_extra(
@@ -2293,32 +2439,36 @@ impl<'mc> ScoreComponent<'mc> {
             )?;
         }
         let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setExtra",
             "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_color(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::ChatColor<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
             "(Lnet/md_5/bungee/api/ChatColor;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn copy_formatting_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        >,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2326,7 +2476,8 @@ impl<'mc> ScoreComponent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn color(
@@ -2337,7 +2488,8 @@ impl<'mc> ScoreComponent<'mc> {
             "getColor",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2347,15 +2499,16 @@ impl<'mc> ScoreComponent<'mc> {
     }
     pub fn retain(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "retain",
             "(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     #[deprecated]
@@ -2368,7 +2521,8 @@ impl<'mc> ScoreComponent<'mc> {
             "duplicateWithoutFormatting",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2378,7 +2532,7 @@ impl<'mc> ScoreComponent<'mc> {
     }
     pub fn to_legacy_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -2396,7 +2550,7 @@ impl<'mc> ScoreComponent<'mc> {
     }
     pub fn to_plain_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -2420,7 +2574,8 @@ impl<'mc> ScoreComponent<'mc> {
             "getColorRaw",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2429,12 +2584,10 @@ impl<'mc> ScoreComponent<'mc> {
         Ok(ret)
     }
     pub fn font(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFont",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFont", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2447,7 +2600,8 @@ impl<'mc> ScoreComponent<'mc> {
             "getFontRaw",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2457,185 +2611,209 @@ impl<'mc> ScoreComponent<'mc> {
     pub fn is_bold(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBold", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBold", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_bold_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalic", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalic", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn add_extra_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addExtra",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_formatting(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[])?;
+            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_font(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_font(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setFont",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_bold(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_italic(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_underlined(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_strikethrough(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_obfuscated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_insertion(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInsertion",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_click_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setClickEvent",
             "(Lnet/md_5/bungee/api/chat/ClickEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_hover_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setHoverEvent",
             "(Lnet/md_5/bungee/api/chat/HoverEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn insertion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2644,7 +2822,8 @@ impl<'mc> ScoreComponent<'mc> {
             "getInsertion",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2659,7 +2838,8 @@ impl<'mc> ScoreComponent<'mc> {
             "getClickEvent",
             "()Lnet/md_5/bungee/api/chat/ClickEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ClickEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2675,7 +2855,8 @@ impl<'mc> ScoreComponent<'mc> {
             "getHoverEvent",
             "()Lnet/md_5/bungee/api/chat/HoverEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::HoverEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2690,7 +2871,7 @@ impl<'mc> ScoreComponent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2698,26 +2879,29 @@ impl<'mc> ScoreComponent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2771,7 +2955,7 @@ impl<'mc> ClickEventAction<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
@@ -2790,7 +2974,8 @@ impl<'mc> ClickEventAction<'mc> {
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[])?;
+                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2807,16 +2992,15 @@ impl<'mc> ClickEventAction<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2826,7 +3010,8 @@ impl<'mc> ClickEventAction<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -2839,7 +3024,8 @@ impl<'mc> ClickEventAction<'mc> {
             "compareTo",
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -2850,7 +3036,8 @@ impl<'mc> ClickEventAction<'mc> {
             "describeConstable",
             "()Ljava/util/Optional;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -2861,13 +3048,15 @@ impl<'mc> ClickEventAction<'mc> {
             "getDeclaringClass",
             "()Ljava/lang/Class;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[])?;
+            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -2877,7 +3066,7 @@ impl<'mc> ClickEventAction<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2885,26 +3074,29 @@ impl<'mc> ClickEventAction<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2920,8 +3112,8 @@ impl<'mc> crate::JNIRaw<'mc> for ClickEvent<'mc> {
 impl<'mc> ClickEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ClickEventAction<'mc>>,
-        arg1: impl Into<String>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ClickEventAction<'mc>>,
+        arg1: impl Into<&'mc String>,
     ) -> Result<crate::bungee::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
@@ -2969,16 +3161,15 @@ impl<'mc> ClickEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2988,16 +3179,15 @@ impl<'mc> ClickEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn value(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getValue",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getValue", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3013,7 +3203,8 @@ impl<'mc> ClickEvent<'mc> {
             "getAction",
             "()Lnet/md_5/bungee/api/chat/ClickEvent$Action;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ClickEventAction(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3028,7 +3219,7 @@ impl<'mc> ClickEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -3036,26 +3227,29 @@ impl<'mc> ClickEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -3128,7 +3322,7 @@ impl<'mc> ItemTagSerializer<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -3136,7 +3330,8 @@ impl<'mc> ItemTagSerializer<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -3149,16 +3344,15 @@ impl<'mc> ItemTagSerializer<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3168,26 +3362,29 @@ impl<'mc> ItemTagSerializer<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -3207,8 +3404,8 @@ impl<'mc> crate::JNIRaw<'mc> for TranslatableComponent<'mc> {
 impl<'mc> TranslatableComponent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<String>>,
-        _arg1: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
     ) -> Result<
         crate::bungee::bungee::api::chat::TranslatableComponent<'mc>,
         Box<dyn std::error::Error>,
@@ -3258,16 +3455,15 @@ impl<'mc> TranslatableComponent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3277,7 +3473,8 @@ impl<'mc> TranslatableComponent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn duplicate(
@@ -3291,7 +3488,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "duplicate",
             "()Lnet/md_5/bungee/api/chat/TranslatableComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::TranslatableComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3305,7 +3503,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getFormat",
             "()Ljava/util/regex/Pattern;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn set_with(
@@ -3326,26 +3525,28 @@ impl<'mc> TranslatableComponent<'mc> {
             )?;
         }
         let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setWith",
             "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn add_with_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addWith",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn translate(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3354,7 +3555,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getTranslate",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3363,15 +3565,16 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     pub fn set_translate(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTranslate",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_extra(
@@ -3392,32 +3595,36 @@ impl<'mc> TranslatableComponent<'mc> {
             )?;
         }
         let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setExtra",
             "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_color(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::ChatColor<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
             "(Lnet/md_5/bungee/api/ChatColor;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn copy_formatting_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        >,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3425,7 +3632,8 @@ impl<'mc> TranslatableComponent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn color(
@@ -3436,7 +3644,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getColor",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3446,15 +3655,16 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     pub fn retain(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "retain",
             "(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     #[deprecated]
@@ -3467,7 +3677,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "duplicateWithoutFormatting",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3477,7 +3688,7 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     pub fn to_legacy_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -3495,7 +3706,7 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     pub fn to_plain_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -3519,7 +3730,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getColorRaw",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3528,12 +3740,10 @@ impl<'mc> TranslatableComponent<'mc> {
         Ok(ret)
     }
     pub fn font(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFont",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFont", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3546,7 +3756,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getFontRaw",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3556,185 +3767,209 @@ impl<'mc> TranslatableComponent<'mc> {
     pub fn is_bold(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBold", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBold", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_bold_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalic", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalic", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn add_extra_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addExtra",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_formatting(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[])?;
+            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_font(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_font(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setFont",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_bold(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_italic(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_underlined(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_strikethrough(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_obfuscated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_insertion(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInsertion",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_click_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setClickEvent",
             "(Lnet/md_5/bungee/api/chat/ClickEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_hover_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setHoverEvent",
             "(Lnet/md_5/bungee/api/chat/HoverEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn insertion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3743,7 +3978,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getInsertion",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3758,7 +3994,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getClickEvent",
             "()Lnet/md_5/bungee/api/chat/ClickEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ClickEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3774,7 +4011,8 @@ impl<'mc> TranslatableComponent<'mc> {
             "getHoverEvent",
             "()Lnet/md_5/bungee/api/chat/HoverEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::HoverEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3789,7 +4027,7 @@ impl<'mc> TranslatableComponent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -3797,26 +4035,29 @@ impl<'mc> TranslatableComponent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -3860,14 +4101,14 @@ impl<'mc> ComponentBuilderJoiner<'mc> {
     }
     pub fn join(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>>,
-        arg1: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilder<'mc>>,
+        arg1: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"join","(Lnet/md_5/bungee/api/chat/ComponentBuilder;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"join","(Lnet/md_5/bungee/api/chat/ComponentBuilder;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3931,16 +4172,15 @@ impl<'mc> ItemTag<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3950,12 +4190,13 @@ impl<'mc> ItemTag<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn of_nbt(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bungee::bungee::api::chat::ItemTag<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("net/md_5/bungee/api/chat/ItemTag")?;
@@ -3966,18 +4207,16 @@ impl<'mc> ItemTag<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bungee::bungee::api::chat::ItemTag(jni, obj)
         };
         Ok(ret)
     }
     pub fn nbt(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getNbt",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getNbt", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3991,7 +4230,7 @@ impl<'mc> ItemTag<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -3999,26 +4238,29 @@ impl<'mc> ItemTag<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -4039,7 +4281,7 @@ impl<'mc> KeybindComponent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::KeybindComponent<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::KeybindComponent<'mc>>,
         >,
     ) -> Result<crate::bungee::bungee::api::chat::KeybindComponent<'mc>, Box<dyn std::error::Error>>
     {
@@ -4087,16 +4329,15 @@ impl<'mc> KeybindComponent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4106,7 +4347,8 @@ impl<'mc> KeybindComponent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn duplicate(
@@ -4118,7 +4360,8 @@ impl<'mc> KeybindComponent<'mc> {
             "duplicate",
             "()Lnet/md_5/bungee/api/chat/KeybindComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::KeybindComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4132,7 +4375,8 @@ impl<'mc> KeybindComponent<'mc> {
             "getKeybind",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4141,15 +4385,16 @@ impl<'mc> KeybindComponent<'mc> {
     }
     pub fn set_keybind(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setKeybind",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_extra(
@@ -4170,32 +4415,36 @@ impl<'mc> KeybindComponent<'mc> {
             )?;
         }
         let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setExtra",
             "(Ljava/util/List;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_color(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::ChatColor<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
             "(Lnet/md_5/bungee/api/ChatColor;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn copy_formatting_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        >,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4203,7 +4452,8 @@ impl<'mc> KeybindComponent<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
         // 0
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"copyFormatting","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;Z)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn color(
@@ -4214,7 +4464,8 @@ impl<'mc> KeybindComponent<'mc> {
             "getColor",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4224,15 +4475,16 @@ impl<'mc> KeybindComponent<'mc> {
     }
     pub fn retain(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "retain",
             "(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     #[deprecated]
@@ -4245,7 +4497,8 @@ impl<'mc> KeybindComponent<'mc> {
             "duplicateWithoutFormatting",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4255,7 +4508,7 @@ impl<'mc> KeybindComponent<'mc> {
     }
     pub fn to_legacy_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4273,7 +4526,7 @@ impl<'mc> KeybindComponent<'mc> {
     }
     pub fn to_plain_text(
         jni: crate::SharedJNIEnv<'mc>,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4297,7 +4550,8 @@ impl<'mc> KeybindComponent<'mc> {
             "getColorRaw",
             "()Lnet/md_5/bungee/api/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4306,12 +4560,10 @@ impl<'mc> KeybindComponent<'mc> {
         Ok(ret)
     }
     pub fn font(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFont",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFont", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4324,7 +4576,8 @@ impl<'mc> KeybindComponent<'mc> {
             "getFontRaw",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4334,185 +4587,209 @@ impl<'mc> KeybindComponent<'mc> {
     pub fn is_bold(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBold", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBold", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_bold_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBoldRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalic", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalic", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_italic_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isItalicRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlined", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_underlined_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isUnderlinedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isStrikethrough", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_strikethrough_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStrikethroughRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscated", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_obfuscated_raw(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isObfuscatedRaw", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn add_extra_with_base_component(
         &mut self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addExtra",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_formatting(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[])?;
+            .call_method(&self.jni_object(), "hasFormatting", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_font(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_font(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setFont",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_bold(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_italic(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_underlined(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_strikethrough(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_obfuscated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_insertion(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInsertion",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_click_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setClickEvent",
             "(Lnet/md_5/bungee/api/chat/ClickEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_hover_event(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::HoverEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setHoverEvent",
             "(Lnet/md_5/bungee/api/chat/HoverEvent;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn insertion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4521,7 +4798,8 @@ impl<'mc> KeybindComponent<'mc> {
             "getInsertion",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4536,7 +4814,8 @@ impl<'mc> KeybindComponent<'mc> {
             "getClickEvent",
             "()Lnet/md_5/bungee/api/chat/ClickEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ClickEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4552,7 +4831,8 @@ impl<'mc> KeybindComponent<'mc> {
             "getHoverEvent",
             "()Lnet/md_5/bungee/api/chat/HoverEvent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::HoverEvent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4567,7 +4847,7 @@ impl<'mc> KeybindComponent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -4575,26 +4855,29 @@ impl<'mc> KeybindComponent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -4649,7 +4932,7 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
@@ -4668,7 +4951,8 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[])?;
+                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4685,16 +4969,15 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4704,7 +4987,8 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -4717,7 +5001,8 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
             "compareTo",
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -4728,7 +5013,8 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
             "describeConstable",
             "()Ljava/util/Optional;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -4739,13 +5025,15 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
             "getDeclaringClass",
             "()Ljava/lang/Class;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[])?;
+            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -4755,7 +5043,7 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -4763,26 +5051,29 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -4798,7 +5089,7 @@ impl<'mc> crate::JNIRaw<'mc> for ComponentBuilder<'mc> {
 impl<'mc> ComponentBuilder<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
@@ -4814,7 +5105,7 @@ impl<'mc> ComponentBuilder<'mc> {
     pub fn new_with_component_builder(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilder<'mc>>,
         >,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
@@ -4854,15 +5145,15 @@ impl<'mc> ComponentBuilder<'mc> {
     }
     pub fn append_with_string(
         &mut self,
-        _arg0: Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_1)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4872,7 +5163,7 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
     }
     pub fn append_with_base_component(
         &mut self,
-        _arg0: std::option::Option<
+        arg0: std::option::Option<
             Vec<impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
@@ -4882,7 +5173,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "append",
             "(Lnet/md_5/bungee/api/chat/BaseComponent;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4892,16 +5184,16 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
     }
     pub fn append_with_component_builderjoiner(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::BaseComponent<'mc>>,
         arg1: std::option::Option<
-            impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+            impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
         >,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/chat/BaseComponent;Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4911,7 +5203,9 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
     }
     pub fn event_with_hover_event(
         &mut self,
-        arg0: std::option::Option<impl Into<crate::bungee::bungee::api::chat::ClickEvent<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::bungee::bungee::api::chat::ClickEvent<'mc>>,
+        >,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
@@ -4920,7 +5214,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "event",
             "(Lnet/md_5/bungee/api/chat/ClickEvent;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4937,7 +5232,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "reset",
             "()Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4947,7 +5243,7 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
     }
     pub fn color(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::ChatColor<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::ChatColor<'mc>>,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -4956,7 +5252,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "color",
             "(Lnet/md_5/bungee/api/ChatColor;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4966,7 +5263,7 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
     }
     pub fn font(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
@@ -4975,7 +5272,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "font",
             "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4995,7 +5293,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "bold",
             "(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5015,7 +5314,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "italic",
             "(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5035,7 +5335,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "underlined",
             "(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5055,7 +5356,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "strikethrough",
             "(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5075,7 +5377,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "obfuscated",
             "(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5085,7 +5388,7 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
     }
     pub fn insertion(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
@@ -5094,7 +5397,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "insertion",
             "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5113,7 +5417,8 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
             "setCursor",
             "(I)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5124,17 +5429,18 @@ self.jni_ref().call_method(&self.jni_object(),"append","(Lnet/md_5/bungee/api/ch
     pub fn cursor(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getCursor", "()I", &[])?;
+            .call_method(&self.jni_object(), "getCursor", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn retain(
         &mut self,
-        arg0: impl Into<crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: impl Into<&'mc crate::bungee::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res =
-self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_0)])?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",&[jni::objects::JValueGen::from(&val_0)]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5151,7 +5457,8 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
             "resetCursor",
             "()Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5161,7 +5468,7 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
     }
     pub fn append_legacy(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bungee::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
@@ -5170,7 +5477,8 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
             "appendLegacy",
             "(Ljava/lang/String;)Lnet/md_5/bungee/api/chat/ComponentBuilder;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::ComponentBuilder(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5180,12 +5488,13 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
     }
     pub fn remove_component(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeComponent",
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn get_component(
@@ -5199,7 +5508,8 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
             "getComponent",
             "(I)Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5216,7 +5526,8 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
             "getCurrentComponent",
             "()Lnet/md_5/bungee/api/chat/BaseComponent;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bungee::bungee::api::chat::BaseComponent(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5231,7 +5542,7 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -5239,7 +5550,8 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -5252,16 +5564,15 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5271,26 +5582,29 @@ self.jni_ref().call_method(&self.jni_object(),"retain","(Lnet/md_5/bungee/api/ch
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }

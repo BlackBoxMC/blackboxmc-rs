@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct InventoryOpenEvent<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16,7 +17,7 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryOpenEvent<'mc> {
 impl<'mc> InventoryOpenEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
     ) -> Result<crate::bukkit::event::inventory::InventoryOpenEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -61,7 +62,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -72,7 +74,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn player(
@@ -83,7 +86,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
             "getPlayer",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -94,12 +98,13 @@ impl<'mc> InventoryOpenEvent<'mc> {
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -113,7 +118,7 @@ impl<'mc> InventoryOpenEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -126,7 +131,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -142,7 +148,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -156,7 +163,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -166,7 +174,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -176,7 +185,7 @@ impl<'mc> InventoryOpenEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -184,7 +193,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -197,16 +207,15 @@ impl<'mc> InventoryOpenEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -216,26 +225,29 @@ impl<'mc> InventoryOpenEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -265,8 +277,8 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareItemCraftEvent<'mc> {
 impl<'mc> PrepareItemCraftEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::CraftingInventory<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::CraftingInventory<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
         arg2: bool,
     ) -> Result<
         crate::bukkit::event::inventory::PrepareItemCraftEvent<'mc>,
@@ -322,7 +334,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -338,7 +351,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/CraftingInventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::CraftingInventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -354,7 +368,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             "getRecipe",
             "()Lorg/bukkit/inventory/Recipe;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Recipe(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -373,7 +388,7 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -381,7 +396,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
     pub fn is_repair(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRepair", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRepair", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn view(
@@ -392,7 +408,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -406,7 +423,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -416,7 +434,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -426,7 +445,7 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -434,7 +453,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -447,16 +467,15 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -466,26 +485,29 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -512,8 +534,8 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareAnvilEvent<'mc> {
 impl<'mc> PrepareAnvilEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<crate::bukkit::event::inventory::PrepareAnvilEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -562,7 +584,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -578,7 +601,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -597,7 +621,7 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -610,7 +634,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -620,15 +645,16 @@ impl<'mc> PrepareAnvilEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn view(
@@ -639,7 +665,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -653,7 +680,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -663,7 +691,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -673,7 +702,7 @@ impl<'mc> PrepareAnvilEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -681,7 +710,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -694,16 +724,15 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -713,26 +742,29 @@ impl<'mc> PrepareAnvilEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -791,7 +823,7 @@ impl<'mc> DragType<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::event::inventory::DragType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/event/inventory/DragType")?;
@@ -802,7 +834,7 @@ impl<'mc> DragType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -834,8 +866,8 @@ impl<'mc> crate::JNIRaw<'mc> for BrewEvent<'mc> {
 impl<'mc> BrewEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::BrewerInventory<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::BrewerInventory<'mc>>,
         arg2: Vec<impl Into<crate::bukkit::inventory::ItemStack<'mc>>>,
         arg3: i32,
     ) -> Result<crate::bukkit::event::inventory::BrewEvent<'mc>, Box<dyn std::error::Error>> {
@@ -897,7 +929,8 @@ impl<'mc> BrewEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -908,7 +941,8 @@ impl<'mc> BrewEvent<'mc> {
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn contents(
@@ -919,7 +953,8 @@ impl<'mc> BrewEvent<'mc> {
             "getContents",
             "()Lorg/bukkit/inventory/BrewerInventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::BrewerInventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -930,18 +965,20 @@ impl<'mc> BrewEvent<'mc> {
     pub fn fuel_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getFuelLevel", "()I", &[])?;
+            .call_method(&self.jni_object(), "getFuelLevel", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -955,7 +992,7 @@ impl<'mc> BrewEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -968,7 +1005,8 @@ impl<'mc> BrewEvent<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -982,7 +1020,8 @@ impl<'mc> BrewEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -992,7 +1031,8 @@ impl<'mc> BrewEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -1002,7 +1042,7 @@ impl<'mc> BrewEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1010,7 +1050,8 @@ impl<'mc> BrewEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -1023,16 +1064,15 @@ impl<'mc> BrewEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1042,26 +1082,29 @@ impl<'mc> BrewEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1091,9 +1134,9 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryMoveItemEvent<'mc> {
 impl<'mc> InventoryMoveItemEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::Inventory<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::bukkit::inventory::Inventory<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::Inventory<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
+        arg2: impl Into<&'mc crate::bukkit::inventory::Inventory<'mc>>,
         arg3: bool,
     ) -> Result<
         crate::bukkit::event::inventory::InventoryMoveItemEvent<'mc>,
@@ -1143,7 +1186,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1154,7 +1198,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn item(
@@ -1165,7 +1210,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             "getItem",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1181,7 +1227,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             "getSource",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1191,15 +1238,16 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
     }
     pub fn set_item(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItem",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn destination(
@@ -1210,7 +1258,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             "getDestination",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1221,12 +1270,13 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -1240,7 +1290,7 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -1253,7 +1303,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             "getInitiator",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1267,7 +1318,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1277,7 +1329,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -1287,7 +1340,7 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1295,7 +1348,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -1308,16 +1362,15 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1327,26 +1380,29 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1376,9 +1432,9 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceSmeltEvent<'mc> {
 impl<'mc> FurnaceSmeltEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
+        arg2: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<crate::bukkit::event::inventory::FurnaceSmeltEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -1422,7 +1478,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1438,7 +1495,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1448,21 +1506,23 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn source(
@@ -1473,7 +1533,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             "getSource",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1484,12 +1545,13 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -1503,7 +1565,7 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -1516,7 +1578,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1530,7 +1593,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1540,7 +1604,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -1550,7 +1615,7 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1558,7 +1623,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -1571,16 +1637,15 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1590,26 +1655,29 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1634,11 +1702,13 @@ impl<'mc> crate::JNIRaw<'mc> for SmithItemEvent<'mc> {
 impl<'mc> SmithItemEvent<'mc> {
     pub fn new_with_inventory_view(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
         arg2: i32,
-        arg3: impl Into<crate::bukkit::event::inventory::ClickType<'mc>>,
-        arg4: std::option::Option<impl Into<crate::bukkit::event::inventory::InventoryAction<'mc>>>,
+        arg3: impl Into<&'mc crate::bukkit::event::inventory::ClickType<'mc>>,
+        arg4: std::option::Option<
+            impl Into<&'mc crate::bukkit::event::inventory::InventoryAction<'mc>>,
+        >,
         arg5: std::option::Option<i32>,
     ) -> Result<crate::bukkit::event::inventory::SmithItemEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -1686,7 +1756,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/SmithingInventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::SmithingInventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1702,7 +1773,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1713,21 +1785,23 @@ impl<'mc> SmithItemEvent<'mc> {
     pub fn slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     #[deprecated]
     pub fn set_cursor(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCursor",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn cursor(
@@ -1738,7 +1812,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getCursor",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1757,7 +1832,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getSlotType",
             "()Lorg/bukkit/event/inventory/InventoryType$SlotType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::inventory::InventoryTypeSlotType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1776,7 +1852,7 @@ impl<'mc> SmithItemEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -1790,7 +1866,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getAction",
             "()Lorg/bukkit/event/inventory/InventoryAction;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -1817,7 +1894,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getCurrentItem",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1828,32 +1906,36 @@ impl<'mc> SmithItemEvent<'mc> {
     pub fn is_right_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRightClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRightClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_left_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_shift_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_current_item(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCurrentItem",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn clicked_inventory(
@@ -1864,7 +1946,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getClickedInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1875,13 +1958,15 @@ impl<'mc> SmithItemEvent<'mc> {
     pub fn raw_slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getRawSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getRawSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn hotbar_button(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[])?;
+            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn click(
@@ -1892,7 +1977,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getClick",
             "()Lorg/bukkit/event/inventory/ClickType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -1919,7 +2005,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/event/Event$Result;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::EventResult(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1929,32 +2016,35 @@ impl<'mc> SmithItemEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::event::EventResult<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::event::EventResult<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/event/Event$Result;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn who_clicked(
@@ -1965,7 +2055,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getWhoClicked",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1981,7 +2072,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1995,7 +2087,8 @@ impl<'mc> SmithItemEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2005,7 +2098,8 @@ impl<'mc> SmithItemEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -2015,7 +2109,7 @@ impl<'mc> SmithItemEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2023,7 +2117,8 @@ impl<'mc> SmithItemEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -2036,16 +2131,15 @@ impl<'mc> SmithItemEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2055,26 +2149,29 @@ impl<'mc> SmithItemEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2176,7 +2273,7 @@ impl<'mc> ClickType<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::event::inventory::ClickType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/event/inventory/ClickType")?;
@@ -2187,7 +2284,7 @@ impl<'mc> ClickType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -2205,37 +2302,43 @@ impl<'mc> ClickType<'mc> {
     pub fn is_right_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRightClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRightClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_left_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_shift_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_keyboard_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isKeyboardClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isKeyboardClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_mouse_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isMouseClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isMouseClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_creative_action(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCreativeAction", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCreativeAction", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
 }
@@ -2255,8 +2358,8 @@ impl<'mc> crate::JNIRaw<'mc> for BrewingStandFuelEvent<'mc> {
 impl<'mc> BrewingStandFuelEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
         arg2: i32,
     ) -> Result<
         crate::bukkit::event::inventory::BrewingStandFuelEvent<'mc>,
@@ -2311,7 +2414,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2322,7 +2426,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn fuel(
@@ -2333,7 +2438,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
             "getFuel",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2344,12 +2450,13 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -2363,7 +2470,7 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -2371,34 +2478,38 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
     pub fn fuel_power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getFuelPower", "()I", &[])?;
+            .call_method(&self.jni_object(), "getFuelPower", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_fuel_power(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setFuelPower",
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_consuming(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isConsuming", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isConsuming", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_consuming(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setConsuming",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn block(
@@ -2409,7 +2520,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2423,7 +2535,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2433,7 +2546,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -2443,7 +2557,7 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2451,7 +2565,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -2464,16 +2579,15 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2483,26 +2597,29 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2532,8 +2649,8 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareGrindstoneEvent<'mc> {
 impl<'mc> PrepareGrindstoneEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::PrepareGrindstoneEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -2585,7 +2702,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2601,7 +2719,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2620,7 +2739,7 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -2633,7 +2752,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2643,15 +2763,16 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn view(
@@ -2662,7 +2783,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2676,7 +2798,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2686,7 +2809,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -2696,7 +2820,7 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2704,7 +2828,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -2717,16 +2842,15 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2736,26 +2860,29 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2816,7 +2943,7 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
@@ -2835,7 +2962,8 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[])?;
+                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2852,16 +2980,15 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2871,7 +2998,8 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -2884,7 +3012,8 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
             "compareTo",
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -2895,7 +3024,8 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
             "describeConstable",
             "()Ljava/util/Optional;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -2906,13 +3036,15 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
             "getDeclaringClass",
             "()Ljava/lang/Class;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[])?;
+            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -2922,7 +3054,7 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2930,26 +3062,29 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2965,10 +3100,12 @@ impl<'mc> crate::JNIRaw<'mc> for HopperInventorySearchEvent<'mc> {
 impl<'mc> HopperInventorySearchEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::Inventory<'mc>>,
-        arg1: impl Into<crate::bukkit::event::inventory::HopperInventorySearchEventContainerType<'mc>>,
-        arg2: impl Into<crate::bukkit::block::Block<'mc>>,
-        arg3: impl Into<crate::bukkit::block::Block<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::Inventory<'mc>>,
+        arg1: impl Into<
+            &'mc crate::bukkit::event::inventory::HopperInventorySearchEventContainerType<'mc>,
+        >,
+        arg2: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
+        arg3: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::HopperInventorySearchEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -3016,7 +3153,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3032,7 +3170,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3051,22 +3190,23 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
     }
     pub fn set_inventory(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::Inventory<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::Inventory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInventory",
             "(Lorg/bukkit/inventory/Inventory;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn container_type(
@@ -3080,7 +3220,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             "getContainerType",
             "()Lorg/bukkit/event/inventory/HopperInventorySearchEvent$ContainerType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::inventory::HopperInventorySearchEventContainerType(
                 self.jni_ref(),
@@ -3097,7 +3238,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             "getSearchBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3113,7 +3255,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3127,7 +3270,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3137,7 +3281,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -3147,7 +3292,7 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -3155,7 +3300,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -3168,16 +3314,15 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3187,26 +3332,29 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -3231,12 +3379,14 @@ impl<'mc> crate::JNIRaw<'mc> for CraftItemEvent<'mc> {
 impl<'mc> CraftItemEvent<'mc> {
     pub fn new_with_recipe(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::Recipe<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg2: impl Into<crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::Recipe<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg2: impl Into<&'mc crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
         arg3: i32,
-        arg4: impl Into<crate::bukkit::event::inventory::ClickType<'mc>>,
-        arg5: std::option::Option<impl Into<crate::bukkit::event::inventory::InventoryAction<'mc>>>,
+        arg4: impl Into<&'mc crate::bukkit::event::inventory::ClickType<'mc>>,
+        arg5: std::option::Option<
+            impl Into<&'mc crate::bukkit::event::inventory::InventoryAction<'mc>>,
+        >,
         arg6: std::option::Option<i32>,
     ) -> Result<crate::bukkit::event::inventory::CraftItemEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -3285,7 +3435,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3301,7 +3452,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getRecipe",
             "()Lorg/bukkit/inventory/Recipe;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Recipe(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3317,7 +3469,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3328,21 +3481,23 @@ impl<'mc> CraftItemEvent<'mc> {
     pub fn slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     #[deprecated]
     pub fn set_cursor(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCursor",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn cursor(
@@ -3353,7 +3508,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getCursor",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3372,7 +3528,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getSlotType",
             "()Lorg/bukkit/event/inventory/InventoryType$SlotType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::inventory::InventoryTypeSlotType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3391,7 +3548,7 @@ impl<'mc> CraftItemEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -3405,7 +3562,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getAction",
             "()Lorg/bukkit/event/inventory/InventoryAction;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -3432,7 +3590,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getCurrentItem",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3443,32 +3602,36 @@ impl<'mc> CraftItemEvent<'mc> {
     pub fn is_right_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRightClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRightClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_left_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_shift_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_current_item(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCurrentItem",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn clicked_inventory(
@@ -3479,7 +3642,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getClickedInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3490,13 +3654,15 @@ impl<'mc> CraftItemEvent<'mc> {
     pub fn raw_slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getRawSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getRawSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn hotbar_button(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[])?;
+            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn click(
@@ -3507,7 +3673,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getClick",
             "()Lorg/bukkit/event/inventory/ClickType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -3534,7 +3701,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/event/Event$Result;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::EventResult(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3544,32 +3712,35 @@ impl<'mc> CraftItemEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::event::EventResult<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::event::EventResult<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/event/Event$Result;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn who_clicked(
@@ -3580,7 +3751,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getWhoClicked",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3596,7 +3768,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3610,7 +3783,8 @@ impl<'mc> CraftItemEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3620,7 +3794,8 @@ impl<'mc> CraftItemEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -3630,7 +3805,7 @@ impl<'mc> CraftItemEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -3638,7 +3813,8 @@ impl<'mc> CraftItemEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -3651,16 +3827,15 @@ impl<'mc> CraftItemEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3670,26 +3845,29 @@ impl<'mc> CraftItemEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -3715,9 +3893,9 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceStartSmeltEvent<'mc> {
 impl<'mc> FurnaceStartSmeltEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::bukkit::inventory::CookingRecipe<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
+        arg2: impl Into<&'mc crate::bukkit::inventory::CookingRecipe<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::FurnaceStartSmeltEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -3764,7 +3942,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3780,7 +3959,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             "getRecipe",
             "()Lorg/bukkit/inventory/CookingRecipe;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::CookingRecipe(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3799,7 +3979,7 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -3807,17 +3987,19 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
     pub fn total_cook_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getTotalCookTime", "()I", &[])?;
+            .call_method(&self.jni_object(), "getTotalCookTime", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_total_cook_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTotalCookTime",
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn source(
@@ -3828,7 +4010,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             "getSource",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3844,7 +4027,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3858,7 +4042,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3868,7 +4053,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -3878,7 +4064,7 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -3886,7 +4072,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -3899,16 +4086,15 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3918,26 +4104,29 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -3965,8 +4154,8 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryPickupItemEvent<'mc> {
 impl<'mc> InventoryPickupItemEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::Inventory<'mc>>,
-        arg1: impl Into<crate::bukkit::entity::Item<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::Inventory<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::entity::Item<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::InventoryPickupItemEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -4018,7 +4207,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4029,7 +4219,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn item(&mut self) -> Result<crate::bukkit::entity::Item<'mc>, Box<dyn std::error::Error>> {
@@ -4038,7 +4229,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
             "getItem",
             "()Lorg/bukkit/entity/Item;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::Item(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4054,7 +4246,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4065,12 +4258,13 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -4084,7 +4278,7 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -4095,7 +4289,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4105,7 +4300,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -4115,7 +4311,7 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -4123,7 +4319,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -4136,16 +4333,15 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4155,26 +4351,29 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -4204,7 +4403,7 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryInteractEvent<'mc> {
 impl<'mc> InventoryInteractEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::InventoryInteractEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -4252,7 +4451,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/event/Event$Result;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::EventResult(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4262,32 +4462,35 @@ impl<'mc> InventoryInteractEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::event::EventResult<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::event::EventResult<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/event/Event$Result;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn who_clicked(
@@ -4298,7 +4501,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
             "getWhoClicked",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4314,7 +4518,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4330,7 +4535,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4349,7 +4555,7 @@ impl<'mc> InventoryInteractEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -4362,7 +4568,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4376,7 +4583,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4386,7 +4594,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -4396,7 +4605,7 @@ impl<'mc> InventoryInteractEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -4404,7 +4613,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -4417,16 +4627,15 @@ impl<'mc> InventoryInteractEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4436,26 +4645,29 @@ impl<'mc> InventoryInteractEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -4487,7 +4699,7 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryEvent<'mc> {
 impl<'mc> InventoryEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
     ) -> Result<crate::bukkit::event::inventory::InventoryEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -4532,7 +4744,8 @@ impl<'mc> InventoryEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4548,7 +4761,8 @@ impl<'mc> InventoryEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4567,7 +4781,7 @@ impl<'mc> InventoryEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -4580,7 +4794,8 @@ impl<'mc> InventoryEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4594,7 +4809,8 @@ impl<'mc> InventoryEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4604,7 +4820,8 @@ impl<'mc> InventoryEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -4614,7 +4831,7 @@ impl<'mc> InventoryEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -4622,7 +4839,8 @@ impl<'mc> InventoryEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -4635,16 +4853,15 @@ impl<'mc> InventoryEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4654,26 +4871,29 @@ impl<'mc> InventoryEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -4698,10 +4918,10 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryCreativeEvent<'mc> {
 impl<'mc> InventoryCreativeEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
         arg2: i32,
-        arg3: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg3: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::InventoryCreativeEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -4743,15 +4963,16 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     }
     pub fn set_cursor(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCursor",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn cursor(
@@ -4762,7 +4983,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getCursor",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4778,7 +5000,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4789,7 +5012,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     pub fn slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn slot_type(
@@ -4803,7 +5027,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getSlotType",
             "()Lorg/bukkit/event/inventory/InventoryType$SlotType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::inventory::InventoryTypeSlotType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4822,7 +5047,7 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -4836,7 +5061,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getAction",
             "()Lorg/bukkit/event/inventory/InventoryAction;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -4863,7 +5089,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getCurrentItem",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4874,32 +5101,36 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     pub fn is_right_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRightClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRightClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_left_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_shift_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_current_item(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCurrentItem",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn clicked_inventory(
@@ -4910,7 +5141,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getClickedInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4921,13 +5153,15 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     pub fn raw_slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getRawSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getRawSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn hotbar_button(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[])?;
+            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn click(
@@ -4938,7 +5172,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getClick",
             "()Lorg/bukkit/event/inventory/ClickType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -4965,7 +5200,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/event/Event$Result;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::EventResult(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4975,32 +5211,35 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::event::EventResult<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::event::EventResult<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/event/Event$Result;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn who_clicked(
@@ -5011,7 +5250,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getWhoClicked",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5027,7 +5267,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5043,7 +5284,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5057,7 +5299,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5067,7 +5310,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -5077,7 +5321,7 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -5085,7 +5329,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -5098,16 +5343,15 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5117,26 +5361,29 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -5164,9 +5411,9 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceExtractEvent<'mc> {
 impl<'mc> FurnaceExtractEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::entity::Player<'mc>>,
-        arg1: impl Into<crate::bukkit::block::Block<'mc>>,
-        arg2: impl Into<crate::bukkit::Material<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::entity::Player<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
+        arg2: impl Into<&'mc crate::bukkit::Material<'mc>>,
         arg3: i32,
         arg4: i32,
     ) -> Result<crate::bukkit::event::inventory::FurnaceExtractEvent<'mc>, Box<dyn std::error::Error>>
@@ -5223,7 +5470,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             "getPlayer",
             "()Lorg/bukkit/entity/Player;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::Player(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5239,7 +5487,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             "getItemType",
             "()Lorg/bukkit/Material;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -5261,7 +5510,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
     pub fn item_amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getItemAmount", "()I", &[])?;
+            .call_method(&self.jni_object(), "getItemAmount", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn handlers(
@@ -5272,7 +5522,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5291,7 +5542,7 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -5299,17 +5550,19 @@ impl<'mc> FurnaceExtractEvent<'mc> {
     pub fn exp_to_drop(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getExpToDrop", "()I", &[])?;
+            .call_method(&self.jni_object(), "getExpToDrop", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_exp_to_drop(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setExpToDrop",
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn block(
@@ -5320,7 +5573,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5334,7 +5588,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5344,7 +5599,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -5354,7 +5610,7 @@ impl<'mc> FurnaceExtractEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -5362,7 +5618,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -5375,16 +5632,15 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5394,26 +5650,29 @@ impl<'mc> FurnaceExtractEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -5551,7 +5810,7 @@ impl<'mc> InventoryTypeSlotType<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
@@ -5570,7 +5829,8 @@ impl<'mc> InventoryTypeSlotType<'mc> {
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[])?;
+                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5587,16 +5847,15 @@ impl<'mc> InventoryTypeSlotType<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5606,7 +5865,8 @@ impl<'mc> InventoryTypeSlotType<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -5619,7 +5879,8 @@ impl<'mc> InventoryTypeSlotType<'mc> {
             "compareTo",
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -5630,7 +5891,8 @@ impl<'mc> InventoryTypeSlotType<'mc> {
             "describeConstable",
             "()Ljava/util/Optional;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -5641,13 +5903,15 @@ impl<'mc> InventoryTypeSlotType<'mc> {
             "getDeclaringClass",
             "()Ljava/lang/Class;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[])?;
+            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -5657,7 +5921,7 @@ impl<'mc> InventoryTypeSlotType<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -5665,26 +5929,29 @@ impl<'mc> InventoryTypeSlotType<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -5754,7 +6021,7 @@ impl<'mc> InventoryType<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -5766,7 +6033,7 @@ impl<'mc> InventoryType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -5784,7 +6051,8 @@ impl<'mc> InventoryType<'mc> {
     pub fn default_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getDefaultSize", "()I", &[])?;
+            .call_method(&self.jni_object(), "getDefaultSize", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn default_title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5793,7 +6061,8 @@ impl<'mc> InventoryType<'mc> {
             "getDefaultTitle",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5803,7 +6072,8 @@ impl<'mc> InventoryType<'mc> {
     pub fn is_creatable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCreatable", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCreatable", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
 }
@@ -5823,8 +6093,8 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareSmithingEvent<'mc> {
 impl<'mc> PrepareSmithingEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::PrepareSmithingEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -5875,7 +6145,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5891,7 +6162,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5910,7 +6182,7 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -5923,7 +6195,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5933,15 +6206,16 @@ impl<'mc> PrepareSmithingEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn view(
@@ -5952,7 +6226,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5966,7 +6241,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5976,7 +6252,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -5986,7 +6263,7 @@ impl<'mc> PrepareSmithingEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -5994,7 +6271,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -6007,16 +6285,15 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6026,26 +6303,29 @@ impl<'mc> PrepareSmithingEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -6076,7 +6356,7 @@ impl<'mc> crate::JNIRaw<'mc> for TradeSelectEvent<'mc> {
 impl<'mc> TradeSelectEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
         arg1: i32,
     ) -> Result<crate::bukkit::event::inventory::TradeSelectEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -6126,7 +6406,8 @@ impl<'mc> TradeSelectEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6137,7 +6418,8 @@ impl<'mc> TradeSelectEvent<'mc> {
     pub fn index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getIndex", "()I", &[])?;
+            .call_method(&self.jni_object(), "getIndex", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn inventory(
@@ -6148,7 +6430,8 @@ impl<'mc> TradeSelectEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/MerchantInventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::MerchantInventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6164,7 +6447,8 @@ impl<'mc> TradeSelectEvent<'mc> {
             "getMerchant",
             "()Lorg/bukkit/inventory/Merchant;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Merchant(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6183,7 +6467,7 @@ impl<'mc> TradeSelectEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -6196,7 +6480,8 @@ impl<'mc> TradeSelectEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/event/Event$Result;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::EventResult(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6206,32 +6491,35 @@ impl<'mc> TradeSelectEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::event::EventResult<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::event::EventResult<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/event/Event$Result;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn who_clicked(
@@ -6242,7 +6530,8 @@ impl<'mc> TradeSelectEvent<'mc> {
             "getWhoClicked",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6258,7 +6547,8 @@ impl<'mc> TradeSelectEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6272,7 +6562,8 @@ impl<'mc> TradeSelectEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6282,7 +6573,8 @@ impl<'mc> TradeSelectEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -6292,7 +6584,7 @@ impl<'mc> TradeSelectEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -6300,7 +6592,8 @@ impl<'mc> TradeSelectEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -6313,16 +6606,15 @@ impl<'mc> TradeSelectEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6332,26 +6624,29 @@ impl<'mc> TradeSelectEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -6476,7 +6771,7 @@ impl<'mc> InventoryAction<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::event::inventory::InventoryAction<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -6488,7 +6783,7 @@ impl<'mc> InventoryAction<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -6520,11 +6815,13 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryClickEvent<'mc> {
 impl<'mc> InventoryClickEvent<'mc> {
     pub fn new_with_inventory_view(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::event::inventory::InventoryTypeSlotType<'mc>>,
         arg2: i32,
-        arg3: impl Into<crate::bukkit::event::inventory::ClickType<'mc>>,
-        arg4: std::option::Option<impl Into<crate::bukkit::event::inventory::InventoryAction<'mc>>>,
+        arg3: impl Into<&'mc crate::bukkit::event::inventory::ClickType<'mc>>,
+        arg4: std::option::Option<
+            impl Into<&'mc crate::bukkit::event::inventory::InventoryAction<'mc>>,
+        >,
         arg5: std::option::Option<i32>,
     ) -> Result<crate::bukkit::event::inventory::InventoryClickEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -6572,7 +6869,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6583,21 +6881,23 @@ impl<'mc> InventoryClickEvent<'mc> {
     pub fn slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     #[deprecated]
     pub fn set_cursor(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCursor",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn cursor(
@@ -6608,7 +6908,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getCursor",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6627,7 +6928,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getSlotType",
             "()Lorg/bukkit/event/inventory/InventoryType$SlotType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::inventory::InventoryTypeSlotType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6646,7 +6948,7 @@ impl<'mc> InventoryClickEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -6660,7 +6962,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getAction",
             "()Lorg/bukkit/event/inventory/InventoryAction;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -6687,7 +6990,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getCurrentItem",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6698,32 +7002,36 @@ impl<'mc> InventoryClickEvent<'mc> {
     pub fn is_right_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRightClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRightClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_left_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isLeftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_shift_click(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isShiftClick", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_current_item(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCurrentItem",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn clicked_inventory(
@@ -6734,7 +7042,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getClickedInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6745,13 +7054,15 @@ impl<'mc> InventoryClickEvent<'mc> {
     pub fn raw_slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getRawSlot", "()I", &[])?;
+            .call_method(&self.jni_object(), "getRawSlot", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn hotbar_button(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[])?;
+            .call_method(&self.jni_object(), "getHotbarButton", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn click(
@@ -6762,7 +7073,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getClick",
             "()Lorg/bukkit/event/inventory/ClickType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -6789,7 +7101,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/event/Event$Result;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::EventResult(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6799,32 +7112,35 @@ impl<'mc> InventoryClickEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::event::EventResult<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::event::EventResult<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/event/Event$Result;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn who_clicked(
@@ -6835,7 +7151,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getWhoClicked",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6851,7 +7168,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6867,7 +7185,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6881,7 +7200,8 @@ impl<'mc> InventoryClickEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6891,7 +7211,8 @@ impl<'mc> InventoryClickEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -6901,7 +7222,7 @@ impl<'mc> InventoryClickEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -6909,7 +7230,8 @@ impl<'mc> InventoryClickEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -6922,16 +7244,15 @@ impl<'mc> InventoryClickEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6941,26 +7262,29 @@ impl<'mc> InventoryClickEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -6988,9 +7312,9 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryDragEvent<'mc> {
 impl<'mc> InventoryDragEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
+        arg2: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
         arg3: bool,
         arg4: std::collections::HashMap<i32, impl Into<crate::bukkit::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::bukkit::event::inventory::InventoryDragEvent<'mc>, Box<dyn std::error::Error>>
@@ -7053,7 +7377,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7069,7 +7394,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getType",
             "()Lorg/bukkit/event/inventory/DragType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -7090,15 +7416,16 @@ impl<'mc> InventoryDragEvent<'mc> {
     }
     pub fn set_cursor(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCursor",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn cursor(
@@ -7109,7 +7436,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getCursor",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7128,7 +7456,7 @@ impl<'mc> InventoryDragEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -7141,7 +7469,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getOldCursor",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7157,7 +7486,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/event/Event$Result;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::EventResult(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7167,32 +7497,35 @@ impl<'mc> InventoryDragEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::event::EventResult<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::event::EventResult<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/event/Event$Result;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn who_clicked(
@@ -7203,7 +7536,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getWhoClicked",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7219,7 +7553,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7235,7 +7570,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7249,7 +7585,8 @@ impl<'mc> InventoryDragEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7259,7 +7596,8 @@ impl<'mc> InventoryDragEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -7269,7 +7607,7 @@ impl<'mc> InventoryDragEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -7277,7 +7615,8 @@ impl<'mc> InventoryDragEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -7290,16 +7629,15 @@ impl<'mc> InventoryDragEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7309,26 +7647,29 @@ impl<'mc> InventoryDragEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -7356,8 +7697,8 @@ impl<'mc> crate::JNIRaw<'mc> for FurnaceBurnEvent<'mc> {
 impl<'mc> FurnaceBurnEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::block::Block<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::block::Block<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
         arg2: i32,
     ) -> Result<crate::bukkit::event::inventory::FurnaceBurnEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -7409,7 +7750,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7420,7 +7762,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn fuel(
@@ -7431,7 +7774,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
             "getFuel",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7442,28 +7786,31 @@ impl<'mc> FurnaceBurnEvent<'mc> {
     pub fn burn_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getBurnTime", "()I", &[])?;
+            .call_method(&self.jni_object(), "getBurnTime", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_burn_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBurnTime",
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCancelled",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -7477,7 +7824,7 @@ impl<'mc> FurnaceBurnEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -7485,18 +7832,20 @@ impl<'mc> FurnaceBurnEvent<'mc> {
     pub fn is_burning(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isBurning", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isBurning", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_burning(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_0 = jni::objects::JValueGen::Bool(arg0.into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBurning",
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn block(
@@ -7507,7 +7856,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7521,7 +7871,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7531,7 +7882,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -7541,7 +7893,7 @@ impl<'mc> FurnaceBurnEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -7549,7 +7901,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -7562,16 +7915,15 @@ impl<'mc> FurnaceBurnEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7581,26 +7933,29 @@ impl<'mc> FurnaceBurnEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -7630,7 +7985,7 @@ impl<'mc> crate::JNIRaw<'mc> for InventoryCloseEvent<'mc> {
 impl<'mc> InventoryCloseEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
     ) -> Result<crate::bukkit::event::inventory::InventoryCloseEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -7675,7 +8030,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7691,7 +8047,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
             "getPlayer",
             "()Lorg/bukkit/entity/HumanEntity;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::HumanEntity(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7710,7 +8067,7 @@ impl<'mc> InventoryCloseEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -7723,7 +8080,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7739,7 +8097,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7753,7 +8112,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7763,7 +8123,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -7773,7 +8134,7 @@ impl<'mc> InventoryCloseEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -7781,7 +8142,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -7794,16 +8156,15 @@ impl<'mc> InventoryCloseEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7813,26 +8174,29 @@ impl<'mc> InventoryCloseEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -7857,8 +8221,8 @@ impl<'mc> crate::JNIRaw<'mc> for PrepareInventoryResultEvent<'mc> {
 impl<'mc> PrepareInventoryResultEvent<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::inventory::InventoryView<'mc>>,
-        arg1: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::InventoryView<'mc>>,
+        arg1: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<
         crate::bukkit::event::inventory::PrepareInventoryResultEvent<'mc>,
         Box<dyn std::error::Error>,
@@ -7910,7 +8274,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             "getHandlers",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::event::HandlerList(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7926,7 +8291,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7936,15 +8302,16 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
     }
     pub fn set_result(
         &mut self,
-        arg0: impl Into<crate::bukkit::inventory::ItemStack<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResult",
             "(Lorg/bukkit/inventory/ItemStack;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn handler_list(
@@ -7958,7 +8325,7 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             &[],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             crate::bukkit::event::HandlerList(jni, obj)
         };
         Ok(ret)
@@ -7971,7 +8338,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             "getInventory",
             "()Lorg/bukkit/inventory/Inventory;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::Inventory(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7987,7 +8355,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             "getView",
             "()Lorg/bukkit/inventory/InventoryView;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::InventoryView(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8001,7 +8370,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             "getEventName",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -8011,7 +8381,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -8021,7 +8392,7 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -8029,7 +8400,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -8042,16 +8414,15 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -8061,26 +8432,29 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }

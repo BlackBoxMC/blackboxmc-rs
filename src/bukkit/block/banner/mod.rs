@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 pub enum PatternTypeEnum {
     Base,
     SquareBottomLeft,
@@ -204,7 +205,8 @@ impl<'mc> PatternType<'mc> {
             "getIdentifier",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -213,7 +215,7 @@ impl<'mc> PatternType<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/block/banner/PatternType")?;
@@ -224,7 +226,7 @@ impl<'mc> PatternType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -241,7 +243,7 @@ impl<'mc> PatternType<'mc> {
     }
     pub fn get_by_identifier(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/block/banner/PatternType")?;
@@ -252,7 +254,7 @@ impl<'mc> PatternType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -284,8 +286,8 @@ impl<'mc> crate::JNIRaw<'mc> for Pattern<'mc> {
 impl<'mc> Pattern<'mc> {
     pub fn new_with_map(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::bukkit::DyeColor<'mc>>>,
-        arg1: std::option::Option<impl Into<crate::bukkit::block::banner::PatternType<'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc crate::bukkit::DyeColor<'mc>>>,
+        arg1: std::option::Option<impl Into<&'mc crate::bukkit::block::banner::PatternType<'mc>>>,
     ) -> Result<crate::bukkit::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
@@ -333,13 +335,15 @@ impl<'mc> Pattern<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn color(&mut self) -> Result<crate::bukkit::DyeColor<'mc>, Box<dyn std::error::Error>> {
@@ -348,7 +352,8 @@ impl<'mc> Pattern<'mc> {
             "getColor",
             "()Lorg/bukkit/DyeColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -375,7 +380,8 @@ impl<'mc> Pattern<'mc> {
             "getPattern",
             "()Lorg/bukkit/block/banner/PatternType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self
@@ -401,7 +407,7 @@ impl<'mc> Pattern<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -409,16 +415,15 @@ impl<'mc> Pattern<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -426,22 +431,24 @@ impl<'mc> Pattern<'mc> {
             .to_string())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }

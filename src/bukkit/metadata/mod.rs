@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements MetadataStore. Needed for returning it from Java.
 pub struct MetadataStore<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -31,13 +32,13 @@ impl<'mc> MetadataStore<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
-        arg2: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: impl Into<&'mc crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
             "(Ljava/lang/Object;Ljava/lang/String;Lorg/bukkit/metadata/MetadataValue;)V",
@@ -46,13 +47,14 @@ impl<'mc> MetadataStore<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
+        arg1: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -64,19 +66,20 @@ impl<'mc> MetadataStore<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn remove_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
-        arg2: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: impl Into<&'mc crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/Object;Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
@@ -85,20 +88,22 @@ impl<'mc> MetadataStore<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn invalidate_all(
         &mut self,
-        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "invalidateAll",
             "(Lorg/bukkit/plugin/Plugin;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -120,10 +125,11 @@ impl<'mc> MetadataValue<'mc> {
     pub fn from_extendable(
         env: &crate::SharedJNIEnv<'mc>,
         plugin: &'mc crate::bukkit::plugin::Plugin,
+        address: i32,
         lib_name: String,
         name: String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable("MetadataValue", name, lib_name) }?;
+        let obj = unsafe { plugin.new_extendable(address, "MetadataValue", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
     pub fn from_raw(
@@ -151,16 +157,15 @@ impl<'mc> MetadataValue<'mc> {
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
+                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "asString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "asString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -170,7 +175,8 @@ impl<'mc> MetadataValue<'mc> {
     pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[])?;
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn owning_plugin(
@@ -181,7 +187,8 @@ impl<'mc> MetadataValue<'mc> {
             "getOwningPlugin",
             "()Lorg/bukkit/plugin/Plugin;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::plugin::Plugin(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -190,44 +197,52 @@ impl<'mc> MetadataValue<'mc> {
         Ok(ret)
     }
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asFloat", "()F", &[])?;
+            .call_method(&self.jni_object(), "asFloat", "()F", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.f().unwrap())
     }
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asDouble", "()D", &[])?;
+            .call_method(&self.jni_object(), "asDouble", "()D", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.d().unwrap())
     }
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asLong", "()J", &[])?;
+            .call_method(&self.jni_object(), "asLong", "()J", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.j().unwrap())
     }
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asShort", "()S", &[])?;
+            .call_method(&self.jni_object(), "asShort", "()S", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.s().unwrap())
     }
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asByte", "()B", &[])?;
+            .call_method(&self.jni_object(), "asByte", "()B", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.b().unwrap())
     }
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asBoolean", "()Z", &[])?;
+            .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
 }
@@ -270,12 +285,12 @@ impl<'mc> Metadatable<'mc> {
     }
     pub fn set_metadata(
         &mut self,
-        arg0: impl Into<String>,
-        arg1: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
+        arg0: impl Into<&'mc String>,
+        arg1: impl Into<&'mc crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
             "(Ljava/lang/String;Lorg/bukkit/metadata/MetadataValue;)V",
@@ -283,12 +298,13 @@ impl<'mc> Metadatable<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_metadata(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -296,17 +312,18 @@ impl<'mc> Metadatable<'mc> {
             "hasMetadata",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn remove_metadata(
         &mut self,
-        arg0: impl Into<String>,
-        arg1: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: impl Into<&'mc String>,
+        arg1: impl Into<&'mc crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
@@ -314,7 +331,8 @@ impl<'mc> Metadatable<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -376,13 +394,13 @@ impl<'mc> MetadataStoreBase<'mc> {
     pub fn set_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
-        arg2: impl Into<crate::bukkit::metadata::MetadataValue<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: impl Into<&'mc crate::bukkit::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
             "(Ljava/lang/Object;Ljava/lang/String;Lorg/bukkit/metadata/MetadataValue;)V",
@@ -391,13 +409,14 @@ impl<'mc> MetadataStoreBase<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn has_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
+        arg1: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -409,19 +428,20 @@ impl<'mc> MetadataStoreBase<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn remove_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
-        arg2: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: impl Into<&'mc crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = arg0;
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
             "(Ljava/lang/Object;Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V",
@@ -430,20 +450,22 @@ impl<'mc> MetadataStoreBase<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn invalidate_all(
         &mut self,
-        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "invalidateAll",
             "(Lorg/bukkit/plugin/Plugin;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn wait(
@@ -453,7 +475,7 @@ impl<'mc> MetadataStoreBase<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -461,7 +483,8 @@ impl<'mc> MetadataStoreBase<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -474,16 +497,15 @@ impl<'mc> MetadataStoreBase<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -493,26 +515,29 @@ impl<'mc> MetadataStoreBase<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -562,7 +587,7 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
     pub fn value_of_with_string(
         jni: crate::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
@@ -581,7 +606,8 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[])?;
+                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -598,16 +624,15 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -617,7 +642,8 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -630,7 +656,8 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             "compareTo",
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -641,7 +668,8 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             "describeConstable",
             "()Ljava/util/Optional;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -652,13 +680,15 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             "getDeclaringClass",
             "()Ljava/lang/Class;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[])?;
+            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -668,7 +698,7 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -676,26 +706,29 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -711,9 +744,9 @@ impl<'mc> crate::JNIRaw<'mc> for LazyMetadataValue<'mc> {
 impl<'mc> LazyMetadataValue<'mc> {
     pub fn new_with_plugin(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::plugin::Plugin<'mc>>,
         arg1: std::option::Option<
-            impl Into<crate::bukkit::metadata::LazyMetadataValueCacheStrategy<'mc>>,
+            impl Into<&'mc crate::bukkit::metadata::LazyMetadataValueCacheStrategy<'mc>>,
         >,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::bukkit::metadata::LazyMetadataValue<'mc>, Box<dyn std::error::Error>> {
@@ -753,21 +786,22 @@ impl<'mc> LazyMetadataValue<'mc> {
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
+                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "asString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "asString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -777,7 +811,8 @@ impl<'mc> LazyMetadataValue<'mc> {
     pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[])?;
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn owning_plugin(
@@ -788,7 +823,8 @@ impl<'mc> LazyMetadataValue<'mc> {
             "getOwningPlugin",
             "()Lorg/bukkit/plugin/Plugin;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::plugin::Plugin(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -799,37 +835,43 @@ impl<'mc> LazyMetadataValue<'mc> {
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asFloat", "()F", &[])?;
+            .call_method(&self.jni_object(), "asFloat", "()F", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.f().unwrap())
     }
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asDouble", "()D", &[])?;
+            .call_method(&self.jni_object(), "asDouble", "()D", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.d().unwrap())
     }
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asLong", "()J", &[])?;
+            .call_method(&self.jni_object(), "asLong", "()J", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.j().unwrap())
     }
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asShort", "()S", &[])?;
+            .call_method(&self.jni_object(), "asShort", "()S", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.s().unwrap())
     }
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asByte", "()B", &[])?;
+            .call_method(&self.jni_object(), "asByte", "()B", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.b().unwrap())
     }
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asBoolean", "()Z", &[])?;
+            .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -839,7 +881,7 @@ impl<'mc> LazyMetadataValue<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -847,7 +889,8 @@ impl<'mc> LazyMetadataValue<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -860,16 +903,15 @@ impl<'mc> LazyMetadataValue<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -879,26 +921,29 @@ impl<'mc> LazyMetadataValue<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -923,7 +968,7 @@ impl<'mc> crate::JNIRaw<'mc> for FixedMetadataValue<'mc> {
 impl<'mc> FixedMetadataValue<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::plugin::Plugin<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::plugin::Plugin<'mc>>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<crate::bukkit::metadata::FixedMetadataValue<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -967,21 +1012,22 @@ impl<'mc> FixedMetadataValue<'mc> {
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
+                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "asString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "asString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -991,7 +1037,8 @@ impl<'mc> FixedMetadataValue<'mc> {
     pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[])?;
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn owning_plugin(
@@ -1002,7 +1049,8 @@ impl<'mc> FixedMetadataValue<'mc> {
             "getOwningPlugin",
             "()Lorg/bukkit/plugin/Plugin;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::plugin::Plugin(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1013,37 +1061,43 @@ impl<'mc> FixedMetadataValue<'mc> {
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asFloat", "()F", &[])?;
+            .call_method(&self.jni_object(), "asFloat", "()F", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.f().unwrap())
     }
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asDouble", "()D", &[])?;
+            .call_method(&self.jni_object(), "asDouble", "()D", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.d().unwrap())
     }
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asLong", "()J", &[])?;
+            .call_method(&self.jni_object(), "asLong", "()J", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.j().unwrap())
     }
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asShort", "()S", &[])?;
+            .call_method(&self.jni_object(), "asShort", "()S", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.s().unwrap())
     }
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asByte", "()B", &[])?;
+            .call_method(&self.jni_object(), "asByte", "()B", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.b().unwrap())
     }
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asBoolean", "()Z", &[])?;
+            .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -1053,7 +1107,7 @@ impl<'mc> FixedMetadataValue<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1061,7 +1115,8 @@ impl<'mc> FixedMetadataValue<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -1074,16 +1129,15 @@ impl<'mc> FixedMetadataValue<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1093,26 +1147,29 @@ impl<'mc> FixedMetadataValue<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1160,12 +1217,10 @@ impl<'mc> MetadataValueAdapter<'mc> {
         }
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "asString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "asString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1175,7 +1230,8 @@ impl<'mc> MetadataValueAdapter<'mc> {
     pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[])?;
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn owning_plugin(
@@ -1186,7 +1242,8 @@ impl<'mc> MetadataValueAdapter<'mc> {
             "getOwningPlugin",
             "()Lorg/bukkit/plugin/Plugin;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::plugin::Plugin(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1197,37 +1254,43 @@ impl<'mc> MetadataValueAdapter<'mc> {
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asFloat", "()F", &[])?;
+            .call_method(&self.jni_object(), "asFloat", "()F", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.f().unwrap())
     }
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asDouble", "()D", &[])?;
+            .call_method(&self.jni_object(), "asDouble", "()D", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.d().unwrap())
     }
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asLong", "()J", &[])?;
+            .call_method(&self.jni_object(), "asLong", "()J", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.j().unwrap())
     }
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asShort", "()S", &[])?;
+            .call_method(&self.jni_object(), "asShort", "()S", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.s().unwrap())
     }
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asByte", "()B", &[])?;
+            .call_method(&self.jni_object(), "asByte", "()B", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.b().unwrap())
     }
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "asBoolean", "()Z", &[])?;
+            .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn wait(
@@ -1237,7 +1300,7 @@ impl<'mc> MetadataValueAdapter<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1245,7 +1308,8 @@ impl<'mc> MetadataValueAdapter<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -1258,16 +1322,15 @@ impl<'mc> MetadataValueAdapter<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1277,37 +1340,43 @@ impl<'mc> MetadataValueAdapter<'mc> {
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[])?;
+                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }

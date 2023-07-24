@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 blackbox_rs = {path="../../"}
+color-eyre = "0.6.2"
 jni = "0.21.1"
 
 [lib]

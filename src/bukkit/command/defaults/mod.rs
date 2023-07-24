@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct ReloadCommand<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16,7 +17,7 @@ impl<'mc> crate::JNIRaw<'mc> for ReloadCommand<'mc> {
 impl<'mc> ReloadCommand<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::defaults::ReloadCommand<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -53,9 +54,9 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn execute(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        _arg2: Vec<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -67,7 +68,8 @@ impl<'mc> ReloadCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -76,7 +78,8 @@ impl<'mc> ReloadCommand<'mc> {
             "getPermission",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -85,24 +88,23 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn set_permission(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPermission",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -110,12 +112,10 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -125,12 +125,13 @@ impl<'mc> ReloadCommand<'mc> {
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn register(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -138,12 +139,13 @@ impl<'mc> ReloadCommand<'mc> {
             "register",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_name(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -151,12 +153,13 @@ impl<'mc> ReloadCommand<'mc> {
             "setName",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn unregister(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -164,7 +167,8 @@ impl<'mc> ReloadCommand<'mc> {
             "unregister",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -173,7 +177,8 @@ impl<'mc> ReloadCommand<'mc> {
             "getDescription",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -182,7 +187,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn set_description(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -190,7 +195,8 @@ impl<'mc> ReloadCommand<'mc> {
             "setDescription",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -200,7 +206,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn set_usage(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -208,7 +214,8 @@ impl<'mc> ReloadCommand<'mc> {
             "setUsage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -240,7 +247,8 @@ impl<'mc> ReloadCommand<'mc> {
             "setAliases",
             "(Ljava/util/List;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -250,7 +258,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn set_permission_message(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -258,7 +266,8 @@ impl<'mc> ReloadCommand<'mc> {
             "setPermissionMessage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -268,7 +277,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn set_label(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -276,16 +285,15 @@ impl<'mc> ReloadCommand<'mc> {
             "setLabel",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLabel",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLabel", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -294,7 +302,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn test_permission_silent(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -302,12 +310,13 @@ impl<'mc> ReloadCommand<'mc> {
             "testPermissionSilent",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn test_permission(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -315,7 +324,8 @@ impl<'mc> ReloadCommand<'mc> {
             "testPermission",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -324,7 +334,8 @@ impl<'mc> ReloadCommand<'mc> {
             "getPermissionMessage",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -332,12 +343,10 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string())
     }
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getUsage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUsage", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -346,8 +355,8 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn broadcast_command_message_with_command_sender(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -355,7 +364,7 @@ impl<'mc> ReloadCommand<'mc> {
         // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
+        let res = jni.call_static_method(
             cls,
             "broadcastCommandMessage",
             "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Z)V",
@@ -374,7 +383,7 @@ impl<'mc> ReloadCommand<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -382,7 +391,8 @@ impl<'mc> ReloadCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -395,32 +405,36 @@ impl<'mc> ReloadCommand<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -445,7 +459,7 @@ impl<'mc> crate::JNIRaw<'mc> for TimingsCommand<'mc> {
 impl<'mc> TimingsCommand<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::defaults::TimingsCommand<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -484,9 +498,9 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn execute(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        _arg2: Vec<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -498,21 +512,23 @@ impl<'mc> TimingsCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn execute_spigot_timings(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        _arg1: Vec<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "executeSpigotTimings",
             "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -521,7 +537,8 @@ impl<'mc> TimingsCommand<'mc> {
             "getPermission",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -530,24 +547,23 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn set_permission(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPermission",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -555,12 +571,10 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -570,12 +584,13 @@ impl<'mc> TimingsCommand<'mc> {
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn register(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -583,12 +598,13 @@ impl<'mc> TimingsCommand<'mc> {
             "register",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_name(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -596,12 +612,13 @@ impl<'mc> TimingsCommand<'mc> {
             "setName",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn unregister(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -609,7 +626,8 @@ impl<'mc> TimingsCommand<'mc> {
             "unregister",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -618,7 +636,8 @@ impl<'mc> TimingsCommand<'mc> {
             "getDescription",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -627,7 +646,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn set_description(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -635,7 +654,8 @@ impl<'mc> TimingsCommand<'mc> {
             "setDescription",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -645,7 +665,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn set_usage(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -653,7 +673,8 @@ impl<'mc> TimingsCommand<'mc> {
             "setUsage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -685,7 +706,8 @@ impl<'mc> TimingsCommand<'mc> {
             "setAliases",
             "(Ljava/util/List;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -695,7 +717,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn set_permission_message(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -703,7 +725,8 @@ impl<'mc> TimingsCommand<'mc> {
             "setPermissionMessage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -713,7 +736,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn set_label(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -721,16 +744,15 @@ impl<'mc> TimingsCommand<'mc> {
             "setLabel",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLabel",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLabel", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -739,7 +761,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn test_permission_silent(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -747,12 +769,13 @@ impl<'mc> TimingsCommand<'mc> {
             "testPermissionSilent",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn test_permission(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -760,7 +783,8 @@ impl<'mc> TimingsCommand<'mc> {
             "testPermission",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -769,7 +793,8 @@ impl<'mc> TimingsCommand<'mc> {
             "getPermissionMessage",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -777,12 +802,10 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string())
     }
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getUsage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUsage", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -791,8 +814,8 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn broadcast_command_message_with_command_sender(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -800,7 +823,7 @@ impl<'mc> TimingsCommand<'mc> {
         // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
+        let res = jni.call_static_method(
             cls,
             "broadcastCommandMessage",
             "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Z)V",
@@ -819,7 +842,7 @@ impl<'mc> TimingsCommand<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -827,7 +850,8 @@ impl<'mc> TimingsCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -840,32 +864,36 @@ impl<'mc> TimingsCommand<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -916,7 +944,8 @@ impl<'mc> BukkitCommand<'mc> {
             "getPermission",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -925,24 +954,23 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn set_permission(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPermission",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -950,12 +978,10 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -965,12 +991,13 @@ impl<'mc> BukkitCommand<'mc> {
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn register(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -978,14 +1005,15 @@ impl<'mc> BukkitCommand<'mc> {
             "register",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn execute(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        _arg2: Vec<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -997,12 +1025,13 @@ impl<'mc> BukkitCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_name(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1010,12 +1039,13 @@ impl<'mc> BukkitCommand<'mc> {
             "setName",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn unregister(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1023,7 +1053,8 @@ impl<'mc> BukkitCommand<'mc> {
             "unregister",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1032,7 +1063,8 @@ impl<'mc> BukkitCommand<'mc> {
             "getDescription",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1041,7 +1073,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn set_description(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1049,7 +1081,8 @@ impl<'mc> BukkitCommand<'mc> {
             "setDescription",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1059,7 +1092,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn set_usage(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1067,7 +1100,8 @@ impl<'mc> BukkitCommand<'mc> {
             "setUsage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1099,7 +1133,8 @@ impl<'mc> BukkitCommand<'mc> {
             "setAliases",
             "(Ljava/util/List;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1109,7 +1144,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn set_permission_message(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1117,7 +1152,8 @@ impl<'mc> BukkitCommand<'mc> {
             "setPermissionMessage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1127,7 +1163,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn set_label(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1135,16 +1171,15 @@ impl<'mc> BukkitCommand<'mc> {
             "setLabel",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLabel",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLabel", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1153,7 +1188,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn test_permission_silent(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1161,12 +1196,13 @@ impl<'mc> BukkitCommand<'mc> {
             "testPermissionSilent",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn test_permission(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1174,7 +1210,8 @@ impl<'mc> BukkitCommand<'mc> {
             "testPermission",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1183,7 +1220,8 @@ impl<'mc> BukkitCommand<'mc> {
             "getPermissionMessage",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1191,12 +1229,10 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string())
     }
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getUsage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUsage", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1205,8 +1241,8 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn broadcast_command_message_with_command_sender(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -1214,7 +1250,7 @@ impl<'mc> BukkitCommand<'mc> {
         // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
+        let res = jni.call_static_method(
             cls,
             "broadcastCommandMessage",
             "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Z)V",
@@ -1233,7 +1269,7 @@ impl<'mc> BukkitCommand<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1241,7 +1277,8 @@ impl<'mc> BukkitCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -1254,32 +1291,36 @@ impl<'mc> BukkitCommand<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1304,7 +1345,7 @@ impl<'mc> crate::JNIRaw<'mc> for VersionCommand<'mc> {
 impl<'mc> VersionCommand<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::defaults::VersionCommand<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -1343,9 +1384,9 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn execute(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        _arg2: Vec<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -1357,7 +1398,8 @@ impl<'mc> VersionCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1366,7 +1408,8 @@ impl<'mc> VersionCommand<'mc> {
             "getPermission",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1375,24 +1418,23 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn set_permission(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPermission",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1400,12 +1442,10 @@ impl<'mc> VersionCommand<'mc> {
             .to_string())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1415,12 +1455,13 @@ impl<'mc> VersionCommand<'mc> {
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn register(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1428,12 +1469,13 @@ impl<'mc> VersionCommand<'mc> {
             "register",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_name(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1441,12 +1483,13 @@ impl<'mc> VersionCommand<'mc> {
             "setName",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn unregister(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1454,7 +1497,8 @@ impl<'mc> VersionCommand<'mc> {
             "unregister",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1463,7 +1507,8 @@ impl<'mc> VersionCommand<'mc> {
             "getDescription",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1472,7 +1517,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn set_description(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1480,7 +1525,8 @@ impl<'mc> VersionCommand<'mc> {
             "setDescription",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1490,7 +1536,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn set_usage(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1498,7 +1544,8 @@ impl<'mc> VersionCommand<'mc> {
             "setUsage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1530,7 +1577,8 @@ impl<'mc> VersionCommand<'mc> {
             "setAliases",
             "(Ljava/util/List;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1540,7 +1588,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn set_permission_message(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1548,7 +1596,8 @@ impl<'mc> VersionCommand<'mc> {
             "setPermissionMessage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1558,7 +1607,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn set_label(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1566,16 +1615,15 @@ impl<'mc> VersionCommand<'mc> {
             "setLabel",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLabel",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLabel", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1584,7 +1632,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn test_permission_silent(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1592,12 +1640,13 @@ impl<'mc> VersionCommand<'mc> {
             "testPermissionSilent",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn test_permission(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1605,7 +1654,8 @@ impl<'mc> VersionCommand<'mc> {
             "testPermission",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1614,7 +1664,8 @@ impl<'mc> VersionCommand<'mc> {
             "getPermissionMessage",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1622,12 +1673,10 @@ impl<'mc> VersionCommand<'mc> {
             .to_string())
     }
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getUsage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUsage", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1636,8 +1685,8 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn broadcast_command_message_with_command_sender(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -1645,7 +1694,7 @@ impl<'mc> VersionCommand<'mc> {
         // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
+        let res = jni.call_static_method(
             cls,
             "broadcastCommandMessage",
             "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Z)V",
@@ -1664,7 +1713,7 @@ impl<'mc> VersionCommand<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -1672,7 +1721,8 @@ impl<'mc> VersionCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -1685,32 +1735,36 @@ impl<'mc> VersionCommand<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -1766,9 +1820,9 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn execute(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        _arg2: Vec<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -1780,7 +1834,8 @@ impl<'mc> HelpCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1789,7 +1844,8 @@ impl<'mc> HelpCommand<'mc> {
             "getPermission",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1798,24 +1854,23 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn set_permission(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPermission",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1823,12 +1878,10 @@ impl<'mc> HelpCommand<'mc> {
             .to_string())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1838,12 +1891,13 @@ impl<'mc> HelpCommand<'mc> {
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn register(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1851,12 +1905,13 @@ impl<'mc> HelpCommand<'mc> {
             "register",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_name(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1864,12 +1919,13 @@ impl<'mc> HelpCommand<'mc> {
             "setName",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn unregister(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -1877,7 +1933,8 @@ impl<'mc> HelpCommand<'mc> {
             "unregister",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1886,7 +1943,8 @@ impl<'mc> HelpCommand<'mc> {
             "getDescription",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1895,7 +1953,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn set_description(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1903,7 +1961,8 @@ impl<'mc> HelpCommand<'mc> {
             "setDescription",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1913,7 +1972,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn set_usage(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1921,7 +1980,8 @@ impl<'mc> HelpCommand<'mc> {
             "setUsage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1953,7 +2013,8 @@ impl<'mc> HelpCommand<'mc> {
             "setAliases",
             "(Ljava/util/List;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1963,7 +2024,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn set_permission_message(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1971,7 +2032,8 @@ impl<'mc> HelpCommand<'mc> {
             "setPermissionMessage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1981,7 +2043,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn set_label(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -1989,16 +2051,15 @@ impl<'mc> HelpCommand<'mc> {
             "setLabel",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLabel",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLabel", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2007,7 +2068,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn test_permission_silent(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -2015,12 +2076,13 @@ impl<'mc> HelpCommand<'mc> {
             "testPermissionSilent",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn test_permission(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -2028,7 +2090,8 @@ impl<'mc> HelpCommand<'mc> {
             "testPermission",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2037,7 +2100,8 @@ impl<'mc> HelpCommand<'mc> {
             "getPermissionMessage",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2045,12 +2109,10 @@ impl<'mc> HelpCommand<'mc> {
             .to_string())
     }
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getUsage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUsage", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2059,8 +2121,8 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn broadcast_command_message_with_command_sender(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -2068,7 +2130,7 @@ impl<'mc> HelpCommand<'mc> {
         // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
+        let res = jni.call_static_method(
             cls,
             "broadcastCommandMessage",
             "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Z)V",
@@ -2087,7 +2149,7 @@ impl<'mc> HelpCommand<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2095,7 +2157,8 @@ impl<'mc> HelpCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -2108,32 +2171,36 @@ impl<'mc> HelpCommand<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }
@@ -2158,7 +2225,7 @@ impl<'mc> crate::JNIRaw<'mc> for PluginsCommand<'mc> {
 impl<'mc> PluginsCommand<'mc> {
     pub fn new(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::defaults::PluginsCommand<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -2197,9 +2264,9 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn execute(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        _arg2: Vec<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -2211,7 +2278,8 @@ impl<'mc> PluginsCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2220,7 +2288,8 @@ impl<'mc> PluginsCommand<'mc> {
             "getPermission",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2229,24 +2298,23 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn set_permission(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setPermission",
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getName",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2254,12 +2322,10 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toString",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2269,12 +2335,13 @@ impl<'mc> PluginsCommand<'mc> {
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn register(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -2282,12 +2349,13 @@ impl<'mc> PluginsCommand<'mc> {
             "register",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_name(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -2295,12 +2363,13 @@ impl<'mc> PluginsCommand<'mc> {
             "setName",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn unregister(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandMap<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandMap<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -2308,7 +2377,8 @@ impl<'mc> PluginsCommand<'mc> {
             "unregister",
             "(Lorg/bukkit/command/CommandMap;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2317,7 +2387,8 @@ impl<'mc> PluginsCommand<'mc> {
             "getDescription",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2326,7 +2397,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn set_description(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -2334,7 +2405,8 @@ impl<'mc> PluginsCommand<'mc> {
             "setDescription",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2344,7 +2416,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn set_usage(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -2352,7 +2424,8 @@ impl<'mc> PluginsCommand<'mc> {
             "setUsage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2384,7 +2457,8 @@ impl<'mc> PluginsCommand<'mc> {
             "setAliases",
             "(Ljava/util/List;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2394,7 +2468,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn set_permission_message(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -2402,7 +2476,8 @@ impl<'mc> PluginsCommand<'mc> {
             "setPermissionMessage",
             "(Ljava/lang/String;)Lorg/bukkit/command/Command;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::command::Command(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2412,7 +2487,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn set_label(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -2420,16 +2495,15 @@ impl<'mc> PluginsCommand<'mc> {
             "setLabel",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLabel",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLabel", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2438,7 +2512,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn test_permission_silent(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -2446,12 +2520,13 @@ impl<'mc> PluginsCommand<'mc> {
             "testPermissionSilent",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn test_permission(
         &mut self,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let res = self.jni_ref().call_method(
@@ -2459,7 +2534,8 @@ impl<'mc> PluginsCommand<'mc> {
             "testPermission",
             "(Lorg/bukkit/command/CommandSender;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2468,7 +2544,8 @@ impl<'mc> PluginsCommand<'mc> {
             "getPermissionMessage",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2476,12 +2553,10 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string())
     }
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getUsage",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUsage", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2490,8 +2565,8 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn broadcast_command_message_with_command_sender(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::command::CommandSender<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: impl Into<&'mc crate::bukkit::command::CommandSender<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -2499,7 +2574,7 @@ impl<'mc> PluginsCommand<'mc> {
         // 1
         let val_2 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("void")?;
-        let _res = jni.call_static_method(
+        let res = jni.call_static_method(
             cls,
             "broadcastCommandMessage",
             "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Z)V",
@@ -2518,7 +2593,7 @@ impl<'mc> PluginsCommand<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_1 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        self.jni_ref().call_method(
+        let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
             "(JI)V",
@@ -2526,7 +2601,8 @@ impl<'mc> PluginsCommand<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn equals(
@@ -2539,32 +2615,36 @@ impl<'mc> PluginsCommand<'mc> {
             "equals",
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[])?;
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getClass",
-            "()Ljava/lang/Class;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        self.jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(())
     }
 }

@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ProjectileSource. Needed for returning it from Java.
 pub struct ProjectileSource<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -33,7 +34,7 @@ impl<'mc> ProjectileSource<'mc> {
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<crate::bukkit::util::Vector<'mc>>>,
+        arg1: std::option::Option<impl Into<&'mc crate::bukkit::util::Vector<'mc>>>,
     ) -> Result<crate::bukkit::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
@@ -45,7 +46,8 @@ impl<'mc> ProjectileSource<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::Projectile(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -102,7 +104,8 @@ impl<'mc> BlockProjectileSource<'mc> {
             "getBlock",
             "()Lorg/bukkit/block/Block;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -113,7 +116,7 @@ impl<'mc> BlockProjectileSource<'mc> {
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<crate::bukkit::util::Vector<'mc>>>,
+        arg1: std::option::Option<impl Into<&'mc crate::bukkit::util::Vector<'mc>>>,
     ) -> Result<crate::bukkit::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
@@ -125,7 +128,8 @@ impl<'mc> BlockProjectileSource<'mc> {
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
             ],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::entity::Projectile(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())

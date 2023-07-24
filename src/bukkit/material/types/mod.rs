@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 pub enum MushroomBlockTextureEnum {
     AllPores,
     CapNorthWest,
@@ -88,7 +89,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -100,7 +101,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -120,7 +121,8 @@ impl<'mc> MushroomBlockTexture<'mc> {
     pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getData", "()B", &[])?;
+            .call_method(&self.jni_object(), "getData", "()B", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.b().unwrap())
     }
     #[deprecated]
@@ -138,7 +140,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -156,7 +158,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
     }
     pub fn get_cap_by_face(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bukkit::block::BlockFace<'mc>>,
+        arg0: impl Into<&'mc crate::bukkit::block::BlockFace<'mc>>,
     ) -> Result<crate::bukkit::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
@@ -168,7 +170,7 @@ impl<'mc> MushroomBlockTexture<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -192,7 +194,8 @@ impl<'mc> MushroomBlockTexture<'mc> {
             "getCapFace",
             "()Lorg/bukkit/block/BlockFace;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant = self

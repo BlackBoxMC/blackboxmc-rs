@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements AdvancementProgress. Needed for returning it from Java.
 pub struct AdvancementProgress<'mc>(
     pub(crate) crate::SharedJNIEnv<'mc>,
@@ -33,7 +34,8 @@ impl<'mc> AdvancementProgress<'mc> {
     pub fn is_done(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isDone", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isDone", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn advancement(
@@ -44,7 +46,8 @@ impl<'mc> AdvancementProgress<'mc> {
             "getAdvancement",
             "()Lorg/bukkit/advancement/Advancement;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::advancement::Advancement(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -54,7 +57,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     pub fn award_criteria(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -62,12 +65,13 @@ impl<'mc> AdvancementProgress<'mc> {
             "awardCriteria",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn revoke_criteria(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -75,12 +79,13 @@ impl<'mc> AdvancementProgress<'mc> {
             "revokeCriteria",
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_date_awarded(
         &mut self,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -88,7 +93,8 @@ impl<'mc> AdvancementProgress<'mc> {
             "getDateAwarded",
             "(Ljava/lang/String;)Ljava/util/Date;",
             &[jni::objects::JValueGen::from(&val_0)],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.l().unwrap())
     }
 }
@@ -149,7 +155,7 @@ impl<'mc> AdvancementDisplayType<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<crate::bukkit::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>>
     {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
@@ -161,7 +167,7 @@ impl<'mc> AdvancementDisplayType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -183,7 +189,8 @@ impl<'mc> AdvancementDisplayType<'mc> {
             "getColor",
             "()Lorg/bukkit/ChatColor;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -225,7 +232,8 @@ impl<'mc> AdvancementDisplay<'mc> {
     pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isHidden", "()Z", &[])?;
+            .call_method(&self.jni_object(), "isHidden", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_type(
@@ -237,7 +245,8 @@ impl<'mc> AdvancementDisplay<'mc> {
             "getType",
             "()Lorg/bukkit/advancement/AdvancementDisplayType;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -260,13 +269,15 @@ impl<'mc> AdvancementDisplay<'mc> {
     pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getX", "()F", &[])?;
+            .call_method(&self.jni_object(), "getX", "()F", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.f().unwrap())
     }
     pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getY", "()F", &[])?;
+            .call_method(&self.jni_object(), "getY", "()F", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.f().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -275,7 +286,8 @@ impl<'mc> AdvancementDisplay<'mc> {
             "getDescription",
             "()Ljava/lang/String;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -283,12 +295,10 @@ impl<'mc> AdvancementDisplay<'mc> {
             .to_string())
     }
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTitle",
-            "()Ljava/lang/String;",
-            &[],
-        )?;
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getTitle", "()Ljava/lang/String;", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -303,7 +313,8 @@ impl<'mc> AdvancementDisplay<'mc> {
             "getIcon",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -314,13 +325,15 @@ impl<'mc> AdvancementDisplay<'mc> {
     pub fn should_show_toast(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "shouldShowToast", "()Z", &[])?;
+            .call_method(&self.jni_object(), "shouldShowToast", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
     pub fn should_announce_chat(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "shouldAnnounceChat", "()Z", &[])?;
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "shouldAnnounceChat", "()Z", &[]);
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         Ok(res.z().unwrap())
     }
 }
@@ -370,7 +383,8 @@ impl<'mc> Advancement<'mc> {
             "getDisplay",
             "()Lorg/bukkit/advancement/AdvancementDisplay;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::advancement::AdvancementDisplay(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -384,7 +398,8 @@ impl<'mc> Advancement<'mc> {
             "getKey",
             "()Lorg/bukkit/NamespacedKey;",
             &[],
-        )?;
+        );
+        let res = crate::java_error_throw(self.jni_ref(), res)?;
         let ret = {
             crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())

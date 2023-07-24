@@ -265,90 +265,102 @@ fn function_sanity_check(
     let mut corr_functions = vec![];
 
     for item in item.items.clone() {
-        if let syn::ImplItem::Fn(f) = item {
-            let mut self_sig = String::new();
-            let name = f.sig.ident.to_string();
-            if validate_fn_for_required(&ty, name.as_str()) {
-                // get the self reciever
-                f.sig.inputs.iter().for_each(|f| {
-                    if let syn::FnArg::Receiver(r) = f {
-                        self_sig = resolve_self_name(r).clone();
-                    }
-                });
-                // It has the name. Does it have the correct amount of arguments?
-                let args = f
-                    .sig
-                    .inputs
-                    .iter()
-                    .filter(|f| {
-                        if let syn::FnArg::Typed(_) = f {
-                            true
-                        } else {
-                            false
+        match item {
+            syn::ImplItem::Macro(_) => todo!(),
+            syn::ImplItem::Const(_) => todo!(),
+            syn::ImplItem::Fn(f) => {
+                let mut self_sig = String::new();
+                let name = f.sig.ident.to_string();
+                if validate_fn_for_required(&ty, name.as_str()) {
+                    // get the self reciever
+                    f.sig.inputs.iter().for_each(|f| {
+                        if let syn::FnArg::Receiver(r) = f {
+                            self_sig = resolve_self_name(r).clone();
                         }
-                    })
-                    .map(|f| {
-                        if let syn::FnArg::Typed(f) = f {
-                            (f.span(), type_name(&*f.ty, false, false, false))
-                        } else {
-                            unreachable!()
-                        }
-                    })
-                    .collect::<Vec<(Span, String)>>();
+                    });
+                    // It has the name. Does it have the correct amount of arguments?
+                    let args = f
+                        .sig
+                        .inputs
+                        .iter()
+                        .filter(|f| {
+                            if let syn::FnArg::Typed(_) = f {
+                                true
+                            } else {
+                                false
+                            }
+                        })
+                        .map(|f| {
+                            if let syn::FnArg::Typed(f) = f {
+                                (f.span(), type_name(&*f.ty, false, false, false))
+                            } else {
+                                unreachable!()
+                            }
+                        })
+                        .collect::<Vec<(Span, String)>>();
 
-                let aargs = function_args_from_extend_requirement_filter_name(
-                    name.clone(),
-                    &abstract_functions_with_args,
-                );
-                let mut aargs_disp = vec![self_sig.clone()];
-                aargs_disp.append(&mut aargs.clone());
-                let mut args_disp = vec![self_sig.clone()];
-                args_disp.append(&mut args.iter().map(|f| f.1.clone()).collect());
+                    let aargs = function_args_from_extend_requirement_filter_name(
+                        name.clone(),
+                        &abstract_functions_with_args,
+                    );
+                    let mut aargs_disp = vec![self_sig.clone()];
+                    aargs_disp.append(&mut aargs.clone());
+                    let mut args_disp = vec![self_sig.clone()];
+                    args_disp.append(&mut args.iter().map(|f| f.1.clone()).collect());
 
-                if aargs.len() != args.len() {
-                    errors.push((
-                        f.sig.span(),
-                        format!(
-                            "{} {} \n expected `{}`. got `{}`",
-                            aargs.len(),
-                            args.len(),
-                            aargs_disp.join(", ").replace("  ", " ").replace("& ", "&"),
-                            args_disp.join(", ").replace("  ", " ").replace("& ", "&"),
-                        ),
-                    ));
-                } else {
-                    // Are the functions all the correct type?
-                    for i in 0..aargs.len() {
-                        let aarg = aargs.get(i).unwrap();
-                        let arg = args.get(i).unwrap();
-                        if aarg != &arg.1 {
-                            errors.push((arg.0, format!("expected `{}`.. got `{}`", aarg, arg.1)));
+                    if aargs.len() != args.len() {
+                        errors.push((
+                            f.sig.span(),
+                            format!(
+                                "{} {} \n expected `{}`. got `{}`",
+                                aargs.len(),
+                                args.len(),
+                                aargs_disp.join(", ").replace("  ", " ").replace("& ", "&"),
+                                args_disp.join(", ").replace("  ", " ").replace("& ", "&"),
+                            ),
+                        ));
+                    } else {
+                        // Are the functions all the correct type?
+                        for i in 0..aargs.len() {
+                            let aarg = aargs.get(i).unwrap();
+                            let arg = args.get(i).unwrap();
+                            if aarg != &arg.1 {
+                                errors.push((
+                                    arg.0,
+                                    format!("expected `{}`.. got `{}`", aarg, arg.1),
+                                ));
+                            }
                         }
                     }
+
+                    let return_arg =
+                        function_return_arg(name.clone(), &abstract_functions_with_args);
+                    match f.sig.output {
+                        syn::ReturnType::Default => {
+                            if return_arg != "()" {
+                                errors.push((
+                                    f.sig.span(),
+                                    format!("function was expected to return {}", return_arg),
+                                ));
+                            }
+                        }
+                        syn::ReturnType::Type(_, ty) => {
+                            let tyname = type_name(&*ty, false, false, false).replace(" ", "");
+                            if tyname != return_arg {
+                                errors.push((
+                                    ty.span(),
+                                    format!("expected {}, got {}", return_arg, tyname),
+                                ));
+                            }
+                        }
+                    };
+                    corr_functions.push(name);
                 }
-
-                let return_arg = function_return_arg(name.clone(), &abstract_functions_with_args);
-                match f.sig.output {
-                    syn::ReturnType::Default => {
-                        if return_arg != "()" {
-                            errors.push((
-                                f.sig.span(),
-                                format!("function was expected to return {}", return_arg),
-                            ));
-                        }
-                    }
-                    syn::ReturnType::Type(_, ty) => {
-                        let tyname = type_name(&*ty, false, false, false).replace(" ", "");
-                        if tyname != return_arg {
-                            errors.push((
-                                ty.span(),
-                                format!("expected {}, got {}", return_arg, tyname),
-                            ));
-                        }
-                    }
-                };
-                corr_functions.push(name);
             }
+            syn::ImplItem::Type(_) => todo!(),
+
+            syn::ImplItem::Verbatim(_) => todo!(),
+            _ => todo!(),
         }
     }
     let functions: String =

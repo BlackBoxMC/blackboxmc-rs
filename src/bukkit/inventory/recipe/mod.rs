@@ -1,5 +1,6 @@
 #![allow(deprecated)]
 use crate::JNIRaw;
+use color_eyre::eyre::Result;
 pub enum CookingBookCategoryEnum {
     Food,
     Blocks,
@@ -48,7 +49,7 @@ impl<'mc> CookingBookCategory<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<
         crate::bukkit::inventory::recipe::CookingBookCategory<'mc>,
         Box<dyn std::error::Error>,
@@ -62,7 +63,7 @@ impl<'mc> CookingBookCategory<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -131,7 +132,7 @@ impl<'mc> CraftingBookCategory<'mc> {
     }
     pub fn value_of(
         jni: crate::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<&'mc String>,
     ) -> Result<
         crate::bukkit::inventory::recipe::CraftingBookCategory<'mc>,
         Box<dyn std::error::Error>,
@@ -145,7 +146,7 @@ impl<'mc> CraftingBookCategory<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let obj = res.l()?;
+            let mut obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni

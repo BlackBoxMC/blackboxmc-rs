@@ -85,7 +85,13 @@ impl<'mc> SharedJNIEnv<'mc> {
             .call_static_method(class, name, sig, args)?)
     }
 
-    pub fn clone(&self) -> Self {
+    pub fn exception_occurred(&self) -> Result<jni::objects::JThrowable<'mc>, jni::errors::Error> {
+        self.jni.borrow_mut().exception_occurred()
+    }
+}
+
+impl<'mc> Clone for SharedJNIEnv<'mc> {
+    fn clone(&self) -> Self {
         Self {
             jni: RefCell::new(
                 // The reason it's unsafe is actually OK for this use case. The "local reference frame" is a discrete feature of the library that is only ever used if you instantiate the JVM from the Rust program itself, which we never do. Since the JNI pointer lasts for the lifetime of the program, we can safely clone it.
@@ -98,4 +104,45 @@ impl<'mc> SharedJNIEnv<'mc> {
 pub trait JNIRaw<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc>;
     fn jni_object(&self) -> jni::objects::JObject<'mc>;
+}
+
+/// Function that checks if an exception is being thrown, and turns it into a Rust error.
+pub fn java_error_throw<'mc>(
+    jni: SharedJNIEnv<'mc>,
+    res: Result<jni::objects::JValueGen<jni::objects::JObject<'mc>>, jni::errors::Error>,
+) -> Result<jni::objects::JValueGen<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+    match res {
+        Ok(res) => {
+            Ok(res)
+        }
+        Err(err) => {
+            let exp = jni.exception_occurred()?;
+            if !exp.is_null() {
+                jni.exception_clear()?;
+                let mut message = String::new();
+                let obj = jni.call_method(&exp, "getMessage", "()Ljava/lang/String;", &[])?;
+                let mut message = format!(
+                    "{}",
+                    jni.get_string(unsafe { &jni::objects::JString::from_raw(obj.as_jni().l) })?
+                        .to_string_lossy()
+                        .to_string()
+                );
+                // Is there a cause?
+                let cause = jni.call_method(&exp, "getCause", "()Ljava/lang/Throwable;", &[])?.l().unwrap();
+                if !&cause.is_null() {
+                    message += "\ncaused by: ";
+                    let cause_obj = jni.call_method(&cause, "getMessage", "()Ljava/lang/String;", &[])?;
+                    message += format!(
+                        "{}",
+                        jni.get_string(unsafe { &jni::objects::JString::from_raw(cause_obj.as_jni().l) })?
+                            .to_string_lossy()
+                            .to_string()
+                    ).as_str();
+                };
+                return Err(eyre::eyre!(message).into());
+            } else {
+                Err(err.into())
+            }
+        }
+    }
 }
