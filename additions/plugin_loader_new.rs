@@ -1,7 +1,7 @@
-// src/bukkit/plugin/mod.rs#PluginLoader
+// blackboxmc-rs-bukkit/src/plugin/mod.rs#PluginLoader
 pub fn from_extendable(
-    env: &crate::SharedJNIEnv<'mc>,
-    plugin: &'mc crate::bukkit::plugin::Plugin,
+    env: &blackboxmc_general::SharedJNIEnv<'mc>,
+    plugin: &'mc crate::plugin::Plugin,
     address: i32,
     lib_name: String,
     name: String,

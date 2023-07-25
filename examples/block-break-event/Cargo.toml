@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-blackbox_rs = {path="../../"}
+blackboxmc_bukkit = {path="../../blackboxmc-rs-bukkit"}
+blackboxmc_general = {path="../../blackboxmc-rs-general"}
 jni = "0.21.1"
 
 [lib]

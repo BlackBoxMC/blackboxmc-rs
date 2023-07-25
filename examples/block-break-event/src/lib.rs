@@ -1,10 +1,10 @@
-use blackbox_rs::SharedJNIEnv;
+use blackboxmc_general::SharedJNIEnv;
 use jni::{objects::JObject, JNIEnv};
 
 #[no_mangle]
 pub extern "system" fn __on__BlockBreakEvent(env: JNIEnv<'_>, obj: JObject<'_>) {
     let e = SharedJNIEnv::new(env);
-    let mut event = blackbox_rs::bukkit::event::block::BlockBreakEvent::from_raw(&e, obj).unwrap();
+    let mut event = blackboxmc_bukkit::event::block::BlockBreakEvent::from_raw(&e, obj).unwrap();
 
     // Cancel the event.
     event.set_cancelled(true).expect("Couldn't cancel event");

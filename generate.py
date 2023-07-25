@@ -18,8 +18,8 @@ reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", 
                   "abstract", "become", "box", "do", "final", "macro", "override", "priv", "typeof", "unsized", "virtual", "yield"]
 
 library_resolves = {
-    "net.md_5": "bungee",
-    "org.bukkit": "bukkit",
+    "net.md_5": "blackboxmc-rs-bungee",
+    "org.bukkit": "blackboxmc-rs-bukkit",
 }
 
 parsed_classes = {}
@@ -32,6 +32,9 @@ filled_once = []
 bindings = {}
 omitted_classes = []
 enums = []
+
+def library_name_format(libname):
+    return libname.replace("-","_").replace("_rs_","_")
 
 def mod_rs_folder_populate(dir):
     files = os.listdir(dir)
@@ -89,7 +92,7 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
             letter = chr(ord('a')+increment).upper()
             ty["type_name_resolved"] = letter
             generic_letters.append(letter)
-            generic_args.append(letter+": crate::JNIRaw<'mc> + "+old.replace("&dyn","")+"<'mc>")
+            generic_args.append(letter+": blackboxmc_general::JNIRaw<'mc> + "+old.replace("&dyn","")+"<'mc>")
 
         if ty["is_array"]:
             thing += "Vec<"
@@ -163,7 +166,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
     ty = type["type_name_resolved"].replace("&dyn ","")
 
-    if(ty.startswith("crate") or ty.startswith("blackbox")): # for internal types...
+    if(ty.startswith("crate")): # for internal types...
         # get the original object.
         fcall = ".into().1.clone()"
         if type["type_name_resolved"].startswith("&dyn"):
@@ -377,18 +380,13 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     name = what[len(what)-1]
                     what.pop()
                     return_group["type_name_resolved"] = "::".join(what)+name
-                if return_group["is_array"]:
-                    code.append("let arr = &Into::<jni::objects::JObjectArray>::into(unsafe {"+
-                                "    jni::objects::JObject::from_raw(res.as_jni().l)"+
-                                "});"+
-                                "let num = "+prefix+".get_array_length(arr)"+end_line+";"+
-                                "let mut vec = (0..num)"+
-                                "    .map(|i| {")
-                else:
-                    if return_group["type_name_resolved"] != "()":
-                        code.append("let ret = {")
-
-
+                #if return_group["is_array"]:
+                #    code.append("let arr = &Into::<jni::objects::JObjectArray>::into(unsafe {"+
+                #                "    jni::objects::JObject::from_raw(res.as_jni().l)"+
+                #                "});"+
+                #                "let num = "+prefix+".get_array_length(arr)"+end_line+";"+
+                #                "let mut vec = (0..num)"+
+                #                "    .map(|i| {")
 
                 if static:
                     val_1 = "jni"
@@ -410,27 +408,21 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                                 "    .to_string_lossy()"+
                                 "    .to_string();")
                     val_2 = "raw_obj"
-                code.append(return_group["type_name_resolved"]+"("+
-                                                prefix+","+
-                                                val_2)
-
+                code.append(return_group["type_name_resolved"]+"::from_raw(&"+
+                                                    prefix+","+
+                                                    val_2)
                 if return_group["type_name_original"] in enums:
                     code.append(", "+return_group["type_name_resolved"]+"::from_string(variant_str).unwrap()")
                 code.append(")")
-                if return_group["is_array"]:
-                    return_val = "Box::leak(Box::new(vec))"
-                    code.append("})"+
-                                ".collect::<Vec<"+return_group["type_name_resolved"]+">>();")
-                else:
-                    return_val = "ret"
-                    code.append("};")
-
-                if static:
-                    code.append("Ok("+return_val+")")
-                else:
-                    #code.append("let len = self.2."+str(index)+".len();")
-                    #code.append("&self.2."+str(index)+".push("+return_val+");")
-                    code.append("Ok("+return_val+")")
+                #if return_group["is_array"]:
+                #    return_val = "Box::leak(Box::new(vec))"
+                #    code.append("})"+
+                #                ".collect::<Vec<"+return_group["type_name_resolved"]+">>();")
+                #else:
+                #    return_val = "ret"
+                #    if return_group["is_array"]:
+                #        code.append("};")
+                #
     return "\n".join(code)
 
 def java_call_signature_format(types, return_type, is_constructor=False):
@@ -466,7 +458,6 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
 
     if ty.replace("com.destroystokyo.paper","org.bukkit") in interface_names:
         is_interface = True
-
 
     type_name_original = ty
     match ty:
@@ -569,7 +560,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
             inner_type_name = inner_type["type_name_resolved"]
             type_alone = "std::ops::Fn"
             generics = [inner_type_name]
-            type_name_resolved = "std::boxed::Box<&dyn std::ops::Fn(crate::SharedJNIEnv<'mc>,"+inner_type_name+")>"
+            type_name_resolved = "std::boxed::Box<&dyn std::ops::Fn(blackboxmc_general::SharedJNIEnv<'mc>,"+inner_type_name+")>"
 
         case _:
             if (ty.startswith("java") != True):
@@ -589,10 +580,10 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                         _ = 0
                     return None
                 else:
-                    if crate_name in library_resolves:
-                        to_replace = "crate::"+library_resolves[crate_name]
-                    else:
-                        to_replace = library_resolves[crate_name]
+                    if crate_name == library or library is False:
+                        to_replace = "crate"
+                    else: 
+                        to_replace = library_name_format(library_resolves[crate_name])
 
                     type_name_resolved = ty.replace(
                         crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
@@ -697,6 +688,36 @@ def java_letter_from_rust(type):
         case _:
             return "L"+type.replace(".","/")+";"
 
+def gen_from_raw_func(name, is_enum, mod_path):
+    impl_signature = []
+    impl_signature.append("pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>")
+    if is_enum:
+        impl_signature.append(", e: "+name+"Enum")
+    impl_signature.append(") -> Result<Self, Box<dyn std::error::Error>> {")
+    impl_signature.append(
+                "if obj.is_null() {\n"+
+                "    return Err(eyre::eyre!(\n"+
+                "        \"Tried to instantiate "+name+" from null object.\")\n"+
+                "    .into());\n"+
+                "}\n"+
+                "let (valid, name) = env.validate_name(&obj, \""+name+"\")?;\n"+
+                "if !valid {\n"+
+                "    Err(eyre::eyre!(\n"+
+                "        \"Invalid argument passed. Expected a "+name+" object, got {}\",\n"+
+                "        name\n"+
+                "    )\n"+
+                "    .into())\n"+
+                "} else {\n"+
+                "    Ok(Self(env.clone(), obj")
+    if is_enum:
+        impl_signature.append(", e")
+    impl_signature.append("))\n"+
+                "}"
+        )
+    impl_signature.append("}")
+    for impl in impl_signature:
+        file_cache[mod_path].append(impl)
+
 def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor):
     og_name = name
     impl_signature = []
@@ -710,27 +731,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             impl_signature.append("\""+v+"\" => Some("+name+"Enum::"+val_proper+"),")
         impl_signature.append("_ => None}}")
 
-
-    if not is_enum and not is_constructor:
-        impl_signature.append("pub fn from_raw(env: &crate::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>) -> Result<Self, Box<dyn std::error::Error>> {")
-        impl_signature.append(
-                    "if obj.is_null() {\n"+
-                    "    return Err(eyre::eyre!(\n"+
-                    "        \"Tried to instantiate "+name+" from null object.\")\n"+
-                    "    .into());\n"+
-                    "}\n"+
-                    "let (valid, name) = env.validate_name(&obj, \""+name+"\")?;\n"+
-                    "if !valid {\n"+
-                    "    Err(eyre::eyre!(\n"+
-                    "        \"Invalid argument passed. Expected a "+name+" object, got {}\",\n"+
-                    "        name\n"+
-                    "    )\n"+
-                    "    .into())\n"+
-                    "} else {\n"+
-                    "    Ok(Self(env.clone(), obj))\n"+
-                    "}"
-            )
-        impl_signature.append("}")
 
     names = {}
     methods_ = {}
@@ -871,7 +871,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             })
         else:
             func_signature.append({
-                "type_name_resolved": "jni: crate::SharedJNIEnv<'mc>",
+                "type_name_resolved": "jni: blackboxmc_general::SharedJNIEnv<'mc>",
                 "type_name_lhand": "",
                 "is_array": False,
                 "is_interface": False,
@@ -1034,7 +1034,7 @@ def parse_classes(library, val, classes):
         parsed_classes[mod_path] = [full_name]
 
     if mod_path not in file_cache:
-        file_cache[mod_path] = ["#![allow(deprecated)]\nuse crate::JNIRaw;\nuse color_eyre::eyre::Result;"]
+        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse color_eyre::eyre::Result;"]
 
     if (name == ""):
         return
@@ -1077,7 +1077,7 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("}")
 
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) crate::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
+            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
 
         file_cache[mod_path].append("impl<'mc> std::ops::Deref for "+name+"<'mc> {")
         file_cache[mod_path].append("   type Target = "+name+"Enum;")
@@ -1086,7 +1086,7 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
         file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {")
+        file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
         file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
@@ -1101,6 +1101,8 @@ def parse_classes(library, val, classes):
 
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
+        gen_from_raw_func(name, True, mod_path)
+
         if "methods" in val:
             parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False)
 
@@ -1111,16 +1113,19 @@ def parse_classes(library, val, classes):
             "/// An instantiatable struct that implements "+name+". Needed for returning it from Java."
         )
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) crate::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
         file_cache[mod_path].append(
             "impl<'mc> "+name+"<'mc> {")
+        
+        gen_from_raw_func(name, False, mod_path)
+
         if "methods" in val:
             parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False)
         file_cache[mod_path].append("}")
 
-        file_cache[mod_path].append("impl<'mc> crate::JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {")
+        file_cache[mod_path].append("impl<'mc> blackboxmc_general::JNIRaw<'mc> for "+name+"<'mc> {")
+        file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
         file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
@@ -1133,15 +1138,15 @@ def parse_classes(library, val, classes):
         #        print(inter["name"])
     else:  # struct generation
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc>(pub(crate) crate::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
 
         if "classes" in val:
             for cl in val["classes"]:
                 parse_classes(library,cl, classes)
 
-        file_cache[mod_path].append("impl<'mc> crate::JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> crate::SharedJNIEnv<'mc> {")
+        file_cache[mod_path].append("impl<'mc> blackboxmc_general::JNIRaw<'mc> for "+name+"<'mc> {")
+        file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
         file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
@@ -1151,6 +1156,8 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("}")
 
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
+
+        gen_from_raw_func(name, False, mod_path)
 
         if "constructors" in val:
             parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True)
@@ -1217,7 +1224,7 @@ for library in libraries:
     crate_dir = ""
 
     if library in library_resolves:
-        crate_dir = os.path.join("src", library_resolves[library])
+        crate_dir = os.path.join(library_resolves[library], "src")
     else:
         print("Unhandled library "+library +
             ". All libraries must have corresponding rust crates.")
@@ -1265,7 +1272,7 @@ for library in libraries:
     shutil.copytree(dir, crate_dir, dirs_exist_ok=True)
     shutil.rmtree(crate_dir + os.sep + parts[0])
 
-    mod_rs = crate_dir+os.sep+"mod.rs"
+    mod_rs = crate_dir+os.sep+"lib.rs"
 
     if mod_rs not in file_cache:
         file_cache[mod_rs] = []
@@ -1277,8 +1284,9 @@ for library in libraries:
 
     file_cache = {}
 
-mod_rs_folder_populate("src")
-os.rename("src"+os.sep+"mod.rs", "src"+os.sep+"lib.rs")
+    mod_rs_folder_populate(crate_dir)
+    
+    os.rename(crate_dir+os.sep+"mod.rs", crate_dir+os.sep+"lib.rs")
 
 # inject any manually written code.
 for filename in os.listdir("additions"):
@@ -1314,7 +1322,8 @@ for filename in os.listdir("additions"):
 
 for i in range(0,4):
     wildcard = "*/*" * i
-    os.system("rustfmt --unstable-features --skip-children ./src/bukkit/*"+wildcard+".rs")
-    os.system("rustfmt --unstable-features --skip-children ./src/bungee/*"+wildcard+".rs")
+    for library in library_resolves:
+        resolved = library_resolves[library] 
+        os.system("rustfmt --unstable-features --skip-children ./"+resolved+"/src/*"+wildcard+".rs")
 
 os.system("cargo fix --allow-dirty --allow-staged --broken-code --jobs "+str(multiprocessing.cpu_count()))

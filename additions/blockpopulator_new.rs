@@ -1,7 +1,7 @@
-// src/bukkit/generator/mod.rs#BlockPopulator
+// blackboxmc-rs-bukkit/src/generator/mod.rs#BlockPopulator
 pub fn from_extendable(
-    env: &crate::SharedJNIEnv<'mc>,
-    plugin: &'mc crate::bukkit::plugin::Plugin,
+    env: &blackboxmc_general::SharedJNIEnv<'mc>,
+    plugin: &'mc crate::plugin::Plugin,
     address: i32,
     lib_name: String,
     name: String,

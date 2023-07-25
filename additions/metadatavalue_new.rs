@@ -1,7 +1,7 @@
-// src/bukkit/metadata/mod.rs#MetadataValue
+// blackboxmc-rs-bukkit/src/metadata/mod.rs#MetadataValue
 pub fn from_extendable(
-    env: &crate::SharedJNIEnv<'mc>,
-    plugin: &'mc crate::bukkit::plugin::Plugin,
+    env: &blackboxmc_general::SharedJNIEnv<'mc>,
+    plugin: &'mc crate::plugin::Plugin,
     address: i32,
     lib_name: String,
     name: String,

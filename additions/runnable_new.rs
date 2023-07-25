@@ -1,7 +1,7 @@
-// src/bukkit/scheduler/mod.rs#BukkitRunnable
+// blackboxmc-rs-bukkit/src/scheduler/mod.rs#BukkitRunnable
 pub fn from_extendable(
-    env: &crate::SharedJNIEnv<'mc>,
-    plugin: &'mc crate::bukkit::plugin::Plugin,
+    env: &blackboxmc_general::SharedJNIEnv<'mc>,
+    plugin: &'mc crate::plugin::Plugin,
     address: i32,
     lib_name: String,
     name: String,

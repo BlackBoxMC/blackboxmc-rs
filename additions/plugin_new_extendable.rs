@@ -1,4 +1,4 @@
-// src/bukkit/plugin/mod.rs#Plugin
+// blackboxmc-rs-bukkit/src/plugin/mod.rs#Plugin
 /// Return one of the extendable classes that BlackBox supports, based on the value given.
 ///
 /// ## Safety
@@ -32,5 +32,5 @@ pub unsafe fn new_extendable(
         ],
     );
     let obj = self.jni_ref().translate_error(obj)?;
-    Ok(jni::objects::JObject::from_raw(obj.l().clone()))
+    Ok(jni::objects::JObject::from_raw(obj.l()?))
 }

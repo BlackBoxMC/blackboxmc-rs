@@ -1,13 +1,13 @@
 use std::{cell::OnceCell, error::Error, fmt::Display, ops::Deref, sync::Mutex, time::SystemTime};
 
-use blackbox_rs::{
-    bukkit::{
-        command::{Command, CommandSender},
-        event::server::PluginEnableEvent,
-        generator::{ChunkGenerator, ChunkGeneratorChunkData, WorldInfo},
-        plugin::{self, Plugin},
-        scheduler::BukkitRunnable,
-    },
+use blackboxmc_bukkit::{
+    command::{Command, CommandSender},
+    event::server::PluginEnableEvent,
+    generator::{ChunkGenerator, ChunkGeneratorChunkData, WorldInfo},
+    plugin::{self, Plugin},
+    scheduler::BukkitRunnable,
+};
+use blackboxmc_general::{
     macros::{extends_blackbox, memory::MemoryMap},
     JNIRaw, SharedJNIEnv,
 };
@@ -28,8 +28,10 @@ impl HungerThread {
             "HungerThread".to_string(),
         )
     }
-    pub fn run(plug: &mut Plugin) {
+    pub fn run(plug: &mut Plugin) -> Result<(), Box<dyn Error>> {
+        plug.server()?;
         println!("test");
+        Ok(())
     }
 }
 
@@ -42,7 +44,7 @@ pub extern "system" fn __extends__BukkitRunnable__HungerThread__run<'mc>(
 ) {
     let e = SharedJNIEnv::new(env);
     let mut plug = Plugin::from_raw(&e, plugin).unwrap();
-    HungerThread::run(&mut plug);
+    HungerThread::run(&mut plug).unwrap();
 }
 
 #[no_mangle]
