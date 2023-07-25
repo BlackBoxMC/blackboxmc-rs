@@ -33,7 +33,8 @@ impl<'mc> ProjectileSource<'mc> {
         arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -49,7 +50,7 @@ impl<'mc> ProjectileSource<'mc> {
         })
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ProjectileSource<'mc> {
+impl<'mc> JNIRaw<'mc> for ProjectileSource<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -103,7 +104,8 @@ impl<'mc> BlockProjectileSource<'mc> {
         arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0.unwrap();
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -119,7 +121,7 @@ impl<'mc> BlockProjectileSource<'mc> {
         })
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BlockProjectileSource<'mc> {
+impl<'mc> JNIRaw<'mc> for BlockProjectileSource<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }

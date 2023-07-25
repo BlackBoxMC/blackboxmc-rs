@@ -32,5 +32,5 @@ pub unsafe fn new_extendable(
         ],
     );
     let obj = self.jni_ref().translate_error(obj)?;
-    Ok(jni::objects::JObject::from_raw(obj.l()?))
+    Ok(jni::objects::JObject::from_raw(*obj.l()?))
 }

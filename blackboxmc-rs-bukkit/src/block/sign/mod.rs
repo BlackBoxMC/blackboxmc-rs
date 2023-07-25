@@ -169,7 +169,7 @@ impl<'mc> SignSide<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
@@ -203,7 +203,7 @@ impl<'mc> SignSide<'mc> {
         )
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SignSide<'mc> {
+impl<'mc> JNIRaw<'mc> for SignSide<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }

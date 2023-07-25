@@ -20,6 +20,7 @@ reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", 
 library_resolves = {
     "net.md_5": "blackboxmc-rs-bungee",
     "org.bukkit": "blackboxmc-rs-bukkit",
+    "java.util": "blackboxmc-rs-javautil"
 }
 
 parsed_classes = {}
@@ -166,9 +167,9 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
     ty = type["type_name_resolved"].replace("&dyn ","")
 
-    if(ty.startswith("crate")): # for internal types...
+    if(ty.startswith("crate") or ty.startswith("blackbox")): # for internal types...
         # get the original object.
-        fcall = ".into().1.clone()"
+        fcall = ".into().jni_object().clone()"
         if type["type_name_resolved"].startswith("&dyn"):
             fcall = ".jni_object().clone()"
 
@@ -272,7 +273,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
                         t1 = java_type_from_rust(type["generics"][0])["class_name"]
 
-                        c.append("\n\t\t".join(code_format({
+                        co = code_format({
                             "type_name_resolved": type["generics"][0],
                             "type_name_lhand": "v",
                             "is_array": type["is_array"],
@@ -282,7 +283,10 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                             "generics": type["generics"],
                             "package_name": type["package_name"],
                             "options_start_at": options_start_at,
-                        }, prefix, 0, "map_val", "v", options_start_at)))
+                        }, prefix, 0, "map_val", "v", options_start_at)
+                        if co is None:
+                            return None
+                        c.append("\n\t\t".join(co))
 
                         c.append(
                             prefix+".call_method("+
@@ -453,6 +457,10 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         ty = ty.replace("[]", "")
         is_array = True
 
+    if not isinstance(library, bool):
+        if library.startswith("java"):
+            ty = "Java"+ty
+
     type_alone = ""
     generics = []
 
@@ -497,101 +505,35 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
             type_name_resolved = "std::net::IpAddr"
         case "java.net.InetSocketAddress":
             type_name_resolved = "std::net::SocketAddr"
-        case "java.util.Map" | "java.util.Set":
-            final_type = ""
-            if(ty == "java.util.Map"):
-                final_type = "std::collections::HashMap"
-            else:
-                final_type = "std::collections::HashSet"
-            # get the inner type.
-            inner_type_name_parts = re.findall("<(.*?)>", parameter_type)
-            if len(inner_type_name_parts) <= 0:
-                return None
-            inner_type_name_raw = inner_type_name_parts[0]
-            inner_types = []
-            if "?" in inner_type_name_raw:
-                return None
-
-            for ty in inner_type_name_raw.split(","):
-                resolved = java_type_to_rust("unk",ty.replace(" ",""),method,i,returning,library)
-                if resolved is None:
-                    return None
-                inner_types.append(resolved["type_name_resolved"])
-            type_alone = final_type
-            generics = inner_types
-            type_name_resolved = final_type+"<" + ",".join(inner_types) + ">"
-        case "java.util.List" | "java.util.ArrayList" | "java.util.Collection" | "java.lang.Iterable" | "java.util.Iterator":
-            final_type = ""
-            prefix = ""
-            match ty:
-                case "java.util.List" | "java.util.ArrayList" | "java.util.Collection":
-                    final_type = "Vec"
-                case "java.lang.Iterable" | "java.util.Iterator":
-                    final_type = "&dyn std::iter::Iterator"
-                    prefix = "Item = "
-            # get the inner type.
-            inner_type_name_parts = re.findall("<(.*?)>", parameter_type)
-            if len(inner_type_name_parts) <= 0:
-                return None
-            inner_type_name_raw = inner_type_name_parts[0]
-            inner_type = java_type_to_rust("unk",inner_type_name_raw.replace(" ",""),method,i,returning,library)
-            if inner_type is None:
-                return None
-            inner_type_name = inner_type["type_name_resolved"]
-            if "crate::" in inner_type_name:
-                inner_type_name += "<'mc>"
-            type_alone = final_type
-            if "<T" in inner_type_name:
-                # i don't wanna deal with this shit right now maybe later
-                return None
-            generics = [prefix+inner_type_name]
-            type_name_resolved = final_type+"<"+prefix+inner_type_name+">"
-        case "java.lang.Object" | "java.util.Random" | "java.lang.reflect.Type" | "java.awt.Image" | "java.awt.image.BufferedImage" | "java.util.regex.Pattern":
+        case "java.lang.Object"  | "java.lang.reflect.Type" | "java.awt.Image" | "java.awt.image.BufferedImage":
             type_name_resolved = "jni::objects::JObject"
-        case "java.util.function.Consumer":
-            # get the inner type.
-            inner_type_name_parts = re.findall("<(.*?)>", parameter_type)
-            if len(inner_type_name_parts) <= 0:
-                return None
-            inner_type_name_raw = inner_type_name_parts[0]
-            inner_type = java_type_to_rust("unk",inner_type_name_raw.replace(" ",""),method,i,returning,library)
-            if inner_type is None:
-                return None
-            inner_type_name = inner_type["type_name_resolved"]
-            type_alone = "std::ops::Fn"
-            generics = [inner_type_name]
-            type_name_resolved = "std::boxed::Box<&dyn std::ops::Fn(blackboxmc_general::SharedJNIEnv<'mc>,"+inner_type_name+")>"
-
         case _:
-            if (ty.startswith("java") != True):
-                crate_name = ".".join(
-                    filter(lambda f: f.lower() == f, ty.split(".")))
+            crate_name = ".".join(
+                filter(lambda f: f.lower() == f, ty.split(".")))
 
-                cont = True
-                while crate_name not in library_resolves and crate_name != "":
-                    parts = crate_name.split(".")
-                    parts.pop()
-                    crate_name = ".".join(parts)
+            cont = True
+            while crate_name not in library_resolves and crate_name != "":
+                parts = crate_name.split(".")
+                parts.pop()
+                crate_name = ".".join(parts)
 
-                if crate_name == "":
-                    if len(ty) >= 2: # ignore ?, T, etc... for now
-                        # it just so happens that the current external functions are stuff we don't care to implement anyways. but we'll leave this here for the future.
-                        #print("Unbound external class:",ty,"\t\t",method["method"]["name"])
-                        _ = 0
-                    return None
-                else:
-                    if crate_name == library or library is False:
-                        to_replace = "crate"
-                    else: 
-                        to_replace = library_name_format(library_resolves[crate_name])
-
-                    type_name_resolved = ty.replace(
-                        crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
+            if crate_name == "":
+                if len(ty) >= 2: # ignore ?, T, etc... for now
+                    # it just so happens that the current external functions are stuff we don't care to implement anyways. but we'll leave this here for the future.
+                    #print("Unbound external class:",ty,"\t\t",method["method"]["name"])
+                    _ = 0
+                return None
             else:
-                if method is None:
-                    print("Unbound std class:",ty,"\t\t",ty)
+                if crate_name == library or library is False:
+                    to_replace = "crate"
                 else:
-                    print("Unbound std class:",ty,"\t\t",method["method"]["name"])
+                    to_replace = library_name_format(library_resolves[crate_name])
+                    if to_replace == library_name_format(library_resolves["java.util"]):
+                        class_name = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
+                        ty = ty.replace(class_name, "Java"+class_name)
+                        
+                type_name_resolved = ty.replace(
+                    crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
 
     if type_alone == "":
         type_alone = type_name_resolved
@@ -1008,7 +950,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
 
 def parse_classes(library, val, classes):
-
     if "modifiers" in val:
         modifiers = int(val["modifiers"])
         if (modifiers&1 != 1):
@@ -1020,7 +961,8 @@ def parse_classes(library, val, classes):
     name = val["name"].replace("$", "").replace("-", "_")
 
     full_name = val["packageName"]+"."+name
-
+    if library.startswith("java"):
+        name = "Java"+name
     if full_name in excluded_classes:
         print("excluding "+full_name)
         return
@@ -1099,6 +1041,7 @@ def parse_classes(library, val, classes):
             for cl in val["classes"]:
                 parse_classes(library, cl, classes)
 
+
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
         gen_from_raw_func(name, True, mod_path)
@@ -1124,7 +1067,7 @@ def parse_classes(library, val, classes):
             parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False)
         file_cache[mod_path].append("}")
 
-        file_cache[mod_path].append("impl<'mc> blackboxmc_general::JNIRaw<'mc> for "+name+"<'mc> {")
+        file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
         file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
         file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
@@ -1171,8 +1114,9 @@ def parse_classes(library, val, classes):
         if "interfaces" in val:
             for inter in val["interfaces"]:
                 if inter["packageName"].startswith("java"):
-                    continue
-                inter_resolved = java_type_to_rust("", inter["packageName"]+"."+inter["name"], None, 0, library, False)
+                    if not inter["packageName"].startswith("java.util"):
+                        continue
+                inter_resolved = java_type_to_rust("", inter["packageName"]+"."+inter["name"], None, 0, True, library, False)
 
                 if inter_resolved is None:
                     continue
@@ -1184,8 +1128,9 @@ def parse_classes(library, val, classes):
         if "superClass" in val:
             super_class = val["superClass"]
             if super_class["packageName"].startswith("java"):
-                return
-            super_class_resolved = java_type_to_rust("", super_class["packageName"]+"."+super_class["name"], None, 0, library, False)
+                if not super_class["packageName"].startswith("java.util"):
+                    return
+            super_class_resolved = java_type_to_rust("", super_class["packageName"]+"."+super_class["name"], None, 0, True, library, False)
 
             if super_class_resolved is None:
                 return

@@ -35,48 +35,6 @@ impl<'mc> NumberConversions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn floor(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f64,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.into());
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "floor",
-            "(D)I",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn ceil(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f64,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.into());
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "ceil",
-            "(D)I",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn is_finite_with_float(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<f64>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(
-            cls,
-            "isFinite",
-            "(D)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        Ok(res.z().unwrap())
-    }
     pub fn round(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -119,18 +77,18 @@ impl<'mc> NumberConversions<'mc> {
         )?;
         Ok(res.d().unwrap())
     }
-    pub fn check_finite_with_double(
+    pub fn check_finite_with_float(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f32,
+        arg0: f64,
         arg1: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.into());
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let cls = &jni.find_class("void")?;
         let res = jni.call_static_method(
             cls,
             "checkFinite",
-            "(FLjava/lang/String;)V",
+            "(DLjava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -207,6 +165,48 @@ impl<'mc> NumberConversions<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(res.b().unwrap())
+    }
+    pub fn floor(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: f64,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let cls = &jni.find_class("int")?;
+        let res = jni.call_static_method(
+            cls,
+            "floor",
+            "(D)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.i().unwrap())
+    }
+    pub fn ceil(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: f64,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let cls = &jni.find_class("int")?;
+        let res = jni.call_static_method(
+            cls,
+            "ceil",
+            "(D)I",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.i().unwrap())
+    }
+    pub fn is_finite_with_double(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<f32>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
+        let cls = &jni.find_class("boolean")?;
+        let res = jni.call_static_method(
+            cls,
+            "isFinite",
+            "(F)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -321,9 +321,10 @@ impl<'mc> BlockIterator<'mc> {
         arg3: std::option::Option<f64>,
         arg4: std::option::Option<i32>,
     ) -> Result<crate::util::BlockIterator<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
         let val_3 = jni::objects::JValueGen::Double(arg3.unwrap().into());
         let val_4 = jni::objects::JValueGen::Int(arg4.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/BlockIterator")?;
@@ -345,7 +346,7 @@ impl<'mc> BlockIterator<'mc> {
         arg0: impl Into<&'mc crate::Location<'mc>>,
         arg1: std::option::Option<f64>,
     ) -> Result<crate::util::BlockIterator<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/BlockIterator")?;
         let res = jni.new_object(
@@ -372,12 +373,17 @@ impl<'mc> BlockIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
+    pub fn next(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "next",
+            "()Lorg/bukkit/block/Block;",
+            &[],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        crate::block::Block::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn wait(
         &mut self,
@@ -450,6 +456,25 @@ impl<'mc> BlockIterator<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn for_each_remaining(
+        &mut self,
+        arg0: impl Into<&'mc blackboxmc_javautil::function::JavaConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "forEachRemaining",
+            "(Ljava/util/function/Consumer;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+}
+impl<'mc> Into<blackboxmc_javautil::JavaIterator<'mc>> for BlockIterator<'mc> {
+    fn into(self) -> blackboxmc_javautil::JavaIterator<'mc> {
+        blackboxmc_javautil::JavaIterator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Transformation<'mc>(
@@ -599,9 +624,10 @@ impl<'mc> RayTraceResult<'mc> {
         arg1: impl Into<&'mc crate::block::Block<'mc>>,
         arg2: std::option::Option<impl Into<&'mc crate::block::BlockFace<'mc>>>,
     ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/RayTraceResult")?;
         let res = jni.new_object(
             cls,
@@ -613,38 +639,6 @@ impl<'mc> RayTraceResult<'mc> {
             ],
         )?;
         crate::util::RayTraceResult::from_raw(&jni, res)
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     pub fn hit_position(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -706,6 +700,38 @@ impl<'mc> RayTraceResult<'mc> {
         crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -775,7 +801,7 @@ impl<'mc> CachedServerIcon<'mc> {
         }
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for CachedServerIcon<'mc> {
+impl<'mc> JNIRaw<'mc> for CachedServerIcon<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -953,7 +979,7 @@ impl<'mc> VoxelShape<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::BoundingBox<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "overlaps",
@@ -963,8 +989,22 @@ impl<'mc> VoxelShape<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn bounding_boxes(
+        &mut self,
+    ) -> Result<blackboxmc_javautil::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBoundingBoxes",
+            "()Ljava/util/Collection;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_javautil::JavaCollection::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VoxelShape<'mc> {
+impl<'mc> JNIRaw<'mc> for VoxelShape<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1022,7 +1062,7 @@ impl<'mc> Consumer<'mc> {
         Ok(())
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Consumer<'mc> {
+impl<'mc> JNIRaw<'mc> for Consumer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1058,18 +1098,6 @@ impl<'mc> StructureSearchResult<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn structure(
         &mut self,
     ) -> Result<crate::generator::structure::Structure<'mc>, Box<dyn std::error::Error>> {
@@ -1084,8 +1112,20 @@ impl<'mc> StructureSearchResult<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "()Lorg/bukkit/Location;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for StructureSearchResult<'mc> {
+impl<'mc> JNIRaw<'mc> for StructureSearchResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1156,252 +1196,15 @@ impl<'mc> BoundingBox<'mc> {
         )?;
         crate::util::BoundingBox::from_raw(&jni, res)
     }
-    pub fn union_with_vector(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::util::BoundingBox<'mc>>>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "union",
-            "(Lorg/bukkit/util/BoundingBox;)Lorg/bukkit/util/BoundingBox;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn union_with_location(
-        &mut self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-        arg2: std::option::Option<f64>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "union",
-            "(DDD)Lorg/bukkit/util/BoundingBox;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn clone(&mut self) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/util/BoundingBox;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn of_with_block(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
-        let cls = &jni.find_class("org/bukkit/util/BoundingBox")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Lorg/bukkit/Location;Lorg/bukkit/Location;)Lorg/bukkit/util/BoundingBox;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::util::BoundingBox::from_raw(&jni, obj)
-    }
-    pub fn of_with_vector(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: f64,
-        arg2: f64,
-        arg3: std::option::Option<f64>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JValueGen::Double(arg1.into());
-        let val_2 = jni::objects::JValueGen::Double(arg2.into());
-        let val_3 = jni::objects::JValueGen::Double(arg3.unwrap().into());
-        let cls = &jni.find_class("org/bukkit/util/BoundingBox")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Lorg/bukkit/Location;DDD)Lorg/bukkit/util/BoundingBox;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::util::BoundingBox::from_raw(&jni, obj)
-    }
-    pub fn contains_with_vector(
-        &mut self,
-        arg0: f64,
-        arg1: std::option::Option<f64>,
-        arg2: std::option::Option<f64>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.into());
-        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "contains",
-            "(DDD)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn copy(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::BoundingBox<'mc>>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            "(Lorg/bukkit/util/BoundingBox;)Lorg/bukkit/util/BoundingBox;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn expand_with_vector(
-        &mut self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "expand",
-            "(D)Lorg/bukkit/util/BoundingBox;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn expand_with_block_face(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "expand",
-            "(Lorg/bukkit/util/Vector;D)Lorg/bukkit/util/BoundingBox;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn expand_with_double(
-        &mut self,
-        arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: f64,
-        arg4: f64,
-        arg5: std::option::Option<f64>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.into());
-        let val_1 = jni::objects::JValueGen::Double(arg1.into());
-        let val_2 = jni::objects::JValueGen::Double(arg2.into());
-        let val_3 = jni::objects::JValueGen::Double(arg3.into());
-        let val_4 = jni::objects::JValueGen::Double(arg4.into());
-        let val_5 = jni::objects::JValueGen::Double(arg5.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "expand",
-            "(DDDDDD)Lorg/bukkit/util/BoundingBox;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-                jni::objects::JValueGen::from(&val_5),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn shift_with_vector(
+    pub fn union_with_bounding_box(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "shift",
+            "union",
             "(Lorg/bukkit/Location;)Lorg/bukkit/util/BoundingBox;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
@@ -1410,56 +1213,23 @@ impl<'mc> BoundingBox<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn shift_with_double(
+    pub fn union_with_vector(
         &mut self,
-        arg0: f64,
-        arg1: f64,
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
         arg2: std::option::Option<f64>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.into());
-        let val_1 = jni::objects::JValueGen::Double(arg1.into());
+        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
         let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "shift",
+            "union",
             "(DDD)Lorg/bukkit/util/BoundingBox;",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn resize(
-        &mut self,
-        arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: f64,
-        arg4: f64,
-        arg5: f64,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.into());
-        let val_1 = jni::objects::JValueGen::Double(arg1.into());
-        let val_2 = jni::objects::JValueGen::Double(arg2.into());
-        let val_3 = jni::objects::JValueGen::Double(arg3.into());
-        let val_4 = jni::objects::JValueGen::Double(arg4.into());
-        let val_5 = jni::objects::JValueGen::Double(arg5.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "resize",
-            "(DDDDDD)Lorg/bukkit/util/BoundingBox;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-                jni::objects::JValueGen::from(&val_5),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -1474,25 +1244,22 @@ impl<'mc> BoundingBox<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    pub fn serialize(
+        &mut self,
+    ) -> Result<blackboxmc_javautil::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_javautil::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::collections::HashMap<impl Into<String>, jni::objects::JObject<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let raw_val_0 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
-        for (k, v) in arg0 {
-            let map_val_0 = jni::objects::JObject::from(jni.new_string(k.into()).unwrap());
-            let map_val_1 = v;
-            jni.call_method(
-                &raw_val_0,
-                "put",
-                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
-                &[
-                    jni::objects::JValueGen::from(&map_val_0),
-                    jni::objects::JValueGen::from(&map_val_1),
-                ],
-            )?;
-        }
-        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/BoundingBox")?;
         let res = jni.call_static_method(
             cls,
@@ -1651,7 +1418,7 @@ impl<'mc> BoundingBox<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::BoundingBox<'mc>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "intersection",
@@ -1668,8 +1435,10 @@ impl<'mc> BoundingBox<'mc> {
         arg0: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
         arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "overlaps",
@@ -1688,8 +1457,8 @@ impl<'mc> BoundingBox<'mc> {
         arg1: impl Into<&'mc crate::util::Vector<'mc>>,
         arg2: f64,
     ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Double(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1703,6 +1472,273 @@ impl<'mc> BoundingBox<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
+    pub fn of_with_block(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::Location<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/util/BoundingBox")?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            "(Lorg/bukkit/Location;Lorg/bukkit/Location;)Lorg/bukkit/util/BoundingBox;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        crate::util::BoundingBox::from_raw(&jni, obj)
+    }
+    pub fn of_with_location(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg1: f64,
+        arg2: f64,
+        arg3: std::option::Option<f64>,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.into());
+        let val_3 = jni::objects::JValueGen::Double(arg3.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/util/BoundingBox")?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            "(Lorg/bukkit/util/Vector;DDD)Lorg/bukkit/util/BoundingBox;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        crate::util::BoundingBox::from_raw(&jni, obj)
+    }
+    pub fn contains_with_bounding_box(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "contains",
+            "(Lorg/bukkit/util/Vector;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn contains_with_vector(
+        &mut self,
+        arg0: f64,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "contains",
+            "(DDD)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn copy(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::BoundingBox<'mc>>,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copy",
+            "(Lorg/bukkit/util/BoundingBox;)Lorg/bukkit/util/BoundingBox;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn expand_with_double(
+        &mut self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+        arg3: f64,
+        arg4: f64,
+        arg5: std::option::Option<f64>,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.into());
+        let val_3 = jni::objects::JValueGen::Double(arg3.into());
+        let val_4 = jni::objects::JValueGen::Double(arg4.into());
+        let val_5 = jni::objects::JValueGen::Double(arg5.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "expand",
+            "(DDDDDD)Lorg/bukkit/util/BoundingBox;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn expand_with_vector(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "expand",
+            "(Lorg/bukkit/block/BlockFace;D)Lorg/bukkit/util/BoundingBox;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn shift_with_location(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "shift",
+            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/BoundingBox;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn shift_with_double(
+        &mut self,
+        arg0: f64,
+        arg1: f64,
+        arg2: std::option::Option<f64>,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "shift",
+            "(DDD)Lorg/bukkit/util/BoundingBox;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn resize(
+        &mut self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+        arg3: f64,
+        arg4: f64,
+        arg5: f64,
+    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.into());
+        let val_3 = jni::objects::JValueGen::Double(arg3.into());
+        let val_4 = jni::objects::JValueGen::Double(arg4.into());
+        let val_5 = jni::objects::JValueGen::Double(arg5.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "resize",
+            "(DDDDDD)Lorg/bukkit/util/BoundingBox;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1792,17 +1828,17 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<f32>,
-        arg1: std::option::Option<f32>,
-        arg2: std::option::Option<f32>,
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
     ) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_1 = jni::objects::JValueGen::Float(arg1.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg2.unwrap().into());
+        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/BlockVector")?;
         let res = jni.new_object(
             cls,
-            "(FFF)V",
+            "(DDD)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -1811,7 +1847,7 @@ impl<'mc> BlockVector<'mc> {
         )?;
         crate::util::BlockVector::from_raw(&jni, res)
     }
-    pub fn new_with_double(
+    pub fn new_with_float(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: i32,
@@ -1831,6 +1867,22 @@ impl<'mc> BlockVector<'mc> {
             ],
         )?;
         crate::util::BlockVector::from_raw(&jni, res)
+    }
+    pub fn deserialize_with_map(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/util/Vector")?;
+        let res = jni.call_static_method(
+            cls,
+            "deserialize",
+            "(Ljava/util/Map;)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        )?;
+        let mut obj = res.l()?;
+        crate::util::Vector::from_raw(&jni, obj)
     }
     pub fn equals(
         &mut self,
@@ -1853,48 +1905,12 @@ impl<'mc> BlockVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(&mut self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/util/BlockVector;",
-            &[],
-        );
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BlockVector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn deserialize_with_map(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<
-            std::collections::HashMap<impl Into<String>, jni::objects::JObject<'mc>>,
-        >,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let raw_val_0 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
-        for (k, v) in arg0.unwrap() {
-            let map_val_0 = jni::objects::JObject::from(jni.new_string(k.into()).unwrap());
-            let map_val_1 = v;
-            jni.call_method(
-                &raw_val_0,
-                "put",
-                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
-                &[
-                    jni::objects::JValueGen::from(&map_val_0),
-                    jni::objects::JValueGen::from(&map_val_1),
-                ],
-            )?;
-        }
-        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
-        let cls = &jni.find_class("org/bukkit/util/Vector")?;
-        let res = jni.call_static_method(
-            cls,
-            "deserialize",
-            "(Ljava/util/Map;)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        )?;
-        let mut obj = res.l()?;
-        crate::util::Vector::from_raw(&jni, obj)
+        Ok(res.l().unwrap())
     }
     pub fn is_normalized(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1903,117 +1919,16 @@ impl<'mc> BlockVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn add(
+    pub fn multiply_with_int(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "add",
-            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "length", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn dot(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "dot",
-            "(Lorg/bukkit/util/Vector;)D",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn copy(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn normalize(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "normalize",
-            "()Lorg/bukkit/util/Vector;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn zero(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "zero",
-            "()Lorg/bukkit/util/Vector;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn distance(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "distance",
-            "(Lorg/bukkit/util/Vector;)D",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn multiply_with_vector(
-        &mut self,
-        arg0: std::option::Option<f32>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "multiply",
-            "(F)Lorg/bukkit/util/Vector;",
+            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -2021,7 +1936,7 @@ impl<'mc> BlockVector<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn multiply_with_int(
+    pub fn multiply_with_float(
         &mut self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -2097,23 +2012,7 @@ impl<'mc> BlockVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn set_y_with_double(
-        &mut self,
-        arg0: std::option::Option<f32>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setY",
-            "(F)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn set_y_with_int(
+    pub fn set_y_with_float(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -2122,6 +2021,22 @@ impl<'mc> BlockVector<'mc> {
             &self.jni_object(),
             "setY",
             "(I)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_y_with_double(
+        &mut self,
+        arg0: std::option::Option<f64>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setY",
+            "(D)Lorg/bukkit/util/Vector;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -2136,23 +2051,7 @@ impl<'mc> BlockVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn set_z_with_double(
-        &mut self,
-        arg0: std::option::Option<f32>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setZ",
-            "(F)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn set_z_with_int(
+    pub fn set_z_with_float(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -2161,6 +2060,22 @@ impl<'mc> BlockVector<'mc> {
             &self.jni_object(),
             "setZ",
             "(I)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_z_with_double(
+        &mut self,
+        arg0: std::option::Option<f64>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setZ",
+            "(D)Lorg/bukkit/util/Vector;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -2179,7 +2094,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subtract",
@@ -2202,7 +2117,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "distanceSquared",
@@ -2219,6 +2134,17 @@ impl<'mc> BlockVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn serialize(
+        &mut self,
+    ) -> Result<blackboxmc_javautil::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_javautil::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn is_zero(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2230,7 +2156,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "divide",
@@ -2246,7 +2172,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "angle",
@@ -2260,7 +2186,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "midpoint",
@@ -2276,7 +2202,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getMidpoint",
@@ -2292,7 +2218,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "crossProduct",
@@ -2308,7 +2234,7 @@ impl<'mc> BlockVector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCrossProduct",
@@ -2325,8 +2251,8 @@ impl<'mc> BlockVector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isInAABB",
@@ -2344,7 +2270,7 @@ impl<'mc> BlockVector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2418,7 +2344,7 @@ impl<'mc> BlockVector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2439,7 +2365,7 @@ impl<'mc> BlockVector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2461,7 +2387,8 @@ impl<'mc> BlockVector<'mc> {
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<f32>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -2498,8 +2425,8 @@ impl<'mc> BlockVector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -2518,8 +2445,8 @@ impl<'mc> BlockVector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -2540,6 +2467,108 @@ impl<'mc> BlockVector<'mc> {
         let res = jni.call_static_method(cls, "getRandom", "()Lorg/bukkit/util/Vector;", &[])?;
         let mut obj = res.l()?;
         crate::util::Vector::from_raw(&jni, obj)
+    }
+    pub fn add(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "add",
+            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "length", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn dot(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "dot",
+            "(Lorg/bukkit/util/Vector;)D",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
+    pub fn copy(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copy",
+            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn normalize(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "normalize",
+            "()Lorg/bukkit/util/Vector;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn zero(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "zero",
+            "()Lorg/bukkit/util/Vector;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn distance(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "distance",
+            "(Lorg/bukkit/util/Vector;)D",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -2640,51 +2669,6 @@ impl<'mc> EulerAngle<'mc> {
         )?;
         crate::util::EulerAngle::from_raw(&jni, res)
     }
-    pub fn add(
-        &mut self,
-        arg0: f64,
-        arg1: f64,
-        arg2: f64,
-    ) -> Result<crate::util::EulerAngle<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Double(arg0.into());
-        let val_1 = jni::objects::JValueGen::Double(arg1.into());
-        let val_2 = jni::objects::JValueGen::Double(arg2.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "add",
-            "(DDD)Lorg/bukkit/util/EulerAngle;",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::EulerAngle::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2777,6 +2761,51 @@ impl<'mc> EulerAngle<'mc> {
         crate::util::EulerAngle::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn add(
+        &mut self,
+        arg0: f64,
+        arg1: f64,
+        arg2: f64,
+    ) -> Result<crate::util::EulerAngle<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Double(arg2.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "add",
+            "(DDD)Lorg/bukkit/util/EulerAngle;",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::EulerAngle::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -3152,19 +3181,19 @@ impl<'mc> Vector<'mc> {
         )?;
         crate::util::Vector::from_raw(&jni, res)
     }
-    pub fn new_with_int(
+    pub fn new_with_float(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i32,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
+        arg0: f32,
+        arg1: f32,
+        arg2: std::option::Option<f32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Int(arg0.into());
-        let val_1 = jni::objects::JValueGen::Int(arg1.into());
-        let val_2 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_0 = jni::objects::JValueGen::Float(arg0.into());
+        let val_1 = jni::objects::JValueGen::Float(arg1.into());
+        let val_2 = jni::objects::JValueGen::Float(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.new_object(
             cls,
-            "(III)V",
+            "(FFF)V",
             &[
                 jni::objects::JValueGen::from(&val_0),
                 jni::objects::JValueGen::from(&val_1),
@@ -3180,150 +3209,16 @@ impl<'mc> Vector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn add(
+    pub fn multiply_with_int(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "add",
-            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "length", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn clone(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/util/Vector;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn dot(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "dot",
-            "(Lorg/bukkit/util/Vector;)D",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn copy(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn normalize(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "normalize",
-            "()Lorg/bukkit/util/Vector;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn zero(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "zero",
-            "()Lorg/bukkit/util/Vector;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn distance(
-        &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "distance",
-            "(Lorg/bukkit/util/Vector;)D",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn multiply_with_vector(
-        &mut self,
-        arg0: std::option::Option<f32>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "multiply",
-            "(F)Lorg/bukkit/util/Vector;",
+            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -3331,7 +3226,7 @@ impl<'mc> Vector<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn multiply_with_int(
+    pub fn multiply_with_float(
         &mut self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3407,23 +3302,7 @@ impl<'mc> Vector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn set_y_with_double(
-        &mut self,
-        arg0: std::option::Option<f32>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setY",
-            "(F)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn set_y_with_int(
+    pub fn set_y_with_float(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3432,6 +3311,22 @@ impl<'mc> Vector<'mc> {
             &self.jni_object(),
             "setY",
             "(I)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_y_with_double(
+        &mut self,
+        arg0: std::option::Option<f64>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setY",
+            "(D)Lorg/bukkit/util/Vector;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -3446,23 +3341,7 @@ impl<'mc> Vector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn set_z_with_double(
-        &mut self,
-        arg0: std::option::Option<f32>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setZ",
-            "(F)Lorg/bukkit/util/Vector;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn set_z_with_int(
+    pub fn set_z_with_float(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3471,6 +3350,22 @@ impl<'mc> Vector<'mc> {
             &self.jni_object(),
             "setZ",
             "(I)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_z_with_double(
+        &mut self,
+        arg0: std::option::Option<f64>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setZ",
+            "(D)Lorg/bukkit/util/Vector;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -3489,7 +3384,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subtract",
@@ -3512,7 +3407,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "distanceSquared",
@@ -3529,25 +3424,22 @@ impl<'mc> Vector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn serialize(
+        &mut self,
+    ) -> Result<blackboxmc_javautil::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_javautil::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::collections::HashMap<impl Into<String>, jni::objects::JObject<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let raw_val_0 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
-        for (k, v) in arg0 {
-            let map_val_0 = jni::objects::JObject::from(jni.new_string(k.into()).unwrap());
-            let map_val_1 = v;
-            jni.call_method(
-                &raw_val_0,
-                "put",
-                "(Ljava/Lang/ObjectLjava/Lang/Object)V",
-                &[
-                    jni::objects::JValueGen::from(&map_val_0),
-                    jni::objects::JValueGen::from(&map_val_1),
-                ],
-            )?;
-        }
-        let val_0 = jni::objects::JValueGen::Object(raw_val_0);
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -3569,7 +3461,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "divide",
@@ -3585,7 +3477,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "angle",
@@ -3599,7 +3491,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "midpoint",
@@ -3615,7 +3507,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getMidpoint",
@@ -3631,7 +3523,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "crossProduct",
@@ -3647,7 +3539,7 @@ impl<'mc> Vector<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCrossProduct",
@@ -3664,8 +3556,8 @@ impl<'mc> Vector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isInAABB",
@@ -3683,7 +3575,7 @@ impl<'mc> Vector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3757,7 +3649,7 @@ impl<'mc> Vector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3778,7 +3670,7 @@ impl<'mc> Vector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3800,7 +3692,8 @@ impl<'mc> Vector<'mc> {
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<f32>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_1 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -3837,8 +3730,8 @@ impl<'mc> Vector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -3857,8 +3750,8 @@ impl<'mc> Vector<'mc> {
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
         arg1: impl Into<&'mc crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;
         let res = jni.call_static_method(
             cls,
@@ -3879,6 +3772,141 @@ impl<'mc> Vector<'mc> {
         let res = jni.call_static_method(cls, "getRandom", "()Lorg/bukkit/util/Vector;", &[])?;
         let mut obj = res.l()?;
         crate::util::Vector::from_raw(&jni, obj)
+    }
+    pub fn add(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "add",
+            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "length", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn clone(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Lorg/bukkit/util/Vector;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn dot(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "dot",
+            "(Lorg/bukkit/util/Vector;)D",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
+    pub fn copy(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copy",
+            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn normalize(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "normalize",
+            "()Lorg/bukkit/util/Vector;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn zero(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "zero",
+            "()Lorg/bukkit/util/Vector;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn distance(
+        &mut self,
+        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "distance",
+            "(Lorg/bukkit/util/Vector;)D",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
     }
     pub fn wait(
         &mut self,

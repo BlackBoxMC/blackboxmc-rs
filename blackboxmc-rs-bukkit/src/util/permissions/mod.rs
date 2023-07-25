@@ -37,14 +37,17 @@ impl<'mc> DefaultPermissions<'mc> {
     }
     pub fn register_permission_with_permission(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
+        arg0: impl Into<&'mc String>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
+        arg2: std::option::Option<impl Into<&'mc crate::permissions::PermissionDefault<'mc>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().1.clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().1.clone()) };
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(cls,"registerPermission",
-"(Lorg/bukkit/permissions/Permission;Lorg/bukkit/permissions/Permission;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+"(Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/permissions/PermissionDefault;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         let mut obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
@@ -53,29 +56,16 @@ impl<'mc> DefaultPermissions<'mc> {
         arg0: impl Into<&'mc String>,
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc crate::permissions::PermissionDefault<'mc>>,
-        arg3: std::option::Option<std::collections::HashMap<impl Into<String>, bool>>,
+        arg3: std::option::Option<impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>>,
         arg4: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let val_1 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().1.clone()) };
-        let raw_val_3 = jni.new_object("java/util/HashMap", "()V", &[]).unwrap();
-        for (k, v) in arg3.unwrap() {
-            let map_val_0 = jni::objects::JObject::from(jni.new_string(k.into()).unwrap());
-            // -2
-            let map_val_1 = jni::objects::JValueGen::Bool(v.into());
-            jni.call_method(
-                &raw_val_3,
-                "put",
-                "(Ljava/Lang/ObjectLjava/lang/Boolean)V",
-                &[
-                    jni::objects::JValueGen::from(&map_val_0),
-                    jni::objects::JValueGen::from(&map_val_1),
-                ],
-            )?;
-        }
-        let val_3 = jni::objects::JValueGen::Object(raw_val_3);
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().1.clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let val_4 =
+            unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(cls,"registerPermission",
 "(Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/permissions/PermissionDefault;Ljava/util/Map;Lorg/bukkit/permissions/Permission;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
@@ -200,7 +190,7 @@ impl<'mc> CommandPermissions<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::permissions::Permission<'mc>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(
             cls,
@@ -322,7 +312,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::permissions::Permission<'mc>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(
             cls,

@@ -36,6 +36,26 @@ impl<'mc> ConfigurationSerialization<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn deserialize(
+        &mut self,
+        arg0: impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>,
+    ) -> Result<
+        crate::configuration::serialization::ConfigurationSerializable<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "deserialize",
+            "(Ljava/util/Map;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )
+    }
     pub fn get_alias(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -72,19 +92,37 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
-    pub fn unregister_class_with_string(
+    pub fn unregister_class_with_class(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = arg0.unwrap();
+        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
         let cls = &jni.find_class("void")?;
         let res = jni.call_static_method(
             cls,
             "unregisterClass",
-            "(Ljava/lang/Class;)V",
+            "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
+    }
+    pub fn deserialize_object_with_map(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>>,
+        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+    ) -> Result<
+        crate::configuration::serialization::ConfigurationSerializable<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_0 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = arg1.unwrap();
+        let cls =
+            &jni.find_class("org/bukkit/configuration/serialization/ConfigurationSerializable")?;
+        let res = jni.call_static_method(cls,"deserializeObject",
+"(Ljava/util/Map;Ljava/lang/Class;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
+        let mut obj = res.l()?;
+        crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
     }
     pub fn get_class_by_alias(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
@@ -210,8 +248,19 @@ impl<'mc> ConfigurationSerializable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn serialize(
+        &mut self,
+    ) -> Result<blackboxmc_javautil::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_javautil::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConfigurationSerializable<'mc> {
+impl<'mc> JNIRaw<'mc> for ConfigurationSerializable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -302,7 +351,7 @@ impl<'mc> SerializableAs<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SerializableAs<'mc> {
+impl<'mc> JNIRaw<'mc> for SerializableAs<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -390,7 +439,7 @@ impl<'mc> DelegateDeserialization<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for DelegateDeserialization<'mc> {
+impl<'mc> JNIRaw<'mc> for DelegateDeserialization<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
