@@ -14,12 +14,8 @@ impl<'mc> PistonHead<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PistonHead from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("PistonHead") {
+        let (valid, name) = env.validate_name(&obj, "PistonHead")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PistonHead object, got {}",
                 name
@@ -38,14 +34,14 @@ impl<'mc> PistonHead<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_short(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isShort", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_type(
@@ -60,7 +56,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/block/data/type/TechnicalPiston$Type;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::TechnicalPistonType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -79,7 +75,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/block/data/type/TechnicalPiston$Type;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -91,7 +87,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -121,7 +117,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -133,7 +129,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -152,7 +148,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -166,7 +162,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -185,7 +181,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -199,7 +195,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -209,7 +205,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -237,7 +233,7 @@ impl<'mc> PistonHead<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -253,7 +249,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -265,14 +261,14 @@ impl<'mc> PistonHead<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -282,7 +278,7 @@ impl<'mc> PistonHead<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -296,7 +292,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -308,7 +304,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -343,7 +339,7 @@ impl<'mc> PistonHead<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -355,7 +351,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -385,7 +381,7 @@ impl<'mc> PistonHead<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -397,7 +393,7 @@ impl<'mc> PistonHead<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -434,12 +430,8 @@ impl<'mc> Chest<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Chest from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Chest") {
+        let (valid, name) = env.validate_name(&obj, "Chest")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Chest object, got {}",
                 name
@@ -459,7 +451,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/block/data/type/Chest$Type;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::ChestType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -478,7 +470,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/block/data/type/Chest$Type;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -490,7 +482,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -520,7 +512,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -532,7 +524,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -551,7 +543,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -565,7 +557,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -584,7 +576,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -598,7 +590,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -608,7 +600,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -636,7 +628,7 @@ impl<'mc> Chest<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -652,7 +644,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -664,14 +656,14 @@ impl<'mc> Chest<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -681,7 +673,7 @@ impl<'mc> Chest<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -695,7 +687,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -707,7 +699,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -742,7 +734,7 @@ impl<'mc> Chest<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -754,7 +746,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -784,7 +776,7 @@ impl<'mc> Chest<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -796,7 +788,7 @@ impl<'mc> Chest<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -808,7 +800,7 @@ impl<'mc> Chest<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -820,7 +812,7 @@ impl<'mc> Chest<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -856,12 +848,8 @@ impl<'mc> GlassPane<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate GlassPane from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("GlassPane") {
+        let (valid, name) = env.validate_name(&obj, "GlassPane")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a GlassPane object, got {}",
                 name
@@ -888,7 +876,7 @@ impl<'mc> GlassPane<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn has_face(
@@ -902,7 +890,7 @@ impl<'mc> GlassPane<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn clone(
@@ -914,7 +902,7 @@ impl<'mc> GlassPane<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -933,7 +921,7 @@ impl<'mc> GlassPane<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -947,7 +935,7 @@ impl<'mc> GlassPane<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -966,7 +954,7 @@ impl<'mc> GlassPane<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -980,7 +968,7 @@ impl<'mc> GlassPane<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -990,7 +978,7 @@ impl<'mc> GlassPane<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1018,7 +1006,7 @@ impl<'mc> GlassPane<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1034,7 +1022,7 @@ impl<'mc> GlassPane<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1046,14 +1034,14 @@ impl<'mc> GlassPane<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1063,7 +1051,7 @@ impl<'mc> GlassPane<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -1077,7 +1065,7 @@ impl<'mc> GlassPane<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -1089,7 +1077,7 @@ impl<'mc> GlassPane<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1124,7 +1112,7 @@ impl<'mc> GlassPane<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -1136,7 +1124,7 @@ impl<'mc> GlassPane<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1166,7 +1154,7 @@ impl<'mc> GlassPane<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -1178,7 +1166,7 @@ impl<'mc> GlassPane<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1190,7 +1178,7 @@ impl<'mc> GlassPane<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -1202,7 +1190,7 @@ impl<'mc> GlassPane<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -1238,12 +1226,8 @@ impl<'mc> TripwireHook<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TripwireHook from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TripwireHook") {
+        let (valid, name) = env.validate_name(&obj, "TripwireHook")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TripwireHook object, got {}",
                 name
@@ -1257,7 +1241,7 @@ impl<'mc> TripwireHook<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAttached", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_attached(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -1269,7 +1253,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -1281,7 +1265,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1300,7 +1284,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -1314,7 +1298,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1333,7 +1317,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -1347,7 +1331,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -1357,7 +1341,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1385,7 +1369,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1401,7 +1385,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1413,14 +1397,14 @@ impl<'mc> TripwireHook<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1430,7 +1414,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -1444,7 +1428,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -1456,7 +1440,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1491,7 +1475,7 @@ impl<'mc> TripwireHook<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -1503,7 +1487,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1533,7 +1517,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -1545,7 +1529,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1562,7 +1546,7 @@ impl<'mc> TripwireHook<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1592,14 +1576,14 @@ impl<'mc> TripwireHook<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -1611,7 +1595,7 @@ impl<'mc> TripwireHook<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -1652,12 +1636,8 @@ impl<'mc> PitcherCrop<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PitcherCrop from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("PitcherCrop") {
+        let (valid, name) = env.validate_name(&obj, "PitcherCrop")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PitcherCrop object, got {}",
                 name
@@ -1671,7 +1651,7 @@ impl<'mc> PitcherCrop<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_age(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -1682,14 +1662,14 @@ impl<'mc> PitcherCrop<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -1701,7 +1681,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1720,7 +1700,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -1734,7 +1714,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1753,7 +1733,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -1767,7 +1747,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -1777,7 +1757,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1805,7 +1785,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1821,7 +1801,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1833,14 +1813,14 @@ impl<'mc> PitcherCrop<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1850,7 +1830,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -1864,7 +1844,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -1876,7 +1856,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1911,7 +1891,7 @@ impl<'mc> PitcherCrop<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -1923,7 +1903,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1953,7 +1933,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -1965,7 +1945,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1982,7 +1962,7 @@ impl<'mc> PitcherCrop<'mc> {
             "()Lorg/bukkit/block/data/Bisected$Half;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BisectedHalf(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2001,7 +1981,7 @@ impl<'mc> PitcherCrop<'mc> {
             "(Lorg/bukkit/block/data/Bisected$Half;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -2037,12 +2017,8 @@ impl<'mc> Lectern<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Lectern from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Lectern") {
+        let (valid, name) = env.validate_name(&obj, "Lectern")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Lectern object, got {}",
                 name
@@ -2056,7 +2032,7 @@ impl<'mc> Lectern<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasBook", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn facing(
@@ -2068,7 +2044,7 @@ impl<'mc> Lectern<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2098,7 +2074,7 @@ impl<'mc> Lectern<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -2110,7 +2086,7 @@ impl<'mc> Lectern<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2129,7 +2105,7 @@ impl<'mc> Lectern<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -2143,7 +2119,7 @@ impl<'mc> Lectern<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2162,7 +2138,7 @@ impl<'mc> Lectern<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -2176,7 +2152,7 @@ impl<'mc> Lectern<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -2186,7 +2162,7 @@ impl<'mc> Lectern<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2214,7 +2190,7 @@ impl<'mc> Lectern<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2230,7 +2206,7 @@ impl<'mc> Lectern<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2242,14 +2218,14 @@ impl<'mc> Lectern<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2259,7 +2235,7 @@ impl<'mc> Lectern<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -2273,7 +2249,7 @@ impl<'mc> Lectern<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -2285,7 +2261,7 @@ impl<'mc> Lectern<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2320,7 +2296,7 @@ impl<'mc> Lectern<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -2332,7 +2308,7 @@ impl<'mc> Lectern<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2362,7 +2338,7 @@ impl<'mc> Lectern<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -2374,7 +2350,7 @@ impl<'mc> Lectern<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2386,7 +2362,7 @@ impl<'mc> Lectern<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -2398,7 +2374,7 @@ impl<'mc> Lectern<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -2436,12 +2412,8 @@ impl<'mc> DaylightDetector<'mc> {
                 eyre::eyre!("Tried to instantiate DaylightDetector from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("DaylightDetector") {
+        let (valid, name) = env.validate_name(&obj, "DaylightDetector")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DaylightDetector object, got {}",
                 name
@@ -2455,7 +2427,7 @@ impl<'mc> DaylightDetector<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isInverted", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_inverted(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -2467,14 +2439,14 @@ impl<'mc> DaylightDetector<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_power(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -2485,14 +2457,14 @@ impl<'mc> DaylightDetector<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -2504,7 +2476,7 @@ impl<'mc> DaylightDetector<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2523,7 +2495,7 @@ impl<'mc> DaylightDetector<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -2537,7 +2509,7 @@ impl<'mc> DaylightDetector<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2556,7 +2528,7 @@ impl<'mc> DaylightDetector<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -2570,7 +2542,7 @@ impl<'mc> DaylightDetector<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -2580,7 +2552,7 @@ impl<'mc> DaylightDetector<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2608,7 +2580,7 @@ impl<'mc> DaylightDetector<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2624,7 +2596,7 @@ impl<'mc> DaylightDetector<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2636,14 +2608,14 @@ impl<'mc> DaylightDetector<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2653,7 +2625,7 @@ impl<'mc> DaylightDetector<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -2667,7 +2639,7 @@ impl<'mc> DaylightDetector<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -2679,7 +2651,7 @@ impl<'mc> DaylightDetector<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2714,7 +2686,7 @@ impl<'mc> DaylightDetector<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -2726,7 +2698,7 @@ impl<'mc> DaylightDetector<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2756,7 +2728,7 @@ impl<'mc> DaylightDetector<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -2768,7 +2740,7 @@ impl<'mc> DaylightDetector<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2806,12 +2778,8 @@ impl<'mc> StructureBlock<'mc> {
                 eyre::eyre!("Tried to instantiate StructureBlock from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("StructureBlock") {
+        let (valid, name) = env.validate_name(&obj, "StructureBlock")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StructureBlock object, got {}",
                 name
@@ -2833,7 +2801,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Lorg/bukkit/block/data/type/StructureBlock$Mode;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::StructureBlockMode(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2852,7 +2820,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Lorg/bukkit/block/data/type/StructureBlock$Mode;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -2864,7 +2832,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2883,7 +2851,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -2897,7 +2865,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2916,7 +2884,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -2930,7 +2898,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -2940,7 +2908,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -2968,7 +2936,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2984,7 +2952,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2996,14 +2964,14 @@ impl<'mc> StructureBlock<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3013,7 +2981,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -3027,7 +2995,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -3039,7 +3007,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3074,7 +3042,7 @@ impl<'mc> StructureBlock<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -3086,7 +3054,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3116,7 +3084,7 @@ impl<'mc> StructureBlock<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -3128,7 +3096,7 @@ impl<'mc> StructureBlock<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3164,12 +3132,8 @@ impl<'mc> PinkPetals<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PinkPetals from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("PinkPetals") {
+        let (valid, name) = env.validate_name(&obj, "PinkPetals")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PinkPetals object, got {}",
                 name
@@ -3183,7 +3147,7 @@ impl<'mc> PinkPetals<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFlowerAmount", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_flower_amount(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -3194,14 +3158,14 @@ impl<'mc> PinkPetals<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_flower_amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaximumFlowerAmount", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn facing(
@@ -3213,7 +3177,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3243,7 +3207,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -3255,7 +3219,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3274,7 +3238,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -3288,7 +3252,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3307,7 +3271,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -3321,7 +3285,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -3331,7 +3295,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3359,7 +3323,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3375,7 +3339,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3387,14 +3351,14 @@ impl<'mc> PinkPetals<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3404,7 +3368,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -3418,7 +3382,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -3430,7 +3394,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3465,7 +3429,7 @@ impl<'mc> PinkPetals<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -3477,7 +3441,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3507,7 +3471,7 @@ impl<'mc> PinkPetals<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -3519,7 +3483,7 @@ impl<'mc> PinkPetals<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3555,12 +3519,8 @@ impl<'mc> Piston<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Piston from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Piston") {
+        let (valid, name) = env.validate_name(&obj, "Piston")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Piston object, got {}",
                 name
@@ -3579,14 +3539,14 @@ impl<'mc> Piston<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_extended(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isExtended", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn facing(
@@ -3598,7 +3558,7 @@ impl<'mc> Piston<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3628,7 +3588,7 @@ impl<'mc> Piston<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -3640,7 +3600,7 @@ impl<'mc> Piston<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3659,7 +3619,7 @@ impl<'mc> Piston<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -3673,7 +3633,7 @@ impl<'mc> Piston<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3692,7 +3652,7 @@ impl<'mc> Piston<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -3706,7 +3666,7 @@ impl<'mc> Piston<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -3716,7 +3676,7 @@ impl<'mc> Piston<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3744,7 +3704,7 @@ impl<'mc> Piston<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -3760,7 +3720,7 @@ impl<'mc> Piston<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3772,14 +3732,14 @@ impl<'mc> Piston<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3789,7 +3749,7 @@ impl<'mc> Piston<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -3803,7 +3763,7 @@ impl<'mc> Piston<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -3815,7 +3775,7 @@ impl<'mc> Piston<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3850,7 +3810,7 @@ impl<'mc> Piston<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -3862,7 +3822,7 @@ impl<'mc> Piston<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -3892,7 +3852,7 @@ impl<'mc> Piston<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -3904,7 +3864,7 @@ impl<'mc> Piston<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3940,12 +3900,8 @@ impl<'mc> TNT<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TNT from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TNT") {
+        let (valid, name) = env.validate_name(&obj, "TNT")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TNT object, got {}",
                 name
@@ -3959,7 +3915,7 @@ impl<'mc> TNT<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isUnstable", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_unstable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -3971,7 +3927,7 @@ impl<'mc> TNT<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -3983,7 +3939,7 @@ impl<'mc> TNT<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4002,7 +3958,7 @@ impl<'mc> TNT<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -4016,7 +3972,7 @@ impl<'mc> TNT<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4035,7 +3991,7 @@ impl<'mc> TNT<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -4049,7 +4005,7 @@ impl<'mc> TNT<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -4059,7 +4015,7 @@ impl<'mc> TNT<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -4087,7 +4043,7 @@ impl<'mc> TNT<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4103,7 +4059,7 @@ impl<'mc> TNT<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4115,14 +4071,14 @@ impl<'mc> TNT<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4132,7 +4088,7 @@ impl<'mc> TNT<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -4146,7 +4102,7 @@ impl<'mc> TNT<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -4158,7 +4114,7 @@ impl<'mc> TNT<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -4193,7 +4149,7 @@ impl<'mc> TNT<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -4205,7 +4161,7 @@ impl<'mc> TNT<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -4235,7 +4191,7 @@ impl<'mc> TNT<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -4247,7 +4203,7 @@ impl<'mc> TNT<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4283,12 +4239,8 @@ impl<'mc> Fence<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Fence from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Fence") {
+        let (valid, name) = env.validate_name(&obj, "Fence")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Fence object, got {}",
                 name
@@ -4315,7 +4267,7 @@ impl<'mc> Fence<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn has_face(
@@ -4329,7 +4281,7 @@ impl<'mc> Fence<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn clone(
@@ -4341,7 +4293,7 @@ impl<'mc> Fence<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4360,7 +4312,7 @@ impl<'mc> Fence<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -4374,7 +4326,7 @@ impl<'mc> Fence<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4393,7 +4345,7 @@ impl<'mc> Fence<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -4407,7 +4359,7 @@ impl<'mc> Fence<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -4417,7 +4369,7 @@ impl<'mc> Fence<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -4445,7 +4397,7 @@ impl<'mc> Fence<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4461,7 +4413,7 @@ impl<'mc> Fence<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4473,14 +4425,14 @@ impl<'mc> Fence<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4490,7 +4442,7 @@ impl<'mc> Fence<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -4504,7 +4456,7 @@ impl<'mc> Fence<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -4516,7 +4468,7 @@ impl<'mc> Fence<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -4551,7 +4503,7 @@ impl<'mc> Fence<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -4563,7 +4515,7 @@ impl<'mc> Fence<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -4593,7 +4545,7 @@ impl<'mc> Fence<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -4605,7 +4557,7 @@ impl<'mc> Fence<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -4617,7 +4569,7 @@ impl<'mc> Fence<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -4629,7 +4581,7 @@ impl<'mc> Fence<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -4675,12 +4627,8 @@ impl<'mc> BigDripleafTilt<'mc> {
                 eyre::eyre!("Tried to instantiate BigDripleafTilt from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BigDripleafTilt") {
+        let (valid, name) = env.validate_name(&obj, "BigDripleafTilt")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BigDripleafTilt object, got {}",
                 name
@@ -4713,7 +4661,7 @@ impl<'mc> BigDripleafTilt<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4731,14 +4679,14 @@ impl<'mc> BigDripleafTilt<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4749,7 +4697,7 @@ impl<'mc> BigDripleafTilt<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -4763,7 +4711,7 @@ impl<'mc> BigDripleafTilt<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -4775,7 +4723,7 @@ impl<'mc> BigDripleafTilt<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -4787,14 +4735,14 @@ impl<'mc> BigDripleafTilt<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -4813,28 +4761,28 @@ impl<'mc> BigDripleafTilt<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -4859,12 +4807,8 @@ impl<'mc> WallHeight<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WallHeight from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("WallHeight") {
+        let (valid, name) = env.validate_name(&obj, "WallHeight")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WallHeight object, got {}",
                 name
@@ -4897,7 +4841,7 @@ impl<'mc> WallHeight<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4915,14 +4859,14 @@ impl<'mc> WallHeight<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -4933,7 +4877,7 @@ impl<'mc> WallHeight<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -4947,7 +4891,7 @@ impl<'mc> WallHeight<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -4959,7 +4903,7 @@ impl<'mc> WallHeight<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -4971,14 +4915,14 @@ impl<'mc> WallHeight<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -4997,28 +4941,28 @@ impl<'mc> WallHeight<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -5035,12 +4979,8 @@ impl<'mc> SculkCatalyst<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SculkCatalyst from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SculkCatalyst") {
+        let (valid, name) = env.validate_name(&obj, "SculkCatalyst")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SculkCatalyst object, got {}",
                 name
@@ -5054,7 +4994,7 @@ impl<'mc> SculkCatalyst<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBloom", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_bloom(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -5066,7 +5006,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -5078,7 +5018,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5097,7 +5037,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -5111,7 +5051,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5130,7 +5070,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -5144,7 +5084,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -5154,7 +5094,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -5182,7 +5122,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5198,7 +5138,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5210,14 +5150,14 @@ impl<'mc> SculkCatalyst<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5227,7 +5167,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -5241,7 +5181,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -5253,7 +5193,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -5288,7 +5228,7 @@ impl<'mc> SculkCatalyst<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -5300,7 +5240,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -5330,7 +5270,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -5342,7 +5282,7 @@ impl<'mc> SculkCatalyst<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5388,12 +5328,8 @@ impl<'mc> JigsawOrientation<'mc> {
                 eyre::eyre!("Tried to instantiate JigsawOrientation from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("JigsawOrientation") {
+        let (valid, name) = env.validate_name(&obj, "JigsawOrientation")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JigsawOrientation object, got {}",
                 name
@@ -5426,7 +5362,7 @@ impl<'mc> JigsawOrientation<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5444,14 +5380,14 @@ impl<'mc> JigsawOrientation<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5462,7 +5398,7 @@ impl<'mc> JigsawOrientation<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -5476,7 +5412,7 @@ impl<'mc> JigsawOrientation<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -5488,7 +5424,7 @@ impl<'mc> JigsawOrientation<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -5500,14 +5436,14 @@ impl<'mc> JigsawOrientation<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -5526,28 +5462,28 @@ impl<'mc> JigsawOrientation<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -5564,12 +5500,8 @@ impl<'mc> Furnace<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Furnace from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Furnace") {
+        let (valid, name) = env.validate_name(&obj, "Furnace")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Furnace object, got {}",
                 name
@@ -5588,7 +5520,7 @@ impl<'mc> Furnace<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -5618,7 +5550,7 @@ impl<'mc> Furnace<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -5630,7 +5562,7 @@ impl<'mc> Furnace<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5649,7 +5581,7 @@ impl<'mc> Furnace<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -5663,7 +5595,7 @@ impl<'mc> Furnace<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5682,7 +5614,7 @@ impl<'mc> Furnace<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -5696,7 +5628,7 @@ impl<'mc> Furnace<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -5706,7 +5638,7 @@ impl<'mc> Furnace<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -5734,7 +5666,7 @@ impl<'mc> Furnace<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -5750,7 +5682,7 @@ impl<'mc> Furnace<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5762,14 +5694,14 @@ impl<'mc> Furnace<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5779,7 +5711,7 @@ impl<'mc> Furnace<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -5793,7 +5725,7 @@ impl<'mc> Furnace<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -5805,7 +5737,7 @@ impl<'mc> Furnace<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -5840,7 +5772,7 @@ impl<'mc> Furnace<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -5852,7 +5784,7 @@ impl<'mc> Furnace<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -5882,7 +5814,7 @@ impl<'mc> Furnace<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -5894,7 +5826,7 @@ impl<'mc> Furnace<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -5906,7 +5838,7 @@ impl<'mc> Furnace<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isLit", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_lit(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -5918,7 +5850,7 @@ impl<'mc> Furnace<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -5954,12 +5886,8 @@ impl<'mc> Sapling<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Sapling from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Sapling") {
+        let (valid, name) = env.validate_name(&obj, "Sapling")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Sapling object, got {}",
                 name
@@ -5973,7 +5901,7 @@ impl<'mc> Sapling<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getStage", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_stage(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -5984,14 +5912,14 @@ impl<'mc> Sapling<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_stage(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumStage", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -6003,7 +5931,7 @@ impl<'mc> Sapling<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6022,7 +5950,7 @@ impl<'mc> Sapling<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -6036,7 +5964,7 @@ impl<'mc> Sapling<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6055,7 +5983,7 @@ impl<'mc> Sapling<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -6069,7 +5997,7 @@ impl<'mc> Sapling<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -6079,7 +6007,7 @@ impl<'mc> Sapling<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6107,7 +6035,7 @@ impl<'mc> Sapling<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6123,7 +6051,7 @@ impl<'mc> Sapling<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6135,14 +6063,14 @@ impl<'mc> Sapling<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6152,7 +6080,7 @@ impl<'mc> Sapling<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -6166,7 +6094,7 @@ impl<'mc> Sapling<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -6178,7 +6106,7 @@ impl<'mc> Sapling<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6213,7 +6141,7 @@ impl<'mc> Sapling<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -6225,7 +6153,7 @@ impl<'mc> Sapling<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6255,7 +6183,7 @@ impl<'mc> Sapling<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -6267,7 +6195,7 @@ impl<'mc> Sapling<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6313,12 +6241,8 @@ impl<'mc> SculkSensorPhase<'mc> {
                 eyre::eyre!("Tried to instantiate SculkSensorPhase from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SculkSensorPhase") {
+        let (valid, name) = env.validate_name(&obj, "SculkSensorPhase")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SculkSensorPhase object, got {}",
                 name
@@ -6351,7 +6275,7 @@ impl<'mc> SculkSensorPhase<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6369,14 +6293,14 @@ impl<'mc> SculkSensorPhase<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6387,7 +6311,7 @@ impl<'mc> SculkSensorPhase<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -6401,7 +6325,7 @@ impl<'mc> SculkSensorPhase<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -6413,7 +6337,7 @@ impl<'mc> SculkSensorPhase<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -6425,14 +6349,14 @@ impl<'mc> SculkSensorPhase<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -6451,28 +6375,28 @@ impl<'mc> SculkSensorPhase<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -6491,12 +6415,8 @@ impl<'mc> WallHangingSign<'mc> {
                 eyre::eyre!("Tried to instantiate WallHangingSign from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("WallHangingSign") {
+        let (valid, name) = env.validate_name(&obj, "WallHangingSign")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WallHangingSign object, got {}",
                 name
@@ -6515,7 +6435,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6545,7 +6465,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -6557,7 +6477,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6576,7 +6496,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -6590,7 +6510,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6609,7 +6529,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -6623,7 +6543,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -6633,7 +6553,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6661,7 +6581,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -6677,7 +6597,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6689,14 +6609,14 @@ impl<'mc> WallHangingSign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6706,7 +6626,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -6720,7 +6640,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -6732,7 +6652,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6767,7 +6687,7 @@ impl<'mc> WallHangingSign<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -6779,7 +6699,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6809,7 +6729,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -6821,7 +6741,7 @@ impl<'mc> WallHangingSign<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6833,7 +6753,7 @@ impl<'mc> WallHangingSign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -6845,7 +6765,7 @@ impl<'mc> WallHangingSign<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -6883,12 +6803,8 @@ impl<'mc> TechnicalPiston<'mc> {
                 eyre::eyre!("Tried to instantiate TechnicalPiston from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TechnicalPiston") {
+        let (valid, name) = env.validate_name(&obj, "TechnicalPiston")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TechnicalPiston object, got {}",
                 name
@@ -6910,7 +6826,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/block/data/type/TechnicalPiston$Type;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::TechnicalPistonType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -6929,7 +6845,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/block/data/type/TechnicalPiston$Type;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -6941,7 +6857,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -6971,7 +6887,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -6983,7 +6899,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7002,7 +6918,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -7016,7 +6932,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7035,7 +6951,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -7049,7 +6965,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -7059,7 +6975,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7087,7 +7003,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7103,7 +7019,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7115,14 +7031,14 @@ impl<'mc> TechnicalPiston<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7132,7 +7048,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -7146,7 +7062,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -7158,7 +7074,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7193,7 +7109,7 @@ impl<'mc> TechnicalPiston<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -7205,7 +7121,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7235,7 +7151,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -7247,7 +7163,7 @@ impl<'mc> TechnicalPiston<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7283,12 +7199,8 @@ impl<'mc> Switch<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Switch from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Switch") {
+        let (valid, name) = env.validate_name(&obj, "Switch")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Switch object, got {}",
                 name
@@ -7309,7 +7221,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/block/data/type/Switch$Face;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::SwitchFace(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7329,7 +7241,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/data/type/Switch$Face;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -7341,7 +7253,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7371,7 +7283,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -7383,7 +7295,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7402,7 +7314,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -7416,7 +7328,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7435,7 +7347,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -7449,7 +7361,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -7459,7 +7371,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7487,7 +7399,7 @@ impl<'mc> Switch<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7503,7 +7415,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7515,14 +7427,14 @@ impl<'mc> Switch<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7532,7 +7444,7 @@ impl<'mc> Switch<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -7546,7 +7458,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -7558,7 +7470,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7593,7 +7505,7 @@ impl<'mc> Switch<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -7605,7 +7517,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7635,7 +7547,7 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -7647,7 +7559,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7667,7 +7579,7 @@ impl<'mc> Switch<'mc> {
             "()Lorg/bukkit/block/data/FaceAttachable$AttachedFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::FaceAttachableAttachedFace(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7686,14 +7598,14 @@ impl<'mc> Switch<'mc> {
             "(Lorg/bukkit/block/data/FaceAttachable$AttachedFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -7705,7 +7617,7 @@ impl<'mc> Switch<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -7746,12 +7658,8 @@ impl<'mc> BubbleColumn<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BubbleColumn from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BubbleColumn") {
+        let (valid, name) = env.validate_name(&obj, "BubbleColumn")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BubbleColumn object, got {}",
                 name
@@ -7765,7 +7673,7 @@ impl<'mc> BubbleColumn<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDrag", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_drag(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -7777,7 +7685,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -7789,7 +7697,7 @@ impl<'mc> BubbleColumn<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7808,7 +7716,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -7822,7 +7730,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7841,7 +7749,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -7855,7 +7763,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -7865,7 +7773,7 @@ impl<'mc> BubbleColumn<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7893,7 +7801,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -7909,7 +7817,7 @@ impl<'mc> BubbleColumn<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7921,14 +7829,14 @@ impl<'mc> BubbleColumn<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7938,7 +7846,7 @@ impl<'mc> BubbleColumn<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -7952,7 +7860,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -7964,7 +7872,7 @@ impl<'mc> BubbleColumn<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -7999,7 +7907,7 @@ impl<'mc> BubbleColumn<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -8011,7 +7919,7 @@ impl<'mc> BubbleColumn<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8041,7 +7949,7 @@ impl<'mc> BubbleColumn<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -8053,7 +7961,7 @@ impl<'mc> BubbleColumn<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8089,12 +7997,8 @@ impl<'mc> Bell<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Bell from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Bell") {
+        let (valid, name) = env.validate_name(&obj, "Bell")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Bell object, got {}",
                 name
@@ -8114,7 +8018,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/block/data/type/Bell$Attachment;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::BellAttachment(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8133,7 +8037,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/block/data/type/Bell$Attachment;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -8145,7 +8049,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8175,7 +8079,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -8187,7 +8091,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8206,7 +8110,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -8220,7 +8124,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8239,7 +8143,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -8253,7 +8157,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -8263,7 +8167,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8291,7 +8195,7 @@ impl<'mc> Bell<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -8307,7 +8211,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8319,14 +8223,14 @@ impl<'mc> Bell<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8336,7 +8240,7 @@ impl<'mc> Bell<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -8350,7 +8254,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -8362,7 +8266,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8397,7 +8301,7 @@ impl<'mc> Bell<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -8409,7 +8313,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8439,7 +8343,7 @@ impl<'mc> Bell<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -8451,7 +8355,7 @@ impl<'mc> Bell<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8463,7 +8367,7 @@ impl<'mc> Bell<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -8475,7 +8379,7 @@ impl<'mc> Bell<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -8511,12 +8415,8 @@ impl<'mc> Bamboo<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Bamboo from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Bamboo") {
+        let (valid, name) = env.validate_name(&obj, "Bamboo")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Bamboo object, got {}",
                 name
@@ -8536,7 +8436,7 @@ impl<'mc> Bamboo<'mc> {
             "()Lorg/bukkit/block/data/type/Bamboo$Leaves;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::BambooLeaves(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8555,14 +8455,14 @@ impl<'mc> Bamboo<'mc> {
             "(Lorg/bukkit/block/data/type/Bamboo$Leaves;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_age(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -8573,14 +8473,14 @@ impl<'mc> Bamboo<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -8592,7 +8492,7 @@ impl<'mc> Bamboo<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8611,7 +8511,7 @@ impl<'mc> Bamboo<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -8625,7 +8525,7 @@ impl<'mc> Bamboo<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8644,7 +8544,7 @@ impl<'mc> Bamboo<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -8658,7 +8558,7 @@ impl<'mc> Bamboo<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -8668,7 +8568,7 @@ impl<'mc> Bamboo<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8696,7 +8596,7 @@ impl<'mc> Bamboo<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -8712,7 +8612,7 @@ impl<'mc> Bamboo<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8724,14 +8624,14 @@ impl<'mc> Bamboo<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8741,7 +8641,7 @@ impl<'mc> Bamboo<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -8755,7 +8655,7 @@ impl<'mc> Bamboo<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -8767,7 +8667,7 @@ impl<'mc> Bamboo<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8802,7 +8702,7 @@ impl<'mc> Bamboo<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -8814,7 +8714,7 @@ impl<'mc> Bamboo<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -8844,7 +8744,7 @@ impl<'mc> Bamboo<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -8856,7 +8756,7 @@ impl<'mc> Bamboo<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8868,7 +8768,7 @@ impl<'mc> Bamboo<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getStage", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_stage(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -8879,14 +8779,14 @@ impl<'mc> Bamboo<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_stage(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumStage", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
 }
@@ -8922,12 +8822,8 @@ impl<'mc> Jigsaw<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Jigsaw from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Jigsaw") {
+        let (valid, name) = env.validate_name(&obj, "Jigsaw")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Jigsaw object, got {}",
                 name
@@ -8949,7 +8845,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Lorg/bukkit/block/data/type/Jigsaw$Orientation;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::JigsawOrientation(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8968,7 +8864,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Lorg/bukkit/block/data/type/Jigsaw$Orientation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -8980,7 +8876,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -8999,7 +8895,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -9013,7 +8909,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9032,7 +8928,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -9046,7 +8942,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -9056,7 +8952,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9084,7 +8980,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -9100,7 +8996,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9112,14 +9008,14 @@ impl<'mc> Jigsaw<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9129,7 +9025,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -9143,7 +9039,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -9155,7 +9051,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9190,7 +9086,7 @@ impl<'mc> Jigsaw<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -9202,7 +9098,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9232,7 +9128,7 @@ impl<'mc> Jigsaw<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -9244,7 +9140,7 @@ impl<'mc> Jigsaw<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9280,12 +9176,8 @@ impl<'mc> Chain<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Chain from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Chain") {
+        let (valid, name) = env.validate_name(&obj, "Chain")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Chain object, got {}",
                 name
@@ -9299,7 +9191,7 @@ impl<'mc> Chain<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAxis", "()Lorg/bukkit/Axis;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9329,7 +9221,7 @@ impl<'mc> Chain<'mc> {
             "(Lorg/bukkit/Axis;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -9341,7 +9233,7 @@ impl<'mc> Chain<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9360,7 +9252,7 @@ impl<'mc> Chain<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -9374,7 +9266,7 @@ impl<'mc> Chain<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9393,7 +9285,7 @@ impl<'mc> Chain<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -9407,7 +9299,7 @@ impl<'mc> Chain<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -9417,7 +9309,7 @@ impl<'mc> Chain<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9445,7 +9337,7 @@ impl<'mc> Chain<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -9461,7 +9353,7 @@ impl<'mc> Chain<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9473,14 +9365,14 @@ impl<'mc> Chain<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9490,7 +9382,7 @@ impl<'mc> Chain<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -9504,7 +9396,7 @@ impl<'mc> Chain<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -9516,7 +9408,7 @@ impl<'mc> Chain<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9551,7 +9443,7 @@ impl<'mc> Chain<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -9563,7 +9455,7 @@ impl<'mc> Chain<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9593,7 +9485,7 @@ impl<'mc> Chain<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -9605,7 +9497,7 @@ impl<'mc> Chain<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9617,7 +9509,7 @@ impl<'mc> Chain<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -9629,7 +9521,7 @@ impl<'mc> Chain<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -9665,12 +9557,8 @@ impl<'mc> Lantern<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Lantern from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Lantern") {
+        let (valid, name) = env.validate_name(&obj, "Lantern")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Lantern object, got {}",
                 name
@@ -9684,7 +9572,7 @@ impl<'mc> Lantern<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isHanging", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_hanging(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -9696,7 +9584,7 @@ impl<'mc> Lantern<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -9708,7 +9596,7 @@ impl<'mc> Lantern<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9727,7 +9615,7 @@ impl<'mc> Lantern<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -9741,7 +9629,7 @@ impl<'mc> Lantern<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9760,7 +9648,7 @@ impl<'mc> Lantern<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -9774,7 +9662,7 @@ impl<'mc> Lantern<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -9784,7 +9672,7 @@ impl<'mc> Lantern<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9812,7 +9700,7 @@ impl<'mc> Lantern<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -9828,7 +9716,7 @@ impl<'mc> Lantern<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9840,14 +9728,14 @@ impl<'mc> Lantern<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9857,7 +9745,7 @@ impl<'mc> Lantern<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -9871,7 +9759,7 @@ impl<'mc> Lantern<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -9883,7 +9771,7 @@ impl<'mc> Lantern<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9918,7 +9806,7 @@ impl<'mc> Lantern<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -9930,7 +9818,7 @@ impl<'mc> Lantern<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -9960,7 +9848,7 @@ impl<'mc> Lantern<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -9972,7 +9860,7 @@ impl<'mc> Lantern<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -9984,7 +9872,7 @@ impl<'mc> Lantern<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -9996,7 +9884,7 @@ impl<'mc> Lantern<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -10032,12 +9920,8 @@ impl<'mc> Dispenser<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Dispenser from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Dispenser") {
+        let (valid, name) = env.validate_name(&obj, "Dispenser")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Dispenser object, got {}",
                 name
@@ -10051,7 +9935,7 @@ impl<'mc> Dispenser<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isTriggered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_triggered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -10063,7 +9947,7 @@ impl<'mc> Dispenser<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -10075,7 +9959,7 @@ impl<'mc> Dispenser<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -10105,7 +9989,7 @@ impl<'mc> Dispenser<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -10117,7 +10001,7 @@ impl<'mc> Dispenser<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10136,7 +10020,7 @@ impl<'mc> Dispenser<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -10150,7 +10034,7 @@ impl<'mc> Dispenser<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10169,7 +10053,7 @@ impl<'mc> Dispenser<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -10183,7 +10067,7 @@ impl<'mc> Dispenser<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -10193,7 +10077,7 @@ impl<'mc> Dispenser<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -10221,7 +10105,7 @@ impl<'mc> Dispenser<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -10237,7 +10121,7 @@ impl<'mc> Dispenser<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10249,14 +10133,14 @@ impl<'mc> Dispenser<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10266,7 +10150,7 @@ impl<'mc> Dispenser<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -10280,7 +10164,7 @@ impl<'mc> Dispenser<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -10292,7 +10176,7 @@ impl<'mc> Dispenser<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -10327,7 +10211,7 @@ impl<'mc> Dispenser<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -10339,7 +10223,7 @@ impl<'mc> Dispenser<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -10369,7 +10253,7 @@ impl<'mc> Dispenser<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -10381,7 +10265,7 @@ impl<'mc> Dispenser<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10427,12 +10311,8 @@ impl<'mc> StructureBlockMode<'mc> {
                 eyre::eyre!("Tried to instantiate StructureBlockMode from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("StructureBlockMode") {
+        let (valid, name) = env.validate_name(&obj, "StructureBlockMode")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StructureBlockMode object, got {}",
                 name
@@ -10465,7 +10345,7 @@ impl<'mc> StructureBlockMode<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -10483,14 +10363,14 @@ impl<'mc> StructureBlockMode<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -10501,7 +10381,7 @@ impl<'mc> StructureBlockMode<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -10515,7 +10395,7 @@ impl<'mc> StructureBlockMode<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -10527,7 +10407,7 @@ impl<'mc> StructureBlockMode<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -10539,14 +10419,14 @@ impl<'mc> StructureBlockMode<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -10565,28 +10445,28 @@ impl<'mc> StructureBlockMode<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -10603,12 +10483,8 @@ impl<'mc> RespawnAnchor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RespawnAnchor from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("RespawnAnchor") {
+        let (valid, name) = env.validate_name(&obj, "RespawnAnchor")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RespawnAnchor object, got {}",
                 name
@@ -10622,7 +10498,7 @@ impl<'mc> RespawnAnchor<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getCharges", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_charges(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -10633,14 +10509,14 @@ impl<'mc> RespawnAnchor<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_charges(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumCharges", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -10652,7 +10528,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10671,7 +10547,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -10685,7 +10561,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10704,7 +10580,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -10718,7 +10594,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -10728,7 +10604,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -10756,7 +10632,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -10772,7 +10648,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10784,14 +10660,14 @@ impl<'mc> RespawnAnchor<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10801,7 +10677,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -10815,7 +10691,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -10827,7 +10703,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -10862,7 +10738,7 @@ impl<'mc> RespawnAnchor<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -10874,7 +10750,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -10904,7 +10780,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -10916,7 +10792,7 @@ impl<'mc> RespawnAnchor<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -10952,12 +10828,8 @@ impl<'mc> Cake<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Cake from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Cake") {
+        let (valid, name) = env.validate_name(&obj, "Cake")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Cake object, got {}",
                 name
@@ -10971,7 +10843,7 @@ impl<'mc> Cake<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getBites", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_bites(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -10982,14 +10854,14 @@ impl<'mc> Cake<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_bites(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumBites", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -11001,7 +10873,7 @@ impl<'mc> Cake<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11020,7 +10892,7 @@ impl<'mc> Cake<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -11034,7 +10906,7 @@ impl<'mc> Cake<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11053,7 +10925,7 @@ impl<'mc> Cake<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -11067,7 +10939,7 @@ impl<'mc> Cake<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -11077,7 +10949,7 @@ impl<'mc> Cake<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11105,7 +10977,7 @@ impl<'mc> Cake<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -11121,7 +10993,7 @@ impl<'mc> Cake<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11133,14 +11005,14 @@ impl<'mc> Cake<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11150,7 +11022,7 @@ impl<'mc> Cake<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -11164,7 +11036,7 @@ impl<'mc> Cake<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -11176,7 +11048,7 @@ impl<'mc> Cake<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11211,7 +11083,7 @@ impl<'mc> Cake<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -11223,7 +11095,7 @@ impl<'mc> Cake<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11253,7 +11125,7 @@ impl<'mc> Cake<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -11265,7 +11137,7 @@ impl<'mc> Cake<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11303,12 +11175,8 @@ impl<'mc> EndPortalFrame<'mc> {
                 eyre::eyre!("Tried to instantiate EndPortalFrame from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("EndPortalFrame") {
+        let (valid, name) = env.validate_name(&obj, "EndPortalFrame")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EndPortalFrame object, got {}",
                 name
@@ -11322,7 +11190,7 @@ impl<'mc> EndPortalFrame<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasEye", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_eye(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -11334,7 +11202,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -11346,7 +11214,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11376,7 +11244,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -11388,7 +11256,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11407,7 +11275,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -11421,7 +11289,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11440,7 +11308,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -11454,7 +11322,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -11464,7 +11332,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11492,7 +11360,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -11508,7 +11376,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11520,14 +11388,14 @@ impl<'mc> EndPortalFrame<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11537,7 +11405,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -11551,7 +11419,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -11563,7 +11431,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11598,7 +11466,7 @@ impl<'mc> EndPortalFrame<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -11610,7 +11478,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11640,7 +11508,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -11652,7 +11520,7 @@ impl<'mc> EndPortalFrame<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11688,12 +11556,8 @@ impl<'mc> DecoratedPot<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DecoratedPot from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("DecoratedPot") {
+        let (valid, name) = env.validate_name(&obj, "DecoratedPot")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DecoratedPot object, got {}",
                 name
@@ -11712,7 +11576,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11742,7 +11606,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -11754,7 +11618,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11773,7 +11637,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -11787,7 +11651,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11806,7 +11670,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -11820,7 +11684,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -11830,7 +11694,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11858,7 +11722,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -11874,7 +11738,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -11886,14 +11750,14 @@ impl<'mc> DecoratedPot<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11903,7 +11767,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -11917,7 +11781,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -11929,7 +11793,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -11964,7 +11828,7 @@ impl<'mc> DecoratedPot<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -11976,7 +11840,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12006,7 +11870,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -12018,7 +11882,7 @@ impl<'mc> DecoratedPot<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12030,7 +11894,7 @@ impl<'mc> DecoratedPot<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -12042,7 +11906,7 @@ impl<'mc> DecoratedPot<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -12078,12 +11942,8 @@ impl<'mc> GlowLichen<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate GlowLichen from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("GlowLichen") {
+        let (valid, name) = env.validate_name(&obj, "GlowLichen")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a GlowLichen object, got {}",
                 name
@@ -12110,7 +11970,7 @@ impl<'mc> GlowLichen<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn has_face(
@@ -12124,7 +11984,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn clone(
@@ -12136,7 +11996,7 @@ impl<'mc> GlowLichen<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12155,7 +12015,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -12169,7 +12029,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12188,7 +12048,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -12202,7 +12062,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -12212,7 +12072,7 @@ impl<'mc> GlowLichen<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12240,7 +12100,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -12256,7 +12116,7 @@ impl<'mc> GlowLichen<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12268,14 +12128,14 @@ impl<'mc> GlowLichen<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12285,7 +12145,7 @@ impl<'mc> GlowLichen<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -12299,7 +12159,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -12311,7 +12171,7 @@ impl<'mc> GlowLichen<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12346,7 +12206,7 @@ impl<'mc> GlowLichen<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -12358,7 +12218,7 @@ impl<'mc> GlowLichen<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12388,7 +12248,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -12400,7 +12260,7 @@ impl<'mc> GlowLichen<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12412,7 +12272,7 @@ impl<'mc> GlowLichen<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -12424,7 +12284,7 @@ impl<'mc> GlowLichen<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -12470,12 +12330,8 @@ impl<'mc> ComparatorMode<'mc> {
                 eyre::eyre!("Tried to instantiate ComparatorMode from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("ComparatorMode") {
+        let (valid, name) = env.validate_name(&obj, "ComparatorMode")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ComparatorMode object, got {}",
                 name
@@ -12508,7 +12364,7 @@ impl<'mc> ComparatorMode<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -12526,14 +12382,14 @@ impl<'mc> ComparatorMode<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -12544,7 +12400,7 @@ impl<'mc> ComparatorMode<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -12558,7 +12414,7 @@ impl<'mc> ComparatorMode<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -12570,7 +12426,7 @@ impl<'mc> ComparatorMode<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -12582,14 +12438,14 @@ impl<'mc> ComparatorMode<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -12608,28 +12464,28 @@ impl<'mc> ComparatorMode<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -12646,12 +12502,8 @@ impl<'mc> Observer<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Observer from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Observer") {
+        let (valid, name) = env.validate_name(&obj, "Observer")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Observer object, got {}",
                 name
@@ -12670,7 +12522,7 @@ impl<'mc> Observer<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12700,7 +12552,7 @@ impl<'mc> Observer<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -12712,7 +12564,7 @@ impl<'mc> Observer<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12731,7 +12583,7 @@ impl<'mc> Observer<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -12745,7 +12597,7 @@ impl<'mc> Observer<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12764,7 +12616,7 @@ impl<'mc> Observer<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -12778,7 +12630,7 @@ impl<'mc> Observer<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -12788,7 +12640,7 @@ impl<'mc> Observer<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12816,7 +12668,7 @@ impl<'mc> Observer<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -12832,7 +12684,7 @@ impl<'mc> Observer<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12844,14 +12696,14 @@ impl<'mc> Observer<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12861,7 +12713,7 @@ impl<'mc> Observer<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -12875,7 +12727,7 @@ impl<'mc> Observer<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -12887,7 +12739,7 @@ impl<'mc> Observer<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12922,7 +12774,7 @@ impl<'mc> Observer<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -12934,7 +12786,7 @@ impl<'mc> Observer<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -12964,7 +12816,7 @@ impl<'mc> Observer<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -12976,7 +12828,7 @@ impl<'mc> Observer<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -12988,7 +12840,7 @@ impl<'mc> Observer<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -13000,7 +12852,7 @@ impl<'mc> Observer<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -13036,12 +12888,8 @@ impl<'mc> Stairs<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Stairs from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Stairs") {
+        let (valid, name) = env.validate_name(&obj, "Stairs")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Stairs object, got {}",
                 name
@@ -13061,7 +12909,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/block/data/type/Stairs$Shape;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::StairsShape(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13080,7 +12928,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/data/type/Stairs$Shape;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn half(
@@ -13092,7 +12940,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/block/data/Bisected$Half;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BisectedHalf(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13111,7 +12959,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/data/Bisected$Half;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -13123,7 +12971,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13142,7 +12990,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -13156,7 +13004,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13175,7 +13023,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -13189,7 +13037,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -13199,7 +13047,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -13227,7 +13075,7 @@ impl<'mc> Stairs<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -13243,7 +13091,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13255,14 +13103,14 @@ impl<'mc> Stairs<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13272,7 +13120,7 @@ impl<'mc> Stairs<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -13286,7 +13134,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -13298,7 +13146,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -13333,7 +13181,7 @@ impl<'mc> Stairs<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -13345,7 +13193,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -13375,7 +13223,7 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -13387,7 +13235,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13404,7 +13252,7 @@ impl<'mc> Stairs<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -13434,14 +13282,14 @@ impl<'mc> Stairs<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -13453,7 +13301,7 @@ impl<'mc> Stairs<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -13504,12 +13352,8 @@ impl<'mc> BellAttachment<'mc> {
                 eyre::eyre!("Tried to instantiate BellAttachment from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BellAttachment") {
+        let (valid, name) = env.validate_name(&obj, "BellAttachment")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BellAttachment object, got {}",
                 name
@@ -13542,7 +13386,7 @@ impl<'mc> BellAttachment<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -13560,14 +13404,14 @@ impl<'mc> BellAttachment<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -13578,7 +13422,7 @@ impl<'mc> BellAttachment<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -13592,7 +13436,7 @@ impl<'mc> BellAttachment<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -13604,7 +13448,7 @@ impl<'mc> BellAttachment<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -13616,14 +13460,14 @@ impl<'mc> BellAttachment<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -13642,28 +13486,28 @@ impl<'mc> BellAttachment<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -13688,12 +13532,8 @@ impl<'mc> DoorHinge<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DoorHinge from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("DoorHinge") {
+        let (valid, name) = env.validate_name(&obj, "DoorHinge")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DoorHinge object, got {}",
                 name
@@ -13726,7 +13566,7 @@ impl<'mc> DoorHinge<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -13744,14 +13584,14 @@ impl<'mc> DoorHinge<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -13762,7 +13602,7 @@ impl<'mc> DoorHinge<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -13776,7 +13616,7 @@ impl<'mc> DoorHinge<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -13788,7 +13628,7 @@ impl<'mc> DoorHinge<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -13800,14 +13640,14 @@ impl<'mc> DoorHinge<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -13826,28 +13666,28 @@ impl<'mc> DoorHinge<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -13867,12 +13707,8 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             )
             .into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("CalibratedSculkSensor") {
+        let (valid, name) = env.validate_name(&obj, "CalibratedSculkSensor")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CalibratedSculkSensor object, got {}",
                 name
@@ -13891,7 +13727,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -13921,7 +13757,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -13933,7 +13769,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13952,7 +13788,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -13966,7 +13802,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -13985,7 +13821,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -13999,7 +13835,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -14009,7 +13845,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14037,7 +13873,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -14053,7 +13889,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14065,14 +13901,14 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14082,7 +13918,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -14096,7 +13932,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -14108,7 +13944,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14143,7 +13979,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -14155,7 +13991,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14185,7 +14021,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -14197,7 +14033,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14217,7 +14053,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "()Lorg/bukkit/block/data/type/SculkSensor$Phase;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::SculkSensorPhase(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14236,14 +14072,14 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Lorg/bukkit/block/data/type/SculkSensor$Phase;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_power(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -14254,21 +14090,21 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -14280,7 +14116,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -14319,12 +14155,8 @@ impl<'mc> EnderChest<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EnderChest from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("EnderChest") {
+        let (valid, name) = env.validate_name(&obj, "EnderChest")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EnderChest object, got {}",
                 name
@@ -14343,7 +14175,7 @@ impl<'mc> EnderChest<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14373,7 +14205,7 @@ impl<'mc> EnderChest<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -14385,7 +14217,7 @@ impl<'mc> EnderChest<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14404,7 +14236,7 @@ impl<'mc> EnderChest<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -14418,7 +14250,7 @@ impl<'mc> EnderChest<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14437,7 +14269,7 @@ impl<'mc> EnderChest<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -14451,7 +14283,7 @@ impl<'mc> EnderChest<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -14461,7 +14293,7 @@ impl<'mc> EnderChest<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14489,7 +14321,7 @@ impl<'mc> EnderChest<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -14505,7 +14337,7 @@ impl<'mc> EnderChest<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14517,14 +14349,14 @@ impl<'mc> EnderChest<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14534,7 +14366,7 @@ impl<'mc> EnderChest<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -14548,7 +14380,7 @@ impl<'mc> EnderChest<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -14560,7 +14392,7 @@ impl<'mc> EnderChest<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14595,7 +14427,7 @@ impl<'mc> EnderChest<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -14607,7 +14439,7 @@ impl<'mc> EnderChest<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14637,7 +14469,7 @@ impl<'mc> EnderChest<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -14649,7 +14481,7 @@ impl<'mc> EnderChest<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14661,7 +14493,7 @@ impl<'mc> EnderChest<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -14673,7 +14505,7 @@ impl<'mc> EnderChest<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -14709,12 +14541,8 @@ impl<'mc> Bed<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Bed from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Bed") {
+        let (valid, name) = env.validate_name(&obj, "Bed")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Bed object, got {}",
                 name
@@ -14734,7 +14562,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/block/data/type/Bed$Part;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::BedPart(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14753,14 +14581,14 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/block/data/type/Bed$Part;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_occupied(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccupied", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn facing(
@@ -14772,7 +14600,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14802,7 +14630,7 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -14814,7 +14642,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14833,7 +14661,7 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -14847,7 +14675,7 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14866,7 +14694,7 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -14880,7 +14708,7 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -14890,7 +14718,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -14918,7 +14746,7 @@ impl<'mc> Bed<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -14934,7 +14762,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -14946,14 +14774,14 @@ impl<'mc> Bed<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14963,7 +14791,7 @@ impl<'mc> Bed<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -14977,7 +14805,7 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -14989,7 +14817,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15024,7 +14852,7 @@ impl<'mc> Bed<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -15036,7 +14864,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15066,7 +14894,7 @@ impl<'mc> Bed<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -15078,7 +14906,7 @@ impl<'mc> Bed<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15122,12 +14950,8 @@ impl<'mc> ChestType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ChestType from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("ChestType") {
+        let (valid, name) = env.validate_name(&obj, "ChestType")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ChestType object, got {}",
                 name
@@ -15160,7 +14984,7 @@ impl<'mc> ChestType<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -15178,14 +15002,14 @@ impl<'mc> ChestType<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -15196,7 +15020,7 @@ impl<'mc> ChestType<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -15210,7 +15034,7 @@ impl<'mc> ChestType<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -15222,7 +15046,7 @@ impl<'mc> ChestType<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -15234,14 +15058,14 @@ impl<'mc> ChestType<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -15260,28 +15084,28 @@ impl<'mc> ChestType<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -15300,12 +15124,8 @@ impl<'mc> AmethystCluster<'mc> {
                 eyre::eyre!("Tried to instantiate AmethystCluster from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("AmethystCluster") {
+        let (valid, name) = env.validate_name(&obj, "AmethystCluster")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AmethystCluster object, got {}",
                 name
@@ -15324,7 +15144,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15354,7 +15174,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -15366,7 +15186,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15385,7 +15205,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -15399,7 +15219,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15418,7 +15238,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -15432,7 +15252,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -15442,7 +15262,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15470,7 +15290,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -15486,7 +15306,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15498,14 +15318,14 @@ impl<'mc> AmethystCluster<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15515,7 +15335,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -15529,7 +15349,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -15541,7 +15361,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15576,7 +15396,7 @@ impl<'mc> AmethystCluster<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -15588,7 +15408,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15618,7 +15438,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -15630,7 +15450,7 @@ impl<'mc> AmethystCluster<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15642,7 +15462,7 @@ impl<'mc> AmethystCluster<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -15654,7 +15474,7 @@ impl<'mc> AmethystCluster<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -15690,12 +15510,8 @@ impl<'mc> NoteBlock<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate NoteBlock from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("NoteBlock") {
+        let (valid, name) = env.validate_name(&obj, "NoteBlock")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a NoteBlock object, got {}",
                 name
@@ -15714,7 +15530,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Lorg/bukkit/Instrument;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15744,14 +15560,14 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/Instrument;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn note(&mut self) -> Result<crate::bukkit::Note<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getNote", "()Lorg/bukkit/Note;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::Note(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15770,14 +15586,14 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/Note;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -15789,7 +15605,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -15801,7 +15617,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15820,7 +15636,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -15834,7 +15650,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15853,7 +15669,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -15867,7 +15683,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -15877,7 +15693,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -15905,7 +15721,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -15921,7 +15737,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -15933,14 +15749,14 @@ impl<'mc> NoteBlock<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15950,7 +15766,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -15964,7 +15780,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -15976,7 +15792,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16011,7 +15827,7 @@ impl<'mc> NoteBlock<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -16023,7 +15839,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16053,7 +15869,7 @@ impl<'mc> NoteBlock<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -16065,7 +15881,7 @@ impl<'mc> NoteBlock<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16103,12 +15919,8 @@ impl<'mc> MangrovePropagule<'mc> {
                 eyre::eyre!("Tried to instantiate MangrovePropagule from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("MangrovePropagule") {
+        let (valid, name) = env.validate_name(&obj, "MangrovePropagule")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MangrovePropagule object, got {}",
                 name
@@ -16122,7 +15934,7 @@ impl<'mc> MangrovePropagule<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_age(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -16133,14 +15945,14 @@ impl<'mc> MangrovePropagule<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -16152,7 +15964,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16171,7 +15983,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -16185,7 +15997,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16204,7 +16016,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -16218,7 +16030,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -16228,7 +16040,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16256,7 +16068,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -16272,7 +16084,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16284,14 +16096,14 @@ impl<'mc> MangrovePropagule<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16301,7 +16113,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -16315,7 +16127,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -16327,7 +16139,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16362,7 +16174,7 @@ impl<'mc> MangrovePropagule<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -16374,7 +16186,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16404,7 +16216,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -16416,7 +16228,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16428,7 +16240,7 @@ impl<'mc> MangrovePropagule<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isHanging", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_hanging(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -16440,14 +16252,14 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn stage(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getStage", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_stage(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -16458,21 +16270,21 @@ impl<'mc> MangrovePropagule<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_stage(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumStage", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -16484,7 +16296,7 @@ impl<'mc> MangrovePropagule<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -16530,12 +16342,8 @@ impl<'mc> SculkSensor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SculkSensor from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SculkSensor") {
+        let (valid, name) = env.validate_name(&obj, "SculkSensor")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SculkSensor object, got {}",
                 name
@@ -16557,7 +16365,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Lorg/bukkit/block/data/type/SculkSensor$Phase;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::SculkSensorPhase(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16576,14 +16384,14 @@ impl<'mc> SculkSensor<'mc> {
             "(Lorg/bukkit/block/data/type/SculkSensor$Phase;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_power(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -16594,14 +16402,14 @@ impl<'mc> SculkSensor<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -16613,7 +16421,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16632,7 +16440,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -16646,7 +16454,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16665,7 +16473,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -16679,7 +16487,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -16689,7 +16497,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16717,7 +16525,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -16733,7 +16541,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16745,14 +16553,14 @@ impl<'mc> SculkSensor<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16762,7 +16570,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -16776,7 +16584,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -16788,7 +16596,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16823,7 +16631,7 @@ impl<'mc> SculkSensor<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -16835,7 +16643,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -16865,7 +16673,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -16877,7 +16685,7 @@ impl<'mc> SculkSensor<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16889,7 +16697,7 @@ impl<'mc> SculkSensor<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -16901,7 +16709,7 @@ impl<'mc> SculkSensor<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -16937,12 +16745,8 @@ impl<'mc> BigDripleaf<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BigDripleaf from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BigDripleaf") {
+        let (valid, name) = env.validate_name(&obj, "BigDripleaf")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BigDripleaf object, got {}",
                 name
@@ -16964,7 +16768,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/block/data/type/BigDripleaf$Tilt;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::BigDripleafTilt(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -16983,7 +16787,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/block/data/type/BigDripleaf$Tilt;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -16995,7 +16799,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17025,7 +16829,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -17037,7 +16841,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17056,7 +16860,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -17070,7 +16874,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17089,7 +16893,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -17103,7 +16907,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -17113,7 +16917,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17141,7 +16945,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -17157,7 +16961,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17169,14 +16973,14 @@ impl<'mc> BigDripleaf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17186,7 +16990,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -17200,7 +17004,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -17212,7 +17016,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17247,7 +17051,7 @@ impl<'mc> BigDripleaf<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -17259,7 +17063,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17289,7 +17093,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -17301,7 +17105,7 @@ impl<'mc> BigDripleaf<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17313,7 +17117,7 @@ impl<'mc> BigDripleaf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -17325,7 +17129,7 @@ impl<'mc> BigDripleaf<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -17356,12 +17160,8 @@ impl<'mc> Ladder<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Ladder from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Ladder") {
+        let (valid, name) = env.validate_name(&obj, "Ladder")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Ladder object, got {}",
                 name
@@ -17380,7 +17180,7 @@ impl<'mc> Ladder<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17410,7 +17210,7 @@ impl<'mc> Ladder<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -17422,7 +17222,7 @@ impl<'mc> Ladder<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17441,7 +17241,7 @@ impl<'mc> Ladder<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -17455,7 +17255,7 @@ impl<'mc> Ladder<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17474,7 +17274,7 @@ impl<'mc> Ladder<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -17488,7 +17288,7 @@ impl<'mc> Ladder<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -17498,7 +17298,7 @@ impl<'mc> Ladder<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17526,7 +17326,7 @@ impl<'mc> Ladder<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -17542,7 +17342,7 @@ impl<'mc> Ladder<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17554,14 +17354,14 @@ impl<'mc> Ladder<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17571,7 +17371,7 @@ impl<'mc> Ladder<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -17585,7 +17385,7 @@ impl<'mc> Ladder<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -17597,7 +17397,7 @@ impl<'mc> Ladder<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17632,7 +17432,7 @@ impl<'mc> Ladder<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -17644,7 +17444,7 @@ impl<'mc> Ladder<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17674,7 +17474,7 @@ impl<'mc> Ladder<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -17686,7 +17486,7 @@ impl<'mc> Ladder<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17698,7 +17498,7 @@ impl<'mc> Ladder<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -17710,7 +17510,7 @@ impl<'mc> Ladder<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -17746,12 +17546,8 @@ impl<'mc> Scaffolding<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Scaffolding from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Scaffolding") {
+        let (valid, name) = env.validate_name(&obj, "Scaffolding")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Scaffolding object, got {}",
                 name
@@ -17765,7 +17561,7 @@ impl<'mc> Scaffolding<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getDistance", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_distance(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -17776,14 +17572,14 @@ impl<'mc> Scaffolding<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_bottom(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBottom", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_bottom(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -17795,21 +17591,21 @@ impl<'mc> Scaffolding<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumDistance", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -17821,7 +17617,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -17833,7 +17629,7 @@ impl<'mc> Scaffolding<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17852,7 +17648,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -17866,7 +17662,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17885,7 +17681,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -17899,7 +17695,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -17909,7 +17705,7 @@ impl<'mc> Scaffolding<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -17937,7 +17733,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -17953,7 +17749,7 @@ impl<'mc> Scaffolding<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -17965,14 +17761,14 @@ impl<'mc> Scaffolding<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17982,7 +17778,7 @@ impl<'mc> Scaffolding<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -17996,7 +17792,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -18008,7 +17804,7 @@ impl<'mc> Scaffolding<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18043,7 +17839,7 @@ impl<'mc> Scaffolding<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -18055,7 +17851,7 @@ impl<'mc> Scaffolding<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18085,7 +17881,7 @@ impl<'mc> Scaffolding<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -18097,7 +17893,7 @@ impl<'mc> Scaffolding<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18133,12 +17929,8 @@ impl<'mc> BrewingStand<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BrewingStand from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BrewingStand") {
+        let (valid, name) = env.validate_name(&obj, "BrewingStand")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BrewingStand object, got {}",
                 name
@@ -18156,7 +17948,7 @@ impl<'mc> BrewingStand<'mc> {
             "(I)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_bottle(&mut self, arg0: i32, arg1: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -18172,14 +17964,14 @@ impl<'mc> BrewingStand<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_bottles(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumBottles", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -18191,7 +17983,7 @@ impl<'mc> BrewingStand<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18210,7 +18002,7 @@ impl<'mc> BrewingStand<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -18224,7 +18016,7 @@ impl<'mc> BrewingStand<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18243,7 +18035,7 @@ impl<'mc> BrewingStand<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -18257,7 +18049,7 @@ impl<'mc> BrewingStand<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -18267,7 +18059,7 @@ impl<'mc> BrewingStand<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18295,7 +18087,7 @@ impl<'mc> BrewingStand<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -18311,7 +18103,7 @@ impl<'mc> BrewingStand<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18323,14 +18115,14 @@ impl<'mc> BrewingStand<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18340,7 +18132,7 @@ impl<'mc> BrewingStand<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -18354,7 +18146,7 @@ impl<'mc> BrewingStand<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -18366,7 +18158,7 @@ impl<'mc> BrewingStand<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18401,7 +18193,7 @@ impl<'mc> BrewingStand<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -18413,7 +18205,7 @@ impl<'mc> BrewingStand<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18443,7 +18235,7 @@ impl<'mc> BrewingStand<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -18455,7 +18247,7 @@ impl<'mc> BrewingStand<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18491,12 +18283,8 @@ impl<'mc> Fire<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Fire from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Fire") {
+        let (valid, name) = env.validate_name(&obj, "Fire")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Fire object, got {}",
                 name
@@ -18510,7 +18298,7 @@ impl<'mc> Fire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_age(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -18521,14 +18309,14 @@ impl<'mc> Fire<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -18540,7 +18328,7 @@ impl<'mc> Fire<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18559,7 +18347,7 @@ impl<'mc> Fire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -18573,7 +18361,7 @@ impl<'mc> Fire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18592,7 +18380,7 @@ impl<'mc> Fire<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -18606,7 +18394,7 @@ impl<'mc> Fire<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -18616,7 +18404,7 @@ impl<'mc> Fire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18644,7 +18432,7 @@ impl<'mc> Fire<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -18660,7 +18448,7 @@ impl<'mc> Fire<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18672,14 +18460,14 @@ impl<'mc> Fire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18689,7 +18477,7 @@ impl<'mc> Fire<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -18703,7 +18491,7 @@ impl<'mc> Fire<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -18715,7 +18503,7 @@ impl<'mc> Fire<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18750,7 +18538,7 @@ impl<'mc> Fire<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -18762,7 +18550,7 @@ impl<'mc> Fire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18792,7 +18580,7 @@ impl<'mc> Fire<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -18804,7 +18592,7 @@ impl<'mc> Fire<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18829,7 +18617,7 @@ impl<'mc> Fire<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn has_face(
@@ -18843,7 +18631,7 @@ impl<'mc> Fire<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
 }
@@ -18879,12 +18667,8 @@ impl<'mc> Hopper<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Hopper from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Hopper") {
+        let (valid, name) = env.validate_name(&obj, "Hopper")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Hopper object, got {}",
                 name
@@ -18898,7 +18682,7 @@ impl<'mc> Hopper<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_enabled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -18910,7 +18694,7 @@ impl<'mc> Hopper<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -18922,7 +18706,7 @@ impl<'mc> Hopper<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -18952,7 +18736,7 @@ impl<'mc> Hopper<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -18964,7 +18748,7 @@ impl<'mc> Hopper<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -18983,7 +18767,7 @@ impl<'mc> Hopper<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -18997,7 +18781,7 @@ impl<'mc> Hopper<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19016,7 +18800,7 @@ impl<'mc> Hopper<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -19030,7 +18814,7 @@ impl<'mc> Hopper<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -19040,7 +18824,7 @@ impl<'mc> Hopper<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19068,7 +18852,7 @@ impl<'mc> Hopper<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -19084,7 +18868,7 @@ impl<'mc> Hopper<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19096,14 +18880,14 @@ impl<'mc> Hopper<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19113,7 +18897,7 @@ impl<'mc> Hopper<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -19127,7 +18911,7 @@ impl<'mc> Hopper<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -19139,7 +18923,7 @@ impl<'mc> Hopper<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19174,7 +18958,7 @@ impl<'mc> Hopper<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -19186,7 +18970,7 @@ impl<'mc> Hopper<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19216,7 +19000,7 @@ impl<'mc> Hopper<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -19228,7 +19012,7 @@ impl<'mc> Hopper<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19264,12 +19048,8 @@ impl<'mc> Repeater<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Repeater from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Repeater") {
+        let (valid, name) = env.validate_name(&obj, "Repeater")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Repeater object, got {}",
                 name
@@ -19283,7 +19063,7 @@ impl<'mc> Repeater<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isLocked", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_locked(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -19295,14 +19075,14 @@ impl<'mc> Repeater<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn delay(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getDelay", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_delay(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -19313,21 +19093,21 @@ impl<'mc> Repeater<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn minimum_delay(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMinimumDelay", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn maximum_delay(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumDelay", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn facing(
@@ -19339,7 +19119,7 @@ impl<'mc> Repeater<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19369,7 +19149,7 @@ impl<'mc> Repeater<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -19381,7 +19161,7 @@ impl<'mc> Repeater<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19400,7 +19180,7 @@ impl<'mc> Repeater<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -19414,7 +19194,7 @@ impl<'mc> Repeater<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19433,7 +19213,7 @@ impl<'mc> Repeater<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -19447,7 +19227,7 @@ impl<'mc> Repeater<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -19457,7 +19237,7 @@ impl<'mc> Repeater<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19485,7 +19265,7 @@ impl<'mc> Repeater<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -19501,7 +19281,7 @@ impl<'mc> Repeater<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19513,14 +19293,14 @@ impl<'mc> Repeater<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19530,7 +19310,7 @@ impl<'mc> Repeater<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -19544,7 +19324,7 @@ impl<'mc> Repeater<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -19556,7 +19336,7 @@ impl<'mc> Repeater<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19591,7 +19371,7 @@ impl<'mc> Repeater<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -19603,7 +19383,7 @@ impl<'mc> Repeater<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19633,7 +19413,7 @@ impl<'mc> Repeater<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -19645,7 +19425,7 @@ impl<'mc> Repeater<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19657,7 +19437,7 @@ impl<'mc> Repeater<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -19669,7 +19449,7 @@ impl<'mc> Repeater<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -19705,12 +19485,8 @@ impl<'mc> Slab<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Slab from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Slab") {
+        let (valid, name) = env.validate_name(&obj, "Slab")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Slab object, got {}",
                 name
@@ -19730,7 +19506,7 @@ impl<'mc> Slab<'mc> {
             "()Lorg/bukkit/block/data/type/Slab$Type;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::SlabType(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19749,14 +19525,14 @@ impl<'mc> Slab<'mc> {
             "(Lorg/bukkit/block/data/type/Slab$Type;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -19768,7 +19544,7 @@ impl<'mc> Slab<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -19780,7 +19556,7 @@ impl<'mc> Slab<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19799,7 +19575,7 @@ impl<'mc> Slab<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -19813,7 +19589,7 @@ impl<'mc> Slab<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19832,7 +19608,7 @@ impl<'mc> Slab<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -19846,7 +19622,7 @@ impl<'mc> Slab<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -19856,7 +19632,7 @@ impl<'mc> Slab<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19884,7 +19660,7 @@ impl<'mc> Slab<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -19900,7 +19676,7 @@ impl<'mc> Slab<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19912,14 +19688,14 @@ impl<'mc> Slab<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19929,7 +19705,7 @@ impl<'mc> Slab<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -19943,7 +19719,7 @@ impl<'mc> Slab<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -19955,7 +19731,7 @@ impl<'mc> Slab<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -19990,7 +19766,7 @@ impl<'mc> Slab<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -20002,7 +19778,7 @@ impl<'mc> Slab<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20032,7 +19808,7 @@ impl<'mc> Slab<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -20044,7 +19820,7 @@ impl<'mc> Slab<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20080,12 +19856,8 @@ impl<'mc> Snow<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Snow from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Snow") {
+        let (valid, name) = env.validate_name(&obj, "Snow")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Snow object, got {}",
                 name
@@ -20099,7 +19871,7 @@ impl<'mc> Snow<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLayers", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_layers(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -20110,21 +19882,21 @@ impl<'mc> Snow<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn minimum_layers(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMinimumLayers", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn maximum_layers(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumLayers", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -20136,7 +19908,7 @@ impl<'mc> Snow<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20155,7 +19927,7 @@ impl<'mc> Snow<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -20169,7 +19941,7 @@ impl<'mc> Snow<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20188,7 +19960,7 @@ impl<'mc> Snow<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -20202,7 +19974,7 @@ impl<'mc> Snow<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -20212,7 +19984,7 @@ impl<'mc> Snow<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20240,7 +20012,7 @@ impl<'mc> Snow<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -20256,7 +20028,7 @@ impl<'mc> Snow<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20268,14 +20040,14 @@ impl<'mc> Snow<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -20285,7 +20057,7 @@ impl<'mc> Snow<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -20299,7 +20071,7 @@ impl<'mc> Snow<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -20311,7 +20083,7 @@ impl<'mc> Snow<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20346,7 +20118,7 @@ impl<'mc> Snow<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -20358,7 +20130,7 @@ impl<'mc> Snow<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20388,7 +20160,7 @@ impl<'mc> Snow<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -20400,7 +20172,7 @@ impl<'mc> Snow<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20447,12 +20219,8 @@ impl<'mc> RedstoneWireConnection<'mc> {
             )
             .into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("RedstoneWireConnection") {
+        let (valid, name) = env.validate_name(&obj, "RedstoneWireConnection")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RedstoneWireConnection object, got {}",
                 name
@@ -20485,7 +20253,7 @@ impl<'mc> RedstoneWireConnection<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -20503,14 +20271,14 @@ impl<'mc> RedstoneWireConnection<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -20521,7 +20289,7 @@ impl<'mc> RedstoneWireConnection<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -20535,7 +20303,7 @@ impl<'mc> RedstoneWireConnection<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -20547,7 +20315,7 @@ impl<'mc> RedstoneWireConnection<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -20559,14 +20327,14 @@ impl<'mc> RedstoneWireConnection<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -20585,28 +20353,28 @@ impl<'mc> RedstoneWireConnection<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -20623,12 +20391,8 @@ impl<'mc> Cocoa<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Cocoa from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Cocoa") {
+        let (valid, name) = env.validate_name(&obj, "Cocoa")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Cocoa object, got {}",
                 name
@@ -20642,7 +20406,7 @@ impl<'mc> Cocoa<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_age(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -20653,14 +20417,14 @@ impl<'mc> Cocoa<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -20672,7 +20436,7 @@ impl<'mc> Cocoa<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20691,7 +20455,7 @@ impl<'mc> Cocoa<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -20705,7 +20469,7 @@ impl<'mc> Cocoa<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20724,7 +20488,7 @@ impl<'mc> Cocoa<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -20738,7 +20502,7 @@ impl<'mc> Cocoa<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -20748,7 +20512,7 @@ impl<'mc> Cocoa<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20776,7 +20540,7 @@ impl<'mc> Cocoa<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -20792,7 +20556,7 @@ impl<'mc> Cocoa<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20804,14 +20568,14 @@ impl<'mc> Cocoa<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -20821,7 +20585,7 @@ impl<'mc> Cocoa<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -20835,7 +20599,7 @@ impl<'mc> Cocoa<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -20847,7 +20611,7 @@ impl<'mc> Cocoa<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20882,7 +20646,7 @@ impl<'mc> Cocoa<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -20894,7 +20658,7 @@ impl<'mc> Cocoa<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20924,7 +20688,7 @@ impl<'mc> Cocoa<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -20936,7 +20700,7 @@ impl<'mc> Cocoa<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -20953,7 +20717,7 @@ impl<'mc> Cocoa<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -20983,7 +20747,7 @@ impl<'mc> Cocoa<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -21019,12 +20783,8 @@ impl<'mc> Comparator<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Comparator from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Comparator") {
+        let (valid, name) = env.validate_name(&obj, "Comparator")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Comparator object, got {}",
                 name
@@ -21044,7 +20804,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/block/data/type/Comparator$Mode;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::ComparatorMode(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21063,7 +20823,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/block/data/type/Comparator$Mode;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -21075,7 +20835,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21105,7 +20865,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -21117,7 +20877,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21136,7 +20896,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -21150,7 +20910,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21169,7 +20929,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -21183,7 +20943,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -21193,7 +20953,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21221,7 +20981,7 @@ impl<'mc> Comparator<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -21237,7 +20997,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21249,14 +21009,14 @@ impl<'mc> Comparator<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -21266,7 +21026,7 @@ impl<'mc> Comparator<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -21280,7 +21040,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -21292,7 +21052,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21327,7 +21087,7 @@ impl<'mc> Comparator<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -21339,7 +21099,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21369,7 +21129,7 @@ impl<'mc> Comparator<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -21381,7 +21141,7 @@ impl<'mc> Comparator<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21393,7 +21153,7 @@ impl<'mc> Comparator<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -21405,7 +21165,7 @@ impl<'mc> Comparator<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -21441,12 +21201,8 @@ impl<'mc> RedstoneRail<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RedstoneRail from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("RedstoneRail") {
+        let (valid, name) = env.validate_name(&obj, "RedstoneRail")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RedstoneRail object, got {}",
                 name
@@ -21460,7 +21216,7 @@ impl<'mc> RedstoneRail<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -21472,7 +21228,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -21484,7 +21240,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21503,7 +21259,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -21517,7 +21273,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21536,7 +21292,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -21550,7 +21306,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -21560,7 +21316,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21588,7 +21344,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -21604,7 +21360,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21616,14 +21372,14 @@ impl<'mc> RedstoneRail<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -21633,7 +21389,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -21647,7 +21403,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -21659,7 +21415,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21694,7 +21450,7 @@ impl<'mc> RedstoneRail<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -21706,7 +21462,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21736,7 +21492,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -21748,7 +21504,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21765,7 +21521,7 @@ impl<'mc> RedstoneRail<'mc> {
             "()Lorg/bukkit/block/data/Rail$Shape;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::RailShape(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21784,14 +21540,14 @@ impl<'mc> RedstoneRail<'mc> {
             "(Lorg/bukkit/block/data/Rail$Shape;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -21803,7 +21559,7 @@ impl<'mc> RedstoneRail<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -21841,12 +21597,8 @@ impl<'mc> CaveVinesPlant<'mc> {
                 eyre::eyre!("Tried to instantiate CaveVinesPlant from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("CaveVinesPlant") {
+        let (valid, name) = env.validate_name(&obj, "CaveVinesPlant")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CaveVinesPlant object, got {}",
                 name
@@ -21860,7 +21612,7 @@ impl<'mc> CaveVinesPlant<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBerries", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_berries(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -21872,7 +21624,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -21884,7 +21636,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21903,7 +21655,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -21917,7 +21669,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -21936,7 +21688,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -21950,7 +21702,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -21960,7 +21712,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -21988,7 +21740,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -22004,7 +21756,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22016,14 +21768,14 @@ impl<'mc> CaveVinesPlant<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22033,7 +21785,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -22047,7 +21799,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -22059,7 +21811,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22094,7 +21846,7 @@ impl<'mc> CaveVinesPlant<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -22106,7 +21858,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22136,7 +21888,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -22148,7 +21900,7 @@ impl<'mc> CaveVinesPlant<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22184,12 +21936,8 @@ impl<'mc> Light<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Light from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Light") {
+        let (valid, name) = env.validate_name(&obj, "Light")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Light object, got {}",
                 name
@@ -22207,21 +21955,21 @@ impl<'mc> Light<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLevel", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn maximum_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumLevel", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -22233,7 +21981,7 @@ impl<'mc> Light<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22252,7 +22000,7 @@ impl<'mc> Light<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -22266,7 +22014,7 @@ impl<'mc> Light<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22285,7 +22033,7 @@ impl<'mc> Light<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -22299,7 +22047,7 @@ impl<'mc> Light<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -22309,7 +22057,7 @@ impl<'mc> Light<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22337,7 +22085,7 @@ impl<'mc> Light<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -22353,7 +22101,7 @@ impl<'mc> Light<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22365,14 +22113,14 @@ impl<'mc> Light<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22382,7 +22130,7 @@ impl<'mc> Light<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -22396,7 +22144,7 @@ impl<'mc> Light<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -22408,7 +22156,7 @@ impl<'mc> Light<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22443,7 +22191,7 @@ impl<'mc> Light<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -22455,7 +22203,7 @@ impl<'mc> Light<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22485,7 +22233,7 @@ impl<'mc> Light<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -22497,7 +22245,7 @@ impl<'mc> Light<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22509,7 +22257,7 @@ impl<'mc> Light<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -22521,7 +22269,7 @@ impl<'mc> Light<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -22557,12 +22305,8 @@ impl<'mc> SmallDripleaf<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SmallDripleaf from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SmallDripleaf") {
+        let (valid, name) = env.validate_name(&obj, "SmallDripleaf")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SmallDripleaf object, got {}",
                 name
@@ -22581,7 +22325,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22611,7 +22355,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -22623,7 +22367,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22642,7 +22386,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -22656,7 +22400,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22675,7 +22419,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -22689,7 +22433,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -22699,7 +22443,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22727,7 +22471,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -22743,7 +22487,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22755,14 +22499,14 @@ impl<'mc> SmallDripleaf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22772,7 +22516,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -22786,7 +22530,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -22798,7 +22542,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22833,7 +22577,7 @@ impl<'mc> SmallDripleaf<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -22845,7 +22589,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -22875,7 +22619,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -22887,7 +22631,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22899,7 +22643,7 @@ impl<'mc> SmallDripleaf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -22911,7 +22655,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn half(
@@ -22923,7 +22667,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "()Lorg/bukkit/block/data/Bisected$Half;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BisectedHalf(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -22942,7 +22686,7 @@ impl<'mc> SmallDripleaf<'mc> {
             "(Lorg/bukkit/block/data/Bisected$Half;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -22978,12 +22722,8 @@ impl<'mc> TrapDoor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TrapDoor from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TrapDoor") {
+        let (valid, name) = env.validate_name(&obj, "TrapDoor")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TrapDoor object, got {}",
                 name
@@ -23002,7 +22742,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/block/data/Bisected$Half;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BisectedHalf(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23021,7 +22761,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/block/data/Bisected$Half;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -23033,7 +22773,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23052,7 +22792,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -23066,7 +22806,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23085,7 +22825,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -23099,7 +22839,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -23109,7 +22849,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23137,7 +22877,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -23153,7 +22893,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23165,14 +22905,14 @@ impl<'mc> TrapDoor<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23182,7 +22922,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -23196,7 +22936,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -23208,7 +22948,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23243,7 +22983,7 @@ impl<'mc> TrapDoor<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -23255,7 +22995,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23285,7 +23025,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -23297,7 +23037,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23314,7 +23054,7 @@ impl<'mc> TrapDoor<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23344,14 +23084,14 @@ impl<'mc> TrapDoor<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOpen", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -23363,14 +23103,14 @@ impl<'mc> TrapDoor<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -23382,14 +23122,14 @@ impl<'mc> TrapDoor<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -23401,7 +23141,7 @@ impl<'mc> TrapDoor<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -23452,12 +23192,8 @@ impl<'mc> Grindstone<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Grindstone from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Grindstone") {
+        let (valid, name) = env.validate_name(&obj, "Grindstone")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Grindstone object, got {}",
                 name
@@ -23476,7 +23212,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23506,7 +23242,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -23518,7 +23254,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23537,7 +23273,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -23551,7 +23287,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23570,7 +23306,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -23584,7 +23320,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -23594,7 +23330,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23622,7 +23358,7 @@ impl<'mc> Grindstone<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -23638,7 +23374,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23650,14 +23386,14 @@ impl<'mc> Grindstone<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23667,7 +23403,7 @@ impl<'mc> Grindstone<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -23681,7 +23417,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -23693,7 +23429,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23728,7 +23464,7 @@ impl<'mc> Grindstone<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -23740,7 +23476,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -23770,7 +23506,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -23782,7 +23518,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23802,7 +23538,7 @@ impl<'mc> Grindstone<'mc> {
             "()Lorg/bukkit/block/data/FaceAttachable$AttachedFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::FaceAttachableAttachedFace(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -23821,7 +23557,7 @@ impl<'mc> Grindstone<'mc> {
             "(Lorg/bukkit/block/data/FaceAttachable$AttachedFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -23868,12 +23604,8 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             )
             .into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("PointedDripstoneThickness") {
+        let (valid, name) = env.validate_name(&obj, "PointedDripstoneThickness")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PointedDripstoneThickness object, got {}",
                 name
@@ -23906,7 +23638,7 @@ impl<'mc> PointedDripstoneThickness<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -23924,14 +23656,14 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -23942,7 +23674,7 @@ impl<'mc> PointedDripstoneThickness<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -23956,7 +23688,7 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -23968,7 +23700,7 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -23980,14 +23712,14 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -24006,28 +23738,28 @@ impl<'mc> PointedDripstoneThickness<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -24044,12 +23776,8 @@ impl<'mc> Beehive<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Beehive from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Beehive") {
+        let (valid, name) = env.validate_name(&obj, "Beehive")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Beehive object, got {}",
                 name
@@ -24063,14 +23791,14 @@ impl<'mc> Beehive<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaximumHoneyLevel", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn honey_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getHoneyLevel", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_honey_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -24081,7 +23809,7 @@ impl<'mc> Beehive<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -24093,7 +23821,7 @@ impl<'mc> Beehive<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24123,7 +23851,7 @@ impl<'mc> Beehive<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -24135,7 +23863,7 @@ impl<'mc> Beehive<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24154,7 +23882,7 @@ impl<'mc> Beehive<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -24168,7 +23896,7 @@ impl<'mc> Beehive<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24187,7 +23915,7 @@ impl<'mc> Beehive<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -24201,7 +23929,7 @@ impl<'mc> Beehive<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -24211,7 +23939,7 @@ impl<'mc> Beehive<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24239,7 +23967,7 @@ impl<'mc> Beehive<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -24255,7 +23983,7 @@ impl<'mc> Beehive<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24267,14 +23995,14 @@ impl<'mc> Beehive<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24284,7 +24012,7 @@ impl<'mc> Beehive<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -24298,7 +24026,7 @@ impl<'mc> Beehive<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -24310,7 +24038,7 @@ impl<'mc> Beehive<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24345,7 +24073,7 @@ impl<'mc> Beehive<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -24357,7 +24085,7 @@ impl<'mc> Beehive<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24387,7 +24115,7 @@ impl<'mc> Beehive<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -24399,7 +24127,7 @@ impl<'mc> Beehive<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24435,12 +24163,8 @@ impl<'mc> CoralWallFan<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CoralWallFan from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("CoralWallFan") {
+        let (valid, name) = env.validate_name(&obj, "CoralWallFan")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CoralWallFan object, got {}",
                 name
@@ -24459,7 +24183,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24489,7 +24213,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -24501,7 +24225,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24520,7 +24244,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -24534,7 +24258,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24553,7 +24277,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -24567,7 +24291,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -24577,7 +24301,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24605,7 +24329,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -24621,7 +24345,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24633,14 +24357,14 @@ impl<'mc> CoralWallFan<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24650,7 +24374,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -24664,7 +24388,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -24676,7 +24400,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24711,7 +24435,7 @@ impl<'mc> CoralWallFan<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -24723,7 +24447,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24753,7 +24477,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -24765,7 +24489,7 @@ impl<'mc> CoralWallFan<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24777,7 +24501,7 @@ impl<'mc> CoralWallFan<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -24789,7 +24513,7 @@ impl<'mc> CoralWallFan<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -24825,12 +24549,8 @@ impl<'mc> SculkVein<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SculkVein from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SculkVein") {
+        let (valid, name) = env.validate_name(&obj, "SculkVein")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SculkVein object, got {}",
                 name
@@ -24857,7 +24577,7 @@ impl<'mc> SculkVein<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn has_face(
@@ -24871,7 +24591,7 @@ impl<'mc> SculkVein<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn clone(
@@ -24883,7 +24603,7 @@ impl<'mc> SculkVein<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24902,7 +24622,7 @@ impl<'mc> SculkVein<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -24916,7 +24636,7 @@ impl<'mc> SculkVein<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -24935,7 +24655,7 @@ impl<'mc> SculkVein<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -24949,7 +24669,7 @@ impl<'mc> SculkVein<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -24959,7 +24679,7 @@ impl<'mc> SculkVein<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -24987,7 +24707,7 @@ impl<'mc> SculkVein<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -25003,7 +24723,7 @@ impl<'mc> SculkVein<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25015,14 +24735,14 @@ impl<'mc> SculkVein<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25032,7 +24752,7 @@ impl<'mc> SculkVein<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -25046,7 +24766,7 @@ impl<'mc> SculkVein<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -25058,7 +24778,7 @@ impl<'mc> SculkVein<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -25093,7 +24813,7 @@ impl<'mc> SculkVein<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -25105,7 +24825,7 @@ impl<'mc> SculkVein<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -25135,7 +24855,7 @@ impl<'mc> SculkVein<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -25147,7 +24867,7 @@ impl<'mc> SculkVein<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25159,7 +24879,7 @@ impl<'mc> SculkVein<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -25171,7 +24891,7 @@ impl<'mc> SculkVein<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -25215,12 +24935,8 @@ impl<'mc> SlabType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SlabType from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SlabType") {
+        let (valid, name) = env.validate_name(&obj, "SlabType")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SlabType object, got {}",
                 name
@@ -25253,7 +24969,7 @@ impl<'mc> SlabType<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -25271,14 +24987,14 @@ impl<'mc> SlabType<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -25289,7 +25005,7 @@ impl<'mc> SlabType<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -25303,7 +25019,7 @@ impl<'mc> SlabType<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -25315,7 +25031,7 @@ impl<'mc> SlabType<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -25327,14 +25043,14 @@ impl<'mc> SlabType<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -25353,28 +25069,28 @@ impl<'mc> SlabType<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -25391,12 +25107,8 @@ impl<'mc> Tripwire<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Tripwire from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Tripwire") {
+        let (valid, name) = env.validate_name(&obj, "Tripwire")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Tripwire object, got {}",
                 name
@@ -25410,7 +25122,7 @@ impl<'mc> Tripwire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDisarmed", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_disarmed(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -25422,14 +25134,14 @@ impl<'mc> Tripwire<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_attached(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAttached", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_attached(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -25441,7 +25153,7 @@ impl<'mc> Tripwire<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -25453,7 +25165,7 @@ impl<'mc> Tripwire<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25472,7 +25184,7 @@ impl<'mc> Tripwire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -25486,7 +25198,7 @@ impl<'mc> Tripwire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25505,7 +25217,7 @@ impl<'mc> Tripwire<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -25519,7 +25231,7 @@ impl<'mc> Tripwire<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -25529,7 +25241,7 @@ impl<'mc> Tripwire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -25557,7 +25269,7 @@ impl<'mc> Tripwire<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -25573,7 +25285,7 @@ impl<'mc> Tripwire<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25585,14 +25297,14 @@ impl<'mc> Tripwire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25602,7 +25314,7 @@ impl<'mc> Tripwire<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -25616,7 +25328,7 @@ impl<'mc> Tripwire<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -25628,7 +25340,7 @@ impl<'mc> Tripwire<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -25663,7 +25375,7 @@ impl<'mc> Tripwire<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -25675,7 +25387,7 @@ impl<'mc> Tripwire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -25705,7 +25417,7 @@ impl<'mc> Tripwire<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -25717,7 +25429,7 @@ impl<'mc> Tripwire<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25742,7 +25454,7 @@ impl<'mc> Tripwire<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn has_face(
@@ -25756,14 +25468,14 @@ impl<'mc> Tripwire<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -25775,7 +25487,7 @@ impl<'mc> Tripwire<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -25816,12 +25528,8 @@ impl<'mc> Wall<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Wall from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Wall") {
+        let (valid, name) = env.validate_name(&obj, "Wall")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Wall object, got {}",
                 name
@@ -25843,7 +25551,7 @@ impl<'mc> Wall<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Lorg/bukkit/block/data/type/Wall$Height;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::WallHeight(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25855,7 +25563,7 @@ impl<'mc> Wall<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isUp", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_up(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -25867,7 +25575,7 @@ impl<'mc> Wall<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn set_height(
@@ -25886,14 +25594,14 @@ impl<'mc> Wall<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -25905,7 +25613,7 @@ impl<'mc> Wall<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -25917,7 +25625,7 @@ impl<'mc> Wall<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25936,7 +25644,7 @@ impl<'mc> Wall<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -25950,7 +25658,7 @@ impl<'mc> Wall<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -25969,7 +25677,7 @@ impl<'mc> Wall<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -25983,7 +25691,7 @@ impl<'mc> Wall<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -25993,7 +25701,7 @@ impl<'mc> Wall<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26021,7 +25729,7 @@ impl<'mc> Wall<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -26037,7 +25745,7 @@ impl<'mc> Wall<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26049,14 +25757,14 @@ impl<'mc> Wall<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -26066,7 +25774,7 @@ impl<'mc> Wall<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -26080,7 +25788,7 @@ impl<'mc> Wall<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -26092,7 +25800,7 @@ impl<'mc> Wall<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26127,7 +25835,7 @@ impl<'mc> Wall<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -26139,7 +25847,7 @@ impl<'mc> Wall<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26169,7 +25877,7 @@ impl<'mc> Wall<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -26181,7 +25889,7 @@ impl<'mc> Wall<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26225,12 +25933,8 @@ impl<'mc> StairsShape<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate StairsShape from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("StairsShape") {
+        let (valid, name) = env.validate_name(&obj, "StairsShape")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StairsShape object, got {}",
                 name
@@ -26263,7 +25967,7 @@ impl<'mc> StairsShape<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -26281,14 +25985,14 @@ impl<'mc> StairsShape<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -26299,7 +26003,7 @@ impl<'mc> StairsShape<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -26313,7 +26017,7 @@ impl<'mc> StairsShape<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -26325,7 +26029,7 @@ impl<'mc> StairsShape<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -26337,14 +26041,14 @@ impl<'mc> StairsShape<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -26363,28 +26067,28 @@ impl<'mc> StairsShape<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -26401,12 +26105,8 @@ impl<'mc> Farmland<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Farmland from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Farmland") {
+        let (valid, name) = env.validate_name(&obj, "Farmland")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Farmland object, got {}",
                 name
@@ -26420,7 +26120,7 @@ impl<'mc> Farmland<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMoisture", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_moisture(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -26431,14 +26131,14 @@ impl<'mc> Farmland<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_moisture(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumMoisture", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -26450,7 +26150,7 @@ impl<'mc> Farmland<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26469,7 +26169,7 @@ impl<'mc> Farmland<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -26483,7 +26183,7 @@ impl<'mc> Farmland<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26502,7 +26202,7 @@ impl<'mc> Farmland<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -26516,7 +26216,7 @@ impl<'mc> Farmland<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -26526,7 +26226,7 @@ impl<'mc> Farmland<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26554,7 +26254,7 @@ impl<'mc> Farmland<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -26570,7 +26270,7 @@ impl<'mc> Farmland<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26582,14 +26282,14 @@ impl<'mc> Farmland<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -26599,7 +26299,7 @@ impl<'mc> Farmland<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -26613,7 +26313,7 @@ impl<'mc> Farmland<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -26625,7 +26325,7 @@ impl<'mc> Farmland<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26660,7 +26360,7 @@ impl<'mc> Farmland<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -26672,7 +26372,7 @@ impl<'mc> Farmland<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26702,7 +26402,7 @@ impl<'mc> Farmland<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -26714,7 +26414,7 @@ impl<'mc> Farmland<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26750,12 +26450,8 @@ impl<'mc> Gate<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Gate from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Gate") {
+        let (valid, name) = env.validate_name(&obj, "Gate")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Gate object, got {}",
                 name
@@ -26769,7 +26465,7 @@ impl<'mc> Gate<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isInWall", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_in_wall(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -26781,7 +26477,7 @@ impl<'mc> Gate<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -26793,7 +26489,7 @@ impl<'mc> Gate<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26823,7 +26519,7 @@ impl<'mc> Gate<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -26835,7 +26531,7 @@ impl<'mc> Gate<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26854,7 +26550,7 @@ impl<'mc> Gate<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -26868,7 +26564,7 @@ impl<'mc> Gate<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26887,7 +26583,7 @@ impl<'mc> Gate<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -26901,7 +26597,7 @@ impl<'mc> Gate<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -26911,7 +26607,7 @@ impl<'mc> Gate<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -26939,7 +26635,7 @@ impl<'mc> Gate<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -26955,7 +26651,7 @@ impl<'mc> Gate<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -26967,14 +26663,14 @@ impl<'mc> Gate<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -26984,7 +26680,7 @@ impl<'mc> Gate<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -26998,7 +26694,7 @@ impl<'mc> Gate<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -27010,7 +26706,7 @@ impl<'mc> Gate<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -27045,7 +26741,7 @@ impl<'mc> Gate<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -27057,7 +26753,7 @@ impl<'mc> Gate<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -27087,7 +26783,7 @@ impl<'mc> Gate<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -27099,7 +26795,7 @@ impl<'mc> Gate<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27111,7 +26807,7 @@ impl<'mc> Gate<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOpen", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -27123,14 +26819,14 @@ impl<'mc> Gate<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -27142,7 +26838,7 @@ impl<'mc> Gate<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -27191,12 +26887,8 @@ impl<'mc> SwitchFace<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SwitchFace from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SwitchFace") {
+        let (valid, name) = env.validate_name(&obj, "SwitchFace")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SwitchFace object, got {}",
                 name
@@ -27229,7 +26921,7 @@ impl<'mc> SwitchFace<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -27247,14 +26939,14 @@ impl<'mc> SwitchFace<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -27265,7 +26957,7 @@ impl<'mc> SwitchFace<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -27279,7 +26971,7 @@ impl<'mc> SwitchFace<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -27291,7 +26983,7 @@ impl<'mc> SwitchFace<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -27303,14 +26995,14 @@ impl<'mc> SwitchFace<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -27329,28 +27021,28 @@ impl<'mc> SwitchFace<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -27367,12 +27059,8 @@ impl<'mc> SculkShrieker<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SculkShrieker from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SculkShrieker") {
+        let (valid, name) = env.validate_name(&obj, "SculkShrieker")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SculkShrieker object, got {}",
                 name
@@ -27386,7 +27074,7 @@ impl<'mc> SculkShrieker<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCanSummon", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_can_summon(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -27398,14 +27086,14 @@ impl<'mc> SculkShrieker<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_shrieking(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isShrieking", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_shrieking(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -27417,14 +27105,14 @@ impl<'mc> SculkShrieker<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -27436,7 +27124,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -27448,7 +27136,7 @@ impl<'mc> SculkShrieker<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27467,7 +27155,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -27481,7 +27169,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27500,7 +27188,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -27514,7 +27202,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -27524,7 +27212,7 @@ impl<'mc> SculkShrieker<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -27552,7 +27240,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -27568,7 +27256,7 @@ impl<'mc> SculkShrieker<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27580,14 +27268,14 @@ impl<'mc> SculkShrieker<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27597,7 +27285,7 @@ impl<'mc> SculkShrieker<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -27611,7 +27299,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -27623,7 +27311,7 @@ impl<'mc> SculkShrieker<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -27658,7 +27346,7 @@ impl<'mc> SculkShrieker<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -27670,7 +27358,7 @@ impl<'mc> SculkShrieker<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -27700,7 +27388,7 @@ impl<'mc> SculkShrieker<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -27712,7 +27400,7 @@ impl<'mc> SculkShrieker<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27748,12 +27436,8 @@ impl<'mc> Leaves<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Leaves from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Leaves") {
+        let (valid, name) = env.validate_name(&obj, "Leaves")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Leaves object, got {}",
                 name
@@ -27767,7 +27451,7 @@ impl<'mc> Leaves<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPersistent", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_persistent(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -27779,14 +27463,14 @@ impl<'mc> Leaves<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getDistance", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_distance(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -27797,14 +27481,14 @@ impl<'mc> Leaves<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -27816,7 +27500,7 @@ impl<'mc> Leaves<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -27828,7 +27512,7 @@ impl<'mc> Leaves<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27847,7 +27531,7 @@ impl<'mc> Leaves<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -27861,7 +27545,7 @@ impl<'mc> Leaves<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27880,7 +27564,7 @@ impl<'mc> Leaves<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -27894,7 +27578,7 @@ impl<'mc> Leaves<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -27904,7 +27588,7 @@ impl<'mc> Leaves<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -27932,7 +27616,7 @@ impl<'mc> Leaves<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -27948,7 +27632,7 @@ impl<'mc> Leaves<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -27960,14 +27644,14 @@ impl<'mc> Leaves<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27977,7 +27661,7 @@ impl<'mc> Leaves<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -27991,7 +27675,7 @@ impl<'mc> Leaves<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -28003,7 +27687,7 @@ impl<'mc> Leaves<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28038,7 +27722,7 @@ impl<'mc> Leaves<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -28050,7 +27734,7 @@ impl<'mc> Leaves<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28080,7 +27764,7 @@ impl<'mc> Leaves<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -28092,7 +27776,7 @@ impl<'mc> Leaves<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28128,12 +27812,8 @@ impl<'mc> Campfire<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Campfire from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Campfire") {
+        let (valid, name) = env.validate_name(&obj, "Campfire")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Campfire object, got {}",
                 name
@@ -28147,7 +27827,7 @@ impl<'mc> Campfire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isSignalFire", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_signal_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -28159,7 +27839,7 @@ impl<'mc> Campfire<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -28171,7 +27851,7 @@ impl<'mc> Campfire<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28201,7 +27881,7 @@ impl<'mc> Campfire<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -28213,7 +27893,7 @@ impl<'mc> Campfire<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28232,7 +27912,7 @@ impl<'mc> Campfire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -28246,7 +27926,7 @@ impl<'mc> Campfire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28265,7 +27945,7 @@ impl<'mc> Campfire<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -28279,7 +27959,7 @@ impl<'mc> Campfire<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -28289,7 +27969,7 @@ impl<'mc> Campfire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28317,7 +27997,7 @@ impl<'mc> Campfire<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -28333,7 +28013,7 @@ impl<'mc> Campfire<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28345,14 +28025,14 @@ impl<'mc> Campfire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -28362,7 +28042,7 @@ impl<'mc> Campfire<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -28376,7 +28056,7 @@ impl<'mc> Campfire<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -28388,7 +28068,7 @@ impl<'mc> Campfire<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28423,7 +28103,7 @@ impl<'mc> Campfire<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -28435,7 +28115,7 @@ impl<'mc> Campfire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28465,7 +28145,7 @@ impl<'mc> Campfire<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -28477,7 +28157,7 @@ impl<'mc> Campfire<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28489,7 +28169,7 @@ impl<'mc> Campfire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isLit", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_lit(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -28501,14 +28181,14 @@ impl<'mc> Campfire<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -28520,7 +28200,7 @@ impl<'mc> Campfire<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -28561,12 +28241,8 @@ impl<'mc> Dripleaf<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Dripleaf from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Dripleaf") {
+        let (valid, name) = env.validate_name(&obj, "Dripleaf")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Dripleaf object, got {}",
                 name
@@ -28585,7 +28261,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28615,7 +28291,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -28627,7 +28303,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28646,7 +28322,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -28660,7 +28336,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28679,7 +28355,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -28693,7 +28369,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -28703,7 +28379,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28731,7 +28407,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -28747,7 +28423,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28759,14 +28435,14 @@ impl<'mc> Dripleaf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -28776,7 +28452,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -28790,7 +28466,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -28802,7 +28478,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28837,7 +28513,7 @@ impl<'mc> Dripleaf<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -28849,7 +28525,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -28879,7 +28555,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -28891,7 +28567,7 @@ impl<'mc> Dripleaf<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -28903,7 +28579,7 @@ impl<'mc> Dripleaf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -28915,7 +28591,7 @@ impl<'mc> Dripleaf<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -28951,12 +28627,8 @@ impl<'mc> SeaPickle<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SeaPickle from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("SeaPickle") {
+        let (valid, name) = env.validate_name(&obj, "SeaPickle")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SeaPickle object, got {}",
                 name
@@ -28970,7 +28642,7 @@ impl<'mc> SeaPickle<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPickles", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_pickles(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -28981,28 +28653,28 @@ impl<'mc> SeaPickle<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn minimum_pickles(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMinimumPickles", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn maximum_pickles(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumPickles", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -29014,7 +28686,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -29026,7 +28698,7 @@ impl<'mc> SeaPickle<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29045,7 +28717,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -29059,7 +28731,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29078,7 +28750,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -29092,7 +28764,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -29102,7 +28774,7 @@ impl<'mc> SeaPickle<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -29130,7 +28802,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -29146,7 +28818,7 @@ impl<'mc> SeaPickle<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29158,14 +28830,14 @@ impl<'mc> SeaPickle<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -29175,7 +28847,7 @@ impl<'mc> SeaPickle<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -29189,7 +28861,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -29201,7 +28873,7 @@ impl<'mc> SeaPickle<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -29236,7 +28908,7 @@ impl<'mc> SeaPickle<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -29248,7 +28920,7 @@ impl<'mc> SeaPickle<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -29278,7 +28950,7 @@ impl<'mc> SeaPickle<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -29290,7 +28962,7 @@ impl<'mc> SeaPickle<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29328,12 +29000,8 @@ impl<'mc> RedstoneWallTorch<'mc> {
                 eyre::eyre!("Tried to instantiate RedstoneWallTorch from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("RedstoneWallTorch") {
+        let (valid, name) = env.validate_name(&obj, "RedstoneWallTorch")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RedstoneWallTorch object, got {}",
                 name
@@ -29352,7 +29020,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -29382,7 +29050,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -29394,7 +29062,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29413,7 +29081,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -29427,7 +29095,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29446,7 +29114,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -29460,7 +29128,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -29470,7 +29138,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -29498,7 +29166,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -29514,7 +29182,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29526,14 +29194,14 @@ impl<'mc> RedstoneWallTorch<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -29543,7 +29211,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -29557,7 +29225,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -29569,7 +29237,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -29604,7 +29272,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -29616,7 +29284,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -29646,7 +29314,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -29658,7 +29326,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29670,7 +29338,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isLit", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_lit(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -29682,7 +29350,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -29726,12 +29394,8 @@ impl<'mc> BedPart<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BedPart from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BedPart") {
+        let (valid, name) = env.validate_name(&obj, "BedPart")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BedPart object, got {}",
                 name
@@ -29764,7 +29428,7 @@ impl<'mc> BedPart<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -29782,14 +29446,14 @@ impl<'mc> BedPart<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -29800,7 +29464,7 @@ impl<'mc> BedPart<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -29814,7 +29478,7 @@ impl<'mc> BedPart<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -29826,7 +29490,7 @@ impl<'mc> BedPart<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -29838,14 +29502,14 @@ impl<'mc> BedPart<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -29864,28 +29528,28 @@ impl<'mc> BedPart<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -29902,12 +29566,8 @@ impl<'mc> RedstoneWire<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RedstoneWire from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("RedstoneWire") {
+        let (valid, name) = env.validate_name(&obj, "RedstoneWire")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RedstoneWire object, got {}",
                 name
@@ -29931,7 +29591,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Lorg/bukkit/block/BlockFace;)Lorg/bukkit/block/data/type/RedstoneWire$Connection;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::RedstoneWireConnection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -29955,14 +29615,14 @@ impl<'mc> RedstoneWire<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_power(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -29973,14 +29633,14 @@ impl<'mc> RedstoneWire<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumPower", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -29992,7 +29652,7 @@ impl<'mc> RedstoneWire<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30011,7 +29671,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -30025,7 +29685,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30044,7 +29704,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -30058,7 +29718,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -30068,7 +29728,7 @@ impl<'mc> RedstoneWire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30096,7 +29756,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -30112,7 +29772,7 @@ impl<'mc> RedstoneWire<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30124,14 +29784,14 @@ impl<'mc> RedstoneWire<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30141,7 +29801,7 @@ impl<'mc> RedstoneWire<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -30155,7 +29815,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -30167,7 +29827,7 @@ impl<'mc> RedstoneWire<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30202,7 +29862,7 @@ impl<'mc> RedstoneWire<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -30214,7 +29874,7 @@ impl<'mc> RedstoneWire<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30244,7 +29904,7 @@ impl<'mc> RedstoneWire<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -30256,7 +29916,7 @@ impl<'mc> RedstoneWire<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30292,12 +29952,8 @@ impl<'mc> WallSign<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WallSign from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("WallSign") {
+        let (valid, name) = env.validate_name(&obj, "WallSign")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WallSign object, got {}",
                 name
@@ -30316,7 +29972,7 @@ impl<'mc> WallSign<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30346,7 +30002,7 @@ impl<'mc> WallSign<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -30358,7 +30014,7 @@ impl<'mc> WallSign<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30377,7 +30033,7 @@ impl<'mc> WallSign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -30391,7 +30047,7 @@ impl<'mc> WallSign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30410,7 +30066,7 @@ impl<'mc> WallSign<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -30424,7 +30080,7 @@ impl<'mc> WallSign<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -30434,7 +30090,7 @@ impl<'mc> WallSign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30462,7 +30118,7 @@ impl<'mc> WallSign<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -30478,7 +30134,7 @@ impl<'mc> WallSign<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30490,14 +30146,14 @@ impl<'mc> WallSign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30507,7 +30163,7 @@ impl<'mc> WallSign<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -30521,7 +30177,7 @@ impl<'mc> WallSign<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -30533,7 +30189,7 @@ impl<'mc> WallSign<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30568,7 +30224,7 @@ impl<'mc> WallSign<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -30580,7 +30236,7 @@ impl<'mc> WallSign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30610,7 +30266,7 @@ impl<'mc> WallSign<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -30622,7 +30278,7 @@ impl<'mc> WallSign<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30634,7 +30290,7 @@ impl<'mc> WallSign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -30646,7 +30302,7 @@ impl<'mc> WallSign<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -30682,12 +30338,8 @@ impl<'mc> Jukebox<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Jukebox from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Jukebox") {
+        let (valid, name) = env.validate_name(&obj, "Jukebox")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Jukebox object, got {}",
                 name
@@ -30701,7 +30353,7 @@ impl<'mc> Jukebox<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasRecord", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn clone(
@@ -30713,7 +30365,7 @@ impl<'mc> Jukebox<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30732,7 +30384,7 @@ impl<'mc> Jukebox<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -30746,7 +30398,7 @@ impl<'mc> Jukebox<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30765,7 +30417,7 @@ impl<'mc> Jukebox<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -30779,7 +30431,7 @@ impl<'mc> Jukebox<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -30789,7 +30441,7 @@ impl<'mc> Jukebox<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30817,7 +30469,7 @@ impl<'mc> Jukebox<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -30833,7 +30485,7 @@ impl<'mc> Jukebox<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -30845,14 +30497,14 @@ impl<'mc> Jukebox<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30862,7 +30514,7 @@ impl<'mc> Jukebox<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -30876,7 +30528,7 @@ impl<'mc> Jukebox<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -30888,7 +30540,7 @@ impl<'mc> Jukebox<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30923,7 +30575,7 @@ impl<'mc> Jukebox<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -30935,7 +30587,7 @@ impl<'mc> Jukebox<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -30965,7 +30617,7 @@ impl<'mc> Jukebox<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -30977,7 +30629,7 @@ impl<'mc> Jukebox<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31013,12 +30665,8 @@ impl<'mc> Barrel<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Barrel from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Barrel") {
+        let (valid, name) = env.validate_name(&obj, "Barrel")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Barrel object, got {}",
                 name
@@ -31037,7 +30685,7 @@ impl<'mc> Barrel<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31067,7 +30715,7 @@ impl<'mc> Barrel<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -31079,7 +30727,7 @@ impl<'mc> Barrel<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31098,7 +30746,7 @@ impl<'mc> Barrel<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -31112,7 +30760,7 @@ impl<'mc> Barrel<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31131,7 +30779,7 @@ impl<'mc> Barrel<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -31145,7 +30793,7 @@ impl<'mc> Barrel<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -31155,7 +30803,7 @@ impl<'mc> Barrel<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31183,7 +30831,7 @@ impl<'mc> Barrel<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -31199,7 +30847,7 @@ impl<'mc> Barrel<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31211,14 +30859,14 @@ impl<'mc> Barrel<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -31228,7 +30876,7 @@ impl<'mc> Barrel<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -31242,7 +30890,7 @@ impl<'mc> Barrel<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -31254,7 +30902,7 @@ impl<'mc> Barrel<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31289,7 +30937,7 @@ impl<'mc> Barrel<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -31301,7 +30949,7 @@ impl<'mc> Barrel<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31331,7 +30979,7 @@ impl<'mc> Barrel<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -31343,7 +30991,7 @@ impl<'mc> Barrel<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31355,7 +31003,7 @@ impl<'mc> Barrel<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOpen", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -31367,7 +31015,7 @@ impl<'mc> Barrel<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -31403,12 +31051,8 @@ impl<'mc> CommandBlock<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CommandBlock from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("CommandBlock") {
+        let (valid, name) = env.validate_name(&obj, "CommandBlock")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CommandBlock object, got {}",
                 name
@@ -31422,7 +31066,7 @@ impl<'mc> CommandBlock<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isConditional", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_conditional(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -31434,7 +31078,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn facing(
@@ -31446,7 +31090,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31476,7 +31120,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -31488,7 +31132,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31507,7 +31151,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -31521,7 +31165,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31540,7 +31184,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -31554,7 +31198,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -31564,7 +31208,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31592,7 +31236,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -31608,7 +31252,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31620,14 +31264,14 @@ impl<'mc> CommandBlock<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -31637,7 +31281,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -31651,7 +31295,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -31663,7 +31307,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31698,7 +31342,7 @@ impl<'mc> CommandBlock<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -31710,7 +31354,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31740,7 +31384,7 @@ impl<'mc> CommandBlock<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -31752,7 +31396,7 @@ impl<'mc> CommandBlock<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31788,12 +31432,8 @@ impl<'mc> Door<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Door from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Door") {
+        let (valid, name) = env.validate_name(&obj, "Door")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Door object, got {}",
                 name
@@ -31813,7 +31453,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/block/data/type/Door$Hinge;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::DoorHinge(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31832,7 +31472,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/data/type/Door$Hinge;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn half(
@@ -31844,7 +31484,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/block/data/Bisected$Half;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BisectedHalf(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31863,7 +31503,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/data/Bisected$Half;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -31875,7 +31515,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31894,7 +31534,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -31908,7 +31548,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -31927,7 +31567,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -31941,7 +31581,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -31951,7 +31591,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -31979,7 +31619,7 @@ impl<'mc> Door<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -31995,7 +31635,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32007,14 +31647,14 @@ impl<'mc> Door<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -32024,7 +31664,7 @@ impl<'mc> Door<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -32038,7 +31678,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -32050,7 +31690,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32085,7 +31725,7 @@ impl<'mc> Door<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -32097,7 +31737,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32127,7 +31767,7 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -32139,7 +31779,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32156,7 +31796,7 @@ impl<'mc> Door<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32186,14 +31826,14 @@ impl<'mc> Door<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOpen", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -32205,14 +31845,14 @@ impl<'mc> Door<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -32224,7 +31864,7 @@ impl<'mc> Door<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -32272,12 +31912,8 @@ impl<'mc> ChiseledBookshelf<'mc> {
                 eyre::eyre!("Tried to instantiate ChiseledBookshelf from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("ChiseledBookshelf") {
+        let (valid, name) = env.validate_name(&obj, "ChiseledBookshelf")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ChiseledBookshelf object, got {}",
                 name
@@ -32295,7 +31931,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(I)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_slot_occupied(
@@ -32315,14 +31951,14 @@ impl<'mc> ChiseledBookshelf<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_occupied_slots(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMaximumOccupiedSlots", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn facing(
@@ -32334,7 +31970,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32364,7 +32000,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -32376,7 +32012,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32395,7 +32031,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -32409,7 +32045,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32428,7 +32064,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -32442,7 +32078,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -32452,7 +32088,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32480,7 +32116,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -32496,7 +32132,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32508,14 +32144,14 @@ impl<'mc> ChiseledBookshelf<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -32525,7 +32161,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -32539,7 +32175,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -32551,7 +32187,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32586,7 +32222,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -32598,7 +32234,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32628,7 +32264,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -32640,7 +32276,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32676,12 +32312,8 @@ impl<'mc> HangingSign<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate HangingSign from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("HangingSign") {
+        let (valid, name) = env.validate_name(&obj, "HangingSign")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a HangingSign object, got {}",
                 name
@@ -32695,7 +32327,7 @@ impl<'mc> HangingSign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAttached", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_attached(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -32707,7 +32339,7 @@ impl<'mc> HangingSign<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -32719,7 +32351,7 @@ impl<'mc> HangingSign<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32738,7 +32370,7 @@ impl<'mc> HangingSign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -32752,7 +32384,7 @@ impl<'mc> HangingSign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32771,7 +32403,7 @@ impl<'mc> HangingSign<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -32785,7 +32417,7 @@ impl<'mc> HangingSign<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -32795,7 +32427,7 @@ impl<'mc> HangingSign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32823,7 +32455,7 @@ impl<'mc> HangingSign<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -32839,7 +32471,7 @@ impl<'mc> HangingSign<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -32851,14 +32483,14 @@ impl<'mc> HangingSign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -32868,7 +32500,7 @@ impl<'mc> HangingSign<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -32882,7 +32514,7 @@ impl<'mc> HangingSign<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -32894,7 +32526,7 @@ impl<'mc> HangingSign<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32929,7 +32561,7 @@ impl<'mc> HangingSign<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -32941,7 +32573,7 @@ impl<'mc> HangingSign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -32971,7 +32603,7 @@ impl<'mc> HangingSign<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -32983,7 +32615,7 @@ impl<'mc> HangingSign<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33000,7 +32632,7 @@ impl<'mc> HangingSign<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33030,14 +32662,14 @@ impl<'mc> HangingSign<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -33049,7 +32681,7 @@ impl<'mc> HangingSign<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -33090,12 +32722,8 @@ impl<'mc> Candle<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Candle from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Candle") {
+        let (valid, name) = env.validate_name(&obj, "Candle")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Candle object, got {}",
                 name
@@ -33109,7 +32737,7 @@ impl<'mc> Candle<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getCandles", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_candles(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -33120,21 +32748,21 @@ impl<'mc> Candle<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_candles(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumCandles", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_lit(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isLit", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_lit(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -33146,7 +32774,7 @@ impl<'mc> Candle<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -33158,7 +32786,7 @@ impl<'mc> Candle<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33177,7 +32805,7 @@ impl<'mc> Candle<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -33191,7 +32819,7 @@ impl<'mc> Candle<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33210,7 +32838,7 @@ impl<'mc> Candle<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -33224,7 +32852,7 @@ impl<'mc> Candle<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -33234,7 +32862,7 @@ impl<'mc> Candle<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33262,7 +32890,7 @@ impl<'mc> Candle<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -33278,7 +32906,7 @@ impl<'mc> Candle<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33290,14 +32918,14 @@ impl<'mc> Candle<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -33307,7 +32935,7 @@ impl<'mc> Candle<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -33321,7 +32949,7 @@ impl<'mc> Candle<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -33333,7 +32961,7 @@ impl<'mc> Candle<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33368,7 +32996,7 @@ impl<'mc> Candle<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -33380,7 +33008,7 @@ impl<'mc> Candle<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33410,7 +33038,7 @@ impl<'mc> Candle<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -33422,7 +33050,7 @@ impl<'mc> Candle<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33434,7 +33062,7 @@ impl<'mc> Candle<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -33446,7 +33074,7 @@ impl<'mc> Candle<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -33484,12 +33112,8 @@ impl<'mc> PointedDripstone<'mc> {
                 eyre::eyre!("Tried to instantiate PointedDripstone from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("PointedDripstone") {
+        let (valid, name) = env.validate_name(&obj, "PointedDripstone")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PointedDripstone object, got {}",
                 name
@@ -33508,7 +33132,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33538,7 +33162,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn thickness(
@@ -33553,7 +33177,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/block/data/type/PointedDripstone$Thickness;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::mod_type::PointedDripstoneThickness(
                 self.jni_ref(),
@@ -33573,14 +33197,14 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/block/data/type/PointedDripstone$Thickness;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -33592,7 +33216,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -33604,7 +33228,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33623,7 +33247,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -33637,7 +33261,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33656,7 +33280,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -33670,7 +33294,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -33680,7 +33304,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33708,7 +33332,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -33724,7 +33348,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33736,14 +33360,14 @@ impl<'mc> PointedDripstone<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -33753,7 +33377,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -33767,7 +33391,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -33779,7 +33403,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33814,7 +33438,7 @@ impl<'mc> PointedDripstone<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -33826,7 +33450,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -33856,7 +33480,7 @@ impl<'mc> PointedDripstone<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -33868,7 +33492,7 @@ impl<'mc> PointedDripstone<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -33914,12 +33538,8 @@ impl<'mc> TechnicalPistonType<'mc> {
                 eyre::eyre!("Tried to instantiate TechnicalPistonType from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TechnicalPistonType") {
+        let (valid, name) = env.validate_name(&obj, "TechnicalPistonType")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TechnicalPistonType object, got {}",
                 name
@@ -33952,7 +33572,7 @@ impl<'mc> TechnicalPistonType<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -33970,14 +33590,14 @@ impl<'mc> TechnicalPistonType<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -33988,7 +33608,7 @@ impl<'mc> TechnicalPistonType<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -34002,7 +33622,7 @@ impl<'mc> TechnicalPistonType<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -34014,7 +33634,7 @@ impl<'mc> TechnicalPistonType<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -34026,14 +33646,14 @@ impl<'mc> TechnicalPistonType<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -34052,28 +33672,28 @@ impl<'mc> TechnicalPistonType<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -34090,12 +33710,8 @@ impl<'mc> LightningRod<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate LightningRod from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("LightningRod") {
+        let (valid, name) = env.validate_name(&obj, "LightningRod")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a LightningRod object, got {}",
                 name
@@ -34114,7 +33730,7 @@ impl<'mc> LightningRod<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34144,7 +33760,7 @@ impl<'mc> LightningRod<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -34156,7 +33772,7 @@ impl<'mc> LightningRod<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34175,7 +33791,7 @@ impl<'mc> LightningRod<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -34189,7 +33805,7 @@ impl<'mc> LightningRod<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34208,7 +33824,7 @@ impl<'mc> LightningRod<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -34222,7 +33838,7 @@ impl<'mc> LightningRod<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -34232,7 +33848,7 @@ impl<'mc> LightningRod<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34260,7 +33876,7 @@ impl<'mc> LightningRod<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -34276,7 +33892,7 @@ impl<'mc> LightningRod<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34288,14 +33904,14 @@ impl<'mc> LightningRod<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -34305,7 +33921,7 @@ impl<'mc> LightningRod<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -34319,7 +33935,7 @@ impl<'mc> LightningRod<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -34331,7 +33947,7 @@ impl<'mc> LightningRod<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34366,7 +33982,7 @@ impl<'mc> LightningRod<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -34378,7 +33994,7 @@ impl<'mc> LightningRod<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34408,7 +34024,7 @@ impl<'mc> LightningRod<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -34420,7 +34036,7 @@ impl<'mc> LightningRod<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34432,7 +34048,7 @@ impl<'mc> LightningRod<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -34444,14 +34060,14 @@ impl<'mc> LightningRod<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -34463,7 +34079,7 @@ impl<'mc> LightningRod<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -34504,12 +34120,8 @@ impl<'mc> Sign<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Sign from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Sign") {
+        let (valid, name) = env.validate_name(&obj, "Sign")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Sign object, got {}",
                 name
@@ -34528,7 +34140,7 @@ impl<'mc> Sign<'mc> {
             "()Lorg/bukkit/block/BlockFace;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34558,7 +34170,7 @@ impl<'mc> Sign<'mc> {
             "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn clone(
@@ -34570,7 +34182,7 @@ impl<'mc> Sign<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34589,7 +34201,7 @@ impl<'mc> Sign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -34603,7 +34215,7 @@ impl<'mc> Sign<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34622,7 +34234,7 @@ impl<'mc> Sign<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -34636,7 +34248,7 @@ impl<'mc> Sign<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -34646,7 +34258,7 @@ impl<'mc> Sign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34674,7 +34286,7 @@ impl<'mc> Sign<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -34690,7 +34302,7 @@ impl<'mc> Sign<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34702,14 +34314,14 @@ impl<'mc> Sign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -34719,7 +34331,7 @@ impl<'mc> Sign<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -34733,7 +34345,7 @@ impl<'mc> Sign<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -34745,7 +34357,7 @@ impl<'mc> Sign<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34780,7 +34392,7 @@ impl<'mc> Sign<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -34792,7 +34404,7 @@ impl<'mc> Sign<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -34822,7 +34434,7 @@ impl<'mc> Sign<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -34834,7 +34446,7 @@ impl<'mc> Sign<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34846,7 +34458,7 @@ impl<'mc> Sign<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isWaterlogged", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -34858,7 +34470,7 @@ impl<'mc> Sign<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -34894,12 +34506,8 @@ impl<'mc> CaveVines<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CaveVines from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("CaveVines") {
+        let (valid, name) = env.validate_name(&obj, "CaveVines")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CaveVines object, got {}",
                 name
@@ -34913,7 +34521,7 @@ impl<'mc> CaveVines<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_age(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -34924,14 +34532,14 @@ impl<'mc> CaveVines<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumAge", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -34943,7 +34551,7 @@ impl<'mc> CaveVines<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34962,7 +34570,7 @@ impl<'mc> CaveVines<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -34976,7 +34584,7 @@ impl<'mc> CaveVines<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -34995,7 +34603,7 @@ impl<'mc> CaveVines<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -35009,7 +34617,7 @@ impl<'mc> CaveVines<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -35019,7 +34627,7 @@ impl<'mc> CaveVines<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -35047,7 +34655,7 @@ impl<'mc> CaveVines<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -35063,7 +34671,7 @@ impl<'mc> CaveVines<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -35075,14 +34683,14 @@ impl<'mc> CaveVines<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -35092,7 +34700,7 @@ impl<'mc> CaveVines<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -35106,7 +34714,7 @@ impl<'mc> CaveVines<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -35118,7 +34726,7 @@ impl<'mc> CaveVines<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -35153,7 +34761,7 @@ impl<'mc> CaveVines<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -35165,7 +34773,7 @@ impl<'mc> CaveVines<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -35195,7 +34803,7 @@ impl<'mc> CaveVines<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -35207,7 +34815,7 @@ impl<'mc> CaveVines<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -35219,7 +34827,7 @@ impl<'mc> CaveVines<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBerries", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_berries(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -35231,7 +34839,7 @@ impl<'mc> CaveVines<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -35276,12 +34884,8 @@ impl<'mc> BambooLeaves<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BambooLeaves from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BambooLeaves") {
+        let (valid, name) = env.validate_name(&obj, "BambooLeaves")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BambooLeaves object, got {}",
                 name
@@ -35314,7 +34918,7 @@ impl<'mc> BambooLeaves<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -35332,14 +34936,14 @@ impl<'mc> BambooLeaves<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -35350,7 +34954,7 @@ impl<'mc> BambooLeaves<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -35364,7 +34968,7 @@ impl<'mc> BambooLeaves<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -35376,7 +34980,7 @@ impl<'mc> BambooLeaves<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -35388,14 +34992,14 @@ impl<'mc> BambooLeaves<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -35414,28 +35018,28 @@ impl<'mc> BambooLeaves<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -35452,12 +35056,8 @@ impl<'mc> TurtleEgg<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TurtleEgg from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TurtleEgg") {
+        let (valid, name) = env.validate_name(&obj, "TurtleEgg")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TurtleEgg object, got {}",
                 name
@@ -35471,7 +35071,7 @@ impl<'mc> TurtleEgg<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getEggs", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_eggs(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -35482,28 +35082,28 @@ impl<'mc> TurtleEgg<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn minimum_eggs(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMinimumEggs", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn maximum_eggs(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumEggs", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn hatch(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getHatch", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_hatch(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -35514,14 +35114,14 @@ impl<'mc> TurtleEgg<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn maximum_hatch(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaximumHatch", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn clone(
@@ -35533,7 +35133,7 @@ impl<'mc> TurtleEgg<'mc> {
             "()Lorg/bukkit/block/data/BlockData;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -35552,7 +35152,7 @@ impl<'mc> TurtleEgg<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn merge(
@@ -35566,7 +35166,7 @@ impl<'mc> TurtleEgg<'mc> {
             "(Lorg/bukkit/block/data/BlockData;)Lorg/bukkit/block/data/BlockData;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::data::BlockData(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -35585,7 +35185,7 @@ impl<'mc> TurtleEgg<'mc> {
             "(Lorg/bukkit/block/structure/StructureRotation;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_supported_with_location(
@@ -35599,7 +35199,7 @@ impl<'mc> TurtleEgg<'mc> {
             "(Lorg/bukkit/block/Block;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn material(&mut self) -> Result<crate::bukkit::Material<'mc>, Box<dyn std::error::Error>> {
@@ -35609,7 +35209,7 @@ impl<'mc> TurtleEgg<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -35637,7 +35237,7 @@ impl<'mc> TurtleEgg<'mc> {
             "(Z)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -35653,7 +35253,7 @@ impl<'mc> TurtleEgg<'mc> {
             "()Lorg/bukkit/SoundGroup;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::SoundGroup(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -35665,14 +35265,14 @@ impl<'mc> TurtleEgg<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLightEmission", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isOccluding", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -35682,7 +35282,7 @@ impl<'mc> TurtleEgg<'mc> {
             "()Z",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_preferred_tool(
@@ -35696,7 +35296,7 @@ impl<'mc> TurtleEgg<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn piston_move_reaction(
@@ -35708,7 +35308,7 @@ impl<'mc> TurtleEgg<'mc> {
             "()Lorg/bukkit/block/PistonMoveReaction;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -35743,7 +35343,7 @@ impl<'mc> TurtleEgg<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn placement_material(
@@ -35755,7 +35355,7 @@ impl<'mc> TurtleEgg<'mc> {
             "()Lorg/bukkit/Material;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -35785,7 +35385,7 @@ impl<'mc> TurtleEgg<'mc> {
             "(Lorg/bukkit/block/structure/Mirror;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_block_state(
@@ -35797,7 +35397,7 @@ impl<'mc> TurtleEgg<'mc> {
             "()Lorg/bukkit/block/BlockState;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::BlockState(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())

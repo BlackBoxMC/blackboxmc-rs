@@ -41,12 +41,8 @@ impl<'mc> FileConfiguration<'mc> {
                 eyre::eyre!("Tried to instantiate FileConfiguration from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("FileConfiguration") {
+        let (valid, name) = env.validate_name(&obj, "FileConfiguration")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FileConfiguration object, got {}",
                 name
@@ -68,7 +64,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn save_with_file(
@@ -83,7 +79,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn options(
@@ -96,7 +92,7 @@ impl<'mc> FileConfiguration<'mc> {
             "()Lorg/bukkit/configuration/ConfigurationOptions;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -111,7 +107,7 @@ impl<'mc> FileConfiguration<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -129,7 +125,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn parent(
@@ -142,7 +138,7 @@ impl<'mc> FileConfiguration<'mc> {
             "()Lorg/bukkit/configuration/ConfigurationSection;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -166,7 +162,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn defaults(
@@ -178,7 +174,7 @@ impl<'mc> FileConfiguration<'mc> {
             "()Lorg/bukkit/configuration/Configuration;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -197,7 +193,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Lorg/bukkit/configuration/Configuration;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn set_defaults(
@@ -211,7 +207,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Lorg/bukkit/configuration/Configuration;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn get_string_with_string(
@@ -232,7 +228,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -243,7 +239,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -267,14 +263,14 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -299,7 +295,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_int_with_string(
@@ -319,7 +315,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn get_long_with_string(
@@ -339,7 +335,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
     pub fn get_double_with_string(
@@ -359,7 +355,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
     pub fn contains_with_string(
@@ -380,7 +376,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_location_with_string(
@@ -400,7 +396,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::Location(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -424,7 +420,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_set(
@@ -438,7 +434,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn root(
@@ -450,7 +446,7 @@ impl<'mc> FileConfiguration<'mc> {
             "()Lorg/bukkit/configuration/Configuration;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -477,7 +473,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn get_color_with_string(
@@ -497,7 +493,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::Color(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -522,7 +518,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -547,7 +543,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::OfflinePlayer(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -584,7 +580,7 @@ impl<'mc> FileConfiguration<'mc> {
             "()Lorg/bukkit/configuration/ConfigurationSection;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -599,7 +595,7 @@ impl<'mc> FileConfiguration<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -617,7 +613,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_configuration_section(
@@ -632,7 +628,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/configuration/ConfigurationSection;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -651,7 +647,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_int(
@@ -665,7 +661,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_boolean(
@@ -679,7 +675,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_double(
@@ -693,7 +689,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_long(
@@ -707,7 +703,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_list(
@@ -721,7 +717,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_serializable_with_string(
@@ -739,7 +735,7 @@ impl<'mc> FileConfiguration<'mc> {
         let val_1 = arg1.unwrap();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"getSerializable","(Ljava/lang/String;Ljava/lang/Class;Lorg/bukkit/configuration/serialization/ConfigurationSerializable;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::serialization::ConfigurationSerializable(
                 self.jni_ref(),
@@ -765,7 +761,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::util::Vector(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -784,7 +780,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_offline_player(
@@ -798,7 +794,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_item_stack(
@@ -812,7 +808,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_color(
@@ -826,7 +822,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_location(
@@ -840,7 +836,7 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_comments(
@@ -873,7 +869,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn set_inline_comments(
@@ -906,7 +902,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn wait(
@@ -925,7 +921,7 @@ impl<'mc> FileConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn equals(
@@ -939,35 +935,35 @@ impl<'mc> FileConfiguration<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -1001,12 +997,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
             )
             .into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("FileConfigurationOptions") {
+        let (valid, name) = env.validate_name(&obj, "FileConfigurationOptions")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FileConfigurationOptions object, got {}",
                 name
@@ -1032,7 +1024,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1049,7 +1041,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "()Lorg/bukkit/configuration/Configuration;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1071,7 +1063,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(C)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1094,7 +1086,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(Z)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1117,7 +1109,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(Z)Lorg/bukkit/configuration/MemoryConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::MemoryConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1153,7 +1145,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(Ljava/util/List;)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1189,7 +1181,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(Ljava/util/List;)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1213,7 +1205,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(Z)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1237,7 +1229,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn equals(
@@ -1251,14 +1243,14 @@ impl<'mc> FileConfigurationOptions<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1269,28 +1261,28 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -1326,12 +1318,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             )
             .into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("YamlConfigurationOptions") {
+        let (valid, name) = env.validate_name(&obj, "YamlConfigurationOptions")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a YamlConfigurationOptions object, got {}",
                 name
@@ -1356,7 +1344,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::FileConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1378,7 +1366,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(I)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1400,7 +1388,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(I)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1420,7 +1408,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "()Lorg/bukkit/configuration/file/YamlConfiguration;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::YamlConfiguration(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1440,7 +1428,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(C)Lorg/bukkit/configuration/ConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1463,7 +1451,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(Z)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1486,7 +1474,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(Z)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1510,7 +1498,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(Z)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::file::YamlConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1534,7 +1522,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn equals(
@@ -1548,14 +1536,14 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1566,28 +1554,28 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -1636,12 +1624,8 @@ impl<'mc> YamlConfiguration<'mc> {
                 eyre::eyre!("Tried to instantiate YamlConfiguration from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("YamlConfiguration") {
+        let (valid, name) = env.validate_name(&obj, "YamlConfiguration")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a YamlConfiguration object, got {}",
                 name
@@ -1661,7 +1645,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "()Lorg/bukkit/configuration/ConfigurationOptions;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationOptions(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1676,7 +1660,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1694,7 +1678,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn load_with_string(
@@ -1709,7 +1693,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn save_with_file(
@@ -1724,7 +1708,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn parent(
@@ -1737,7 +1721,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "()Lorg/bukkit/configuration/ConfigurationSection;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1761,7 +1745,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn defaults(
@@ -1773,7 +1757,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "()Lorg/bukkit/configuration/Configuration;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1792,7 +1776,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Lorg/bukkit/configuration/Configuration;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn set_defaults(
@@ -1806,7 +1790,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Lorg/bukkit/configuration/Configuration;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn get_string_with_string(
@@ -1827,7 +1811,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1838,7 +1822,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1862,14 +1846,14 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1894,7 +1878,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_int_with_string(
@@ -1914,7 +1898,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn get_long_with_string(
@@ -1934,7 +1918,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
     pub fn get_double_with_string(
@@ -1954,7 +1938,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
     pub fn contains_with_string(
@@ -1975,7 +1959,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_location_with_string(
@@ -1995,7 +1979,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::Location(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2019,7 +2003,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_set(
@@ -2033,7 +2017,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn root(
@@ -2045,7 +2029,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "()Lorg/bukkit/configuration/Configuration;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::Configuration(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2072,7 +2056,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn get_color_with_string(
@@ -2092,7 +2076,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::Color(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2117,7 +2101,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2142,7 +2126,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::OfflinePlayer(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2179,7 +2163,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "()Lorg/bukkit/configuration/ConfigurationSection;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2194,7 +2178,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -2212,7 +2196,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_configuration_section(
@@ -2227,7 +2211,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/configuration/ConfigurationSection;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::ConfigurationSection(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2246,7 +2230,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_int(
@@ -2260,7 +2244,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_boolean(
@@ -2274,7 +2258,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_double(
@@ -2288,7 +2272,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_long(
@@ -2302,7 +2286,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_list(
@@ -2316,7 +2300,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_serializable_with_string(
@@ -2334,7 +2318,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let val_1 = arg1.unwrap();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"getSerializable","(Ljava/lang/String;Ljava/lang/Class;Lorg/bukkit/configuration/serialization/ConfigurationSerializable;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::configuration::serialization::ConfigurationSerializable(
                 self.jni_ref(),
@@ -2360,7 +2344,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::util::Vector(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2379,7 +2363,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_offline_player(
@@ -2393,7 +2377,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_item_stack(
@@ -2407,7 +2391,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_color(
@@ -2421,7 +2405,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn is_location(
@@ -2435,7 +2419,7 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_comments(
@@ -2468,7 +2452,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn set_inline_comments(
@@ -2501,7 +2485,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn wait(
@@ -2520,7 +2504,7 @@ impl<'mc> YamlConfiguration<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn equals(
@@ -2534,35 +2518,35 @@ impl<'mc> YamlConfiguration<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }

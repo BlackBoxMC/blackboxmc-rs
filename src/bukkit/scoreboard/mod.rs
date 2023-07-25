@@ -22,12 +22,8 @@ impl<'mc> Criterias<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Criterias from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Criterias") {
+        let (valid, name) = env.validate_name(&obj, "Criterias")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Criterias object, got {}",
                 name
@@ -53,7 +49,7 @@ impl<'mc> Criterias<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn equals(
@@ -67,14 +63,14 @@ impl<'mc> Criterias<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -85,28 +81,28 @@ impl<'mc> Criterias<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -133,12 +129,8 @@ impl<'mc> TeamOptionStatus<'mc> {
                 eyre::eyre!("Tried to instantiate TeamOptionStatus from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TeamOptionStatus") {
+        let (valid, name) = env.validate_name(&obj, "TeamOptionStatus")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TeamOptionStatus object, got {}",
                 name
@@ -171,7 +163,7 @@ impl<'mc> TeamOptionStatus<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -189,14 +181,14 @@ impl<'mc> TeamOptionStatus<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -207,7 +199,7 @@ impl<'mc> TeamOptionStatus<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -221,7 +213,7 @@ impl<'mc> TeamOptionStatus<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -233,7 +225,7 @@ impl<'mc> TeamOptionStatus<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -245,14 +237,14 @@ impl<'mc> TeamOptionStatus<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -271,28 +263,28 @@ impl<'mc> TeamOptionStatus<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -309,12 +301,8 @@ impl<'mc> Criteria<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Criteria from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Criteria") {
+        let (valid, name) = env.validate_name(&obj, "Criteria")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Criteria object, got {}",
                 name
@@ -328,7 +316,7 @@ impl<'mc> Criteria<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -348,7 +336,7 @@ impl<'mc> Criteria<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let mut obj = res.l()?;
+            let obj = res.l()?;
             crate::bukkit::scoreboard::Criteria(jni, obj)
         };
         Ok(ret)
@@ -357,7 +345,7 @@ impl<'mc> Criteria<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isReadOnly", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn default_render_type(
@@ -369,7 +357,7 @@ impl<'mc> Criteria<'mc> {
             "()Lorg/bukkit/scoreboard/RenderType;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -399,7 +387,7 @@ impl<'mc> Criteria<'mc> {
         let res = jni.call_static_method(cls,"statistic",
 "(Lorg/bukkit/Statistic;Lorg/bukkit/entity/EntityType;)Lorg/bukkit/scoreboard/Criteria;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
         let ret = {
-            let mut obj = res.l()?;
+            let obj = res.l()?;
             crate::bukkit::scoreboard::Criteria(jni, obj)
         };
         Ok(ret)
@@ -478,7 +466,7 @@ impl<'mc> NameTagVisibility<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let mut obj = res.l()?;
+            let obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -549,7 +537,7 @@ impl<'mc> RenderType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let mut obj = res.l()?;
+            let obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -578,12 +566,8 @@ impl<'mc> Objective<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Objective from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Objective") {
+        let (valid, name) = env.validate_name(&obj, "Objective")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Objective object, got {}",
                 name
@@ -600,7 +584,7 @@ impl<'mc> Objective<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -611,7 +595,7 @@ impl<'mc> Objective<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -622,7 +606,7 @@ impl<'mc> Objective<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "unregister", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     #[deprecated]
@@ -633,7 +617,7 @@ impl<'mc> Objective<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -651,7 +635,7 @@ impl<'mc> Objective<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn scoreboard(
@@ -663,7 +647,7 @@ impl<'mc> Objective<'mc> {
             "()Lorg/bukkit/scoreboard/Scoreboard;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Scoreboard(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -683,7 +667,7 @@ impl<'mc> Objective<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Score;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Score(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -700,7 +684,7 @@ impl<'mc> Objective<'mc> {
             "()Lorg/bukkit/scoreboard/Criteria;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Criteria(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -712,7 +696,7 @@ impl<'mc> Objective<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isModifiable", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_display_slot(
@@ -726,7 +710,7 @@ impl<'mc> Objective<'mc> {
             "(Lorg/bukkit/scoreboard/DisplaySlot;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn display_slot(
@@ -738,7 +722,7 @@ impl<'mc> Objective<'mc> {
             "()Lorg/bukkit/scoreboard/DisplaySlot;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -768,7 +752,7 @@ impl<'mc> Objective<'mc> {
             "(Lorg/bukkit/scoreboard/RenderType;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn render_type(
@@ -780,7 +764,7 @@ impl<'mc> Objective<'mc> {
             "()Lorg/bukkit/scoreboard/RenderType;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -822,12 +806,8 @@ impl<'mc> Score<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Score from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Score") {
+        let (valid, name) = env.validate_name(&obj, "Score")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Score object, got {}",
                 name
@@ -841,7 +821,7 @@ impl<'mc> Score<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getEntry", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -858,7 +838,7 @@ impl<'mc> Score<'mc> {
             "()Lorg/bukkit/OfflinePlayer;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::OfflinePlayer(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -875,7 +855,7 @@ impl<'mc> Score<'mc> {
             "()Lorg/bukkit/scoreboard/Scoreboard;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Scoreboard(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -892,7 +872,7 @@ impl<'mc> Score<'mc> {
             "()Lorg/bukkit/scoreboard/Objective;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Objective(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -904,7 +884,7 @@ impl<'mc> Score<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getScore", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn set_score(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -915,14 +895,14 @@ impl<'mc> Score<'mc> {
             "(I)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn is_score_set(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isScoreSet", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
 }
@@ -948,12 +928,8 @@ impl<'mc> Scoreboard<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Scoreboard from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Scoreboard") {
+        let (valid, name) = env.validate_name(&obj, "Scoreboard")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Scoreboard object, got {}",
                 name
@@ -975,7 +951,7 @@ impl<'mc> Scoreboard<'mc> {
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().1.clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"registerNewObjective","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/scoreboard/RenderType;)Lorg/bukkit/scoreboard/Objective;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Objective(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -994,7 +970,7 @@ impl<'mc> Scoreboard<'mc> {
             "(Lorg/bukkit/scoreboard/DisplaySlot;)Lorg/bukkit/scoreboard/Objective;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Objective(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1014,7 +990,7 @@ impl<'mc> Scoreboard<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     #[deprecated]
@@ -1029,7 +1005,7 @@ impl<'mc> Scoreboard<'mc> {
             "(Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/scoreboard/Team;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Team(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1048,7 +1024,7 @@ impl<'mc> Scoreboard<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Team(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1067,7 +1043,7 @@ impl<'mc> Scoreboard<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Team(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1086,7 +1062,7 @@ impl<'mc> Scoreboard<'mc> {
             "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Team(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1105,7 +1081,7 @@ impl<'mc> Scoreboard<'mc> {
             "(Lorg/bukkit/scoreboard/DisplaySlot;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -1241,7 +1217,7 @@ impl<'mc> DisplaySlot<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let mut obj = res.l()?;
+            let obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -1272,12 +1248,8 @@ impl<'mc> ScoreboardManager<'mc> {
                 eyre::eyre!("Tried to instantiate ScoreboardManager from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("ScoreboardManager") {
+        let (valid, name) = env.validate_name(&obj, "ScoreboardManager")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ScoreboardManager object, got {}",
                 name
@@ -1296,7 +1268,7 @@ impl<'mc> ScoreboardManager<'mc> {
             "()Lorg/bukkit/scoreboard/Scoreboard;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Scoreboard(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1313,7 +1285,7 @@ impl<'mc> ScoreboardManager<'mc> {
             "()Lorg/bukkit/scoreboard/Scoreboard;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Scoreboard(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1344,12 +1316,8 @@ impl<'mc> Team<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Team from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Team") {
+        let (valid, name) = env.validate_name(&obj, "Team")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Team object, got {}",
                 name
@@ -1366,7 +1334,7 @@ impl<'mc> Team<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1384,14 +1352,14 @@ impl<'mc> Team<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1409,21 +1377,21 @@ impl<'mc> Team<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getSize", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "unregister", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn set_color(
@@ -1437,7 +1405,7 @@ impl<'mc> Team<'mc> {
             "(Lorg/bukkit/ChatColor;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn prefix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1447,7 +1415,7 @@ impl<'mc> Team<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1461,7 +1429,7 @@ impl<'mc> Team<'mc> {
             "()Lorg/bukkit/ChatColor;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1480,7 +1448,7 @@ impl<'mc> Team<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn set_prefix(
@@ -1494,7 +1462,7 @@ impl<'mc> Team<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn suffix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1504,7 +1472,7 @@ impl<'mc> Team<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1522,14 +1490,14 @@ impl<'mc> Team<'mc> {
             "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn allow_friendly_fire(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "allowFriendlyFire", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_allow_friendly_fire(
@@ -1544,14 +1512,14 @@ impl<'mc> Team<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn can_see_friendly_invisibles(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "canSeeFriendlyInvisibles", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn set_can_see_friendly_invisibles(
@@ -1566,7 +1534,7 @@ impl<'mc> Team<'mc> {
             "(Z)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     #[deprecated]
@@ -1579,7 +1547,7 @@ impl<'mc> Team<'mc> {
             "()Lorg/bukkit/scoreboard/NameTagVisibility;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -1610,7 +1578,7 @@ impl<'mc> Team<'mc> {
             "(Lorg/bukkit/scoreboard/NameTagVisibility;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn scoreboard(
@@ -1622,7 +1590,7 @@ impl<'mc> Team<'mc> {
             "()Lorg/bukkit/scoreboard/Scoreboard;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::Scoreboard(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1642,7 +1610,7 @@ impl<'mc> Team<'mc> {
             "(Lorg/bukkit/OfflinePlayer;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     #[deprecated]
@@ -1657,7 +1625,7 @@ impl<'mc> Team<'mc> {
             "(Lorg/bukkit/OfflinePlayer;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     #[deprecated]
@@ -1672,7 +1640,7 @@ impl<'mc> Team<'mc> {
             "(Lorg/bukkit/OfflinePlayer;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn has_entry(
@@ -1686,7 +1654,7 @@ impl<'mc> Team<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_option(
@@ -1700,7 +1668,7 @@ impl<'mc> Team<'mc> {
             "(Lorg/bukkit/scoreboard/Team$Option;)Lorg/bukkit/scoreboard/Team$OptionStatus;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::scoreboard::TeamOptionStatus(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1724,7 +1692,7 @@ impl<'mc> Team<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
@@ -1758,12 +1726,8 @@ impl<'mc> TeamOption<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TeamOption from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("TeamOption") {
+        let (valid, name) = env.validate_name(&obj, "TeamOption")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TeamOption object, got {}",
                 name
@@ -1796,7 +1760,7 @@ impl<'mc> TeamOption<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1814,14 +1778,14 @@ impl<'mc> TeamOption<'mc> {
             "(Ljava/lang/Object;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -1832,7 +1796,7 @@ impl<'mc> TeamOption<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn compare_to_with_object(
@@ -1846,7 +1810,7 @@ impl<'mc> TeamOption<'mc> {
             "(Ljava/lang/Enum;)I",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn describe_constable(
@@ -1858,7 +1822,7 @@ impl<'mc> TeamOption<'mc> {
             "()Ljava/util/Optional;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
     pub fn declaring_class(
@@ -1870,14 +1834,14 @@ impl<'mc> TeamOption<'mc> {
             "()Ljava/lang/Class;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn wait(
@@ -1896,28 +1860,28 @@ impl<'mc> TeamOption<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notify", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }

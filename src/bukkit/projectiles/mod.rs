@@ -16,12 +16,8 @@ impl<'mc> ProjectileSource<'mc> {
                 eyre::eyre!("Tried to instantiate ProjectileSource from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("ProjectileSource") {
+        let (valid, name) = env.validate_name(&obj, "ProjectileSource")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ProjectileSource object, got {}",
                 name
@@ -47,7 +43,7 @@ impl<'mc> ProjectileSource<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::entity::Projectile(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -81,12 +77,8 @@ impl<'mc> BlockProjectileSource<'mc> {
             )
             .into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("BlockProjectileSource") {
+        let (valid, name) = env.validate_name(&obj, "BlockProjectileSource")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BlockProjectileSource object, got {}",
                 name
@@ -105,7 +97,7 @@ impl<'mc> BlockProjectileSource<'mc> {
             "()Lorg/bukkit/block/Block;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::block::Block(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -129,7 +121,7 @@ impl<'mc> BlockProjectileSource<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::entity::Projectile(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())

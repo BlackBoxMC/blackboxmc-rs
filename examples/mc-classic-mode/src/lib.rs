@@ -35,12 +35,13 @@ impl HungerThread {
 
 #[no_mangle]
 pub extern "system" fn __extends__BukkitRunnable__HungerThread__run<'mc>(
-    mut env: SharedJNIEnv<'mc>,
+    mut env: JNIEnv<'mc>,
     address: jint,
     plugin: JObject<'mc>,
     objs: JObject<'mc>,
 ) {
-    let mut plug = Plugin::from_raw(&env, plugin).unwrap();
+    let e = SharedJNIEnv::new(env);
+    let mut plug = Plugin::from_raw(&e, plugin).unwrap();
     HungerThread::run(&mut plug);
 }
 

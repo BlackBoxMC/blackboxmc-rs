@@ -16,12 +16,8 @@ impl<'mc> AdvancementProgress<'mc> {
                 eyre::eyre!("Tried to instantiate AdvancementProgress from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("AdvancementProgress") {
+        let (valid, name) = env.validate_name(&obj, "AdvancementProgress")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AdvancementProgress object, got {}",
                 name
@@ -35,7 +31,7 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDone", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn advancement(
@@ -47,7 +43,7 @@ impl<'mc> AdvancementProgress<'mc> {
             "()Lorg/bukkit/advancement/Advancement;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::advancement::Advancement(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -66,7 +62,7 @@ impl<'mc> AdvancementProgress<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn revoke_criteria(
@@ -80,7 +76,7 @@ impl<'mc> AdvancementProgress<'mc> {
             "(Ljava/lang/String;)Z",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_date_awarded(
@@ -94,7 +90,7 @@ impl<'mc> AdvancementProgress<'mc> {
             "(Ljava/lang/String;)Ljava/util/Date;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
 }
@@ -167,7 +163,7 @@ impl<'mc> AdvancementDisplayType<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         let ret = {
-            let mut obj = res.l()?;
+            let obj = res.l()?;
             let raw_obj = obj;
             let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
             let variant_str = jni
@@ -190,7 +186,7 @@ impl<'mc> AdvancementDisplayType<'mc> {
             "()Lorg/bukkit/ChatColor;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::ChatColor(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -214,12 +210,8 @@ impl<'mc> AdvancementDisplay<'mc> {
                 eyre::eyre!("Tried to instantiate AdvancementDisplay from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("AdvancementDisplay") {
+        let (valid, name) = env.validate_name(&obj, "AdvancementDisplay")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AdvancementDisplay object, got {}",
                 name
@@ -233,7 +225,7 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isHidden", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn get_type(
@@ -246,7 +238,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             "()Lorg/bukkit/advancement/AdvancementDisplayType;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
             let variant =
@@ -270,14 +262,14 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getX", "()F", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
     pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getY", "()F", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -287,7 +279,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             "()Ljava/lang/String;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -298,7 +290,7 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getTitle", "()Ljava/lang/String;", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
@@ -314,7 +306,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::inventory::ItemStack(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -326,14 +318,14 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "shouldShowToast", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
     pub fn should_announce_chat(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "shouldAnnounceChat", "()Z", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
 }
@@ -359,12 +351,8 @@ impl<'mc> Advancement<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Advancement from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Advancement") {
+        let (valid, name) = env.validate_name(&obj, "Advancement")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Advancement object, got {}",
                 name
@@ -384,7 +372,7 @@ impl<'mc> Advancement<'mc> {
             "()Lorg/bukkit/advancement/AdvancementDisplay;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::advancement::AdvancementDisplay(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -399,7 +387,7 @@ impl<'mc> Advancement<'mc> {
             "()Lorg/bukkit/NamespacedKey;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::NamespacedKey(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())

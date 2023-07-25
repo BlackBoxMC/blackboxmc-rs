@@ -14,12 +14,8 @@ impl<'mc> Palette<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Palette from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Palette") {
+        let (valid, name) = env.validate_name(&obj, "Palette")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Palette object, got {}",
                 name
@@ -33,7 +29,7 @@ impl<'mc> Palette<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getBlockCount", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
 }
@@ -61,12 +57,8 @@ impl<'mc> StructureManager<'mc> {
                 eyre::eyre!("Tried to instantiate StructureManager from null object.").into(),
             );
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("StructureManager") {
+        let (valid, name) = env.validate_name(&obj, "StructureManager")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StructureManager object, got {}",
                 name
@@ -87,7 +79,7 @@ impl<'mc> StructureManager<'mc> {
             "(Lorg/bukkit/structure/Structure;)Lorg/bukkit/structure/Structure;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::structure::Structure(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -106,7 +98,7 @@ impl<'mc> StructureManager<'mc> {
             "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::structure::Structure(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -122,7 +114,7 @@ impl<'mc> StructureManager<'mc> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().1.clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().1.clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"registerStructure","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/structure/Structure;)Lorg/bukkit/structure/Structure;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::structure::Structure(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -141,7 +133,7 @@ impl<'mc> StructureManager<'mc> {
             "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;",
             &[jni::objects::JValueGen::from(&val_0)],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::structure::Structure(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -166,7 +158,7 @@ impl<'mc> StructureManager<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::structure::Structure(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -190,7 +182,7 @@ impl<'mc> StructureManager<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn delete_structure_with_namespaced_key(
@@ -210,7 +202,7 @@ impl<'mc> StructureManager<'mc> {
                 jni::objects::JValueGen::from(&val_1),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn create_structure(
@@ -222,7 +214,7 @@ impl<'mc> StructureManager<'mc> {
             "()Lorg/bukkit/structure/Structure;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::structure::Structure(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -253,12 +245,8 @@ impl<'mc> Structure<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Structure from null object.").into());
         }
-        let cls = env.jni.borrow().get_object_class(&obj)?;
-        let name_raw = env.call_method(cls, "getName", "()Ljava/lang/String;", &[])?;
-        let oh = name_raw.l()?.into();
-        let what = env.get_string(&oh)?;
-        let name = what.to_string_lossy();
-        if !name.ends_with("Structure") {
+        let (valid, name) = env.validate_name(&obj, "Structure")?;
+        if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Structure object, got {}",
                 name
@@ -288,7 +276,7 @@ impl<'mc> Structure<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn size(
@@ -300,7 +288,7 @@ impl<'mc> Structure<'mc> {
             "()Lorg/bukkit/util/BlockVector;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::util::BlockVector(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())
@@ -312,14 +300,14 @@ impl<'mc> Structure<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getEntityCount", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn palette_count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPaletteCount", "()I", &[]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
     pub fn place_with_location(
@@ -343,7 +331,7 @@ impl<'mc> Structure<'mc> {
         let val_6 = jni::objects::JValueGen::Float(arg6.unwrap().into());
         let val_7 = arg7.unwrap();
         let res = self.jni_ref().call_method(&self.jni_object(),"place","(Lorg/bukkit/RegionAccessor;Lorg/bukkit/util/BlockVector;ZLorg/bukkit/block/structure/StructureRotation;Lorg/bukkit/block/structure/Mirror;IFLjava/util/Random;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7)]);
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        self.jni_ref().translate_error(res)?;
         Ok(())
     }
     pub fn persistent_data_container(
@@ -356,7 +344,7 @@ impl<'mc> Structure<'mc> {
             "()Lorg/bukkit/persistence/PersistentDataContainer;",
             &[],
         );
-        let res = crate::java_error_throw(self.jni_ref(), res)?;
+        let res = self.jni_ref().translate_error(res)?;
         let ret = {
             crate::bukkit::persistence::PersistentDataContainer(self.jni_ref(), unsafe {
                 jni::objects::JObject::from_raw(res.l()?.clone())

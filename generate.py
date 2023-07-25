@@ -326,8 +326,10 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     "\""+method["original_name"]+"\",\""+
                     java_call_signature_format(func_signature, return_group["type_name_original"])+"\",&["+
                     ",".join(types)+
-                    "]);"+
-            "let res = crate::java_error_throw("+prefix+", res)?;")
+                    "]);")
+        if return_group["type_name_resolved"] != "()":
+            code.append("let res = ")
+        code.append(prefix+".translate_error(res)?;")
 
     match return_group["type_name_resolved"]:
         case "()": code.append("Ok(())")
@@ -717,14 +719,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                     "        \"Tried to instantiate "+name+" from null object.\")\n"+
                     "    .into());\n"+
                     "}\n"+
-                    "let cls = env.jni.borrow().get_object_class(&obj)?;\n"+
-                    "let name_raw = env\n"+
-                    "    .call_method(cls, \"getName\", \"()Ljava/lang/String;\", &[])?;\n"+
-                    "let oh = name_raw.l()?.into();\n"+
-                    "let what = env\n"+
-                    "    .get_string(&oh)?;\n"+
-                    "let name = what.to_string_lossy();\n"+
-                    "if !name.ends_with(\""+name+"\") {\n"+
+                    "let (valid, name) = env.validate_name(&obj, \""+name+"\")?;\n"+
+                    "if !valid {\n"+
                     "    Err(eyre::eyre!(\n"+
                     "        \"Invalid argument passed. Expected a "+name+" object, got {}\",\n"+
                     "        name\n"+
