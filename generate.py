@@ -466,7 +466,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                 default = method["method"]["modifiers"]&(1024|1|8) == 1 and is_trait
                 if default:
                     # ok actually forget everything, this needs to have the same letters as the parent class.
-                    print(method["method"]["name"], type_name_original, get_generics(type_name_original)[0])
+                    print(method["method"]["name"], type_name_original, get_generics(type_name_original))
                 type_name_resolved = search[0]
             else:
                 for f in search:
@@ -1074,13 +1074,16 @@ def get_generics(val):
     if isinstance(val, str):
         if ".".join(val.split(".")[0:2]) in libraries:
             temp_lib = libraries[".".join(val.split(".")[0:2])]
-            if val in temp_lib:
-                temp_pkg = temp_lib[val]
-                typealone = "".join(filter(lambda f: f[0].isupper(), type_name_original.split(".")))
-                if typealone.replace("$",".") in temp_pkg:
-                    temp_cls = temp_pkg[typealone.replace("$",".")]
+            package_name = ".".join(filter(lambda f: f[0].islower(), val.split(".")))
+            if package_name in temp_lib:
+                temp_pkg = temp_lib[package_name]
+                typealone = "".join(filter(lambda f: f[0].isupper(), val.split(".")))
+                typealone = typealone.replace(".","$").replace("[]","")
+                if typealone in temp_pkg:
+                    temp_cls = temp_pkg[typealone]
                     if "generics" in temp_cls:
                         generics = temp_cls["generics"]
+
     else:
         if "generics" in val:
             generics = list(map(lambda f: f[0], filter(lambda f: f != "", val["generics"])))
