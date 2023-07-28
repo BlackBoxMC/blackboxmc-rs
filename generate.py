@@ -28,6 +28,7 @@ parsed_classes = {}
 excluded_classes = [
     "org.bukkit.plugin.SimplePluginManager",    # uses stuff that isn't being generated due to that java bug and i don't want to write an entire class binding for something that's getting deprecated anyways.
     "java.lang.Thread",                         # i would have to bind all of java.lang for this and i don't feel like it sorry
+    "java.util.concurrent.atomic.Striped64" # this should not be here.
 ]
 
 interface_names = []
@@ -437,15 +438,17 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
 
     generics = []
     if get_generics and method is not None:
-        search = []
+        search = None
         if returning:
             if "genericReturnType" in method["method"]:
-                search = [method["method"]["genericReturnType"]]
+                search = method["method"]["genericReturnType"]
         else:
             if "genericParameterTypes" in method["method"]:
-                search += method["method"]["genericParameterTypes"]
-        if len(search) > i:
-            f = search[i]
+                search_ = method["method"]["genericParameterTypes"]
+                if len(search_) > i:
+                    search = search_[i]
+        if search is not None:
+            f = search
             if len(f) <= 1:
                 type_name_resolved = f
             else:
@@ -463,6 +466,8 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                                 gen = gen3.group(1)
                             if gen == "javaString":
                                 gen = "String"
+                            if gen == "javaThread":
+                                return None # we're not bothering.
                             gen = gen.replace("?","dyn JNIRaw<'mc>")
                             generics.append(gen)
                         
@@ -764,10 +769,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         n = 0
         types = []
         for type in func_signature:
-            if(type["type_name_lhand"] == ""):
-                continue
-            if(type["is_array"]):
-                n += 1
+            if(type["type_name_lhand"] == "") or (type["is_array"]) or (type["type_name_original"] in excluded_classes):
+                should_continue = False
                 continue
             else:
                 ty = code_format(type, prefix, n, class_name=og_name, options_start_at=options_start_at)
@@ -791,10 +794,12 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
         if("?" in return_group["type_name_resolved"]):
             continue
+        
+        if return_group["type_name_original"] in excluded_classes:
+            continue
 
         if return_group["type_name_alone"] in omitted_classes:
             continue
-
 
         for generic in return_group["generics"]:
             parts = generic.split("::")
@@ -864,10 +869,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
 
 def parse_classes(library, val, classes):
-    if "generics" in val:
-        print("generics",val["name"],val["generics"])
-    else:
-        print("generics",val["name"])
     if "modifiers" in val:
         modifiers = int(val["modifiers"])
         if (modifiers&1 != 1):
@@ -1044,41 +1045,47 @@ def parse_classes(library, val, classes):
     if not val["isEnum"]:
         if "interfaces" in val:
             for inter in val["interfaces"]:
-                if inter["packageName"].startswith("java"):
-                    if not inter["packageName"].startswith("java.util"):
-                        continue
-                inter_resolved = java_type_to_rust("", inter["packageName"]+"."+inter["name"], None, 0, True, library, False)
-
-                if inter_resolved is None:
-                    continue
-
-                if inter_resolved["type_name_alone"] in omitted_classes:
-                    continue
-
-                file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> Into<"+inter_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+"{\n"+
-                                        "   fn into(self) -> "+inter_resolved["type_name_resolved"]+"<'mc"+generics_str_letters+"> {\n"+
-                                        "       "+inter_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+
-                                        "   }\n"+
-                                        "}")
+                parse_into_impl(inter,name,mod_path,generics_str_letters,generics_str_where)
         if "superClass" in val:
             super_class = val["superClass"]
-            if super_class["packageName"].startswith("java"):
-                if not super_class["packageName"].startswith("java.util"):
-                    return
-            super_class_resolved = java_type_to_rust("", super_class["packageName"]+"."+super_class["name"], None, 0, True, library, False)
-
-            if super_class_resolved is None:
-                return
-            if super_class_resolved["type_name_alone"] in omitted_classes:
-                return
-
-            print(super_class_resolved["type_name_alone"])
+            parse_into_impl(super_class,name,mod_path,generics_str_letters,generics_str_where)
             
-            file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> Into<"+super_class_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+"{\n"+
-                                    "   fn into(self) -> "+super_class_resolved["type_name_resolved"]+"<'mc> {\n"+
-                                    "       "+super_class_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+
-                                    "   }\n"+
-                                    "}")
+def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
+    if val["packageName"].startswith("java"):
+        if not val["packageName"].startswith("java.util"):
+            return
+    val_resolved = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False)
+
+    if val_resolved is None:
+        return
+    if val_resolved["type_name_original"] in excluded_classes:
+        return
+    if val_resolved["type_name_alone"] in omitted_classes:
+        return
+    
+    into_generics_str_letters = ""
+    
+    # we want to check if the generics are the same.
+    if ".".join(val_resolved["package_name"].split(".")[0:2]) in libraries:
+        temp_lib = libraries[".".join(val_resolved["package_name"].split(".")[0:2])]
+        temp_pkg = temp_lib[val_resolved["package_name"]]
+        typealone = "".join(filter(lambda f: f[0].isupper(), val_resolved["type_name_original"].split(".")))
+        temp_cls = temp_pkg[typealone]
+        if "generics" in temp_cls and "generics" in val_resolved:
+            if(len(temp_cls["generics"]) != len(val_resolved["generics"])):
+                return
+            similar = False not in map(lambda x, y: x == y, temp_cls["generics"], val_resolved["generics"])
+            if not similar:
+                return
+            else:
+                into_generics_str_letters = generics_str_letters
+    
+    file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> Into<"+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+">> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+"{\n"+
+                            "   fn into(self) -> "+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+"> {\n"+
+                            "       "+val_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+
+                            "   }\n"+
+                            "}")
+
 def parse_annotations(annotations):
     strings = []
     for annotation in annotations:
