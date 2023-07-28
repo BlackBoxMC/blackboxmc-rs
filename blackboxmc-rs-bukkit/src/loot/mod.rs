@@ -27,9 +27,9 @@ impl<'mc> LootTable<'mc> {
     }
     pub fn populate_loot(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaRandom<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
         arg1: impl Into<&'mc crate::loot::LootContext<'mc>>,
-    ) -> Result<blackboxmc_javautil::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -42,14 +42,14 @@ impl<'mc> LootTable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaCollection::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn fill_inventory(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::Inventory<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_javautil::JavaRandom<'mc>>,
+        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
         arg2: impl Into<&'mc crate::loot::LootContext<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -880,20 +880,6 @@ impl<'mc> LootTables<'mc> {
             _ => None,
         }
     }
-    pub fn loot_table(
-        &mut self,
-    ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLootTable",
-            "()Lorg/bukkit/loot/LootTable;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn value_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -928,6 +914,20 @@ impl<'mc> LootTables<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn loot_table(
+        &mut self,
+    ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLootTable",
+            "()Lorg/bukkit/loot/LootTable;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1160,6 +1160,18 @@ impl<'mc> LootContext<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            "()Lorg/bukkit/Location;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn killer(
         &mut self,
     ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
@@ -1199,18 +1211,6 @@ impl<'mc> LootContext<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

@@ -51,11 +51,17 @@ impl<'mc> JNIRaw<'mc> for PersistentDataHolder<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-pub struct PersistentDataTypePrimitivePersistentDataType<'mc>(
+pub struct PersistentDataTypePrimitivePersistentDataType<'mc, T>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
+)
+where
+    T: JNIRaw<'mc>;
+impl<'mc, T> blackboxmc_general::JNIRaw<'mc>
+    for PersistentDataTypePrimitivePersistentDataType<'mc, T>
+where
+    T: JNIRaw<'mc>,
+{
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -64,7 +70,10 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PersistentDataTypePrimitivePersist
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
+impl<'mc, T> PersistentDataTypePrimitivePersistentDataType<'mc, T>
+where
+    T: JNIRaw<'mc>,
+{
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -112,7 +121,7 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
     }
     pub fn to_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: T,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -123,7 +132,7 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
     }
     pub fn from_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: T,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -257,21 +266,18 @@ impl<'mc> JNIRaw<'mc> for PersistentDataAdapterContext<'mc> {
     }
 }
 /// An instantiatable struct that implements PersistentDataType. Needed for returning it from Java.
-pub struct PersistentDataType<'mc>(
+pub struct PersistentDataType<'mc, T, Z>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> PersistentDataType<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "PersistentDataType", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
+)
+where
+    T: JNIRaw<'mc>,
+    Z: JNIRaw<'mc>;
+impl<'mc, T, Z> PersistentDataType<'mc, T, Z>
+where
+    T: JNIRaw<'mc>,
+    Z: JNIRaw<'mc>,
+{
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -318,7 +324,7 @@ impl<'mc> PersistentDataType<'mc> {
     }
     pub fn to_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: Z,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -329,7 +335,7 @@ impl<'mc> PersistentDataType<'mc> {
     }
     pub fn from_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: T,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -339,7 +345,11 @@ impl<'mc> PersistentDataType<'mc> {
         Ok(res.l().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for PersistentDataType<'mc> {
+impl<'mc, T, Z> JNIRaw<'mc> for PersistentDataType<'mc, T, Z>
+where
+    T: JNIRaw<'mc>,
+    Z: JNIRaw<'mc>,
+{
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -555,48 +565,14 @@ impl<'mc> PersistentDataContainer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn has(
-        &mut self,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "has",
-            "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/persistence/PersistentDataType;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn keys(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, orgNamespacedKey>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getKeys", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn adapter_context(
-        &mut self,
-    ) -> Result<crate::persistence::PersistentDataAdapterContext<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAdapterContext",
-            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataAdapterContext::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -617,7 +593,7 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn get(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc>>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -635,8 +611,8 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn set(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc>>,
-        arg2: jni::objects::JObject<'mc>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
+        arg2: Z,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -648,8 +624,8 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn get_or_default(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc>>,
-        arg2: jni::objects::JObject<'mc>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
+        arg2: Z,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -657,6 +633,40 @@ impl<'mc> PersistentDataContainer<'mc> {
         let res = self.jni_ref().call_method(&self.jni_object(),"getOrDefault","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/persistence/PersistentDataType;Ljava/lang/Object;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
+    }
+    pub fn has(
+        &mut self,
+        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "has",
+            "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/persistence/PersistentDataType;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn adapter_context(
+        &mut self,
+    ) -> Result<crate::persistence::PersistentDataAdapterContext<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAdapterContext",
+            "()Lorg/bukkit/persistence/PersistentDataAdapterContext;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::PersistentDataAdapterContext::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 }
 impl<'mc> JNIRaw<'mc> for PersistentDataContainer<'mc> {

@@ -2,11 +2,18 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ItemTagType. Needed for returning it from Java.
-pub struct ItemTagType<'mc>(
+pub struct ItemTagType<'mc, T, Z>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> ItemTagType<'mc> {
+)
+where
+    T: JNIRaw<'mc>,
+    Z: JNIRaw<'mc>;
+impl<'mc, T, Z> ItemTagType<'mc, T, Z>
+where
+    T: JNIRaw<'mc>,
+    Z: JNIRaw<'mc>,
+{
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -51,7 +58,7 @@ impl<'mc> ItemTagType<'mc> {
     }
     pub fn to_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: Z,
         arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -62,7 +69,7 @@ impl<'mc> ItemTagType<'mc> {
     }
     pub fn from_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: T,
         arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -72,7 +79,11 @@ impl<'mc> ItemTagType<'mc> {
         Ok(res.l().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for ItemTagType<'mc> {
+impl<'mc, T, Z> JNIRaw<'mc> for ItemTagType<'mc, T, Z>
+where
+    T: JNIRaw<'mc>,
+    Z: JNIRaw<'mc>,
+{
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -133,11 +144,16 @@ impl<'mc> JNIRaw<'mc> for ItemTagAdapterContext<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-pub struct ItemTagTypePrimitiveTagType<'mc>(
+pub struct ItemTagTypePrimitiveTagType<'mc, T>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTagTypePrimitiveTagType<'mc> {
+)
+where
+    T: JNIRaw<'mc>;
+impl<'mc, T> blackboxmc_general::JNIRaw<'mc> for ItemTagTypePrimitiveTagType<'mc, T>
+where
+    T: JNIRaw<'mc>,
+{
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -146,7 +162,10 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTagTypePrimitiveTagType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
+impl<'mc, T> ItemTagTypePrimitiveTagType<'mc, T>
+where
+    T: JNIRaw<'mc>,
+{
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -194,7 +213,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     }
     pub fn to_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: T,
         arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -205,7 +224,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     }
     pub fn from_primitive(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: T,
         arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = arg0;
@@ -314,6 +333,13 @@ impl<'mc> CustomItemTagContainer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
     pub fn adapter_context(
         &mut self,
     ) -> Result<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>, Box<dyn std::error::Error>>
@@ -332,8 +358,8 @@ impl<'mc> CustomItemTagContainer<'mc> {
     pub fn set_custom_tag(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc>>,
-        arg2: jni::objects::JObject<'mc>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc, T, Z>>,
+        arg2: Z,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -345,7 +371,7 @@ impl<'mc> CustomItemTagContainer<'mc> {
     pub fn has_custom_tag(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc>>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc, T, Z>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -364,7 +390,7 @@ impl<'mc> CustomItemTagContainer<'mc> {
     pub fn get_custom_tag(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc>>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc, T, Z>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -385,13 +411,6 @@ impl<'mc> CustomItemTagContainer<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
 }
 impl<'mc> JNIRaw<'mc> for CustomItemTagContainer<'mc> {

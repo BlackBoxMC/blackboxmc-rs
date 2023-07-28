@@ -63,7 +63,7 @@ version = "0.1.0"
 dependencies = [
  "blackboxmc_bungee",
  "blackboxmc_general",
- "blackboxmc_javautil",
+ "blackboxmc_java",
  "color-eyre",
  "eyre",
  "jni",
@@ -74,7 +74,7 @@ name = "blackboxmc_bungee"
 version = "0.1.0"
 dependencies = [
  "blackboxmc_general",
- "blackboxmc_javautil",
+ "blackboxmc_java",
  "color-eyre",
  "eyre",
  "jni",
@@ -93,7 +93,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "blackboxmc_javautil"
+name = "blackboxmc_java"
 version = "0.1.0"
 dependencies = [
  "blackboxmc_general",

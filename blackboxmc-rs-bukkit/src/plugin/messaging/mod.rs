@@ -211,6 +211,27 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
     pub fn channel(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -251,27 +272,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -442,7 +442,7 @@ impl<'mc> Messenger<'mc> {
     }
     pub fn outgoing_channels(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getOutgoingChannels",
@@ -450,13 +450,13 @@ impl<'mc> Messenger<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn incoming_channels(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIncomingChannels",
@@ -464,14 +464,14 @@ impl<'mc> Messenger<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn get_incoming_channel_registrations_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let val_0 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -481,7 +481,7 @@ impl<'mc> Messenger<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -489,7 +489,7 @@ impl<'mc> Messenger<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -503,7 +503,7 @@ impl<'mc> Messenger<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -742,7 +742,7 @@ impl<'mc> StandardMessenger<'mc> {
     pub fn get_outgoing_channels(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -751,40 +751,21 @@ impl<'mc> StandardMessenger<'mc> {
             &[jni::objects::JValueGen::from(&val_0)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_incoming_channels(
+    pub fn incoming_channels(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIncomingChannels",
-            "(Lorg/bukkit/plugin/Plugin;)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_0)],
+            "()Ljava/util/Set;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn get_incoming_channel_registrations_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let val_0 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getIncomingChannelRegistrations",
-            "(Lorg/bukkit/plugin/Plugin;)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -792,7 +773,7 @@ impl<'mc> StandardMessenger<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -806,7 +787,7 @@ impl<'mc> StandardMessenger<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1039,7 +1020,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
     }
     pub fn listening_plugin_channels(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getListeningPluginChannels",
@@ -1047,7 +1028,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

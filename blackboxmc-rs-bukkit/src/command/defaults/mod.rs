@@ -46,23 +46,6 @@ impl<'mc> ReloadCommand<'mc> {
         )?;
         crate::command::defaults::ReloadCommand::from_raw(&jni, res)
     }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -83,33 +66,22 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_permission(
+    pub fn tab_complete_with_command_sender(
         &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn unregister(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregister",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -124,6 +96,91 @@ impl<'mc> ReloadCommand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn set_permission(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_name(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn unregister(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregister",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -173,7 +230,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaList<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -205,12 +262,12 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -314,63 +371,6 @@ impl<'mc> ReloadCommand<'mc> {
             ],
         )?;
         Ok(())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -486,38 +486,6 @@ impl<'mc> TimingsCommand<'mc> {
         )?;
         crate::command::defaults::TimingsCommand::from_raw(&jni, res)
     }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn execute_spigot_timings(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "executeSpigotTimings",
-            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -538,33 +506,37 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_permission(
+    pub fn tab_complete_with_command_sender(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn execute_spigot_timings(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setPermission",
-            "(Ljava/lang/String;)V",
+            "executeSpigotTimings",
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn unregister(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregister",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -579,6 +551,91 @@ impl<'mc> TimingsCommand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn set_permission(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_name(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn unregister(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregister",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -628,7 +685,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaList<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -660,12 +717,12 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -769,63 +826,6 @@ impl<'mc> TimingsCommand<'mc> {
             ],
         )?;
         Ok(())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -926,6 +926,20 @@ impl<'mc> BukkitCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPermission",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn set_permission(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -940,6 +954,83 @@ impl<'mc> BukkitCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn execute(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: Vec<impl Into<String>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_0),
+                jni::objects::JValueGen::from(&val_1),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_name(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
     pub fn unregister(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -953,20 +1044,6 @@ impl<'mc> BukkitCommand<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermission",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -988,14 +1065,14 @@ impl<'mc> BukkitCommand<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: std::option::Option<Vec<impl Into<String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_3 =
             unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1033,7 +1110,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaList<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1065,12 +1142,12 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1174,83 +1251,6 @@ impl<'mc> BukkitCommand<'mc> {
             ],
         )?;
         Ok(())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn execute(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: Vec<impl Into<String>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "execute",
-            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_0),
-                jni::objects::JValueGen::from(&val_1),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -1366,23 +1366,6 @@ impl<'mc> VersionCommand<'mc> {
         )?;
         crate::command::defaults::VersionCommand::from_raw(&jni, res)
     }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1403,33 +1386,22 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_permission(
+    pub fn tab_complete_with_command_sender(
         &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn unregister(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregister",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1444,6 +1416,91 @@ impl<'mc> VersionCommand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn set_permission(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_name(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn unregister(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregister",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1493,7 +1550,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaList<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1525,12 +1582,12 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1634,63 +1691,6 @@ impl<'mc> VersionCommand<'mc> {
             ],
         )?;
         Ok(())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -1798,23 +1798,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::command::defaults::HelpCommand::from_raw(&jni, res)
     }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1835,33 +1818,22 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_permission(
+    pub fn tab_complete_with_command_sender(
         &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn unregister(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregister",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1876,6 +1848,91 @@ impl<'mc> HelpCommand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn set_permission(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_name(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn unregister(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregister",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1925,7 +1982,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaList<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1957,12 +2014,12 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2066,63 +2123,6 @@ impl<'mc> HelpCommand<'mc> {
             ],
         )?;
         Ok(())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -2238,23 +2238,6 @@ impl<'mc> PluginsCommand<'mc> {
         )?;
         crate::command::defaults::PluginsCommand::from_raw(&jni, res)
     }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -2275,33 +2258,22 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn set_permission(
+    pub fn tab_complete_with_command_sender(
         &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn unregister(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregister",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2316,6 +2288,91 @@ impl<'mc> PluginsCommand<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn set_permission(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn register(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_name(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn unregister(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregister",
+            "(Lorg/bukkit/command/CommandMap;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2365,7 +2422,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaList<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2397,12 +2454,12 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaList::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2506,63 +2563,6 @@ impl<'mc> PluginsCommand<'mc> {
             ],
         )?;
         Ok(())
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRegistered", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/command/CommandMap;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,

@@ -10,4 +10,4 @@ color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"
 blackboxmc_general = {path = "../blackboxmc-rs-general"}
-blackboxmc_javautil = {path = "../blackboxmc-rs-javautil"}
+blackboxmc_java = {path = "../blackboxmc-rs-java"}

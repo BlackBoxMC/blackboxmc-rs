@@ -38,7 +38,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     pub fn deserialize(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, dyn JNIRaw<'mc>>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
@@ -92,23 +92,25 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
-    pub fn unregister_class_with_class(
+    pub fn unregister_class_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_0 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
+        let val_0 = arg0.unwrap();
         let cls = &jni.find_class("void")?;
         let res = jni.call_static_method(
             cls,
             "unregisterClass",
-            "(Ljava/lang/String;)V",
+            "(Ljava/lang/Class;)V",
             &[jni::objects::JValueGen::from(&val_0)],
         )?;
         Ok(())
     }
     pub fn deserialize_object_with_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_javautil::JavaMap<'mc>>>,
+        arg0: std::option::Option<
+            impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, dyn JNIRaw<'mc>>>,
+        >,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
@@ -250,12 +252,13 @@ impl<'mc> ConfigurationSerializable<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_javautil::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaObject>, Box<dyn std::error::Error>>
+    {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_javautil::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

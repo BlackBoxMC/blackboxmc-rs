@@ -238,13 +238,6 @@ impl<'mc> VehicleEnterEvent<'mc> {
         )?;
         crate::event::vehicle::VehicleEnterEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -258,6 +251,13 @@ impl<'mc> VehicleEnterEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -466,13 +466,6 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         )?;
         crate::event::vehicle::VehicleEntityCollisionEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -486,6 +479,13 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -735,13 +735,6 @@ impl<'mc> VehicleExitEvent<'mc> {
         )?;
         crate::event::vehicle::VehicleExitEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -755,6 +748,13 @@ impl<'mc> VehicleExitEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -1337,13 +1337,6 @@ impl<'mc> VehicleCreateEvent<'mc> {
         )?;
         crate::event::vehicle::VehicleCreateEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1357,6 +1350,13 @@ impl<'mc> VehicleCreateEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -1765,13 +1765,6 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         )?;
         crate::event::vehicle::VehicleDestroyEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1785,6 +1778,13 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -1994,13 +1994,6 @@ impl<'mc> VehicleDamageEvent<'mc> {
         )?;
         crate::event::vehicle::VehicleDamageEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2014,6 +2007,13 @@ impl<'mc> VehicleDamageEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_damage(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_0 = jni::objects::JValueGen::Double(arg0.into());

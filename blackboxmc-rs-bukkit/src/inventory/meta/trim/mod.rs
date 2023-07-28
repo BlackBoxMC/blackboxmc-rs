@@ -45,6 +45,27 @@ impl<'mc> ArmorTrim<'mc> {
 "(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_0),jni::objects::JValueGen::from(&val_1)])?;
         crate::inventory::meta::trim::ArmorTrim::from_raw(&jni, res)
     }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_0 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_0)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
     pub fn material(
         &mut self,
     ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
@@ -72,27 +93,6 @@ impl<'mc> ArmorTrim<'mc> {
         crate::inventory::meta::trim::TrimPattern::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_0 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_0)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
