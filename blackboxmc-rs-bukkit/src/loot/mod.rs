@@ -29,8 +29,7 @@ impl<'mc> LootTable<'mc> {
         &mut self,
         arg0: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
         arg1: impl Into<&'mc crate::loot::LootContext<'mc>>,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, orgItemStack>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(

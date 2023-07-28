@@ -27,7 +27,7 @@ impl<'mc> Palette<'mc> {
     }
     pub fn blocks(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgBlockState>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlocks", "()Ljava/util/List;", &[]);
@@ -113,10 +113,7 @@ impl<'mc> StructureManager<'mc> {
     }
     pub fn structures(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaMap<'mc, orgNamespacedKey, orgStructure>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStructures",
@@ -308,7 +305,7 @@ impl<'mc> Structure<'mc> {
     }
     pub fn entities(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEntities",
@@ -329,7 +326,7 @@ impl<'mc> Structure<'mc> {
     }
     pub fn palettes(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgPalette>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPalettes",

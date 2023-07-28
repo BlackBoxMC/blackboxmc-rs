@@ -29,12 +29,11 @@ impl<'mc> ProjectileSource<'mc> {
     }
     pub fn launch_projectile_with_class(
         &mut self,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
-    ) -> Result<T, Box<dyn std::error::Error>> {
+        arg0: std::option::Option<T>,
+        arg1: std::option::Option<T>,
+    ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap();
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_2 = arg1.unwrap().jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -45,7 +44,7 @@ impl<'mc> ProjectileSource<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        T::from_raw(&self.jni_ref(), unsafe {
+        crate::entity::Projectile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -100,12 +99,11 @@ impl<'mc> BlockProjectileSource<'mc> {
     }
     pub fn launch_projectile_with_class(
         &mut self,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
-    ) -> Result<T, Box<dyn std::error::Error>> {
+        arg0: std::option::Option<T>,
+        arg1: std::option::Option<T>,
+    ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap();
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_2 = arg1.unwrap().jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -116,7 +114,7 @@ impl<'mc> BlockProjectileSource<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        T::from_raw(&self.jni_ref(), unsafe {
+        crate::entity::Projectile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

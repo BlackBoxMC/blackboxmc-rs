@@ -174,10 +174,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -533,10 +530,7 @@ impl<'mc> Permissible<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -619,9 +613,7 @@ impl<'mc> Permission<'mc> {
         arg0: impl Into<&'mc String>,
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc crate::permissions::PermissionDefault<'mc>>,
-        arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, javaBoolean>>,
-        >,
+        arg3: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
@@ -636,8 +628,7 @@ impl<'mc> Permission<'mc> {
     }
     pub fn children(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaBoolean>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getChildren", "()Ljava/util/Map;", &[]);
@@ -733,7 +724,7 @@ impl<'mc> Permission<'mc> {
     }
     pub fn permissibles(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, orgPermissible>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPermissibles",
@@ -770,10 +761,10 @@ impl<'mc> Permission<'mc> {
     }
     pub fn load_permissions(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc crate::permissions::PermissionDefault<'mc>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgPermission>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
@@ -786,11 +777,9 @@ impl<'mc> Permission<'mc> {
     pub fn load_permission_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
-        arg1: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<'mc, dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
-        >,
+        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>>,
         arg2: std::option::Option<impl Into<&'mc crate::permissions::PermissionDefault<'mc>>>,
-        arg3: std::option::Option<impl Into<&'mc blackboxmc_java::JavaList<'mc, orgPermission>>>,
+        arg3: std::option::Option<impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
         let val_2 =
@@ -1134,8 +1123,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     pub fn permissions(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaBoolean>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPermissions",

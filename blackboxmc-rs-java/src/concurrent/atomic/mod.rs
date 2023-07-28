@@ -860,10 +860,10 @@ where
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: V,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i32,
     ) -> Result<
-        crate::concurrent::atomic::JavaAtomicStampedReference<'mc>,
+        crate::concurrent::atomic::JavaAtomicStampedReference<'mc, V>,
         Box<dyn std::error::Error>,
     > {
         let val_1 = arg0;
@@ -888,7 +888,7 @@ where
     }
     pub fn attempt_stamp(
         &mut self,
-        arg0: V,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
@@ -905,16 +905,17 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get(&mut self, arg0: Vec<i32>) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: Vec<V>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "get", "(I)Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn reference(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn reference(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getReference",
@@ -922,11 +923,13 @@ where
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set(&mut self, arg0: V, arg1: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i32,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -943,8 +946,8 @@ where
     }
     pub fn compare_and_set(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
         arg2: i32,
         arg3: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -968,8 +971,8 @@ where
     }
     pub fn weak_compare_and_set(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
         arg2: i32,
         arg3: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1108,8 +1111,8 @@ where
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<V>,
-    ) -> Result<crate::concurrent::atomic::JavaAtomicReference<'mc>, Box<dyn std::error::Error>>
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<crate::concurrent::atomic::JavaAtomicReference<'mc, V>, Box<dyn std::error::Error>>
     {
         let val_1 = arg0.unwrap();
         let cls = &jni.find_class("java/util/concurrent/atomic/AtomicReference")?;
@@ -1122,8 +1125,8 @@ where
     }
     pub fn weak_compare_and_set_volatile(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1141,9 +1144,9 @@ where
     }
     pub fn get_and_update(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaUnaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        arg0: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAndUpdate",
@@ -1151,15 +1154,13 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn update_and_get(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaUnaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        arg0: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "updateAndGet",
@@ -1167,17 +1168,15 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn get_and_accumulate(
         &mut self,
         arg0: V,
-        arg1: impl Into<&'mc crate::function::JavaBinaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAndAccumulate",
@@ -1188,17 +1187,15 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn accumulate_and_get(
         &mut self,
         arg0: V,
-        arg1: impl Into<&'mc crate::function::JavaBinaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accumulateAndGet",
@@ -1209,20 +1206,19 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn plain(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn plain(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPlain", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set_plain(&mut self, arg0: V) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_plain(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1233,14 +1229,12 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn get(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn get(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "get", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1253,7 +1247,10 @@ where
             .to_string_lossy()
             .to_string())
     }
-    pub fn set(&mut self, arg0: V) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1264,7 +1261,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn opaque(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn opaque(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getOpaque",
@@ -1272,11 +1269,12 @@ where
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set_opaque(&mut self, arg0: V) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_opaque(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1287,7 +1285,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn acquire(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn acquire(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAcquire",
@@ -1295,11 +1293,12 @@ where
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set_release(&mut self, arg0: V) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_release(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1312,8 +1311,8 @@ where
     }
     pub fn compare_and_set(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1333,7 +1332,7 @@ where
         &mut self,
         arg0: V,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -1346,15 +1345,13 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn compare_and_exchange_acquire(
         &mut self,
         arg0: V,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -1367,15 +1364,13 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn compare_and_exchange_release(
         &mut self,
         arg0: V,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -1388,14 +1383,12 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn weak_compare_and_set_plain(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1414,8 +1407,8 @@ where
     #[deprecated]
     pub fn weak_compare_and_set(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1433,8 +1426,8 @@ where
     }
     pub fn weak_compare_and_set_acquire(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1452,8 +1445,8 @@ where
     }
     pub fn weak_compare_and_set_release(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1469,7 +1462,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_and_set(&mut self, arg0: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn get_and_set(
+        &mut self,
+        arg0: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1478,11 +1474,12 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn lazy_set(&mut self, arg0: V) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn lazy_set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1607,7 +1604,7 @@ where
         arg1: jni::objects::JClass<'mc>,
         arg2: impl Into<&'mc String>,
     ) -> Result<
-        crate::concurrent::atomic::JavaAtomicReferenceFieldUpdater<'mc, U, W>,
+        crate::concurrent::atomic::JavaAtomicReferenceFieldUpdater<'mc, T, V>,
         Box<dyn std::error::Error>,
     > {
         let val_1 = arg0;
@@ -1621,11 +1618,11 @@ where
     }
     pub fn get_and_update(
         &mut self,
-        arg0: T,
-        arg1: impl Into<&'mc crate::function::JavaUnaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: V,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAndUpdate",
@@ -1636,17 +1633,15 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn update_and_get(
         &mut self,
-        arg0: T,
-        arg1: impl Into<&'mc crate::function::JavaUnaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: V,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "updateAndGet",
@@ -1657,41 +1652,38 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn get_and_accumulate(
         &mut self,
-        arg0: T,
+        arg0: V,
         arg1: V,
-        arg2: impl Into<&'mc crate::function::JavaBinaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+        arg2: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = arg2.jni_object();
         let res = self.jni_ref().call_method(&self.jni_object(),"getAndAccumulate","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BinaryOperator;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn accumulate_and_get(
         &mut self,
-        arg0: T,
+        arg0: V,
         arg1: V,
-        arg2: impl Into<&'mc crate::function::JavaBinaryOperator<'mc, V>>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+        arg2: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = arg2.jni_object();
         let res = self.jni_ref().call_method(&self.jni_object(),"accumulateAndGet","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BinaryOperator;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn get(&mut self, arg0: T) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1700,11 +1692,13 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set(&mut self, arg0: T, arg1: V) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -1721,9 +1715,9 @@ where
     }
     pub fn compare_and_set(
         &mut self,
-        arg0: T,
-        arg1: V,
-        arg2: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1743,9 +1737,9 @@ where
     }
     pub fn weak_compare_and_set(
         &mut self,
-        arg0: T,
-        arg1: V,
-        arg2: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -1763,7 +1757,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_and_set(&mut self, arg0: T, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn get_and_set(
+        &mut self,
+        arg0: V,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -1776,11 +1774,13 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn lazy_set(&mut self, arg0: T, arg1: V) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn lazy_set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -3063,7 +3063,7 @@ where
         arg0: jni::objects::JClass<'mc>,
         arg1: impl Into<&'mc String>,
     ) -> Result<
-        crate::concurrent::atomic::JavaAtomicLongFieldUpdater<'mc, U>,
+        crate::concurrent::atomic::JavaAtomicLongFieldUpdater<'mc, T>,
         Box<dyn std::error::Error>,
     > {
         let val_1 = arg0;
@@ -3074,7 +3074,10 @@ where
         let mut obj = res.l()?;
         crate::concurrent::atomic::JavaAtomicLongFieldUpdater::from_raw(&jni, obj)
     }
-    pub fn get_and_increment(&mut self, arg0: T) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn get_and_increment(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3085,7 +3088,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn get_and_decrement(&mut self, arg0: T) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn get_and_decrement(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3096,7 +3102,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn increment_and_get(&mut self, arg0: T) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn increment_and_get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3107,7 +3116,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn decrement_and_get(&mut self, arg0: T) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn decrement_and_get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3118,7 +3130,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn add_and_get(&mut self, arg0: T, arg1: i64) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn add_and_get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i64,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3135,7 +3151,7 @@ where
     }
     pub fn get_and_update(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<&'mc crate::function::JavaLongUnaryOperator<'mc>>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
@@ -3154,7 +3170,7 @@ where
     }
     pub fn update_and_get(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<&'mc crate::function::JavaLongUnaryOperator<'mc>>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
@@ -3173,7 +3189,7 @@ where
     }
     pub fn get_and_accumulate(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i64,
         arg2: impl Into<&'mc crate::function::JavaLongBinaryOperator<'mc>>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -3195,7 +3211,7 @@ where
     }
     pub fn accumulate_and_get(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i64,
         arg2: impl Into<&'mc crate::function::JavaLongBinaryOperator<'mc>>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -3215,7 +3231,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn get(&mut self, arg0: T) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3226,7 +3245,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn set(&mut self, arg0: T, arg1: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i64,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3243,7 +3266,7 @@ where
     }
     pub fn compare_and_set(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i64,
         arg2: i64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3265,7 +3288,7 @@ where
     }
     pub fn weak_compare_and_set(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i64,
         arg2: i64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3285,7 +3308,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_and_set(&mut self, arg0: T, arg1: i64) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn get_and_set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i64,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3300,7 +3327,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn get_and_add(&mut self, arg0: T, arg1: i64) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn get_and_add(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i64,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3315,7 +3346,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub fn lazy_set(&mut self, arg0: T, arg1: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn lazy_set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i64,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3639,7 +3674,7 @@ where
         arg0: jni::objects::JClass<'mc>,
         arg1: impl Into<&'mc String>,
     ) -> Result<
-        crate::concurrent::atomic::JavaAtomicIntegerFieldUpdater<'mc, U>,
+        crate::concurrent::atomic::JavaAtomicIntegerFieldUpdater<'mc, T>,
         Box<dyn std::error::Error>,
     > {
         let val_1 = arg0;
@@ -3650,7 +3685,10 @@ where
         let mut obj = res.l()?;
         crate::concurrent::atomic::JavaAtomicIntegerFieldUpdater::from_raw(&jni, obj)
     }
-    pub fn get_and_increment(&mut self, arg0: T) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn get_and_increment(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3661,7 +3699,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn get_and_decrement(&mut self, arg0: T) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn get_and_decrement(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3672,7 +3713,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn increment_and_get(&mut self, arg0: T) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn increment_and_get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3683,7 +3727,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn decrement_and_get(&mut self, arg0: T) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn decrement_and_get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3694,7 +3741,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn add_and_get(&mut self, arg0: T, arg1: i32) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn add_and_get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i32,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3711,7 +3762,7 @@ where
     }
     pub fn get_and_update(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<&'mc crate::function::JavaIntUnaryOperator<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
@@ -3730,7 +3781,7 @@ where
     }
     pub fn update_and_get(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<&'mc crate::function::JavaIntUnaryOperator<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
@@ -3749,7 +3800,7 @@ where
     }
     pub fn get_and_accumulate(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i32,
         arg2: impl Into<&'mc crate::function::JavaIntBinaryOperator<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3771,7 +3822,7 @@ where
     }
     pub fn accumulate_and_get(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i32,
         arg2: impl Into<&'mc crate::function::JavaIntBinaryOperator<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3791,7 +3842,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn get(&mut self, arg0: T) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3802,7 +3856,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn set(&mut self, arg0: T, arg1: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i32,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3819,7 +3877,7 @@ where
     }
     pub fn compare_and_set(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i32,
         arg2: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3841,7 +3899,7 @@ where
     }
     pub fn weak_compare_and_set(
         &mut self,
-        arg0: T,
+        arg0: jni::objects::JObject<'mc>,
         arg1: i32,
         arg2: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3861,7 +3919,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_and_set(&mut self, arg0: T, arg1: i32) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn get_and_set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i32,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3876,7 +3938,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn get_and_add(&mut self, arg0: T, arg1: i32) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn get_and_add(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i32,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3891,7 +3957,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn lazy_set(&mut self, arg0: T, arg1: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn lazy_set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i32,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -4765,8 +4835,10 @@ where
     pub fn new_with_objects(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::concurrent::atomic::JavaAtomicReferenceArray<'mc>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<
+        crate::concurrent::atomic::JavaAtomicReferenceArray<'mc, E>,
+        Box<dyn std::error::Error>,
+    > {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let cls = &jni.find_class("java/util/concurrent/atomic/AtomicReferenceArray")?;
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -4775,8 +4847,8 @@ where
     pub fn weak_compare_and_set_volatile(
         &mut self,
         arg0: i32,
-        arg1: E,
-        arg2: E,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
@@ -4796,11 +4868,11 @@ where
     }
     pub fn get_and_update(
         &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::function::JavaUnaryOperator<'mc, E>>,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: E,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAndUpdate",
@@ -4811,17 +4883,15 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn update_and_get(
         &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::function::JavaUnaryOperator<'mc, E>>,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: E,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "updateAndGet",
@@ -4832,19 +4902,17 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn get_and_accumulate(
         &mut self,
-        arg0: i32,
+        arg0: E,
         arg1: E,
-        arg2: impl Into<&'mc crate::function::JavaBinaryOperator<'mc, E>>,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+        arg2: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = arg2.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAndAccumulate",
@@ -4856,19 +4924,17 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn accumulate_and_get(
         &mut self,
-        arg0: i32,
+        arg0: E,
         arg1: E,
-        arg2: impl Into<&'mc crate::function::JavaBinaryOperator<'mc, E>>,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+        arg2: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = arg2.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "accumulateAndGet",
@@ -4880,11 +4946,12 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn get_plain(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get_plain(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4893,11 +4960,13 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set_plain(&mut self, arg0: i32, arg1: E) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_plain(
+        &mut self,
+        arg0: i32,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -4912,7 +4981,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4921,9 +4993,7 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn length(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -4943,7 +5013,11 @@ where
             .to_string_lossy()
             .to_string())
     }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(
+        &mut self,
+        arg0: i32,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -4958,7 +5032,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn get_opaque(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get_opaque(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4967,11 +5044,13 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set_opaque(&mut self, arg0: i32, arg1: E) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_opaque(
+        &mut self,
+        arg0: i32,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -4986,7 +5065,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn get_acquire(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get_acquire(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4995,11 +5077,13 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set_release(&mut self, arg0: i32, arg1: E) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_release(
+        &mut self,
+        arg0: i32,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -5017,8 +5101,8 @@ where
     pub fn compare_and_set(
         &mut self,
         arg0: i32,
-        arg1: E,
-        arg2: E,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
@@ -5038,10 +5122,10 @@ where
     }
     pub fn compare_and_exchange(
         &mut self,
-        arg0: i32,
+        arg0: E,
         arg1: E,
         arg2: E,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let val_3 = arg2;
@@ -5056,16 +5140,14 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn compare_and_exchange_acquire(
         &mut self,
-        arg0: i32,
+        arg0: E,
         arg1: E,
         arg2: E,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let val_3 = arg2;
@@ -5080,16 +5162,14 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn compare_and_exchange_release(
         &mut self,
-        arg0: i32,
+        arg0: E,
         arg1: E,
         arg2: E,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let val_3 = arg2;
@@ -5104,15 +5184,13 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn weak_compare_and_set_plain(
         &mut self,
         arg0: i32,
-        arg1: E,
-        arg2: E,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
@@ -5134,8 +5212,8 @@ where
     pub fn weak_compare_and_set(
         &mut self,
         arg0: i32,
-        arg1: E,
-        arg2: E,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
@@ -5156,8 +5234,8 @@ where
     pub fn weak_compare_and_set_acquire(
         &mut self,
         arg0: i32,
-        arg1: E,
-        arg2: E,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
@@ -5178,8 +5256,8 @@ where
     pub fn weak_compare_and_set_release(
         &mut self,
         arg0: i32,
-        arg1: E,
-        arg2: E,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
@@ -5197,7 +5275,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_and_set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get_and_set(
+        &mut self,
+        arg0: E,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -5210,11 +5292,13 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        E::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn lazy_set(&mut self, arg0: i32, arg1: E) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn lazy_set(
+        &mut self,
+        arg0: i32,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -5948,10 +6032,10 @@ where
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: V,
+        arg0: jni::objects::JObject<'mc>,
         arg1: bool,
     ) -> Result<
-        crate::concurrent::atomic::JavaAtomicMarkableReference<'mc>,
+        crate::concurrent::atomic::JavaAtomicMarkableReference<'mc, V>,
         Box<dyn std::error::Error>,
     > {
         let val_1 = arg0;
@@ -5977,7 +6061,7 @@ where
     }
     pub fn attempt_mark(
         &mut self,
-        arg0: V,
+        arg0: jni::objects::JObject<'mc>,
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
@@ -5995,16 +6079,17 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get(&mut self, arg0: Vec<bool>) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: Vec<V>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "get", "(Z)Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn reference(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn reference(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getReference",
@@ -6012,11 +6097,13 @@ where
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        V::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
-    pub fn set(&mut self, arg0: V, arg1: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
@@ -6034,8 +6121,8 @@ where
     }
     pub fn compare_and_set(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
         arg2: bool,
         arg3: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6061,8 +6148,8 @@ where
     }
     pub fn weak_compare_and_set(
         &mut self,
-        arg0: V,
-        arg1: V,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
         arg2: bool,
         arg3: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {

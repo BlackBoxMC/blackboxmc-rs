@@ -55,9 +55,7 @@ impl<'mc> DefaultPermissions<'mc> {
         arg0: impl Into<&'mc String>,
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc crate::permissions::PermissionDefault<'mc>>,
-        arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, javaBoolean>>,
-        >,
+        arg3: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>>,
         arg4: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());

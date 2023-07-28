@@ -764,10 +764,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     pub fn providers(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaList<'mc, netTranslationRegistryTranslationProvider>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getProviders",

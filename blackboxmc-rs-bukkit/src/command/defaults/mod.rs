@@ -72,7 +72,7 @@ impl<'mc> ReloadCommand<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: std::option::Option<Vec<impl Into<String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -231,7 +231,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -263,7 +263,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -514,7 +514,7 @@ impl<'mc> TimingsCommand<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: std::option::Option<Vec<impl Into<String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -688,7 +688,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -720,7 +720,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -1069,7 +1069,7 @@ impl<'mc> BukkitCommand<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: std::option::Option<Vec<impl Into<String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -1115,7 +1115,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1147,7 +1147,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -1398,7 +1398,7 @@ impl<'mc> VersionCommand<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: std::option::Option<Vec<impl Into<String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -1557,7 +1557,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1589,7 +1589,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -1832,7 +1832,7 @@ impl<'mc> HelpCommand<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: std::option::Option<Vec<impl Into<String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -1991,7 +1991,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2023,7 +2023,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -2274,7 +2274,7 @@ impl<'mc> PluginsCommand<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: std::option::Option<Vec<impl Into<String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -2433,7 +2433,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn set_aliases(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, String>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
     ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2465,7 +2465,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);

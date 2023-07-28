@@ -53,7 +53,7 @@ impl<'mc> JavaPluginLoader<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::event::Listener<'mc>>,
         arg1: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, o>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -272,7 +272,7 @@ impl<'mc> JavaPlugin<'mc> {
         arg1: impl Into<&'mc crate::command::Command<'mc>>,
         arg2: impl Into<&'mc String>,
         arg3: Vec<impl Into<String>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
@@ -342,8 +342,8 @@ impl<'mc> JavaPlugin<'mc> {
     }
     pub fn get_plugin(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: jni::objects::JClass<'mc>,
-    ) -> Result<T, Box<dyn std::error::Error>> {
+        arg0: T,
+    ) -> Result<crate::plugin::java::JavaPlugin<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let cls = &jni.find_class("org/bukkit/plugin/java/JavaPlugin")?;
         let res = jni.call_static_method(
@@ -353,7 +353,7 @@ impl<'mc> JavaPlugin<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
         let mut obj = res.l()?;
-        T::from_raw(&jni, obj)
+        crate::plugin::java::JavaPlugin::from_raw(&jni, obj)
     }
     pub fn config(
         &mut self,

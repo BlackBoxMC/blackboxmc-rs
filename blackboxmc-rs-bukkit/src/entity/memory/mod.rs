@@ -43,7 +43,7 @@ where
     }
     pub fn values(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, orgMemoryKey>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Set")?;
         let res = jni.call_static_method(cls, "values", "()Ljava/util/Set;", &[])?;
         let mut obj = res.l()?;
@@ -64,7 +64,7 @@ where
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-    ) -> Result<crate::entity::memory::MemoryKey<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::entity::memory::MemoryKey<'mc, T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/entity/memory/MemoryKey")?;
         let res = jni.call_static_method(

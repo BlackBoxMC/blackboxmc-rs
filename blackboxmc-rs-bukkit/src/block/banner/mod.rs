@@ -358,8 +358,7 @@ impl<'mc> Pattern<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaObject>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);

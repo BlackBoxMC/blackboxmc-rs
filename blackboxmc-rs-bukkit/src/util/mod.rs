@@ -456,7 +456,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     pub fn for_each_remaining(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::function::JavaConsumer<'mc, E>>,
+        arg0: impl Into<&'mc blackboxmc_java::function::JavaConsumer<'mc, T>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -467,6 +467,11 @@ impl<'mc> BlockIterator<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+impl<'mc> Into<blackboxmc_java::JavaIterator<'mc>> for BlockIterator<'mc> {
+    fn into(self) -> blackboxmc_java::JavaIterator<'mc> {
+        blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Transformation<'mc>(
@@ -984,8 +989,7 @@ impl<'mc> VoxelShape<'mc> {
     }
     pub fn bounding_boxes(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, orgBoundingBox>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBoxes",
@@ -1036,7 +1040,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn accept(&mut self, arg0: T) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn accept(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1489,8 +1496,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaObject>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
@@ -1501,7 +1507,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, javaObject>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/BoundingBox")?;
@@ -1880,9 +1886,7 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn deserialize_with_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, javaObject>>,
-        >,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -2221,8 +2225,7 @@ impl<'mc> BlockVector<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaObject>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
@@ -3539,8 +3542,7 @@ impl<'mc> Vector<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaObject>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
@@ -3551,7 +3553,7 @@ impl<'mc> Vector<'mc> {
     }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, javaObject>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/Vector")?;

@@ -52,7 +52,7 @@ impl<'mc> JavaPattern<'mc> {
     }
     pub fn as_match_predicate(
         &mut self,
-    ) -> Result<crate::function::JavaPredicate<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::function::JavaPredicate<'mc, T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "asMatchPredicate",
@@ -61,22 +61,6 @@ impl<'mc> JavaPattern<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::function::JavaPredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn split_as_stream(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaCharSequence<'mc>>,
-    ) -> Result<crate::stream::JavaStream<'mc, String>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "splitAsStream",
-            "(Ljava/lang/CharSequence;)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -98,25 +82,6 @@ impl<'mc> JavaPattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn matches(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaCharSequence<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(
-            cls,
-            "matches",
-            "(Ljava/lang/String;Ljava/lang/CharSequence;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
     pub fn compile_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -137,22 +102,6 @@ impl<'mc> JavaPattern<'mc> {
         let mut obj = res.l()?;
         crate::regex::JavaPattern::from_raw(&jni, obj)
     }
-    pub fn matcher(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaCharSequence<'mc>>,
-    ) -> Result<crate::regex::JavaMatcher<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "matcher",
-            "(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::regex::JavaMatcher::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn pattern(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -166,7 +115,7 @@ impl<'mc> JavaPattern<'mc> {
     }
     pub fn as_predicate(
         &mut self,
-    ) -> Result<crate::function::JavaPredicate<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::function::JavaPredicate<'mc, T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "asPredicate",

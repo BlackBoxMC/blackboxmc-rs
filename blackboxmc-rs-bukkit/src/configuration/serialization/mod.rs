@@ -38,7 +38,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     pub fn deserialize(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, dyn JNIRaw<'mc>>>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
@@ -108,9 +108,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     pub fn deserialize_object_with_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<'mc, javaString, dyn JNIRaw<'mc>>>,
-        >,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
@@ -252,8 +250,7 @@ impl<'mc> ConfigurationSerializable<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaObject>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);

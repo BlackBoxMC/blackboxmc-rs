@@ -407,7 +407,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
@@ -690,7 +690,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn passengers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPassengers",
@@ -1035,7 +1035,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn scoreboard_tags(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScoreboardTags",
@@ -1159,7 +1159,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgMetadataValue>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1326,10 +1326,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -1796,7 +1793,7 @@ impl<'mc> HopperMinecart<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
@@ -2079,7 +2076,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn passengers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPassengers",
@@ -2424,7 +2421,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn scoreboard_tags(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScoreboardTags",
@@ -2548,7 +2545,7 @@ impl<'mc> HopperMinecart<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgMetadataValue>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2715,10 +2712,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -3236,7 +3230,7 @@ impl<'mc> StorageMinecart<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
@@ -3519,7 +3513,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn passengers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPassengers",
@@ -3864,7 +3858,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn scoreboard_tags(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScoreboardTags",
@@ -3988,7 +3982,7 @@ impl<'mc> StorageMinecart<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgMetadataValue>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4155,10 +4149,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -4676,7 +4667,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
@@ -4959,7 +4950,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn passengers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPassengers",
@@ -5304,7 +5295,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn scoreboard_tags(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScoreboardTags",
@@ -5428,7 +5419,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgMetadataValue>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5595,10 +5586,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -6064,7 +6052,7 @@ impl<'mc> PoweredMinecart<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
@@ -6347,7 +6335,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn passengers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPassengers",
@@ -6692,7 +6680,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn scoreboard_tags(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScoreboardTags",
@@ -6816,7 +6804,7 @@ impl<'mc> PoweredMinecart<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgMetadataValue>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6983,10 +6971,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -7434,7 +7419,7 @@ impl<'mc> RideableMinecart<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
@@ -7717,7 +7702,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn passengers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPassengers",
@@ -8062,7 +8047,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn scoreboard_tags(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScoreboardTags",
@@ -8186,7 +8171,7 @@ impl<'mc> RideableMinecart<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgMetadataValue>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8353,10 +8338,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -8846,7 +8828,7 @@ impl<'mc> CommandMinecart<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
@@ -9129,7 +9111,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn passengers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPassengers",
@@ -9474,7 +9456,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn scoreboard_tags(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScoreboardTags",
@@ -9598,7 +9580,7 @@ impl<'mc> CommandMinecart<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgMetadataValue>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9765,10 +9747,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPermissionAttachmentInfo>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",

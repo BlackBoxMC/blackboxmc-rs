@@ -94,7 +94,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     pub fn remaining_criteria(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRemainingCriteria",
@@ -108,7 +108,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     pub fn awarded_criteria(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAwardedCriteria",
@@ -395,7 +395,7 @@ impl<'mc> Advancement<'mc> {
     }
     pub fn criteria(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCriteria",

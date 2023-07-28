@@ -442,7 +442,7 @@ impl<'mc> Messenger<'mc> {
     }
     pub fn outgoing_channels(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getOutgoingChannels",
@@ -456,7 +456,7 @@ impl<'mc> Messenger<'mc> {
     }
     pub fn incoming_channels(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIncomingChannels",
@@ -471,10 +471,7 @@ impl<'mc> Messenger<'mc> {
     pub fn get_incoming_channel_registrations_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPluginMessageListenerRegistration>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -492,10 +489,7 @@ impl<'mc> Messenger<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPluginMessageListenerRegistration>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 =
@@ -749,7 +743,7 @@ impl<'mc> StandardMessenger<'mc> {
     pub fn get_outgoing_channels(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -764,7 +758,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     pub fn incoming_channels(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIncomingChannels",
@@ -780,10 +774,7 @@ impl<'mc> StandardMessenger<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<
-        blackboxmc_java::JavaSet<'mc, orgPluginMessageListenerRegistration>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 =
@@ -1031,7 +1022,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
     }
     pub fn listening_plugin_channels(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getListeningPluginChannels",

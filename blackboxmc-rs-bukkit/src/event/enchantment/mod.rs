@@ -42,7 +42,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         arg2: impl Into<&'mc crate::block::Block<'mc>>,
         arg3: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
         arg4: i32,
-        arg5: impl Into<&'mc blackboxmc_java::JavaMap<'mc, orgEnchantment, javaInteger>>,
+        arg5: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
         arg6: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
         arg7: i32,
         arg8: i32,
@@ -165,10 +165,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     pub fn enchants_to_add(
         &mut self,
-    ) -> Result<
-        blackboxmc_java::JavaMap<'mc, orgEnchantment, javaInteger>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantsToAdd",
@@ -224,7 +221,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgHumanEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -513,7 +510,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, orgHumanEntity>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);

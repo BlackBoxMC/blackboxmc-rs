@@ -593,8 +593,7 @@ impl<'mc> Potion<'mc> {
     }
     pub fn effects(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, orgPotionEffect>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffects",
@@ -964,8 +963,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, javaString, javaObject>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
@@ -1369,8 +1367,7 @@ impl<'mc> PotionBrewer<'mc> {
         arg0: impl Into<&'mc crate::potion::PotionType<'mc>>,
         arg1: bool,
         arg2: bool,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, orgPotionEffect>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
@@ -1419,8 +1416,7 @@ impl<'mc> PotionBrewer<'mc> {
     pub fn get_effects_from_damage(
         &mut self,
         arg0: i32,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, orgPotionEffect>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

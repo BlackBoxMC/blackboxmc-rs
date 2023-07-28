@@ -264,7 +264,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn accept(&mut self, arg0: T, arg1: f64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn accept(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: f64,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let res = self.jni_ref().call_method(
@@ -367,7 +371,10 @@ where
         let mut obj = res.l()?;
         crate::function::JavaPredicate::from_raw(&jni, obj)
     }
-    pub fn test(&mut self, arg0: T) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn test(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -452,7 +459,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply(&mut self, arg0: T) -> Result<R, Box<dyn std::error::Error>> {
+    pub fn apply(
+        &mut self,
+        arg0: R,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -461,13 +471,11 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        R::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn identity(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::function::JavaFunction<'mc, T, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::function::JavaFunction<'mc, T, R>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/function/Function")?;
         let res =
             jni.call_static_method(cls, "identity", "()Ljava/util/function/Function;", &[])?;
@@ -476,8 +484,8 @@ where
     }
     pub fn compose(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, V>>,
-    ) -> Result<crate::function::JavaFunction<'mc, V, R>, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, T, R>>,
+    ) -> Result<crate::function::JavaFunction<'mc, T, R>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -492,8 +500,8 @@ where
     }
     pub fn and_then(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, R>>,
-    ) -> Result<crate::function::JavaFunction<'mc, T, V>, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, T, R>>,
+    ) -> Result<crate::function::JavaFunction<'mc, T, R>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -551,7 +559,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply_as_long(&mut self, arg0: T) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn apply_as_long(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -604,7 +615,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn accept(&mut self, arg0: T) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn accept(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -677,7 +691,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply_as_int(&mut self, arg0: T, arg1: U) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn apply_as_int(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -785,7 +803,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn accept(&mut self, arg0: T, arg1: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn accept(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i64,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Long(arg1.into());
         let res = self.jni_ref().call_method(
@@ -842,14 +864,12 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn get(&mut self) -> Result<T, Box<dyn std::error::Error>> {
+    pub fn get(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "get", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        T::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
 }
 impl<'mc, T> JNIRaw<'mc> for JavaSupplier<'mc, T>
@@ -925,7 +945,11 @@ where
         let mut obj = res.l()?;
         crate::function::JavaBinaryOperator::from_raw(&jni, obj)
     }
-    pub fn apply(&mut self, arg0: T, arg1: U) -> Result<R, Box<dyn std::error::Error>> {
+    pub fn apply(
+        &mut self,
+        arg0: R,
+        arg1: R,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -938,14 +962,12 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        R::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn and_then(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, R>>,
-    ) -> Result<crate::function::JavaBiFunction<'mc, T, U, V>, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, T, R>>,
+    ) -> Result<crate::function::JavaBiFunction<'mc, T, U, R>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -969,6 +991,14 @@ where
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc, T> Into<crate::function::JavaBiFunction<'mc, T>> for JavaBinaryOperator<'mc, T>
+where
+    T: JNIRaw<'mc>,
+{
+    fn into(self) -> crate::function::JavaBiFunction<'mc, T> {
+        crate::function::JavaBiFunction::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JavaUnaryOperator. Needed for returning it from Java.
@@ -1011,7 +1041,10 @@ where
         let mut obj = res.l()?;
         crate::function::JavaUnaryOperator::from_raw(&jni, obj)
     }
-    pub fn apply(&mut self, arg0: T) -> Result<R, Box<dyn std::error::Error>> {
+    pub fn apply(
+        &mut self,
+        arg0: R,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1020,14 +1053,12 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        R::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn compose(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, V>>,
-    ) -> Result<crate::function::JavaFunction<'mc, V, R>, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, T, R>>,
+    ) -> Result<crate::function::JavaFunction<'mc, T, R>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1042,8 +1073,8 @@ where
     }
     pub fn and_then(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, R>>,
-    ) -> Result<crate::function::JavaFunction<'mc, T, V>, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, T, R>>,
+    ) -> Result<crate::function::JavaFunction<'mc, T, R>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1067,6 +1098,14 @@ where
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc, T> Into<crate::function::JavaFunction<'mc, T>> for JavaUnaryOperator<'mc, T>
+where
+    T: JNIRaw<'mc>,
+{
+    fn into(self) -> crate::function::JavaFunction<'mc, T> {
+        crate::function::JavaFunction::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JavaObjIntConsumer. Needed for returning it from Java.
@@ -1100,7 +1139,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn accept(&mut self, arg0: T, arg1: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn accept(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: i32,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -1202,7 +1245,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply_as_double(&mut self, arg0: T) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn apply_as_double(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1595,7 +1641,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply_as_double(&mut self, arg0: T, arg1: U) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn apply_as_double(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -1859,7 +1909,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply(&mut self, arg0: f64) -> Result<R, Box<dyn std::error::Error>> {
+    pub fn apply(
+        &mut self,
+        arg0: R,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1868,9 +1921,7 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        R::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
 }
 impl<'mc, R> JNIRaw<'mc> for JavaDoubleFunction<'mc, R>
@@ -2042,7 +2093,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply(&mut self, arg0: i64) -> Result<R, Box<dyn std::error::Error>> {
+    pub fn apply(
+        &mut self,
+        arg0: R,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2051,9 +2105,7 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        R::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
 }
 impl<'mc, R> JNIRaw<'mc> for JavaLongFunction<'mc, R>
@@ -2159,7 +2211,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply(&mut self, arg0: T, arg1: U) -> Result<R, Box<dyn std::error::Error>> {
+    pub fn apply(
+        &mut self,
+        arg0: R,
+        arg1: R,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -2172,14 +2228,12 @@ where
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        R::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
     pub fn and_then(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, R>>,
-    ) -> Result<crate::function::JavaBiFunction<'mc, T, U, V>, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::function::JavaFunction<'mc, T, R>>,
+    ) -> Result<crate::function::JavaBiFunction<'mc, T, U, R>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2281,7 +2335,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply(&mut self, arg0: i32) -> Result<R, Box<dyn std::error::Error>> {
+    pub fn apply(
+        &mut self,
+        arg0: R,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2290,9 +2347,7 @@ where
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        R::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
 }
 impl<'mc, R> JNIRaw<'mc> for JavaIntFunction<'mc, R>
@@ -2535,7 +2590,10 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply_as_int(&mut self, arg0: T) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn apply_as_int(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2635,7 +2693,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn apply_as_long(&mut self, arg0: T, arg1: U) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn apply_as_long(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -2699,7 +2761,7 @@ where
     }
     pub fn or(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaBiPredicate<'mc, T>>,
+        arg0: impl Into<&'mc crate::function::JavaBiPredicate<'mc, T, U>>,
     ) -> Result<crate::function::JavaBiPredicate<'mc, T, U>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2713,7 +2775,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn test(&mut self, arg0: T, arg1: U) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn test(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
@@ -2744,7 +2810,7 @@ where
     }
     pub fn and(
         &mut self,
-        arg0: impl Into<&'mc crate::function::JavaBiPredicate<'mc, T>>,
+        arg0: impl Into<&'mc crate::function::JavaBiPredicate<'mc, T, U>>,
     ) -> Result<crate::function::JavaBiPredicate<'mc, T, U>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2760,84 +2826,6 @@ where
     }
 }
 impl<'mc, T, U> JNIRaw<'mc> for JavaBiPredicate<'mc, T, U>
-where
-    T: JNIRaw<'mc>,
-    U: JNIRaw<'mc>,
-{
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-/// An instantiatable struct that implements JavaBiConsumer. Needed for returning it from Java.
-pub struct JavaBiConsumer<'mc, T, U>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-)
-where
-    T: JNIRaw<'mc>,
-    U: JNIRaw<'mc>;
-impl<'mc, T, U> JavaBiConsumer<'mc, T, U>
-where
-    T: JNIRaw<'mc>,
-    U: JNIRaw<'mc>,
-{
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate JavaBiConsumer from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "JavaBiConsumer")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a JavaBiConsumer object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-    pub fn accept(&mut self, arg0: T, arg1: U) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = arg1;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "accept",
-            "(Ljava/lang/Object;Ljava/lang/Object;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn and_then(
-        &mut self,
-        arg0: impl Into<&'mc crate::function::JavaBiConsumer<'mc, T>>,
-    ) -> Result<crate::function::JavaBiConsumer<'mc, T, U>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "andThen",
-            "(Ljava/util/function/BiConsumer;)Ljava/util/function/BiConsumer;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::function::JavaBiConsumer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-}
-impl<'mc, T, U> JNIRaw<'mc> for JavaBiConsumer<'mc, T, U>
 where
     T: JNIRaw<'mc>,
     U: JNIRaw<'mc>,
