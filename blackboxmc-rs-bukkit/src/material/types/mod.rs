@@ -108,4 +108,111 @@ impl<'mc> MushroomBlockTexture<'mc> {
             _ => None,
         }
     }
+    pub fn value_of(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<crate::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("org/bukkit/material/types/MushroomBlockTexture")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/material/types/MushroomBlockTexture;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::material::types::MushroomBlockTexture::from_raw(
+            &jni,
+            raw_obj,
+            crate::material::types::MushroomBlockTexture::from_string(variant_str).unwrap(),
+        )
+    }
+    #[deprecated]
+    pub fn data(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", "()B", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.b().unwrap())
+    }
+    #[deprecated]
+    pub fn get_by_data(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i8,
+    ) -> Result<crate::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
+        let cls = &jni.find_class("org/bukkit/material/types/MushroomBlockTexture")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByData",
+            "(B)Lorg/bukkit/material/types/MushroomBlockTexture;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::material::types::MushroomBlockTexture::from_raw(
+            &jni,
+            raw_obj,
+            crate::material::types::MushroomBlockTexture::from_string(variant_str).unwrap(),
+        )
+    }
+    pub fn get_cap_by_face(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<crate::material::types::MushroomBlockTexture<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/material/types/MushroomBlockTexture")?;
+        let res = jni.call_static_method(
+            cls,
+            "getCapByFace",
+            "(Lorg/bukkit/block/BlockFace;)Lorg/bukkit/material/types/MushroomBlockTexture;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::material::types::MushroomBlockTexture::from_raw(
+            &jni,
+            raw_obj,
+            crate::material::types::MushroomBlockTexture::from_string(variant_str).unwrap(),
+        )
+    }
+    pub fn cap_face(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCapFace",
+            "()Lorg/bukkit/block/BlockFace;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::block::BlockFace::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::block::BlockFace::from_string(variant_str).unwrap(),
+        )
+    }
 }

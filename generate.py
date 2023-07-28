@@ -586,7 +586,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             impl_signature.append("\""+v+"\" => Some("+name+"Enum::"+val_proper+"),")
         impl_signature.append("_ => None}}")
 
-
     names = {}
     methods_ = {}
     for method in methods:
@@ -770,7 +769,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         types = []
         for type in func_signature:
             if(type["type_name_lhand"] == "") or (type["is_array"]) or (type["type_name_original"] in excluded_classes):
-                should_continue = False
+                n += 1
                 continue
             else:
                 ty = code_format(type, prefix, n, class_name=og_name, options_start_at=options_start_at)
