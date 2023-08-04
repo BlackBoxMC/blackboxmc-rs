@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 /// An instantiatable struct that implements Attributable. Needed for returning it from Java.
 pub struct Attributable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -334,6 +331,26 @@ impl<'mc> AttributeModifierOperation<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -374,6 +391,21 @@ impl<'mc> AttributeModifierOperation<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -530,6 +562,13 @@ impl<'mc> AttributeModifier<'mc> {
 "(Ljava/util/UUID;Ljava/lang/String;DLorg/bukkit/attribute/AttributeModifier$Operation;Lorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::attribute::AttributeModifier::from_raw(&jni, res)
     }
+    pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAmount", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
@@ -555,13 +594,6 @@ impl<'mc> AttributeModifier<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::attribute::AttributeModifier::from_raw(&jni, obj)
-    }
-    pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAmount", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
     }
     pub fn operation(
         &mut self,
@@ -686,10 +718,18 @@ impl<'mc> AttributeModifier<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
-    for AttributeModifier<'mc>
+impl<'mc>
+    Into<
+        crate::configuration::serialization::ConfigurationSerializable<
+            'mc, /* parse_into_impl */
+        >,
+    > for AttributeModifier<'mc>
 {
-    fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
+    fn into(
+        self,
+    ) -> crate::configuration::serialization::ConfigurationSerializable<
+        'mc, /* parse_into_impl */
+    > {
         crate::configuration::serialization::ConfigurationSerializable::from_raw(
             &self.jni_ref(),
             self.1,

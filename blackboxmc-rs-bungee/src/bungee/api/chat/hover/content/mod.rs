@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct Item<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for Item<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -42,13 +39,6 @@ let res = jni.new_object(cls,
 "(Ljava/lang/String;ILnet/md_5/bungee/api/chat/ItemTag;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
 crate::bungee::api::chat::hover::content::Item::from_raw(&jni,res
 )}
-	pub fn count(&mut self) 
--> Result<i32, Box<dyn std::error::Error>>
-
-{let res = self.jni_ref().call_method(&self.jni_object(),"getCount","()I",&[]);
-let res = 
-self.jni_ref().translate_error(res)?;
-Ok(res.i().unwrap())}
 	pub fn tag(&mut self) 
 -> Result<crate::bungee::api::chat::ItemTag<'mc>, Box<dyn std::error::Error>>
 
@@ -57,6 +47,13 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::ItemTag::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
+	pub fn count(&mut self) 
+-> Result<i32, Box<dyn std::error::Error>>
+
+{let res = self.jni_ref().call_method(&self.jni_object(),"getCount","()I",&[]);
+let res = 
+self.jni_ref().translate_error(res)?;
+Ok(res.i().unwrap())}
 	pub fn set_tag(&mut self,arg0: impl Into<&'mc crate::bungee::api::chat::ItemTag<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
@@ -71,13 +68,6 @@ Ok(())}
 let res = self.jni_ref().call_method(&self.jni_object(),"setCount","(I)V",&[jni::objects::JValueGen::from(&val_1)]);
 self.jni_ref().translate_error(res)?;
 Ok(())}
-	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
--> Result<(), Box<dyn std::error::Error>>
-
-{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
-self.jni_ref().translate_error(res)?;
-Ok(())}
 	pub fn required_action(&mut self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
 
@@ -86,6 +76,13 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
+	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(())}
 	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
@@ -150,8 +147,8 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc>> for Item<'mc>{
-   fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc> {
+impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc/* parse_into_impl */>> for Item<'mc>{
+   fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc/* parse_into_impl */> {
        crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), self.1).unwrap()
    }
 }
@@ -203,13 +200,6 @@ crate::bungee::api::chat::hover::content::Entity::from_raw(&jni,res
 let res = self.jni_ref().call_method(&self.jni_object(),"setType","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
 self.jni_ref().translate_error(res)?;
 Ok(())}
-	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
--> Result<(), Box<dyn std::error::Error>>
-
-{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
-self.jni_ref().translate_error(res)?;
-Ok(())}
 	pub fn required_action(&mut self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
 
@@ -218,6 +208,13 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
+	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(())}
 	pub fn name(&mut self) 
 -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>>
 
@@ -304,8 +301,8 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc>> for Entity<'mc>{
-   fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc> {
+impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc/* parse_into_impl */>> for Entity<'mc>{
+   fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc/* parse_into_impl */> {
        crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), self.1).unwrap()
    }
 }
@@ -699,8 +696,8 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc>> for Text<'mc>{
-   fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc> {
+impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc/* parse_into_impl */>> for Text<'mc>{
+   fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc/* parse_into_impl */> {
        crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), self.1).unwrap()
    }
 }

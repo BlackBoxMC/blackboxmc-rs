@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 /// An instantiatable struct that implements AdvancementProgress. Needed for returning it from Java.
 pub struct AdvancementProgress<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -225,20 +222,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getX", "()F", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
-    }
-    pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getY", "()F", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
-    }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -252,6 +235,20 @@ impl<'mc> AdvancementDisplay<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getX", "()F", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f().unwrap())
+    }
+    pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getY", "()F", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f().unwrap())
     }
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -406,8 +403,8 @@ impl<'mc> JNIRaw<'mc> for Advancement<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::Keyed<'mc>> for Advancement<'mc> {
-    fn into(self) -> crate::Keyed<'mc> {
+impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for Advancement<'mc> {
+    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

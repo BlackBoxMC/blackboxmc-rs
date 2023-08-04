@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ProfileBanList. Needed for returning it from Java.
 pub struct ProfileBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -41,26 +38,6 @@ impl<'mc> ProfileBanList<'mc> {
         let val_4 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    #[deprecated]
-    pub fn add_ban_with_string(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc blackboxmc_java::JavaDate<'mc>>,
-        arg3: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<crate::BanEntry<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let val_4 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
-        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -148,11 +125,6 @@ impl<'mc> JNIRaw<'mc> for ProfileBanList<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::BanList<'mc>> for ProfileBanList<'mc> {
-    fn into(self) -> crate::BanList<'mc> {
-        crate::BanList::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements IpBanList. Needed for returning it from Java.
 pub struct IpBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -177,6 +149,35 @@ impl<'mc> IpBanList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn add_ban_with_object(
+        &mut self,
+        arg0: T,
+        arg1: impl Into<&'mc String>,
+        arg2: impl Into<&'mc blackboxmc_java::JavaDate<'mc>>,
+        arg3: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<crate::BanEntry<'mc, T>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.jni_object();
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
+        let val_4 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addBan",
+            "(LT;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn get_ban_entry_with_string(
         &mut self,
         arg0: std::option::Option<T>,
@@ -188,26 +189,6 @@ impl<'mc> IpBanList<'mc> {
             "(LT;)Lorg/bukkit/BanEntry;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    #[deprecated]
-    pub fn add_ban_with_object(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc blackboxmc_java::JavaDate<'mc>>,
-        arg3: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<crate::BanEntry<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let val_4 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
-        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -277,10 +258,5 @@ impl<'mc> JNIRaw<'mc> for IpBanList<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::BanList<'mc>> for IpBanList<'mc> {
-    fn into(self) -> crate::BanList<'mc> {
-        crate::BanList::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

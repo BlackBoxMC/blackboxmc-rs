@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct FileConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -213,7 +210,6 @@ impl<'mc> FileConfiguration<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -223,29 +219,6 @@ impl<'mc> FileConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -269,6 +242,29 @@ impl<'mc> FileConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::Color::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -299,7 +295,6 @@ impl<'mc> FileConfiguration<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -914,7 +909,6 @@ impl<'mc> FileConfiguration<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -995,7 +989,6 @@ impl<'mc> FileConfiguration<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1164,8 +1157,10 @@ impl<'mc> FileConfiguration<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::configuration::MemoryConfiguration<'mc>> for FileConfiguration<'mc> {
-    fn into(self) -> crate::configuration::MemoryConfiguration<'mc> {
+impl<'mc> Into<crate::configuration::MemoryConfiguration<'mc /* parse_into_impl */>>
+    for FileConfiguration<'mc>
+{
+    fn into(self) -> crate::configuration::MemoryConfiguration<'mc /* parse_into_impl */> {
         crate::configuration::MemoryConfiguration::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1204,6 +1199,22 @@ impl<'mc> FileConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn path_separator(
+        &mut self,
+        arg0: std::option::Option<u16>,
+    ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "pathSeparator",
+            "(C)Lorg/bukkit/configuration/ConfigurationOptions;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::ConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     #[deprecated]
     pub fn header(
         &mut self,
@@ -1223,38 +1234,19 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn path_separator(
-        &mut self,
-        arg0: std::option::Option<u16>,
-    ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pathSeparator",
-            "(C)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::file::FileConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn copy_defaults(
         &mut self,
         arg0: std::option::Option<bool>,
-    ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
-    {
-        // -1
+    ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copyDefaults",
-            "(Z)Lorg/bukkit/configuration/file/FileConfigurationOptions;",
+            "(Z)Lorg/bukkit/configuration/ConfigurationOptions;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::file::FileConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+        crate::configuration::ConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1263,7 +1255,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1327,7 +1318,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1427,10 +1417,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::configuration::MemoryConfigurationOptions<'mc>>
+impl<'mc> Into<crate::configuration::MemoryConfigurationOptions<'mc /* parse_into_impl */>>
     for FileConfigurationOptions<'mc>
 {
-    fn into(self) -> crate::configuration::MemoryConfigurationOptions<'mc> {
+    fn into(self) -> crate::configuration::MemoryConfigurationOptions<'mc /* parse_into_impl */> {
         crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1469,6 +1459,39 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn width(
+        &mut self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
+    {
+        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "width",
+            "(I)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::file::YamlConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn path_separator(
+        &mut self,
+        arg0: std::option::Option<u16>,
+    ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "pathSeparator",
+            "(C)Lorg/bukkit/configuration/ConfigurationOptions;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::ConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     #[deprecated]
     pub fn header(
         &mut self,
@@ -1488,46 +1511,11 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn path_separator(
-        &mut self,
-        arg0: std::option::Option<u16>,
-    ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pathSeparator",
-            "(C)Lorg/bukkit/configuration/MemoryConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn width(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "width",
-            "(I)Lorg/bukkit/configuration/file/YamlConfigurationOptions;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::file::YamlConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn copy_defaults(
         &mut self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1545,7 +1533,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1599,7 +1586,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1727,10 +1713,12 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::configuration::file::FileConfigurationOptions<'mc>>
+impl<'mc> Into<crate::configuration::file::FileConfigurationOptions<'mc /* parse_into_impl */>>
     for YamlConfigurationOptions<'mc>
 {
-    fn into(self) -> crate::configuration::file::FileConfigurationOptions<'mc> {
+    fn into(
+        self,
+    ) -> crate::configuration::file::FileConfigurationOptions<'mc /* parse_into_impl */> {
         crate::configuration::file::FileConfigurationOptions::from_raw(&self.jni_ref(), self.1)
             .unwrap()
     }
@@ -1940,7 +1928,6 @@ impl<'mc> YamlConfiguration<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1950,29 +1937,6 @@ impl<'mc> YamlConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1996,6 +1960,29 @@ impl<'mc> YamlConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::Color::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2026,7 +2013,6 @@ impl<'mc> YamlConfiguration<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2641,7 +2627,6 @@ impl<'mc> YamlConfiguration<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2722,7 +2707,6 @@ impl<'mc> YamlConfiguration<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2891,8 +2875,10 @@ impl<'mc> YamlConfiguration<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::configuration::file::FileConfiguration<'mc>> for YamlConfiguration<'mc> {
-    fn into(self) -> crate::configuration::file::FileConfiguration<'mc> {
+impl<'mc> Into<crate::configuration::file::FileConfiguration<'mc /* parse_into_impl */>>
+    for YamlConfiguration<'mc>
+{
+    fn into(self) -> crate::configuration::file::FileConfiguration<'mc /* parse_into_impl */> {
         crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

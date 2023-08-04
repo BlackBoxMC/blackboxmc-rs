@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct HelpTopicComparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -144,13 +141,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> Into<blackboxmc_java::JavaComparator<'mc>>
-    for HelpTopicComparatorTopicNameComparator<'mc>
-{
-    fn into(self) -> blackboxmc_java::JavaComparator<'mc> {
-        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopicComparator<'mc> {
@@ -316,21 +306,16 @@ impl<'mc> HelpTopicComparator<'mc> {
         })
     }
 }
-impl<'mc> Into<blackboxmc_java::JavaComparator<'mc>> for HelpTopicComparator<'mc> {
-    fn into(self) -> blackboxmc_java::JavaComparator<'mc> {
-        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements HelpTopicFactory. Needed for returning it from Java.
 pub struct HelpTopicFactory<'mc, T>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 )
 where
-    T: JNIRaw<'mc>;
+    T: Into<crate::JavaCommand<'mc>>;
 impl<'mc, T> HelpTopicFactory<'mc, T>
 where
-    T: JNIRaw<'mc>,
+    T: Into<crate::JavaCommand<'mc>>,
 {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -355,7 +340,7 @@ where
     pub fn create_topic(
         &mut self,
         arg0: impl Into<&'mc crate::command::Command<'mc>>,
-    ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::help::HelpTopic<'mc, T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -371,7 +356,7 @@ where
 }
 impl<'mc, T> JNIRaw<'mc> for HelpTopicFactory<'mc, T>
 where
-    T: JNIRaw<'mc>,
+    T: Into<crate::JavaCommand<'mc>>,
 {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -664,7 +649,7 @@ impl<'mc> HelpMap<'mc> {
     pub fn register_help_topic_factory(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
-        arg1: impl Into<&'mc crate::help::HelpTopicFactory<'mc>>,
+        arg1: impl Into<&'mc crate::help::HelpTopicFactory<'mc, INTO<COMMAND>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -927,8 +912,8 @@ impl<'mc> IndexHelpTopic<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::help::HelpTopic<'mc>> for IndexHelpTopic<'mc> {
-    fn into(self) -> crate::help::HelpTopic<'mc> {
+impl<'mc> Into<crate::help::HelpTopic<'mc /* parse_into_impl */>> for IndexHelpTopic<'mc> {
+    fn into(self) -> crate::help::HelpTopic<'mc /* parse_into_impl */> {
         crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1143,8 +1128,8 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::help::HelpTopic<'mc>> for GenericCommandHelpTopic<'mc> {
-    fn into(self) -> crate::help::HelpTopic<'mc> {
+impl<'mc> Into<crate::help::HelpTopic<'mc /* parse_into_impl */>> for GenericCommandHelpTopic<'mc> {
+    fn into(self) -> crate::help::HelpTopic<'mc /* parse_into_impl */> {
         crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

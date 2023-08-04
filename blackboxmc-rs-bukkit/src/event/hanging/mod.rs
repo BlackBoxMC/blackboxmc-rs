@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct HangingBreakEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -39,6 +36,26 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+    pub fn value_of_with_string(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -80,6 +97,21 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -221,7 +253,6 @@ impl<'mc> HangingBreakEvent<'mc> {
         })
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -366,13 +397,15 @@ impl<'mc> HangingBreakEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for HangingBreakEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for HangingBreakEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::hanging::HangingEvent<'mc>> for HangingBreakEvent<'mc> {
-    fn into(self) -> crate::event::hanging::HangingEvent<'mc> {
+impl<'mc> Into<crate::event::hanging::HangingEvent<'mc /* parse_into_impl */>>
+    for HangingBreakEvent<'mc>
+{
+    fn into(self) -> crate::event::hanging::HangingEvent<'mc /* parse_into_impl */> {
         crate::event::hanging::HangingEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -465,7 +498,6 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         })
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -610,8 +642,10 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::hanging::HangingBreakEvent<'mc>> for HangingBreakByEntityEvent<'mc> {
-    fn into(self) -> crate::event::hanging::HangingBreakEvent<'mc> {
+impl<'mc> Into<crate::event::hanging::HangingBreakEvent<'mc /* parse_into_impl */>>
+    for HangingBreakByEntityEvent<'mc>
+{
+    fn into(self) -> crate::event::hanging::HangingBreakEvent<'mc /* parse_into_impl */> {
         crate::event::hanging::HangingBreakEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -732,7 +766,6 @@ impl<'mc> HangingPlaceEvent<'mc> {
         })
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -912,13 +945,15 @@ impl<'mc> HangingPlaceEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for HangingPlaceEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for HangingPlaceEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::hanging::HangingEvent<'mc>> for HangingPlaceEvent<'mc> {
-    fn into(self) -> crate::event::hanging::HangingEvent<'mc> {
+impl<'mc> Into<crate::event::hanging::HangingEvent<'mc /* parse_into_impl */>>
+    for HangingPlaceEvent<'mc>
+{
+    fn into(self) -> crate::event::hanging::HangingEvent<'mc /* parse_into_impl */> {
         crate::event::hanging::HangingEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1074,8 +1109,8 @@ impl<'mc> HangingEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Event<'mc>> for HangingEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc> {
+impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for HangingEvent<'mc> {
+    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

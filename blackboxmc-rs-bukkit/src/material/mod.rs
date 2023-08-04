@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct Chest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -248,8 +245,8 @@ impl<'mc> Chest<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for Chest<'mc> {
-    fn into(self) -> crate::material::DirectionalContainer<'mc> {
+impl<'mc> Into<crate::material::DirectionalContainer<'mc /* parse_into_impl */>> for Chest<'mc> {
+    fn into(self) -> crate::material::DirectionalContainer<'mc /* parse_into_impl */> {
         crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -307,7 +304,6 @@ impl<'mc> Diode<'mc> {
     ) -> Result<crate::material::Diode<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        // 2
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Diode")?;
         let res = jni.new_object(
@@ -529,18 +525,18 @@ impl<'mc> Diode<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Diode<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Diode<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for Diode<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Diode<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Diode<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Diode<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -800,13 +796,13 @@ impl<'mc> Pumpkin<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Pumpkin<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Pumpkin<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Pumpkin<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Pumpkin<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1034,8 +1030,8 @@ impl<'mc> FlowerPot<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for FlowerPot<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for FlowerPot<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1099,7 +1095,6 @@ impl<'mc> PoweredRail<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1130,7 +1125,6 @@ impl<'mc> PoweredRail<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1315,13 +1309,13 @@ impl<'mc> PoweredRail<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for PoweredRail<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for PoweredRail<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::ExtendedRails<'mc>> for PoweredRail<'mc> {
-    fn into(self) -> crate::material::ExtendedRails<'mc> {
+impl<'mc> Into<crate::material::ExtendedRails<'mc /* parse_into_impl */>> for PoweredRail<'mc> {
+    fn into(self) -> crate::material::ExtendedRails<'mc /* parse_into_impl */> {
         crate::material::ExtendedRails::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1431,7 +1425,6 @@ impl<'mc> TripwireHook<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_connected(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1450,7 +1443,6 @@ impl<'mc> TripwireHook<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_activated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1631,13 +1623,15 @@ impl<'mc> TripwireHook<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for TripwireHook<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for TripwireHook<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for TripwireHook<'mc> {
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
+impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
+    for TripwireHook<'mc>
+{
+    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1898,13 +1892,17 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Attachable<'mc>> for SimpleAttachableMaterialData<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc> {
+impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>>
+    for SimpleAttachableMaterialData<'mc>
+{
+    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for SimpleAttachableMaterialData<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
+    for SimpleAttachableMaterialData<'mc>
+{
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1933,7 +1931,6 @@ impl<'mc> Openable<'mc> {
         }
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2222,8 +2219,10 @@ impl<'mc> Torch<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Torch<'mc> {
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
+impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
+    for Torch<'mc>
+{
+    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2280,9 +2279,7 @@ impl<'mc> Comparator<'mc> {
         arg2: std::option::Option<bool>,
     ) -> Result<crate::material::Comparator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // 2
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        // 2
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Comparator")?;
         let res = jni.new_object(
@@ -2341,7 +2338,6 @@ impl<'mc> Comparator<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_subtraction_mode(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2512,18 +2508,18 @@ impl<'mc> Comparator<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Comparator<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Comparator<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for Comparator<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Comparator<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Comparator<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Comparator<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2626,7 +2622,6 @@ impl<'mc> Button<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2804,13 +2799,15 @@ impl<'mc> Button<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for Button<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Button<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Button<'mc> {
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
+impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
+    for Button<'mc>
+{
+    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -3063,8 +3060,8 @@ impl<'mc> Coal<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Coal<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Coal<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -3429,8 +3426,8 @@ impl<'mc> Tree<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc>> for Tree<'mc> {
-    fn into(self) -> crate::material::Wood<'mc> {
+impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for Tree<'mc> {
+    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -3533,7 +3530,6 @@ impl<'mc> PistonBaseMaterial<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3697,18 +3693,22 @@ impl<'mc> PistonBaseMaterial<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for PistonBaseMaterial<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>>
+    for PistonBaseMaterial<'mc>
+{
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for PistonBaseMaterial<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for PistonBaseMaterial<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for PistonBaseMaterial<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
+    for PistonBaseMaterial<'mc>
+{
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -3804,7 +3804,6 @@ impl<'mc> TrapDoor<'mc> {
         Ok(())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3823,7 +3822,6 @@ impl<'mc> TrapDoor<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_inverted(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4008,13 +4006,15 @@ impl<'mc> TrapDoor<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Openable<'mc>> for TrapDoor<'mc> {
-    fn into(self) -> crate::material::Openable<'mc> {
+impl<'mc> Into<crate::material::Openable<'mc /* parse_into_impl */>> for TrapDoor<'mc> {
+    fn into(self) -> crate::material::Openable<'mc /* parse_into_impl */> {
         crate::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for TrapDoor<'mc> {
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
+impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
+    for TrapDoor<'mc>
+{
+    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -4265,8 +4265,8 @@ impl<'mc> Crops<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Crops<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Crops<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -4517,8 +4517,8 @@ impl<'mc> SpawnEgg<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for SpawnEgg<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for SpawnEgg<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -4771,8 +4771,8 @@ impl<'mc> MonsterEggs<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for MonsterEggs<'mc> {
-    fn into(self) -> crate::material::TexturedMaterial<'mc> {
+impl<'mc> Into<crate::material::TexturedMaterial<'mc /* parse_into_impl */>> for MonsterEggs<'mc> {
+    fn into(self) -> crate::material::TexturedMaterial<'mc /* parse_into_impl */> {
         crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -5023,8 +5023,8 @@ impl<'mc> Furnace<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Furnace<'mc> {
-    fn into(self) -> crate::material::FurnaceAndDispenser<'mc> {
+impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */>> for Furnace<'mc> {
+    fn into(self) -> crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */> {
         crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -5111,7 +5111,6 @@ impl<'mc> Rails<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5285,8 +5284,8 @@ impl<'mc> Rails<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Rails<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Rails<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -5346,7 +5345,6 @@ impl<'mc> Sapling<'mc> {
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        // 1
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Sapling")?;
         let res = jni.new_object(
@@ -5371,7 +5369,6 @@ impl<'mc> Sapling<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5563,8 +5560,8 @@ impl<'mc> Sapling<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc>> for Sapling<'mc> {
-    fn into(self) -> crate::material::Wood<'mc> {
+impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for Sapling<'mc> {
+    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -5734,7 +5731,6 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_sticky(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5891,13 +5887,17 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Attachable<'mc>> for PistonExtensionMaterial<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc> {
+impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>>
+    for PistonExtensionMaterial<'mc>
+{
+    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for PistonExtensionMaterial<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
+    for PistonExtensionMaterial<'mc>
+{
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -6000,7 +6000,6 @@ impl<'mc> Lever<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6178,13 +6177,15 @@ impl<'mc> Lever<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for Lever<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Lever<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Lever<'mc> {
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
+impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
+    for Lever<'mc>
+{
+    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -6425,13 +6426,17 @@ impl<'mc> DirectionalContainer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for DirectionalContainer<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>>
+    for DirectionalContainer<'mc>
+{
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for DirectionalContainer<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
+    for DirectionalContainer<'mc>
+{
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -6684,8 +6689,8 @@ impl<'mc> NetherWarts<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for NetherWarts<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for NetherWarts<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -7134,8 +7139,8 @@ impl<'mc> LongGrass<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for LongGrass<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for LongGrass<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -7199,7 +7204,6 @@ impl<'mc> Tripwire<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_activated(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7218,7 +7222,6 @@ impl<'mc> Tripwire<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_object_triggering(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7368,8 +7371,8 @@ impl<'mc> Tripwire<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Tripwire<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Tripwire<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -7624,8 +7627,8 @@ impl<'mc> TexturedMaterial<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for TexturedMaterial<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for TexturedMaterial<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -7921,8 +7924,8 @@ impl<'mc> Dispenser<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Dispenser<'mc> {
-    fn into(self) -> crate::material::FurnaceAndDispenser<'mc> {
+impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */>> for Dispenser<'mc> {
+    fn into(self) -> crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */> {
         crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -8158,8 +8161,8 @@ impl<'mc> Cake<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Cake<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Cake<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -8253,7 +8256,6 @@ impl<'mc> Gate<'mc> {
         )
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8417,18 +8419,18 @@ impl<'mc> Gate<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Gate<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Gate<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Openable<'mc>> for Gate<'mc> {
-    fn into(self) -> crate::material::Openable<'mc> {
+impl<'mc> Into<crate::material::Openable<'mc /* parse_into_impl */>> for Gate<'mc> {
+    fn into(self) -> crate::material::Openable<'mc /* parse_into_impl */> {
         crate::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Gate<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Gate<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -8492,7 +8494,6 @@ impl<'mc> Step<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_inverted(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8698,8 +8699,8 @@ impl<'mc> Step<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for Step<'mc> {
-    fn into(self) -> crate::material::TexturedMaterial<'mc> {
+impl<'mc> Into<crate::material::TexturedMaterial<'mc /* parse_into_impl */>> for Step<'mc> {
+    fn into(self) -> crate::material::TexturedMaterial<'mc /* parse_into_impl */> {
         crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -8952,8 +8953,8 @@ impl<'mc> SmoothBrick<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for SmoothBrick<'mc> {
-    fn into(self) -> crate::material::TexturedMaterial<'mc> {
+impl<'mc> Into<crate::material::TexturedMaterial<'mc /* parse_into_impl */>> for SmoothBrick<'mc> {
+    fn into(self) -> crate::material::TexturedMaterial<'mc /* parse_into_impl */> {
         crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -9033,7 +9034,6 @@ impl<'mc> Leaves<'mc> {
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        // 1
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Leaves")?;
         let res = jni.new_object(
@@ -9055,7 +9055,6 @@ impl<'mc> Leaves<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_decayable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9074,7 +9073,6 @@ impl<'mc> Leaves<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_decaying(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9266,8 +9264,8 @@ impl<'mc> Leaves<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc>> for Leaves<'mc> {
-    fn into(self) -> crate::material::Wood<'mc> {
+impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for Leaves<'mc> {
+    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -9518,13 +9516,13 @@ impl<'mc> Dye<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Colorable<'mc>> for Dye<'mc> {
-    fn into(self) -> crate::material::Colorable<'mc> {
+impl<'mc> Into<crate::material::Colorable<'mc /* parse_into_impl */>> for Dye<'mc> {
+    fn into(self) -> crate::material::Colorable<'mc /* parse_into_impl */> {
         crate::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Dye<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Dye<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -9726,13 +9724,13 @@ impl<'mc> PressurePlate<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::PressureSensor<'mc>> for PressurePlate<'mc> {
-    fn into(self) -> crate::material::PressureSensor<'mc> {
+impl<'mc> Into<crate::material::PressureSensor<'mc /* parse_into_impl */>> for PressurePlate<'mc> {
+    fn into(self) -> crate::material::PressureSensor<'mc /* parse_into_impl */> {
         crate::material::PressureSensor::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for PressurePlate<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for PressurePlate<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -9992,18 +9990,18 @@ impl<'mc> Observer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Observer<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Observer<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for Observer<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Observer<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Observer<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Observer<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -10104,7 +10102,6 @@ impl<'mc> Stairs<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_inverted(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10311,13 +10308,13 @@ impl<'mc> Stairs<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Stairs<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Stairs<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Stairs<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Stairs<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -10570,8 +10567,8 @@ impl<'mc> Sandstone<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Sandstone<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Sandstone<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -10824,8 +10821,10 @@ impl<'mc> EnderChest<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for EnderChest<'mc> {
-    fn into(self) -> crate::material::DirectionalContainer<'mc> {
+impl<'mc> Into<crate::material::DirectionalContainer<'mc /* parse_into_impl */>>
+    for EnderChest<'mc>
+{
+    fn into(self) -> crate::material::DirectionalContainer<'mc /* parse_into_impl */> {
         crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -11066,8 +11065,10 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for FurnaceAndDispenser<'mc> {
-    fn into(self) -> crate::material::DirectionalContainer<'mc> {
+impl<'mc> Into<crate::material::DirectionalContainer<'mc /* parse_into_impl */>>
+    for FurnaceAndDispenser<'mc>
+{
+    fn into(self) -> crate::material::DirectionalContainer<'mc /* parse_into_impl */> {
         crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -11182,7 +11183,6 @@ impl<'mc> Bed<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_head_of_bed(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11339,13 +11339,13 @@ impl<'mc> Bed<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Bed<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Bed<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Bed<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Bed<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -11547,13 +11547,13 @@ impl<'mc> RedstoneWire<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for RedstoneWire<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for RedstoneWire<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for RedstoneWire<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for RedstoneWire<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -11617,7 +11617,6 @@ impl<'mc> WoodenStep<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_inverted(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11811,8 +11810,8 @@ impl<'mc> WoodenStep<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc>> for WoodenStep<'mc> {
-    fn into(self) -> crate::material::Wood<'mc> {
+impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for WoodenStep<'mc> {
+    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -11850,7 +11849,7 @@ impl<'mc> Vine<'mc> {
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnumSet<'mc, E>>>,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnumSet<'mc>>>,
     ) -> Result<crate::material::Vine<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -12070,8 +12069,8 @@ impl<'mc> Vine<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Vine<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Vine<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -12317,8 +12316,8 @@ impl<'mc> Wood<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Wood<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Wood<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -12589,13 +12588,13 @@ impl<'mc> Banner<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Attachable<'mc>> for Banner<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc> {
+impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>> for Banner<'mc> {
+    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Banner<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Banner<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -12726,7 +12725,6 @@ impl<'mc> Mushroom<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12898,8 +12896,8 @@ impl<'mc> Mushroom<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Mushroom<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Mushroom<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -13170,13 +13168,13 @@ impl<'mc> RedstoneTorch<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for RedstoneTorch<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for RedstoneTorch<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Torch<'mc>> for RedstoneTorch<'mc> {
-    fn into(self) -> crate::material::Torch<'mc> {
+impl<'mc> Into<crate::material::Torch<'mc /* parse_into_impl */>> for RedstoneTorch<'mc> {
+    fn into(self) -> crate::material::Torch<'mc /* parse_into_impl */> {
         crate::material::Torch::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -13219,6 +13217,26 @@ impl<'mc> CocoaPlantCocoaPlantSize<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13259,6 +13277,21 @@ impl<'mc> CocoaPlantCocoaPlantSize<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -13640,18 +13673,18 @@ impl<'mc> CocoaPlant<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for CocoaPlant<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for CocoaPlant<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Attachable<'mc>> for CocoaPlant<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc> {
+impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>> for CocoaPlant<'mc> {
+    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for CocoaPlant<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for CocoaPlant<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -13716,7 +13749,6 @@ impl<'mc> Door<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        // 2
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let cls = &jni.find_class("org/bukkit/material/Door")?;
         let res = jni.new_object(
@@ -13788,7 +13820,6 @@ impl<'mc> Door<'mc> {
         )
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13807,7 +13838,6 @@ impl<'mc> Door<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_hinge(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13819,7 +13849,6 @@ impl<'mc> Door<'mc> {
         Ok(())
     }
     pub fn set_top_half(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14039,18 +14068,18 @@ impl<'mc> Door<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Door<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Door<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Openable<'mc>> for Door<'mc> {
-    fn into(self) -> crate::material::Openable<'mc> {
+impl<'mc> Into<crate::material::Openable<'mc /* parse_into_impl */>> for Door<'mc> {
+    fn into(self) -> crate::material::Openable<'mc /* parse_into_impl */> {
         crate::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Door<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Door<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -14183,7 +14212,6 @@ impl<'mc> ExtendedRails<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14382,8 +14410,8 @@ impl<'mc> ExtendedRails<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Rails<'mc>> for ExtendedRails<'mc> {
-    fn into(self) -> crate::material::Rails<'mc> {
+impl<'mc> Into<crate::material::Rails<'mc /* parse_into_impl */>> for ExtendedRails<'mc> {
+    fn into(self) -> crate::material::Rails<'mc /* parse_into_impl */> {
         crate::material::Rails::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -14592,8 +14620,8 @@ impl<'mc> Cauldron<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Cauldron<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Cauldron<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -14858,8 +14886,10 @@ impl<'mc> Ladder<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Ladder<'mc> {
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
+impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
+    for Ladder<'mc>
+{
+    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -14923,7 +14953,6 @@ impl<'mc> Command<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15078,13 +15107,13 @@ impl<'mc> Command<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for Command<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Command<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Command<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Command<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -15148,7 +15177,6 @@ impl<'mc> DetectorRail<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_pressed(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15179,7 +15207,6 @@ impl<'mc> DetectorRail<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15364,13 +15391,13 @@ impl<'mc> DetectorRail<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::PressureSensor<'mc>> for DetectorRail<'mc> {
-    fn into(self) -> crate::material::PressureSensor<'mc> {
+impl<'mc> Into<crate::material::PressureSensor<'mc /* parse_into_impl */>> for DetectorRail<'mc> {
+    fn into(self) -> crate::material::PressureSensor<'mc /* parse_into_impl */> {
         crate::material::PressureSensor::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::ExtendedRails<'mc>> for DetectorRail<'mc> {
-    fn into(self) -> crate::material::ExtendedRails<'mc> {
+impl<'mc> Into<crate::material::ExtendedRails<'mc /* parse_into_impl */>> for DetectorRail<'mc> {
+    fn into(self) -> crate::material::ExtendedRails<'mc /* parse_into_impl */> {
         crate::material::ExtendedRails::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -15485,7 +15512,6 @@ impl<'mc> Hopper<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_active(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15649,18 +15675,18 @@ impl<'mc> Hopper<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Hopper<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Hopper<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc>> for Hopper<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc> {
+impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Hopper<'mc> {
+    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Hopper<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Hopper<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -15913,13 +15939,13 @@ impl<'mc> Skull<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Skull<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Skull<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Skull<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Skull<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -16190,13 +16216,13 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Attachable<'mc>> for Sign<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc> {
+impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>> for Sign<'mc> {
+    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Sign<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Sign<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -16447,13 +16473,13 @@ impl<'mc> Wool<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Colorable<'mc>> for Wool<'mc> {
-    fn into(self) -> crate::material::Colorable<'mc> {
+impl<'mc> Into<crate::material::Colorable<'mc /* parse_into_impl */>> for Wool<'mc> {
+    fn into(self) -> crate::material::Colorable<'mc /* parse_into_impl */> {
         crate::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc>> for Wool<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc> {
+impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Wool<'mc> {
+    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -16553,8 +16579,8 @@ impl<'mc> JNIRaw<'mc> for Attachable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc>> for Attachable<'mc> {
-    fn into(self) -> crate::material::Directional<'mc> {
+impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Attachable<'mc> {
+    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

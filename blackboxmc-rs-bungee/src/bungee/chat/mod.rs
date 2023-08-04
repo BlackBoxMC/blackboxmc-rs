@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct SelectorComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -117,10 +114,10 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
+impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
     for SelectorComponentSerializer<'mc>
 {
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
+    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -239,8 +236,10 @@ impl<'mc> TextComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>> for TextComponentSerializer<'mc> {
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
+impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
+    for TextComponentSerializer<'mc>
+{
+    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -475,10 +474,10 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
+impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
     for ScoreComponentSerializer<'mc>
 {
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
+    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -598,10 +597,10 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
+impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
     for TranslatableComponentSerializer<'mc>
 {
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
+    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -721,10 +720,10 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
+impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
     for KeybindComponentSerializer<'mc>
 {
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc> {
+    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

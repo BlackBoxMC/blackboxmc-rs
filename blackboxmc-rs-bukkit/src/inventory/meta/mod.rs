@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct BookMetaGeneration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -34,6 +31,26 @@ impl<'mc> BookMetaGeneration<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+    pub fn value_of_with_string(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -75,6 +92,21 @@ impl<'mc> BookMetaGeneration<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -255,20 +287,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -282,6 +300,20 @@ impl<'mc> BlockDataMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -408,7 +440,6 @@ impl<'mc> BlockDataMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -513,7 +544,6 @@ impl<'mc> BlockDataMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -641,8 +671,8 @@ impl<'mc> JNIRaw<'mc> for BlockDataMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockDataMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for BlockDataMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -761,20 +791,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -788,6 +804,20 @@ impl<'mc> ArmorMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -914,7 +944,6 @@ impl<'mc> ArmorMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1019,7 +1048,6 @@ impl<'mc> ArmorMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1140,8 +1168,8 @@ impl<'mc> JNIRaw<'mc> for ArmorMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for ArmorMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for ArmorMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1262,20 +1290,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -1289,6 +1303,20 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1415,7 +1443,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1520,7 +1547,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1641,8 +1667,10 @@ impl<'mc> JNIRaw<'mc> for AxolotlBucketMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for AxolotlBucketMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for AxolotlBucketMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1671,18 +1699,6 @@ impl<'mc> SkullMeta<'mc> {
         }
     }
     #[deprecated]
-    pub fn owner(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getOwner", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    #[deprecated]
     pub fn set_owner(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1696,6 +1712,18 @@ impl<'mc> SkullMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
+    }
+    #[deprecated]
+    pub fn owner(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getOwner", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_owner(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1844,20 +1872,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -1871,6 +1885,20 @@ impl<'mc> SkullMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1997,7 +2025,6 @@ impl<'mc> SkullMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2102,7 +2129,6 @@ impl<'mc> SkullMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2223,8 +2249,8 @@ impl<'mc> JNIRaw<'mc> for SkullMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SkullMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for SkullMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2253,7 +2279,6 @@ impl<'mc> CompassMeta<'mc> {
         }
     }
     pub fn set_lodestone_tracked(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2360,20 +2385,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -2387,6 +2398,20 @@ impl<'mc> CompassMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -2513,7 +2538,6 @@ impl<'mc> CompassMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2618,7 +2642,6 @@ impl<'mc> CompassMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2739,8 +2762,8 @@ impl<'mc> JNIRaw<'mc> for CompassMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CompassMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for CompassMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2797,7 +2820,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2902,20 +2924,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -2929,6 +2937,20 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -3055,7 +3077,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3160,7 +3181,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3281,8 +3301,10 @@ impl<'mc> JNIRaw<'mc> for SuspiciousStewMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SuspiciousStewMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for SuspiciousStewMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -3401,20 +3423,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -3428,6 +3436,20 @@ impl<'mc> CrossbowMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -3554,7 +3576,6 @@ impl<'mc> CrossbowMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3659,7 +3680,6 @@ impl<'mc> CrossbowMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3787,8 +3807,8 @@ impl<'mc> JNIRaw<'mc> for CrossbowMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CrossbowMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for CrossbowMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -3858,20 +3878,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -3885,6 +3891,20 @@ impl<'mc> ItemMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -4011,7 +4031,6 @@ impl<'mc> ItemMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4116,7 +4135,6 @@ impl<'mc> ItemMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4244,10 +4262,18 @@ impl<'mc> JNIRaw<'mc> for ItemMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
-    for ItemMeta<'mc>
+impl<'mc>
+    Into<
+        crate::configuration::serialization::ConfigurationSerializable<
+            'mc, /* parse_into_impl */
+        >,
+    > for ItemMeta<'mc>
 {
-    fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
+    fn into(
+        self,
+    ) -> crate::configuration::serialization::ConfigurationSerializable<
+        'mc, /* parse_into_impl */
+    > {
         crate::configuration::serialization::ConfigurationSerializable::from_raw(
             &self.jni_ref(),
             self.1,
@@ -4255,8 +4281,10 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         .unwrap()
     }
 }
-impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for ItemMeta<'mc> {
-    fn into(self) -> crate::persistence::PersistentDataHolder<'mc> {
+impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc /* parse_into_impl */>>
+    for ItemMeta<'mc>
+{
+    fn into(self) -> crate::persistence::PersistentDataHolder<'mc /* parse_into_impl */> {
         crate::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -4365,20 +4393,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -4392,6 +4406,20 @@ impl<'mc> Repairable<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -4518,7 +4546,6 @@ impl<'mc> Repairable<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4623,7 +4650,6 @@ impl<'mc> Repairable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4744,8 +4770,8 @@ impl<'mc> JNIRaw<'mc> for Repairable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for Repairable<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for Repairable<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -4954,20 +4980,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -4981,6 +4993,20 @@ impl<'mc> BannerMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -5107,7 +5133,6 @@ impl<'mc> BannerMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5212,7 +5237,6 @@ impl<'mc> BannerMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5340,8 +5364,8 @@ impl<'mc> JNIRaw<'mc> for BannerMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BannerMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for BannerMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -5457,20 +5481,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -5484,6 +5494,20 @@ impl<'mc> BundleMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -5610,7 +5634,6 @@ impl<'mc> BundleMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5715,7 +5738,6 @@ impl<'mc> BundleMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5843,8 +5865,8 @@ impl<'mc> JNIRaw<'mc> for BundleMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BundleMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for BundleMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -5965,20 +5987,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -5992,6 +6000,20 @@ impl<'mc> ColorableArmorMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -6118,7 +6140,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6223,7 +6244,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6367,13 +6387,17 @@ impl<'mc> JNIRaw<'mc> for ColorableArmorMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ArmorMeta<'mc>> for ColorableArmorMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ArmorMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ArmorMeta<'mc /* parse_into_impl */>>
+    for ColorableArmorMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ArmorMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ArmorMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::inventory::meta::LeatherArmorMeta<'mc>> for ColorableArmorMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::LeatherArmorMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::LeatherArmorMeta<'mc /* parse_into_impl */>>
+    for ColorableArmorMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::LeatherArmorMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::LeatherArmorMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -6498,20 +6522,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -6525,6 +6535,20 @@ impl<'mc> SpawnEggMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -6651,7 +6675,6 @@ impl<'mc> SpawnEggMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6756,7 +6779,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6877,8 +6899,8 @@ impl<'mc> JNIRaw<'mc> for SpawnEggMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SpawnEggMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for SpawnEggMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -6987,20 +7009,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -7014,6 +7022,20 @@ impl<'mc> Damageable<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -7140,7 +7162,6 @@ impl<'mc> Damageable<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7245,7 +7266,6 @@ impl<'mc> Damageable<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7366,8 +7386,8 @@ impl<'mc> JNIRaw<'mc> for Damageable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for Damageable<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for Damageable<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -7433,6 +7453,21 @@ impl<'mc> FireworkMeta<'mc> {
             &self.jni_object(),
             "addEffect",
             "(Lorg/bukkit/FireworkEffect;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn add_effects_with_firework_effects(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaIterable<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addEffects",
+            "(Ljava/lang/Iterable;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
@@ -7526,20 +7561,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -7553,6 +7574,20 @@ impl<'mc> FireworkMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -7679,7 +7714,6 @@ impl<'mc> FireworkMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7784,7 +7818,6 @@ impl<'mc> FireworkMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7905,8 +7938,8 @@ impl<'mc> JNIRaw<'mc> for FireworkMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for FireworkMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -7984,7 +8017,6 @@ impl<'mc> PotionMeta<'mc> {
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8139,20 +8171,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -8166,6 +8184,20 @@ impl<'mc> PotionMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -8292,7 +8324,6 @@ impl<'mc> PotionMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8397,7 +8428,6 @@ impl<'mc> PotionMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8518,8 +8548,8 @@ impl<'mc> JNIRaw<'mc> for PotionMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for PotionMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for PotionMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -8626,20 +8656,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -8653,6 +8669,20 @@ impl<'mc> BlockStateMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -8779,7 +8809,6 @@ impl<'mc> BlockStateMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8884,7 +8913,6 @@ impl<'mc> BlockStateMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9012,8 +9040,10 @@ impl<'mc> JNIRaw<'mc> for BlockStateMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockStateMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for BlockStateMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -9094,7 +9124,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9201,20 +9230,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -9228,6 +9243,20 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -9354,7 +9383,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9459,7 +9487,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9580,8 +9607,10 @@ impl<'mc> JNIRaw<'mc> for EnchantmentStorageMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for EnchantmentStorageMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for EnchantmentStorageMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -9705,20 +9734,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -9732,6 +9747,20 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -9858,7 +9887,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9963,7 +9991,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10084,8 +10111,10 @@ impl<'mc> JNIRaw<'mc> for KnowledgeBookMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for KnowledgeBookMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for KnowledgeBookMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -10212,7 +10241,6 @@ impl<'mc> MapMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_scaling(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10317,20 +10345,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -10344,6 +10358,20 @@ impl<'mc> MapMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -10470,7 +10498,6 @@ impl<'mc> MapMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10575,7 +10602,6 @@ impl<'mc> MapMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10696,8 +10722,8 @@ impl<'mc> JNIRaw<'mc> for MapMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for MapMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for MapMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -10974,20 +11000,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -11001,6 +11013,20 @@ impl<'mc> LeatherArmorMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -11127,7 +11153,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11232,7 +11257,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11353,8 +11377,10 @@ impl<'mc> JNIRaw<'mc> for LeatherArmorMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for LeatherArmorMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for LeatherArmorMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -11473,20 +11499,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -11500,6 +11512,20 @@ impl<'mc> FireworkEffectMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -11626,7 +11652,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11731,7 +11756,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11852,8 +11876,10 @@ impl<'mc> JNIRaw<'mc> for FireworkEffectMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkEffectMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for FireworkEffectMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -12042,20 +12068,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -12069,6 +12081,20 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -12195,7 +12221,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12300,7 +12325,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12421,8 +12445,10 @@ impl<'mc> JNIRaw<'mc> for TropicalFishBucketMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for TropicalFishBucketMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for TropicalFishBucketMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -12704,20 +12730,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -12731,6 +12743,20 @@ impl<'mc> BookMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -12857,7 +12883,6 @@ impl<'mc> BookMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12962,7 +12987,6 @@ impl<'mc> BookMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13083,8 +13107,8 @@ impl<'mc> JNIRaw<'mc> for BookMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BookMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>> for BookMeta<'mc> {
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -13198,20 +13222,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAsString",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -13225,6 +13235,20 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAsString",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -13351,7 +13375,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13456,7 +13479,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13577,8 +13599,10 @@ impl<'mc> JNIRaw<'mc> for MusicInstrumentMeta<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for MusicInstrumentMeta<'mc> {
-    fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
+impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */>>
+    for MusicInstrumentMeta<'mc>
+{
+    fn into(self) -> crate::inventory::meta::ItemMeta<'mc /* parse_into_impl */> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

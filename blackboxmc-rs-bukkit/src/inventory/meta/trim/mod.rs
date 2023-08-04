@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct ArmorTrim<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -192,8 +189,8 @@ impl<'mc> JNIRaw<'mc> for TrimMaterial<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::Keyed<'mc>> for TrimMaterial<'mc> {
-    fn into(self) -> crate::Keyed<'mc> {
+impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for TrimMaterial<'mc> {
+    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -243,8 +240,8 @@ impl<'mc> JNIRaw<'mc> for TrimPattern<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::Keyed<'mc>> for TrimPattern<'mc> {
-    fn into(self) -> crate::Keyed<'mc> {
+impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for TrimPattern<'mc> {
+    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

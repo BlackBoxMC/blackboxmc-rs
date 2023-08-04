@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub enum PluginChannelDirectionEnum {
     Incoming,
     Outgoing,
@@ -178,6 +175,13 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
 "(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::plugin::messaging::PluginMessageListenerRegistration::from_raw(&jni, res)
     }
+    pub fn is_valid(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isValid", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
     pub fn listener(
         &mut self,
     ) -> Result<crate::plugin::messaging::PluginMessageListener<'mc>, Box<dyn std::error::Error>>
@@ -206,13 +210,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn is_valid(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isValid", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -605,6 +602,24 @@ impl<'mc> StandardMessenger<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::plugin::messaging::StandardMessenger::from_raw(&jni, res)
     }
+    #[deprecated]
+    pub fn validate_and_correct_channel(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "validateAndCorrectChannel",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn is_reserved_channel(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -841,24 +856,6 @@ impl<'mc> StandardMessenger<'mc> {
         Ok(())
     }
     #[deprecated]
-    pub fn validate_and_correct_channel(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "validateAndCorrectChannel",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    #[deprecated]
     pub fn validate_channel(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -961,8 +958,10 @@ impl<'mc> StandardMessenger<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::plugin::messaging::Messenger<'mc>> for StandardMessenger<'mc> {
-    fn into(self) -> crate::plugin::messaging::Messenger<'mc> {
+impl<'mc> Into<crate::plugin::messaging::Messenger<'mc /* parse_into_impl */>>
+    for StandardMessenger<'mc>
+{
+    fn into(self) -> crate::plugin::messaging::Messenger<'mc /* parse_into_impl */> {
         crate::plugin::messaging::Messenger::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct MemoryKey<'mc, T>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -76,7 +73,7 @@ where
         let mut obj = res.l()?;
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc, T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getKey",
@@ -159,13 +156,5 @@ where
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc, T> Into<crate::Keyed<'mc, T>> for MemoryKey<'mc, T>
-where
-    T: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::Keyed<'mc, T> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

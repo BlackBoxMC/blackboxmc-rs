@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 /// An instantiatable struct that implements Palette. Needed for returning it from Java.
 pub struct Palette<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -145,7 +142,6 @@ impl<'mc> StructureManager<'mc> {
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -189,7 +185,6 @@ impl<'mc> StructureManager<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        // 0
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -322,7 +317,6 @@ impl<'mc> Structure<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        // 6
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
         let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
@@ -343,7 +337,6 @@ impl<'mc> Structure<'mc> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        // 2
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -394,8 +387,10 @@ impl<'mc> JNIRaw<'mc> for Structure<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for Structure<'mc> {
-    fn into(self) -> crate::persistence::PersistentDataHolder<'mc> {
+impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc /* parse_into_impl */>>
+    for Structure<'mc>
+{
+    fn into(self) -> crate::persistence::PersistentDataHolder<'mc /* parse_into_impl */> {
         crate::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

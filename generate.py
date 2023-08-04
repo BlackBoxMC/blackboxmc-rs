@@ -20,7 +20,8 @@ reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", 
 library_resolves = {
     "net.md_5": "blackboxmc-rs-bungee",
     "org.bukkit": "blackboxmc-rs-bukkit",
-    "java.util": "blackboxmc-rs-java"
+    "java.util": "blackboxmc-rs-java",  # NOTE: written by hand.
+    "java.lang": "blackboxmc-rs-java",  # NOTE: written by hand.
 }
 
 parsed_classes = {}
@@ -85,32 +86,37 @@ def snake_case_to_camel_case(string):
     return re.sub(r"_([a-z])", lambda f: f.group(1).upper(),
                     string.lower()).replace("_","")
 
-def func_signature_format(ty, increment, returning, options_start_at):
+def func_signature_format(ty, increment, returning, options_start_at, generic_letters=None, upper_generic_letters=None):
     thing = ""
     internal_do_into = ty["type_name_resolved"].startswith("crate") or ty["type_name_resolved"].startswith("bukkit") or ty["type_name_resolved"].startswith("blackbox")
     is_string = ty["type_name_resolved"] == "String"
     internal = internal_do_into or ty["type_name_resolved"].startswith("jni")
     generic_letters = []
-    generic_args = []
+    generic_args = ty["generic_clauses"]
 
     generics = ty["generics"]
     generic_str = ""
+    
+    generic_letters = list(filter(lambda f: f != "",generic_letters))
+
+    if(len(generics) < 1):
+        if upper_generic_letters is not None:
+            if len(upper_generic_letters) >= 1:
+                generics = upper_generic_letters
 
     if(len(generics) >= 1):
         generics_ = []
         n = 0
         for gen in generics:
-            gen2 = re.search("(extends|super) ([A-Za-z])",gen)
+            gen2 = re.search("(extends|super) (.*)",gen)
             if gen2 is not None:
                 gen = "Into<"+gen2.group(2)+">"
-            if(len(gen) >= 2):
-                name = java_type_to_rust("", gen, None, 0, True, library, False, False, "")
-                if name is not None:
-                    letter = chr(ord('a')+n+increment).upper()
-                    generics_.append(letter)
-                    generic_args.append(letter+": "+name["type_name_resolved"])
+            if gen.upper() == "":
+                if len(upper_generic_letters) >= n:
+                    generics_.append(upper_generic_letters[n])
+                else:
+                    generics_.append(generic_letters[n])
             else:
-                print(gen)
                 generics_.append(gen.upper())
             n += 1
         generics = generics_
@@ -162,6 +168,8 @@ def func_signature_format(ty, increment, returning, options_start_at):
             if(options_start_at != -1):
                 if increment >= options_start_at:
                     thing += ">"
+    while ",," in thing or ", ," in thing:
+        thing = thing.replace(", ,",",").replace(",,",",")
 
     return {
         "result": thing,
@@ -206,7 +214,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 if class_name != "":
                     match(type["type_name_alone"]):
                         case "bool":
-                            return ["// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+arg+".into());"]
+                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+arg+".into());"]
                         case "i8":
                             return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+arg+".into());"]
                         case "char" | "u16":
@@ -476,6 +484,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
 
     upper_generics_list = list(filter(lambda f: f != "",upper_generic_letters.replace(" ","").split(",")))
     generics = []
+    generic_clauses = []
     if method is not None:
         if len(generics) <= 0:
             search = []
@@ -506,10 +515,12 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                                 gen = gen.replace("?","dyn JNIRaw<'mc>")
                                 # another special case: if it's an "Object" then no it isn't, silly.
                                 if ty == "java.lang.Object":
+                                    generic_clauses.append(gen.upper()+": "+typ["type_name_resolved"])
                                     type_name_resolved = gen
                                     type_name_original = gen
                                 else:
-                                    generics.append(gen.upper())
+                                    generics.append("/* java_type_to_rust */"+gen.upper())
+                                    generic_clauses.append(gen.upper()+": "+typ["type_name_resolved"])
                     n += 1
 
                 
@@ -550,6 +561,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         "type_name_original": type_name_original,
         "type_name_alone": type_alone,
         "generics": generics,
+        "generic_clauses": generic_clauses,
         "options_start_at": options_start_at,
     }
 
@@ -797,7 +809,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 "is_interface": False,
                 "type_name_original": "",
                 "type_name_alone": "",
-                "generics": "",
+                "generics": [],
+                "generic_clauses": [],
                 "package_name": "",
                 "options_start_at": options_start_at,
             })
@@ -809,7 +822,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 "is_interface": False,
                 "type_name_original": "",
                 "type_name_alone": "",
-                "generics": "",
+                "generics": [],
+                "generic_clauses": [],
                 "package_name": "",
                 "options_start_at": options_start_at,
             })
@@ -870,7 +884,6 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             tyname = method["method"]["returnType"]
 
         return_group = java_type_to_rust("", tyname, method, i, True, library, True, is_trait, upper_generic_letters)
-        gen = get_generics(tyname)[0].split(".")
 
         if return_group is None:
             continue
@@ -915,19 +928,23 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             generic_args += group["generic_args"]
 
         if "generics" in method["method"]:
-            generic_letters += method["method"]["generics"]
-            generic_args += list(map(lambda f: f[0].upper()+": JNIRaw<'mc>", method["method"]["generics"]))
+            gen = get_generics(method["method"], False,upper_generic_letters)
+            generic_letters += gen[0].split(",")
+            generic_args += gen[1].split(",")
 
         
 
-        return_type = func_signature_format(return_group,j,True,-1)
+        return_type = func_signature_format(return_group,j,True,-1,generic_letters,upper_generic_letters)
         generic_letters_str = ""
         if len(generic_letters) >= 1:
-            print(generic_letters)
-            generic_letters_str = "<"+",".join(generic_letters)+">"
+            st = ",".join(generic_letters)
+            if st != "":
+                generic_letters_str = "<"+st+">"
         generic_args_str = ""
         if len(generic_args) >= 1:
-            generic_args_str = " where "+",".join(generic_args)
+            st = ",".join(generic_args)
+            if st != "":
+                generic_args_str = " where "+st
 
         func_signature_resolved = ",".join(func_signature_resolved_parts)
 
@@ -981,14 +998,16 @@ def parse_classes(library, val, classes):
     else:
         parsed_classes[mod_path] = [full_name]
 
-    if mod_path not in file_cache:
-        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse color_eyre::eyre::Result;"]
+    if mod_path not in file_cache :
+        file_cache[mod_path] = []
 
     if (name == ""):
         return
 
     # generics?
-    generics_str_letters, generics_str_where = get_generics(val)
+    generics_str_letters, generics_str_where = get_generics(val,True,None)
+    if generics_str_where != "":
+        generics_str_where = " where "+generics_str_where
 
     if val["isEnum"]:  # enum generation
         file_cache[mod_path].append(
@@ -1125,7 +1144,7 @@ def parse_classes(library, val, classes):
             super_class = val["superClass"]
             parse_into_impl(super_class,name,mod_path,generics_str_letters,generics_str_where)
 
-def get_generics(val):
+def get_generics(val, mc_included,upper_generics):
     generics_str_letters = ""
     generics_str_where = ""
     if isinstance(val, str):
@@ -1143,17 +1162,30 @@ def get_generics(val):
 
     else:
         if "generics" in val:
-            generics = list(map(lambda f: f[0], filter(lambda f: f != "", val["generics"])))
+            generics = list(map(lambda f: (f[0], f[1:]), filter(lambda f: f != "", val["generics"])))
             if len(generics) >= 1:
-                generics_str_letters = ", "+",".join(generics)
+                if mc_included:
+                    generics_str_letters += ", "
+                generics_str_letters += ",".join(map(lambda f: f[0], generics))
                 generics_types = []
                 for f in generics:
-                    if len(f) <= 2:
-                        generics_types.append(f+": JNIRaw<'mc>")
+                    if len(f[1]) <= 2:
+                        generics_types.append(f[0]+": JNIRaw<'mc>")
                     else:
-                        generics_types.append(f[0]+": "+f[1]+"<'mc>")
-                generics_str_where = " where "+",".join(generics_types)
-    
+                        typarts = f[1].split(" ")
+                        tyname = typarts[len(typarts)-1]
+                        if "extends" in f[1] or "super" in f[1]:
+                            generics_types.append(f[0]+": Into<crate::Java"+tyname+"<'mc>>")
+                        else:
+                            generics_types.append(f[0]+": Into<"+f[0]+f[1]+">")    
+                generics_str_where = ",".join(generics_types)
+    if upper_generics is not None:
+        if generics_str_letters == upper_generics.replace(" ","").replace(",",""):
+            return "",""
+    if upper_generics is not None:
+        for g in generics_str_letters.split(","):
+            if g in upper_generics:
+                generics_str_letters = generics_str_letters.replace(g,"").replace(",,",",")
     return generics_str_letters, generics_str_where
 def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
     if val["packageName"].startswith("java"):
@@ -1168,7 +1200,7 @@ def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
     if val_resolved["type_name_alone"] in omitted_classes:
         return
     
-    into_generics_str_letters = ""
+    into_generics_str_letters = "/* parse_into_impl */"
     
     # we want to check if the generics are the same.
     if ".".join(val_resolved["package_name"].split(".")[0:2]) in libraries:
@@ -1179,11 +1211,14 @@ def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
         if "generics" in temp_cls and "generics" in val_resolved:
             if(len(temp_cls["generics"]) != len(val_resolved["generics"])):
                 return
+            m = list(filter(lambda f: f != "", generics_str_letters.split(",")))
+            if(len(temp_cls["generics"]) != len(m)):
+                return
             similar = False not in map(lambda x, y: x == y, temp_cls["generics"], val_resolved["generics"])
             if not similar:
                 return
             else:
-                into_generics_str_letters = generics_str_letters
+                into_generics_str_letters += generics_str_letters
     
     file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> Into<"+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+">> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+"{\n"+
                             "   fn into(self) -> "+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+"> {\n"+
@@ -1222,6 +1257,8 @@ for library in libraries:
     crate_dir = ""
 
     if library in library_resolves:
+        #if library_resolves[library] == "blackboxmc-rs-java":
+        #    continue 
         crate_dir = os.path.join(library_resolves[library], "src")
     else:
         print("Unhandled library "+library +
@@ -1234,8 +1271,10 @@ for library in libraries:
         path = library.replace(".", os.sep)
         pathlib.Path(crate_dir+os.sep +
                     path).mkdir(parents=True, exist_ok=True)
+        filled_once.append(crate_dir)
     
-    filled_once.append(crate_dir)
+    print("filled",filled_once,crate_dir)
+        
 
     # make the appropriate directory if it doesn't already exist.
     path = library.replace(".", os.sep)
@@ -1284,7 +1323,15 @@ for library in libraries:
 
     mod_rs_folder_populate(crate_dir)
 
-    os.rename(crate_dir+os.sep+"mod.rs", crate_dir+os.sep+"lib.rs")
+    f1 = open(crate_dir+os.sep+"mod.rs", "r")
+    f2 = open(crate_dir+os.sep+"lib.rs", "a")
+    f3 = open(crate_dir+os.sep+"lib.rs", "r")
+
+    lines = f3.readlines()
+    if(len(lines) == 0):
+        f2.write("#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse color_eyre::eyre::Result;")
+    f2.write("".join(f1.readlines()))
+    os.remove(crate_dir+os.sep+"mod.rs")
 
 # inject any manually written code.
 for filename in os.listdir("additions"):

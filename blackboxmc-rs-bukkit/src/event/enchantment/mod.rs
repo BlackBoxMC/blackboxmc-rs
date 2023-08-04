@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct EnchantItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -61,6 +58,18 @@ impl<'mc> EnchantItemEvent<'mc> {
 "(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;ILjava/util/Map;Lorg/bukkit/enchantments/Enchantment;II)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9)])?;
         crate::event::enchantment::EnchantItemEvent::from_raw(&jni, res)
     }
+    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getItem",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -82,20 +91,7 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getItem",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -338,13 +334,15 @@ impl<'mc> EnchantItemEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for EnchantItemEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for EnchantItemEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for EnchantItemEvent<'mc> {
-    fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
+impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc /* parse_into_impl */>>
+    for EnchantItemEvent<'mc>
+{
+    fn into(self) -> crate::event::inventory::InventoryEvent<'mc /* parse_into_impl */> {
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -403,6 +401,18 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
 "(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_6)])?;
         crate::event::enchantment::PrepareItemEnchantEvent::from_raw(&jni, res)
     }
+    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getItem",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -424,20 +434,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getItem",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -627,13 +624,17 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for PrepareItemEnchantEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>>
+    for PrepareItemEnchantEvent<'mc>
+{
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareItemEnchantEvent<'mc> {
-    fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
+impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc /* parse_into_impl */>>
+    for PrepareItemEnchantEvent<'mc>
+{
+    fn into(self) -> crate::event::inventory::InventoryEvent<'mc /* parse_into_impl */> {
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

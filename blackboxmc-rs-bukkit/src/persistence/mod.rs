@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 /// An instantiatable struct that implements PersistentDataHolder. Needed for returning it from Java.
 pub struct PersistentDataHolder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -123,7 +120,7 @@ where
         &mut self,
         arg0: T,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<T, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -142,7 +139,7 @@ where
         &mut self,
         arg0: T,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<T, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -342,7 +339,7 @@ where
         &mut self,
         arg0: Z,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Z, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -361,7 +358,7 @@ where
         &mut self,
         arg0: T,
         arg1: impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Z, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -467,7 +464,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
             impl Into<&'mc crate::persistence::PersistentDataAdapterContext<'mc>>,
         >,
     ) -> Result<i8, Box<dyn std::error::Error>> {
-        // 1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };

@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct JavaPattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -33,6 +30,17 @@ impl<'mc> JavaPattern<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn pattern(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "pattern", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn quote(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -46,17 +54,6 @@ impl<'mc> JavaPattern<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
         Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn pattern(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "pattern", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
@@ -79,6 +76,25 @@ impl<'mc> JavaPattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    pub fn matches(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+        arg1: impl Into<&'mc blackboxmc_java::JavaCharSequence<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let cls = &jni.find_class("boolean")?;
+        let res = jni.call_static_method(
+            cls,
+            "matches",
+            "(Ljava/lang/String;Ljava/lang/CharSequence;)Z",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(res.z().unwrap())
+    }
     pub fn compile_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -98,6 +114,22 @@ impl<'mc> JavaPattern<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::regex::JavaPattern::from_raw(&jni, obj)
+    }
+    pub fn matcher(
+        &mut self,
+        arg0: impl Into<&'mc blackboxmc_java::JavaCharSequence<'mc>>,
+    ) -> Result<crate::regex::JavaMatcher<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "matcher",
+            "(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::regex::JavaMatcher::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn wait(
         &mut self,

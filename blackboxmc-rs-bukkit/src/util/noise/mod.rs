@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct SimplexNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -75,7 +72,6 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
         let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
-        // 6
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -225,8 +221,10 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::util::noise::PerlinNoiseGenerator<'mc>> for SimplexNoiseGenerator<'mc> {
-    fn into(self) -> crate::util::noise::PerlinNoiseGenerator<'mc> {
+impl<'mc> Into<crate::util::noise::PerlinNoiseGenerator<'mc /* parse_into_impl */>>
+    for SimplexNoiseGenerator<'mc>
+{
+    fn into(self) -> crate::util::noise::PerlinNoiseGenerator<'mc /* parse_into_impl */> {
         crate::util::noise::PerlinNoiseGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -303,7 +301,6 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
         let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
-        // 6
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -453,8 +450,10 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::util::noise::NoiseGenerator<'mc>> for PerlinNoiseGenerator<'mc> {
-    fn into(self) -> crate::util::noise::NoiseGenerator<'mc> {
+impl<'mc> Into<crate::util::noise::NoiseGenerator<'mc /* parse_into_impl */>>
+    for PerlinNoiseGenerator<'mc>
+{
+    fn into(self) -> crate::util::noise::NoiseGenerator<'mc /* parse_into_impl */> {
         crate::util::noise::NoiseGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -557,7 +556,6 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let val_4 = jni::objects::JValueGen::Double(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
         let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
-        // 6
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -721,8 +719,10 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for SimplexOctaveGenerator<'mc> {
-    fn into(self) -> crate::util::noise::OctaveGenerator<'mc> {
+impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc /* parse_into_impl */>>
+    for SimplexOctaveGenerator<'mc>
+{
+    fn into(self) -> crate::util::noise::OctaveGenerator<'mc /* parse_into_impl */> {
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -839,7 +839,6 @@ impl<'mc> OctaveGenerator<'mc> {
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Double(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.unwrap().into());
-        // 5
         let val_6 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1081,7 +1080,6 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Double(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.unwrap().into());
-        // 5
         let val_6 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1172,8 +1170,10 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for PerlinOctaveGenerator<'mc> {
-    fn into(self) -> crate::util::noise::OctaveGenerator<'mc> {
+impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc /* parse_into_impl */>>
+    for PerlinOctaveGenerator<'mc>
+{
+    fn into(self) -> crate::util::noise::OctaveGenerator<'mc /* parse_into_impl */> {
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1244,7 +1244,6 @@ impl<'mc> NoiseGenerator<'mc> {
         let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
         let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
-        // 6
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

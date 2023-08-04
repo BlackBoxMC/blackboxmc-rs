@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct LightningStrikeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -39,6 +36,26 @@ impl<'mc> LightningStrikeEventCause<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+    pub fn value_of_with_string(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -80,6 +97,21 @@ impl<'mc> LightningStrikeEventCause<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -228,7 +260,6 @@ impl<'mc> LightningStrikeEvent<'mc> {
         })
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -384,13 +415,15 @@ impl<'mc> LightningStrikeEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for LightningStrikeEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for LightningStrikeEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::weather::WeatherEvent<'mc>> for LightningStrikeEvent<'mc> {
-    fn into(self) -> crate::event::weather::WeatherEvent<'mc> {
+impl<'mc> Into<crate::event::weather::WeatherEvent<'mc /* parse_into_impl */>>
+    for LightningStrikeEvent<'mc>
+{
+    fn into(self) -> crate::event::weather::WeatherEvent<'mc /* parse_into_impl */> {
         crate::event::weather::WeatherEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -434,7 +467,6 @@ impl<'mc> ThunderChangeEvent<'mc> {
         arg1: bool,
     ) -> Result<crate::event::weather::ThunderChangeEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = &jni.find_class("org/bukkit/event/weather/ThunderChangeEvent")?;
         let res = jni.new_object(
@@ -469,7 +501,6 @@ impl<'mc> ThunderChangeEvent<'mc> {
         })
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -603,13 +634,15 @@ impl<'mc> ThunderChangeEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for ThunderChangeEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for ThunderChangeEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::weather::WeatherEvent<'mc>> for ThunderChangeEvent<'mc> {
-    fn into(self) -> crate::event::weather::WeatherEvent<'mc> {
+impl<'mc> Into<crate::event::weather::WeatherEvent<'mc /* parse_into_impl */>>
+    for ThunderChangeEvent<'mc>
+{
+    fn into(self) -> crate::event::weather::WeatherEvent<'mc /* parse_into_impl */> {
         crate::event::weather::WeatherEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -653,7 +686,6 @@ impl<'mc> WeatherChangeEvent<'mc> {
         arg1: bool,
     ) -> Result<crate::event::weather::WeatherChangeEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = &jni.find_class("org/bukkit/event/weather/WeatherChangeEvent")?;
         let res = jni.new_object(
@@ -688,7 +720,6 @@ impl<'mc> WeatherChangeEvent<'mc> {
         })
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -822,13 +853,15 @@ impl<'mc> WeatherChangeEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for WeatherChangeEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for WeatherChangeEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::weather::WeatherEvent<'mc>> for WeatherChangeEvent<'mc> {
-    fn into(self) -> crate::event::weather::WeatherEvent<'mc> {
+impl<'mc> Into<crate::event::weather::WeatherEvent<'mc /* parse_into_impl */>>
+    for WeatherChangeEvent<'mc>
+{
+    fn into(self) -> crate::event::weather::WeatherEvent<'mc /* parse_into_impl */> {
         crate::event::weather::WeatherEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -994,8 +1027,8 @@ impl<'mc> WeatherEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Event<'mc>> for WeatherEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc> {
+impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for WeatherEvent<'mc> {
+    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

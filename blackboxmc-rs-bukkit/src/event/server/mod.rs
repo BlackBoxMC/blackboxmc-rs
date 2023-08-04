@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct RemoteServerCommandEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -118,7 +115,6 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         Ok(())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -237,8 +233,10 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::ServerCommandEvent<'mc>> for RemoteServerCommandEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerCommandEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerCommandEvent<'mc /* parse_into_impl */>>
+    for RemoteServerCommandEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServerCommandEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerCommandEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -422,8 +420,10 @@ impl<'mc> PluginEnableEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::PluginEvent<'mc>> for PluginEnableEvent<'mc> {
-    fn into(self) -> crate::event::server::PluginEvent<'mc> {
+impl<'mc> Into<crate::event::server::PluginEvent<'mc /* parse_into_impl */>>
+    for PluginEnableEvent<'mc>
+{
+    fn into(self) -> crate::event::server::PluginEvent<'mc /* parse_into_impl */> {
         crate::event::server::PluginEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -529,7 +529,6 @@ impl<'mc> ServerCommandEvent<'mc> {
         Ok(())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -661,13 +660,15 @@ impl<'mc> ServerCommandEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for ServerCommandEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for ServerCommandEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerCommandEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerEvent<'mc /* parse_into_impl */>>
+    for ServerCommandEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServerEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -854,8 +855,10 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::ServiceEvent<'mc>> for ServiceUnregisterEvent<'mc> {
-    fn into(self) -> crate::event::server::ServiceEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServiceEvent<'mc /* parse_into_impl */>>
+    for ServiceUnregisterEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServiceEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServiceEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -900,7 +903,6 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<impl Into<&'mc blackboxmc_java::JavaSet<'mc, E>>>,
     ) -> Result<crate::event::server::BroadcastMessageEvent<'mc>, Box<dyn std::error::Error>> {
-        // 1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
         let val_3 =
@@ -953,7 +955,6 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         Ok(())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1099,13 +1100,17 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for BroadcastMessageEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>>
+    for BroadcastMessageEvent<'mc>
+{
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for BroadcastMessageEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerEvent<'mc /* parse_into_impl */>>
+    for BroadcastMessageEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServerEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1145,7 +1150,6 @@ impl<'mc> ServerEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::event::server::ServerEvent<'mc>, Box<dyn std::error::Error>> {
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
         let cls = &jni.find_class("org/bukkit/event/server/ServerEvent")?;
         let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -1259,8 +1263,8 @@ impl<'mc> ServerEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Event<'mc>> for ServerEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc> {
+impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for ServerEvent<'mc> {
+    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1326,20 +1330,6 @@ impl<'mc> TabCompleteEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn buffer(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBuffer",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1354,8 +1344,21 @@ impl<'mc> TabCompleteEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn buffer(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBuffer",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1515,13 +1518,13 @@ impl<'mc> TabCompleteEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc>> for TabCompleteEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc> {
+impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for TabCompleteEvent<'mc> {
+    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-impl<'mc> Into<crate::event::Event<'mc>> for TabCompleteEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc> {
+impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for TabCompleteEvent<'mc> {
+    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1705,8 +1708,10 @@ impl<'mc> PluginDisableEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::PluginEvent<'mc>> for PluginDisableEvent<'mc> {
-    fn into(self) -> crate::event::server::PluginEvent<'mc> {
+impl<'mc> Into<crate::event::server::PluginEvent<'mc /* parse_into_impl */>>
+    for PluginDisableEvent<'mc>
+{
+    fn into(self) -> crate::event::server::PluginEvent<'mc /* parse_into_impl */> {
         crate::event::server::PluginEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -1890,8 +1895,10 @@ impl<'mc> MapInitializeEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for MapInitializeEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerEvent<'mc /* parse_into_impl */>>
+    for MapInitializeEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServerEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2062,8 +2069,8 @@ impl<'mc> ServiceEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServiceEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerEvent<'mc /* parse_into_impl */>> for ServiceEvent<'mc> {
+    fn into(self) -> crate::event::server::ServerEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2106,6 +2113,26 @@ impl<'mc> ServerLoadEventLoadType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn value_of_with_string(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
+        let cls = &jni.find_class("java/lang/Enum")?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        let mut obj = res.l()?;
+        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2146,6 +2173,21 @@ impl<'mc> ServerLoadEventLoadType<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Ljava/lang/Enum;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -2402,8 +2444,10 @@ impl<'mc> ServerLoadEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerLoadEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerEvent<'mc /* parse_into_impl */>>
+    for ServerLoadEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServerEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2589,8 +2633,10 @@ impl<'mc> ServiceRegisterEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::ServiceEvent<'mc>> for ServiceRegisterEvent<'mc> {
-    fn into(self) -> crate::event::server::ServiceEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServiceEvent<'mc /* parse_into_impl */>>
+    for ServiceRegisterEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServiceEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServiceEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -2759,8 +2805,8 @@ impl<'mc> PluginEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for PluginEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerEvent<'mc /* parse_into_impl */>> for PluginEvent<'mc> {
+    fn into(self) -> crate::event::server::ServerEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -3033,8 +3079,10 @@ impl<'mc> ServerListPingEvent<'mc> {
         })
     }
 }
-impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerListPingEvent<'mc> {
-    fn into(self) -> crate::event::server::ServerEvent<'mc> {
+impl<'mc> Into<crate::event::server::ServerEvent<'mc /* parse_into_impl */>>
+    for ServerListPingEvent<'mc>
+{
+    fn into(self) -> crate::event::server::ServerEvent<'mc /* parse_into_impl */> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ChunkGeneratorChunkData. Needed for returning it from Java.
 pub struct ChunkGeneratorChunkData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -28,41 +25,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn set_region_with_int(
-        &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-        arg3: i32,
-        arg4: i32,
-        arg5: i32,
-        arg6: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
-        let val_7 =
-            unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setRegion",
-            "(IIIIIILorg/bukkit/Material;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-                jni::objects::JValueGen::from(&val_5),
-                jni::objects::JValueGen::from(&val_6),
-                jni::objects::JValueGen::from(&val_7),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     #[deprecated]
     pub fn get_data(
         &mut self,
@@ -85,6 +47,41 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
+    }
+    pub fn set_region_with_int(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+        arg3: i32,
+        arg4: i32,
+        arg5: i32,
+        arg6: std::option::Option<impl Into<&'mc crate::block::data::BlockData<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
+        let val_7 =
+            unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setRegion",
+            "(IIIIIILorg/bukkit/block/data/BlockData;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+                jni::objects::JValueGen::from(&val_6),
+                jni::objects::JValueGen::from(&val_7),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn get_block_data(
         &mut self,
@@ -1106,7 +1103,6 @@ impl<'mc> LimitedRegion<'mc> {
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        // 1
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1192,7 +1188,6 @@ impl<'mc> LimitedRegion<'mc> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 = arg1.unwrap();
-        // 1
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
         let val_4 =
             unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
@@ -1247,8 +1242,8 @@ impl<'mc> JNIRaw<'mc> for LimitedRegion<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::RegionAccessor<'mc>> for LimitedRegion<'mc> {
-    fn into(self) -> crate::RegionAccessor<'mc> {
+impl<'mc> Into<crate::RegionAccessor<'mc /* parse_into_impl */>> for LimitedRegion<'mc> {
+    fn into(self) -> crate::RegionAccessor<'mc /* parse_into_impl */> {
         crate::RegionAccessor::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

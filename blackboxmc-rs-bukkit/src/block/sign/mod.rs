@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub enum SideEnum {
     Front,
     Back,
@@ -129,7 +126,6 @@ impl<'mc> SignSide<'mc> {
         Ok(())
     }
     pub fn set_glowing_text(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -187,8 +183,8 @@ impl<'mc> JNIRaw<'mc> for SignSide<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::material::Colorable<'mc>> for SignSide<'mc> {
-    fn into(self) -> crate::material::Colorable<'mc> {
+impl<'mc> Into<crate::material::Colorable<'mc /* parse_into_impl */>> for SignSide<'mc> {
+    fn into(self) -> crate::material::Colorable<'mc /* parse_into_impl */> {
         crate::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

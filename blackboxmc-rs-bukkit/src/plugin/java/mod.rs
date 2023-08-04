@@ -1,6 +1,3 @@
-#![allow(deprecated)]
-use blackboxmc_general::JNIRaw;
-use color_eyre::eyre::Result;
 pub struct JavaPluginLoader<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -171,8 +168,8 @@ impl<'mc> JavaPluginLoader<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::plugin::PluginLoader<'mc>> for JavaPluginLoader<'mc> {
-    fn into(self) -> crate::plugin::PluginLoader<'mc> {
+impl<'mc> Into<crate::plugin::PluginLoader<'mc /* parse_into_impl */>> for JavaPluginLoader<'mc> {
+    fn into(self) -> crate::plugin::PluginLoader<'mc /* parse_into_impl */> {
         crate::plugin::PluginLoader::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
@@ -215,6 +212,20 @@ impl<'mc> JavaPlugin<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::plugin::java::JavaPlugin::from_raw(&jni, res)
     }
+    pub fn description(
+        &mut self,
+    ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDescription",
+            "()Lorg/bukkit/plugin/PluginDescriptionFile;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -233,20 +244,6 @@ impl<'mc> JavaPlugin<'mc> {
             .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn description(
-        &mut self,
-    ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Lorg/bukkit/plugin/PluginDescriptionFile;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn on_tab_complete(
         &mut self,
@@ -365,7 +362,6 @@ impl<'mc> JavaPlugin<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -429,7 +425,6 @@ impl<'mc> JavaPlugin<'mc> {
         Ok(res.z().unwrap())
     }
     pub fn set_naggable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -574,8 +569,8 @@ impl<'mc> JavaPlugin<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::plugin::PluginBase<'mc>> for JavaPlugin<'mc> {
-    fn into(self) -> crate::plugin::PluginBase<'mc> {
+impl<'mc> Into<crate::plugin::PluginBase<'mc /* parse_into_impl */>> for JavaPlugin<'mc> {
+    fn into(self) -> crate::plugin::PluginBase<'mc /* parse_into_impl */> {
         crate::plugin::PluginBase::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
