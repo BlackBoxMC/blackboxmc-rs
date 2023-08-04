@@ -1040,20 +1040,6 @@ impl<'mc> RaidStopEvent<'mc> {
         )?;
         crate::event::raid::RaidStopEvent::from_raw(&jni, res)
     }
-    pub fn reason(
-        &mut self,
-    ) -> Result<crate::event::raid::RaidStopEventReason<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getReason",
-            "()Lorg/bukkit/event/raid/RaidStopEvent$Reason;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::raid::RaidStopEventReason::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1065,6 +1051,20 @@ impl<'mc> RaidStopEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn reason(
+        &mut self,
+    ) -> Result<crate::event::raid::RaidStopEventReason<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getReason",
+            "()Lorg/bukkit/event/raid/RaidStopEvent$Reason;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::raid::RaidStopEventReason::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

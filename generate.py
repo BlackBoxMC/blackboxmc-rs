@@ -28,19 +28,9 @@ excluded_classes = [
     "org.bukkit.plugin.SimplePluginManager",    # uses stuff that isn't being generated due to that java bug and i don't want to write an entire class binding for something that's getting deprecated anyways.
     "java.lang.Thread",                         # i would have to bind all of java.lang for this and i don't feel like it sorry
     
-    "java.util.concurrent.locks.Condition", "java.util.concurrent.locks.Lock",
-                        "java.util.concurrent.locks.ReadWriteLock",
-                        "java.util.concurrent.locks.AbstractOwnableSynchronizer",
-                        "java.util.concurrent.locks.AbstractQueuedLongSynchronizer",
-                        "java.util.concurrent.locks.AbstractQueuedSynchronizer",
-                        "java.util.concurrent.locks.LockSupport", "java.util.concurrent.locks.ReentrantLock",
-                        "java.util.concurrent.locks.ReentrantReadWriteLock",
-                        "java.util.concurrent.locks.ReentrantReadWriteLock$ReadLock",
-                        "java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock",
-                        "java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject",
-                        "java.util.concurrent.locks.StampedLock", "java.util.function.BiConsumer",
-                        "java.util.concurrent.locks.AbstractQueuedLongSynchronizer$ConditionObject",
-    "java.util.concurrent.atomic.Striped64" # this should not be here.
+    "java.util.concurrent",                     # i want to lessen my workload and binding this is going to be pointless since your only option of multithreading is through BukkitRunnables.
+    "java.util.stream",                         # unneeded when java's iterator is bound.
+    "java.util.function",                       # useless unless i can do implement Into for the functions in question and that can't be done safely.
 ]
 
 interface_names = []
@@ -48,6 +38,15 @@ filled_once = []
 bindings = {}
 omitted_classes = ["Striped64"]
 enums = []
+
+
+def in_excluded_classes(cl):
+    if cl in excluded_classes:
+        return True
+    for c in excluded_classes:
+        if cl.startswith(c):
+            return True
+    return False
 
 def library_name_format(libname):
     return libname.replace("-","_").replace("_rs_","_")
@@ -94,46 +93,75 @@ def func_signature_format(ty, increment, returning, options_start_at):
     generic_letters = []
     generic_args = []
 
-    generic_str, _ = get_generics(ty)
-    
-    if(ty["type_name_lhand"] == "" and not returning):
-        thing += ty["type_name_resolved"]
-    else:
+    generics = ty["generics"]
+    generic_str = ""
+
+    if(len(generics) >= 1):
+        generics_ = []
+        n = 0
+        for gen in generics:
+            gen2 = re.search("(extends|super) ([A-Za-z])",gen)
+            if gen2 is not None:
+                gen = "Into<"+gen2.group(2)+">"
+            if(len(gen) >= 2):
+                name = java_type_to_rust("", gen, None, 0, True, library, False, False, "")
+                if name is not None:
+                    letter = chr(ord('a')+n+increment).upper()
+                    generics_.append(letter)
+                    generic_args.append(letter+": "+name["type_name_resolved"])
+            else:
+                print(gen)
+                generics_.append(gen.upper())
+            n += 1
+        generics = generics_
+        generic_str = ", "+",".join(generics)
+
+    if(len(generics) >= 1 and ty["type_name_original"] == "java.lang.Object"):
         if not returning:
-            thing += ty["type_name_lhand"]+": "
-
-        if(options_start_at > -1):
-            if increment >= options_start_at:
-                thing += "std::option::Option<"
-
-        if(ty["type_name_resolved"].startswith("&dyn")):
-            old = ty["type_name_resolved"]
-            letter = chr(ord('a')+increment).upper()
-            ty["type_name_resolved"] = letter
-            generic_letters.append(letter)
-            generic_args.append(letter+": blackboxmc_general::JNIRaw<'mc> + "+old.replace("&dyn","")+"<'mc>")
-
-        if ty["is_array"]:
-            thing += "Vec<"
-            if (internal_do_into or is_string) and not returning:
-                thing += "impl Into<"
+                thing += ty["type_name_lhand"]+": "
+        thing += generics[len(generics)-1]
+    else:
+        if(len(generics) >= 1 and ty["type_name_original"] == "java.lang.Class"):
+            generics = []
+            generic_str = ""
+        if(ty["type_name_lhand"] == "" and not returning):
             thing += ty["type_name_resolved"]
-            if(internal):
-                thing += "<'mc"+generic_str+">"
-            if (internal_do_into or is_string) and not returning:
-                thing += ">"
-            thing += ">"
         else:
-            if (internal_do_into or is_string) and not returning:
-                thing += "impl Into<&'mc "
-            thing += ty["type_name_resolved"]
-            if(internal):
-                thing += "<'mc"+generic_str+">"
-            if (internal_do_into or is_string) and not returning:
+            if not returning:
+                thing += ty["type_name_lhand"]+": "
+
+            if(options_start_at > -1):
+                if increment >= options_start_at:
+                    thing += "std::option::Option<"
+
+            if(ty["type_name_resolved"].startswith("&dyn")):
+                old = ty["type_name_resolved"]
+                letter = chr(ord('a')+increment).upper()
+                ty["type_name_resolved"] = letter
+                generic_letters.append(letter[0])
+                generic_args.append(letter+": blackboxmc_general::JNIRaw<'mc> + "+old.replace("&dyn","")+"<'mc>")
+
+            if ty["is_array"]:
+                thing += "Vec<"
+                if (internal_do_into or is_string) and not returning:
+                    thing += "impl Into<"
+                thing += ty["type_name_resolved"]
+                if(internal):
+                    thing += "<'mc"+generic_str+">"
+                if (internal_do_into or is_string) and not returning:
+                    thing += ">"
                 thing += ">"
-        if(options_start_at != -1):
-            if increment >= options_start_at:
-                thing += ">"
+            else:
+                if (internal_do_into or is_string) and not returning:
+                    thing += "impl Into<&'mc "
+                thing += ty["type_name_resolved"]
+                if(internal):
+                    thing += "<'mc"+generic_str+">"
+                if (internal_do_into or is_string) and not returning:
+                    thing += ">"
+            if(options_start_at != -1):
+                if increment >= options_start_at:
+                    thing += ">"
 
     return {
         "result": thing,
@@ -336,7 +364,7 @@ def java_call_signature_format(types, return_type, is_constructor=False):
     else:
         return "("+"".join(results)+")"+java_letter_from_rust(return_type)
 
-def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor,is_trait):
+def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor,is_trait, upper_generic_letters):
     type_name_resolved = ""
     is_array = False
     is_interface = False
@@ -351,8 +379,9 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
 
     type_name_original = ty
     package_name = ".".join(filter(lambda f: f.islower(), type_name_original.split(".")))
-    if ty in excluded_classes:
+    if in_excluded_classes(ty):
         return None
+
     match ty:
         case "void":
             type_name_resolved = "()"
@@ -424,10 +453,6 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                     type_name_resolved = type_name_resolved.replace(
                         crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
 
-
-    if type_alone == "":
-        type_alone = type_name_resolved
-
     parts = type_name_resolved.split("::")
     for p in parts:
         if p in reserved_words:
@@ -449,46 +474,45 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     else:
         options_start_at = -1
 
+    upper_generics_list = list(filter(lambda f: f != "",upper_generic_letters.replace(" ","").split(",")))
     generics = []
     if method is not None:
-        search = []
-        if not returning:
-            if "genericReturnType" in method["method"]:
-                search = method["method"]["genericReturnType"].split(".")
-        else:
-            if "genericParameterTypes" in method["method"]:
-                search_ = method["method"]["genericParameterTypes"]
-                if len(search_) > i:
-                    search = [search_[i]]
-        if len(search) >= 1:
-            if len(search[0]) <= 1:
-                # ....hey by any chance is the method a "public" method?
-                default = method["method"]["modifiers"]&(1024|1|8) == 1 and is_trait
-                if default:
-                    # ok actually forget everything, this needs to have the same letters as the parent class.
-                    print(method["method"]["name"], type_name_original, get_generics(type_name_original))
-                type_name_resolved = search[0]
+        if len(generics) <= 0:
+            search = []
+            if not returning:
+                if "genericReturnType" in method["method"]:
+                    search = method["method"]["genericReturnType"].split(".")
             else:
+                if "genericParameterTypes" in method["method"]:
+                    search_ = method["method"]["genericParameterTypes"]
+                    if len(search_) > i:
+                        search = [search_[i]]
+            if len(search) >= 1:
+                n = i
                 for f in search:
-                    if f in excluded_classes:
+                    if in_excluded_classes(f):
                         return None
-                    typ = java_type_to_rust("", f, None,i,returning,library,is_constructor,is_trait)
+                    typ = java_type_to_rust("", f, None,n,returning,library,is_constructor,is_trait,upper_generic_letters)
                     if typ is not None:
                         if "::" in typ["type_name_resolved"] and typ["type_name_resolved"] != type_name_resolved:
                             gen = typ["type_name_resolved"]
                             gen2 = re.search("(extends|super) ([A-Za-z])",gen)
                             if gen2 is not None:
                                 gen = "Into<"+gen2.group(2)+">"
-                            # special case: some things return "Class<?>" or "Object<?>" but that's not supported
+                            # special case: some things return "Class<?>" but that's not supported
                             if ty != "java.lang.Class":
-                                gen3 = re.search("<(.*?)>",gen)
-                                if gen3 is not None:
-                                    gen = gen3.group(1)
                                 if gen == "javaString":
                                     gen = "String"
                                 gen = gen.replace("?","dyn JNIRaw<'mc>")
-                                generics.append(gen)
-                                
+                                # another special case: if it's an "Object" then no it isn't, silly.
+                                if ty == "java.lang.Object":
+                                    type_name_resolved = gen
+                                    type_name_original = gen
+                                else:
+                                    generics.append(gen.upper())
+                    n += 1
+
+                
     # if the generics array is empty, then we have to resort to the default generics.
     if len(generics) <= 0:
         if ".".join(package_name.split(".")[0:2]) in libraries:
@@ -500,8 +524,23 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                     temp_cls = temp_pkg[typealone.replace("$",".")]
                     if "generics" in temp_cls:
                         generics = temp_cls["generics"]
-                            
-        
+    
+    if method is not None:
+        # ....hey by any chance is the method a "public" method?
+        if "isDefault" in method["method"]:
+            default = method["method"]["isDefault"]
+            if default:
+                if(len(upper_generics_list) == len(generics)):
+                    generics = upper_generics_list
+
+    # by any change is the only generic in the type "T" and do we also only have one generic 
+    if len(generics) == 1:
+        if(generics[0] == "T"):
+            if len(upper_generics_list) == 1:
+                generics = upper_generics_list
+    if type_alone == "":
+        type_alone = type_name_resolved
+
     return {
         "type_name_resolved": type_name_resolved,
         "type_name_lhand": type_name_lhand,
@@ -603,7 +642,7 @@ def gen_from_raw_func(name, is_enum, mod_path):
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
-def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor):
+def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor,upper_generic_letters):
     og_name = name
     impl_signature = []
 
@@ -728,9 +767,18 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
     for k in new_methods:
         method = new_methods[k]
-
         name = k
-        types = method["method"]["parameters"]
+        parameters = method["method"]["parameters"]
+        generic_parameter_types = method["method"]["genericParameterTypes"]
+        types = []
+        for i in range(len(parameters)):
+            x = parameters[i]
+            y = generic_parameter_types[i]
+            if(len(y) == 1 and x[1] == "java.lang.Object"):
+                types.append([x[0], y])
+            else:
+                types.append(x)
+
 
         if "options_start_at" in method["method"]:
             options_start_at = method["method"]["options_start_at"]
@@ -769,7 +817,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         i = 0
         # make the function signature
         for type in types:
-            group = java_type_to_rust(type[0], type[1],method, i, False, library,is_constructor,is_trait)
+            group = java_type_to_rust(type[0], type[1],method, i, False, library,is_constructor,is_trait,upper_generic_letters)
 
             if group is None:
                 should_continue = False
@@ -798,7 +846,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         n = 0
         types = []
         for type in func_signature:
-            if(type["type_name_lhand"] == "") or (type["is_array"]) or (type["type_name_original"] in excluded_classes):
+            if(type["type_name_lhand"] == "") or (type["is_array"]) or in_excluded_classes(type["type_name_original"]):
                 n += 1
                 continue
             else:
@@ -821,13 +869,13 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         else:
             tyname = method["method"]["returnType"]
 
-        return_group = java_type_to_rust("", tyname, method, i, True, library, True, is_trait)
+        return_group = java_type_to_rust("", tyname, method, i, True, library, True, is_trait, upper_generic_letters)
         gen = get_generics(tyname)[0].split(".")
 
         if return_group is None:
             continue
                 
-        if return_group["type_name_original"] in excluded_classes:
+        if in_excluded_classes(return_group["type_name_original"]):
             continue
 
         if return_group["type_name_alone"] in omitted_classes:
@@ -866,9 +914,16 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             generic_letters += group["generic_letters"]
             generic_args += group["generic_args"]
 
+        if "generics" in method["method"]:
+            generic_letters += method["method"]["generics"]
+            generic_args += list(map(lambda f: f[0].upper()+": JNIRaw<'mc>", method["method"]["generics"]))
+
+        
+
         return_type = func_signature_format(return_group,j,True,-1)
         generic_letters_str = ""
         if len(generic_letters) >= 1:
+            print(generic_letters)
             generic_letters_str = "<"+",".join(generic_letters)+">"
         generic_args_str = ""
         if len(generic_args) >= 1:
@@ -878,6 +933,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
         if "annotations" in method["method"]:
             impl_signature += parse_annotations(method["method"]["annotations"])
+
+        
         impl_signature.append(
             "\tpub fn "+name+generic_letters_str+"("+func_signature_resolved+") "
         )
@@ -912,7 +969,7 @@ def parse_classes(library, val, classes):
     full_name = val["packageName"]+"."+name
     if library.startswith("java"):
         name = "Java"+name
-    if full_name in excluded_classes:
+    if in_excluded_classes(full_name):
         print("excluding "+full_name)
         return
 
@@ -997,7 +1054,7 @@ def parse_classes(library, val, classes):
         gen_from_raw_func(name, True, mod_path)
 
         if "methods" in val:
-            parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False)
+            parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False,generics_str_letters)
 
         file_cache[mod_path].append("}")
 
@@ -1014,7 +1071,7 @@ def parse_classes(library, val, classes):
         gen_from_raw_func(name, False, mod_path)
 
         if "methods" in val:
-            parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False)
+            parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,generics_str_letters)
         file_cache[mod_path].append("}")
 
         file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> JNIRaw<'mc> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
@@ -1053,10 +1110,10 @@ def parse_classes(library, val, classes):
         gen_from_raw_func(name, False, mod_path)
 
         if "constructors" in val:
-            parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True)
+            parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True,generics_str_letters)
 
         if "methods" in val:
-            parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False)
+            parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False,generics_str_letters)
 
         file_cache[mod_path].append("}")
 
@@ -1102,11 +1159,11 @@ def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
     if val["packageName"].startswith("java"):
         if not val["packageName"].startswith("java.util"):
             return
-    val_resolved = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False, False)
+    val_resolved = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False, False, generics_str_letters)
 
     if val_resolved is None:
         return
-    if val_resolved["type_name_original"] in excluded_classes:
+    if in_excluded_classes(val_resolved["type_name_original"]):
         return
     if val_resolved["type_name_alone"] in omitted_classes:
         return

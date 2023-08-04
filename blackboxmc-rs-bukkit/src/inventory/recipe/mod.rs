@@ -68,32 +68,6 @@ impl<'mc> CookingBookCategory<'mc> {
             _ => None,
         }
     }
-    pub fn value_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/inventory/recipe/CookingBookCategory")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/recipe/CookingBookCategory;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::recipe::CookingBookCategory::from_raw(
-            &jni,
-            raw_obj,
-            crate::inventory::recipe::CookingBookCategory::from_string(variant_str).unwrap(),
-        )
-    }
 }
 pub enum CraftingBookCategoryEnum {
     Building,
@@ -165,31 +139,5 @@ impl<'mc> CraftingBookCategory<'mc> {
             "MISC" => Some(CraftingBookCategoryEnum::Misc),
             _ => None,
         }
-    }
-    pub fn value_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::inventory::recipe::CraftingBookCategory<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/inventory/recipe/CraftingBookCategory")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/inventory/recipe/CraftingBookCategory;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::inventory::recipe::CraftingBookCategory::from_raw(
-            &jni,
-            raw_obj,
-            crate::inventory::recipe::CraftingBookCategory::from_string(variant_str).unwrap(),
-        )
     }
 }

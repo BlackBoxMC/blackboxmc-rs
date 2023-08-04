@@ -36,6 +36,20 @@ impl<'mc> ConfigurationSerialization<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn get_class_by_alias(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/lang/Class")?;
+        let res = jni.call_static_method(
+            cls,
+            "getClassByAlias",
+            "(Ljava/lang/String;)Ljava/lang/Class;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
     pub fn deserialize(
         &mut self,
         arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
@@ -92,16 +106,16 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
-    pub fn unregister_class_with_string(
+    pub fn unregister_class_with_class(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
         let cls = &jni.find_class("void")?;
         let res = jni.call_static_method(
             cls,
             "unregisterClass",
-            "(Ljava/lang/Class;)V",
+            "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
         Ok(())
@@ -123,20 +137,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
 "(Ljava/util/Map;Ljava/lang/Class;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         let mut obj = res.l()?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
-    }
-    pub fn get_class_by_alias(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/lang/Class")?;
-        let res = jni.call_static_method(
-            cls,
-            "getClassByAlias",
-            "(Ljava/lang/String;)Ljava/lang/Class;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn wait(
         &mut self,

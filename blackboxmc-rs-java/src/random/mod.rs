@@ -36,13 +36,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_stochastic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isStochastic", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn equidistribution(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -54,6 +47,13 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn is_stochastic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStochastic", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
@@ -165,7 +165,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     pub fn create(
         &mut self,
-        arg0: std::option::Option<T>,
+        arg0: std::option::Option<i64>,
     ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -178,14 +178,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn all(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/stream/Stream")?;
-        let res = jni.call_static_method(cls, "all", "()Ljava/util/stream/Stream;", &[])?;
-        let mut obj = res.l()?;
-        crate::stream::JavaStream::from_raw(&jni, obj)
     }
     pub fn wait(
         &mut self,
@@ -287,62 +279,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn rngs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "rngs",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn splits(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "splits",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn splits_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: std::option::Option<
-            impl Into<&'mc crate::random::JavaRandomGeneratorSplittableGenerator<'mc>>,
-        >,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "splits",
-            "(JLjava/util/random/RandomGenerator$SplittableGenerator;)Ljava/util/stream/Stream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn split(
         &mut self,
         arg0: std::option::Option<
@@ -422,120 +358,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
-    }
-    pub fn ints(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(II)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn ints_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(JII)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn longs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaLongStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "longs",
-            "(JJJ)Ljava/util/stream/LongStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaLongStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles(
-        &mut self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(DD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(JDD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -660,22 +482,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn rngs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "rngs",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -738,120 +544,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
-    }
-    pub fn ints(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(II)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn ints_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(JII)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn longs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaLongStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "longs",
-            "(JJJ)Ljava/util/stream/LongStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaLongStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles(
-        &mut self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(DD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(JDD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -975,21 +667,12 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn leaps(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "leaps",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+    pub fn leap(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "leap", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn copy_and_leap(
         &mut self,
@@ -1005,13 +688,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn leap(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "leap", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1044,28 +720,19 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "jumpDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
-    }
-    pub fn jumps(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "jumps",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn copy_and_jump(
         &mut self,
@@ -1080,29 +747,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn rngs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "rngs",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1148,120 +792,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
-    }
-    pub fn ints(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(II)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn ints_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(JII)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn longs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaLongStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "longs",
-            "(JJJ)Ljava/util/stream/LongStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaLongStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles(
-        &mut self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(DD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(JDD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1430,120 +960,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
-    pub fn ints(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(II)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn ints_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(JII)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn longs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaLongStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "longs",
-            "(JJJ)Ljava/util/stream/LongStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaLongStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles(
-        &mut self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(DD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(JDD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1584,34 +1000,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn default(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "getDefault",
-            "()Ljava/util/random/RandomGenerator;",
-            &[],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
-    }
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -1650,6 +1038,34 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    pub fn default(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
+        let res = jni.call_static_method(
+            cls,
+            "getDefault",
+            "()Ljava/util/random/RandomGenerator;",
+            &[],
+        )?;
+        let mut obj = res.l()?;
+        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
+    }
+    pub fn of(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
+    }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -1687,42 +1103,19 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn jumps(
+    pub fn jump(
         &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        arg0: std::option::Option<f64>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "jumps",
-            "(J)Ljava/util/stream/Stream;",
+            "jump",
+            "(D)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn jumps_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "jumps",
-            "(JD)Ljava/util/stream/Stream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn copy_and_jump(
         &mut self,
@@ -1750,20 +1143,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &self.jni_object(),
             "jumpPowerOfTwo",
             "(I)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn jump(
-        &mut self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "jump",
-            "(D)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
@@ -1797,21 +1176,18 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     pub fn copy(
         &mut self,
-    ) -> Result<
-        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>,
-        Box<dyn std::error::Error>,
-    > {
+    ) -> Result<crate::random::JavaRandomGeneratorLeapableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copy",
-            "()Ljava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator;",
+            "()Ljava/util/random/RandomGenerator$LeapableGenerator;",
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )
+        crate::random::JavaRandomGeneratorLeapableGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn leap_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
@@ -1819,22 +1195,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             .call_method(&self.jni_object(), "leapDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
-    }
-    pub fn leaps(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "leaps",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn copy_and_leap(
         &mut self,
@@ -1857,22 +1217,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             .call_method(&self.jni_object(), "jumpDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
-    }
-    pub fn rngs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "rngs",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1918,120 +1262,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
-    }
-    pub fn ints(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(II)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn ints_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(JII)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn longs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaLongStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "longs",
-            "(JJJ)Ljava/util/stream/LongStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaLongStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles(
-        &mut self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(DD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(JDD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2156,28 +1386,19 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "jumpDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
-    }
-    pub fn jumps(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "jumps",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn copy_and_jump(
         &mut self,
@@ -2192,29 +1413,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn rngs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaStream<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "rngs",
-            "(J)Ljava/util/stream/Stream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2291,120 +1489,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
-    }
-    pub fn ints(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(II)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn ints_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::stream::JavaIntStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ints",
-            "(JII)Ljava/util/stream/IntStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaIntStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn longs(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<crate::stream::JavaLongStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "longs",
-            "(JJJ)Ljava/util/stream/LongStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaLongStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles(
-        &mut self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(DD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn doubles_with_long(
-        &mut self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<crate::stream::JavaDoubleStream<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "doubles",
-            "(JDD)Ljava/util/stream/DoubleStream;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::stream::JavaDoubleStream::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self

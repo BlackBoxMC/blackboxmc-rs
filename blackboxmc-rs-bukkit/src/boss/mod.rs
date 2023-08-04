@@ -74,31 +74,6 @@ impl<'mc> BarStyle<'mc> {
             _ => None,
         }
     }
-    pub fn value_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/boss/BarStyle")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/boss/BarStyle;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::boss::BarStyle::from_raw(
-            &jni,
-            raw_obj,
-            crate::boss::BarStyle::from_string(variant_str).unwrap(),
-        )
-    }
 }
 pub enum BarColorEnum {
     Pink,
@@ -181,31 +156,6 @@ impl<'mc> BarColor<'mc> {
             _ => None,
         }
     }
-    pub fn value_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/boss/BarColor")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/boss/BarColor;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::boss::BarColor::from_raw(
-            &jni,
-            raw_obj,
-            crate::boss::BarColor::from_string(variant_str).unwrap(),
-        )
-    }
 }
 pub enum BarFlagEnum {
     DarkenSky,
@@ -272,31 +222,6 @@ impl<'mc> BarFlag<'mc> {
             _ => None,
         }
     }
-    pub fn value_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::boss::BarFlag<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/boss/BarFlag")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/boss/BarFlag;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::boss::BarFlag::from_raw(
-            &jni,
-            raw_obj,
-            crate::boss::BarFlag::from_string(variant_str).unwrap(),
-        )
-    }
 }
 /// An instantiatable struct that implements KeyedBossBar. Needed for returning it from Java.
 pub struct KeyedBossBar<'mc>(
@@ -333,13 +258,6 @@ impl<'mc> KeyedBossBar<'mc> {
             "(Lorg/bukkit/boss/BarColor;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -559,6 +477,13 @@ impl<'mc> KeyedBossBar<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hide", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -632,13 +557,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn add_flag(
         &mut self,
         arg0: impl Into<&'mc crate::boss::BarFlag<'mc>>,
@@ -855,6 +773,13 @@ impl<'mc> BossBar<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hide", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }

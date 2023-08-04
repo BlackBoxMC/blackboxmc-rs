@@ -50,19 +50,16 @@ impl<'mc> JavaPattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn as_match_predicate(
-        &mut self,
-    ) -> Result<crate::function::JavaPredicate<'mc, T>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "asMatchPredicate",
-            "()Ljava/util/function/Predicate;",
-            &[],
-        );
+    pub fn pattern(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "pattern", "()Ljava/lang/String;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::function::JavaPredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -101,31 +98,6 @@ impl<'mc> JavaPattern<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::regex::JavaPattern::from_raw(&jni, obj)
-    }
-    pub fn pattern(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "pattern", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn as_predicate(
-        &mut self,
-    ) -> Result<crate::function::JavaPredicate<'mc, T>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "asPredicate",
-            "()Ljava/util/function/Predicate;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::function::JavaPredicate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn wait(
         &mut self,
