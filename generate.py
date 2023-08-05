@@ -1291,8 +1291,8 @@ for library in libraries:
     crate_dir = ""
 
     if library in library_resolves:
-        #if library_resolves[library] == "blackboxmc-rs-java":
-        #    continue 
+        if library_resolves[library] == "blackboxmc-rs-java":
+            continue 
         crate_dir = os.path.join(library_resolves[library], "src")
     else:
         print("Unhandled library "+library +
