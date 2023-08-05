@@ -222,19 +222,37 @@ impl<'mc> AdvancementDisplay<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getX", "()F", &[]);
+            .call_method(&self.jni_object(), "isHidden", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.z().unwrap())
     }
-    pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getY", "()F", &[]);
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/advancement/AdvancementDisplayType;",
+            &[],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::advancement::AdvancementDisplayType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::advancement::AdvancementDisplayType::from_string(variant_str).unwrap(),
+        )
     }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -249,6 +267,20 @@ impl<'mc> AdvancementDisplay<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getX", "()F", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f().unwrap())
+    }
+    pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getY", "()F", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f().unwrap())
     }
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -286,38 +318,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             .call_method(&self.jni_object(), "shouldAnnounceChat", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isHidden", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/advancement/AdvancementDisplayType;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::advancement::AdvancementDisplayType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::advancement::AdvancementDisplayType::from_string(variant_str).unwrap(),
-        )
     }
 }
 impl<'mc> JNIRaw<'mc> for AdvancementDisplay<'mc> {

@@ -42,34 +42,6 @@ impl<'mc> ArmorTrim<'mc> {
 "(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         crate::inventory::meta::trim::ArmorTrim::from_raw(&jni, res)
     }
-    pub fn pattern(
-        &mut self,
-    ) -> Result<crate::inventory::meta::trim::TrimPattern<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPattern",
-            "()Lorg/bukkit/inventory/meta/trim/TrimPattern;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::trim::TrimPattern::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn material(
-        &mut self,
-    ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMaterial",
-            "()Lorg/bukkit/inventory/meta/trim/TrimMaterial;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::trim::TrimMaterial::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -90,6 +62,34 @@ impl<'mc> ArmorTrim<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn material(
+        &mut self,
+    ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaterial",
+            "()Lorg/bukkit/inventory/meta/trim/TrimMaterial;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::trim::TrimMaterial::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn pattern(
+        &mut self,
+    ) -> Result<crate::inventory::meta::trim::TrimPattern<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPattern",
+            "()Lorg/bukkit/inventory/meta/trim/TrimPattern;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::trim::TrimPattern::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn wait(
         &mut self,

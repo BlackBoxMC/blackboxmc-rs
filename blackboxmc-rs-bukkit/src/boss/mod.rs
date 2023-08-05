@@ -272,6 +272,31 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setVisible",
+            "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn color(&mut self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -294,24 +319,6 @@ impl<'mc> KeyedBossBar<'mc> {
             raw_obj,
             crate::boss::BarColor::from_string(variant_str).unwrap(),
         )
-    }
-    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setVisible",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -473,13 +480,6 @@ impl<'mc> KeyedBossBar<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hide", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -557,6 +557,31 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setVisible",
+            "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn color(&mut self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -579,24 +604,6 @@ impl<'mc> BossBar<'mc> {
             raw_obj,
             crate::boss::BarColor::from_string(variant_str).unwrap(),
         )
-    }
-    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setVisible",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -758,13 +765,6 @@ impl<'mc> BossBar<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hide", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "removeAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }

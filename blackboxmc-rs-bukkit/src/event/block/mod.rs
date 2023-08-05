@@ -50,13 +50,6 @@ impl<'mc> MoistureChangeEvent<'mc> {
         )?;
         crate::event::block::MoistureChangeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -70,6 +63,13 @@ impl<'mc> MoistureChangeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -271,13 +271,6 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         )?;
         crate::event::block::BlockReceiveGameEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -291,6 +284,13 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -480,12 +480,21 @@ impl<'mc> BlockDropItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+    pub fn new(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::Block<'mc>>,
+        arg1: impl Into<&'mc crate::block::BlockState<'mc>>,
+        arg2: impl Into<&'mc crate::entity::Player<'mc>>,
+        arg3: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgItem, 'mc>>,
+    ) -> Result<crate::event::block::BlockDropItemEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockDropItemEvent")?;
+        let res = jni.new_object(cls,
+"(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;Lorg/bukkit/entity/Player;Ljava/util/List;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+        crate::event::block::BlockDropItemEvent::from_raw(&jni, res)
     }
     pub fn handlers(
         &mut self,
@@ -500,6 +509,13 @@ impl<'mc> BlockDropItemEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn block_state(
         &mut self,
@@ -901,13 +917,6 @@ impl<'mc> TNTPrimeEvent<'mc> {
 "(Lorg/bukkit/block/Block;Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::block::TNTPrimeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -919,6 +928,27 @@ impl<'mc> TNTPrimeEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn cause(
+        &mut self,
+    ) -> Result<crate::event::block::TNTPrimeEventPrimeCause<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::block::TNTPrimeEventPrimeCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -971,20 +1001,6 @@ impl<'mc> TNTPrimeEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::block::Block::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn cause(
-        &mut self,
-    ) -> Result<crate::event::block::TNTPrimeEventPrimeCause<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::block::TNTPrimeEventPrimeCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1127,6 +1143,24 @@ impl<'mc> BellResonateEvent<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+    pub fn new(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::Block<'mc>>,
+        arg1: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgLivingEntity, 'mc>>,
+    ) -> Result<crate::event::block::BellResonateEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BellResonateEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        crate::event::block::BellResonateEvent::from_raw(&jni, res)
     }
     pub fn handlers(
         &mut self,
@@ -1309,12 +1343,26 @@ impl<'mc> BlockExplodeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+    pub fn new(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::Block<'mc>>,
+        arg1: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlock, 'mc>>,
+        arg2: f32,
+    ) -> Result<crate::event::block::BlockExplodeEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_3 = jni::objects::JValueGen::Float(arg2.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockExplodeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;F)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        crate::event::block::BlockExplodeEvent::from_raw(&jni, res)
     }
     pub fn handlers(
         &mut self,
@@ -1329,6 +1377,13 @@ impl<'mc> BlockExplodeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_yield(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
@@ -1728,12 +1783,19 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
 "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason;Lorg/bukkit/block/BlockState;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::block::CauldronLevelChangeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+    pub fn handlers(
+        &mut self,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHandlers",
+            "()Lorg/bukkit/event/HandlerList;",
+            &[],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn reason(
         &mut self,
@@ -1753,19 +1815,12 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getHandlers",
-            "()Lorg/bukkit/event/HandlerList;",
-            &[],
-        );
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.z().unwrap())
     }
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1985,6 +2040,24 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn new(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+        arg1: impl Into<&'mc crate::block::Block<'mc>>,
+        arg2: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+        arg3: impl Into<&'mc crate::entity::Player<'mc>>,
+        arg4: bool,
+    ) -> Result<crate::event::block::BlockMultiPlaceEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
+        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
+        let cls = &jni.find_class("org/bukkit/event/block/BlockMultiPlaceEvent")?;
+        let res = jni.new_object(cls,
+"(Ljava/util/List;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/Player;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
+        crate::event::block::BlockMultiPlaceEvent::from_raw(&jni, res)
+    }
     pub fn replaced_block_states(
         &mut self,
     ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
@@ -1999,13 +2072,6 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2019,6 +2085,13 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2399,20 +2472,6 @@ impl<'mc> BlockCanBuildEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn block_data(
-        &mut self,
-    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBlockData",
-            "()Lorg/bukkit/block/data/BlockData;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2435,6 +2494,20 @@ impl<'mc> BlockCanBuildEvent<'mc> {
             raw_obj,
             crate::Material::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn block_data(
+        &mut self,
+    ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getBlockData",
+            "()Lorg/bukkit/block/data/BlockData;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::block::data::BlockData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3284,6 +3357,27 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn new(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::Block<'mc>>,
+        arg1: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlock, 'mc>>,
+        arg2: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<crate::event::block::BlockPistonRetractEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockPistonRetractEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;Lorg/bukkit/block/BlockFace;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        crate::event::block::BlockPistonRetractEvent::from_raw(&jni, res)
+    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3524,6 +3618,29 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    #[deprecated]
+    pub fn new_with_block(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::Block<'mc>>,
+        arg1: i32,
+        arg2: std::option::Option<impl Into<&'mc crate::block::BlockFace<'mc>>>,
+    ) -> Result<crate::event::block::BlockPistonExtendEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockPistonExtendEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;ILorg/bukkit/block/BlockFace;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        crate::event::block::BlockPistonExtendEvent::from_raw(&jni, res)
+    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3537,6 +3654,14 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    #[deprecated]
+    pub fn length(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLength", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn blocks(&mut self) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3559,14 +3684,6 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    #[deprecated]
-    pub fn length(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getLength", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -3758,12 +3875,26 @@ impl<'mc> BlockFertilizeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+    pub fn new(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::Block<'mc>>,
+        arg1: impl Into<&'mc crate::entity::Player<'mc>>,
+        arg2: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+    ) -> Result<crate::event::block::BlockFertilizeEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/BlockFertilizeEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        )?;
+        crate::event::block::BlockFertilizeEvent::from_raw(&jni, res)
     }
     pub fn handlers(
         &mut self,
@@ -3778,6 +3909,13 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -4403,13 +4541,6 @@ impl<'mc> BlockGrowEvent<'mc> {
         )?;
         crate::event::block::BlockGrowEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4423,6 +4554,13 @@ impl<'mc> BlockGrowEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4631,13 +4769,6 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4663,6 +4794,13 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_item(
         &mut self,
@@ -4882,13 +5020,6 @@ impl<'mc> BlockCookEvent<'mc> {
 "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/ItemStack;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::block::BlockCookEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_result(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -4903,12 +5034,12 @@ impl<'mc> BlockCookEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn source(
+    pub fn result(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getSource",
+            "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -4917,12 +5048,12 @@ impl<'mc> BlockCookEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn result(
+    pub fn source(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getResult",
+            "getSource",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -4944,6 +5075,13 @@ impl<'mc> BlockCookEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5349,13 +5487,6 @@ impl<'mc> BlockFadeEvent<'mc> {
         )?;
         crate::event::block::BlockFadeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5369,6 +5500,13 @@ impl<'mc> BlockFadeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5572,13 +5710,6 @@ impl<'mc> BlockPlaceEvent<'mc> {
 "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/Player;ZLorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7)])?;
         crate::event::block::BlockPlaceEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5592,6 +5723,13 @@ impl<'mc> BlockPlaceEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5890,13 +6028,6 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         )?;
         crate::event::block::BlockPhysicsEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5910,6 +6041,13 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -6342,12 +6480,23 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+    pub fn new(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::block::Block<'mc>>,
+        arg1: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+    ) -> Result<crate::event::block::SpongeAbsorbEvent<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/event/block/SpongeAbsorbEvent")?;
+        let res = jni.new_object(
+            cls,
+            "(Lorg/bukkit/block/Block;Ljava/util/List;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        crate::event::block::SpongeAbsorbEvent::from_raw(&jni, res)
     }
     pub fn handlers(
         &mut self,
@@ -6362,6 +6511,13 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn blocks(&mut self) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -6754,13 +6910,6 @@ impl<'mc> SignChangeEvent<'mc> {
 "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Ljava/lang/String;Lorg/bukkit/block/sign/Side;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::block::SignChangeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6774,6 +6923,36 @@ impl<'mc> SignChangeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn side(&mut self) -> Result<crate::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getSide",
+            "()Lorg/bukkit/block/sign/Side;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::block::sign::Side::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::block::sign::Side::from_string(variant_str).unwrap(),
+        )
     }
     pub fn get_line(&mut self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -6808,29 +6987,6 @@ impl<'mc> SignChangeEvent<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn side(&mut self) -> Result<crate::block::sign::Side<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSide",
-            "()Lorg/bukkit/block/sign/Side;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::sign::Side::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::sign::Side::from_string(variant_str).unwrap(),
-        )
     }
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7021,13 +7177,6 @@ impl<'mc> LeavesDecayEvent<'mc> {
         )?;
         crate::event::block::LeavesDecayEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7041,6 +7190,13 @@ impl<'mc> LeavesDecayEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -7209,7 +7365,7 @@ impl<'mc> BlockFromToEvent<'mc> {
     pub fn new_with_block(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::block::Block<'mc>>>,
+        arg1: std::option::Option<impl Into<&'mc crate::block::BlockFace<'mc>>>,
     ) -> Result<crate::event::block::BlockFromToEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -7218,20 +7374,13 @@ impl<'mc> BlockFromToEvent<'mc> {
         let cls = &jni.find_class("org/bukkit/event/block/BlockFromToEvent")?;
         let res = jni.new_object(
             cls,
-            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/Block;)V",
+            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;)V",
             &[
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
         )?;
         crate::event::block::BlockFromToEvent::from_raw(&jni, res)
-    }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn handlers(
         &mut self,
@@ -7246,6 +7395,13 @@ impl<'mc> BlockFromToEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn face(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7468,13 +7624,6 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         )?;
         crate::event::block::BlockShearEntityEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7488,6 +7637,13 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7696,13 +7852,6 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         )?;
         crate::event::block::FluidLevelChangeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7716,6 +7865,13 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn new_data(
         &mut self,
@@ -7929,13 +8085,6 @@ impl<'mc> BlockBurnEvent<'mc> {
         )?;
         crate::event::block::BlockBurnEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7949,6 +8098,13 @@ impl<'mc> BlockBurnEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -8149,13 +8305,6 @@ impl<'mc> BlockDispenseEvent<'mc> {
         )?;
         crate::event::block::BlockDispenseEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8181,6 +8330,13 @@ impl<'mc> BlockDispenseEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_item(
         &mut self,
@@ -8405,13 +8561,6 @@ impl<'mc> BellRingEvent<'mc> {
         )?;
         crate::event::block::BellRingEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8425,6 +8574,13 @@ impl<'mc> BellRingEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn direction(
         &mut self,
@@ -8643,13 +8799,6 @@ impl<'mc> BlockDamageEvent<'mc> {
 "(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::block::BlockDamageEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8663,6 +8812,13 @@ impl<'mc> BlockDamageEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -9768,13 +9924,6 @@ impl<'mc> BlockIgniteEvent<'mc> {
 "(Lorg/bukkit/block/Block;Lorg/bukkit/event/block/BlockIgniteEvent$IgniteCause;Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::block::BlockIgniteEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9786,6 +9935,28 @@ impl<'mc> BlockIgniteEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn cause(
+        &mut self,
+    ) -> Result<crate::event::block::BlockIgniteEventIgniteCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/block/BlockIgniteEvent$IgniteCause;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::block::BlockIgniteEventIgniteCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -9850,21 +10021,6 @@ impl<'mc> BlockIgniteEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::block::Block::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn cause(
-        &mut self,
-    ) -> Result<crate::event::block::BlockIgniteEventIgniteCause<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/block/BlockIgniteEvent$IgniteCause;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::block::BlockIgniteEventIgniteCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -10027,13 +10183,6 @@ impl<'mc> NotePlayEvent<'mc> {
         )?;
         crate::event::block::NotePlayEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10047,6 +10196,13 @@ impl<'mc> NotePlayEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn instrument(&mut self) -> Result<crate::Instrument<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(

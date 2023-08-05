@@ -208,6 +208,34 @@ impl<'mc> AttributeInstance<'mc> {
             crate::attribute::Attribute::from_string(variant_str).unwrap(),
         )
     }
+    pub fn modifiers(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getModifiers",
+            "()Ljava/util/Collection;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getValue", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
+    pub fn default_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDefaultValue", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
     pub fn base_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -253,34 +281,6 @@ impl<'mc> AttributeInstance<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn modifiers(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getModifiers",
-            "()Ljava/util/Collection;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getValue", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn default_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDefaultValue", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
     }
 }
 impl<'mc> JNIRaw<'mc> for AttributeInstance<'mc> {
@@ -562,38 +562,6 @@ impl<'mc> AttributeModifier<'mc> {
 "(Ljava/util/UUID;Ljava/lang/String;DLorg/bukkit/attribute/AttributeModifier$Operation;Lorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::attribute::AttributeModifier::from_raw(&jni, res)
     }
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAmount", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-    pub fn operation(
-        &mut self,
-    ) -> Result<crate::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOperation",
-            "()Lorg/bukkit/attribute/AttributeModifier$Operation;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::attribute::AttributeModifierOperation::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -661,6 +629,53 @@ impl<'mc> AttributeModifier<'mc> {
             raw_obj,
             crate::inventory::EquipmentSlot::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn serialize(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn deserialize(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaString, javaObject, 'mc>>,
+    ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/attribute/AttributeModifier")?;
+        let res = jni.call_static_method(
+            cls,
+            "deserialize",
+            "(Ljava/util/Map;)Lorg/bukkit/attribute/AttributeModifier;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        crate::attribute::AttributeModifier::from_raw(&jni, obj)
+    }
+    pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAmount", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
+    pub fn operation(
+        &mut self,
+    ) -> Result<crate::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOperation",
+            "()Lorg/bukkit/attribute/AttributeModifier$Operation;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::attribute::AttributeModifierOperation::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn wait(
         &mut self,

@@ -33,20 +33,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn equidistribution(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "equidistribution", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn is_stochastic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -107,6 +93,20 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isStreamable", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn equidistribution(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "equidistribution", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
@@ -709,6 +709,13 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -729,13 +736,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -981,6 +981,34 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    pub fn default(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
+        let res = jni.call_static_method(
+            cls,
+            "getDefault",
+            "()Ljava/util/random/RandomGenerator;",
+            &[],
+        )?;
+        let mut obj = res.l()?;
+        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
+    }
+    pub fn of(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
+    }
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -1019,34 +1047,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn default(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "getDefault",
-            "()Ljava/util/random/RandomGenerator;",
-            &[],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
-    }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -1084,6 +1084,20 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn jump(
+        &mut self,
+        arg0: std::option::Option<f64>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "jump",
+            "(D)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn copy_and_jump(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -1119,20 +1133,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "leap", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn jump(
-        &mut self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "jump",
-            "(D)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1359,6 +1359,13 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1379,13 +1386,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,

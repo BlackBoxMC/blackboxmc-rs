@@ -238,13 +238,6 @@ impl<'mc> LightningStrikeEvent<'mc> {
 "(Lorg/bukkit/World;Lorg/bukkit/entity/LightningStrike;Lorg/bukkit/event/weather/LightningStrikeEvent$Cause;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::weather::LightningStrikeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -256,6 +249,28 @@ impl<'mc> LightningStrikeEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn cause(
+        &mut self,
+    ) -> Result<crate::event::weather::LightningStrikeEventCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/weather/LightningStrikeEvent$Cause;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::weather::LightningStrikeEventCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -294,21 +309,6 @@ impl<'mc> LightningStrikeEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::entity::LightningStrike::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn cause(
-        &mut self,
-    ) -> Result<crate::event::weather::LightningStrikeEventCause<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/weather/LightningStrikeEvent$Cause;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::weather::LightningStrikeEventCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -467,13 +467,6 @@ impl<'mc> ThunderChangeEvent<'mc> {
         )?;
         crate::event::weather::ThunderChangeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -487,6 +480,13 @@ impl<'mc> ThunderChangeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -674,13 +674,6 @@ impl<'mc> WeatherChangeEvent<'mc> {
         )?;
         crate::event::weather::WeatherChangeEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -694,6 +687,13 @@ impl<'mc> WeatherChangeEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());

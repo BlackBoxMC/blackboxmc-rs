@@ -740,24 +740,6 @@ impl<'mc> TranslationRegistry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn translate(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "translate",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -789,6 +771,24 @@ impl<'mc> TranslationRegistry<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn translate(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "translate",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn wait(
         &mut self,
@@ -889,18 +889,18 @@ impl<'mc> ComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn to_string_with_base_components(
+    pub fn to_string_with_base_component(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<
-            Vec<impl Into<&'mc crate::bungee::api::chat::BaseComponent<'mc>>>,
-        >,
+        arg0: std::option::Option<impl Into<&'mc crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(
             cls,
             "toString",
             "(Lnet/md_5/bungee/api/chat/BaseComponent;)Ljava/lang/String;",
-            &[],
+            &[jni::objects::JValueGen::from(&val_1)],
         )?;
         Ok(jni
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?

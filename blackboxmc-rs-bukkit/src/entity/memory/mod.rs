@@ -38,6 +38,26 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn values(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/util/Set")?;
+        let res = jni.call_static_method(cls, "values", "()Ljava/util/Set;", &[])?;
+        let mut obj = res.l()?;
+        blackboxmc_java::JavaSet::from_raw(&jni, obj)
+    }
+    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKey",
+            "()Lorg/bukkit/NamespacedKey;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -64,26 +84,6 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    pub fn values(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(cls, "values", "()Ljava/util/Set;", &[])?;
-        let mut obj = res.l()?;
-        blackboxmc_java::JavaSet::from_raw(&jni, obj)
-    }
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn wait(
         &mut self,

@@ -52,20 +52,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         )?;
         crate::map::MapFontCharacterSprite::from_raw(&jni, res)
     }
-    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn width(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getWidth", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn get(&mut self, arg0: i32, arg1: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
@@ -80,6 +66,20 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
+    }
+    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn width(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getWidth", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -195,6 +195,13 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::map::MapCursorCollection::from_raw(&jni, res)
     }
+    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "size", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
     pub fn get_cursor(
         &mut self,
         arg0: i32,
@@ -283,13 +290,6 @@ impl<'mc> MapCursorCollection<'mc> {
         crate::map::MapCursor::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "size", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -678,6 +678,20 @@ impl<'mc> MapRenderer<'mc> {
         let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_1)])?;
         crate::map::MapRenderer::from_raw(&jni, res)
     }
+    pub fn initialize(
+        &mut self,
+        arg0: impl Into<&'mc crate::map::MapView<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "initialize",
+            "(Lorg/bukkit/map/MapView;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn is_contextual(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -703,20 +717,6 @@ impl<'mc> MapRenderer<'mc> {
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
             ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn initialize(
-        &mut self,
-        arg0: impl Into<&'mc crate::map::MapView<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "initialize",
-            "(Lorg/bukkit/map/MapView;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -1040,26 +1040,19 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getId", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
     pub fn is_locked(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isLocked", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn center_x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getCenterX", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn center_z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getCenterZ", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     pub fn scale(&mut self) -> Result<crate::map::MapViewScale<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1070,6 +1063,15 @@ impl<'mc> MapView<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::map::MapViewScale::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::World::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1087,14 +1089,19 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
+    pub fn center_x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getCenterX", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::World::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.i().unwrap())
+    }
+    pub fn center_z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getCenterZ", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn is_virtual(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1214,13 +1221,6 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getId", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
 }
 impl<'mc> JNIRaw<'mc> for MapView<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -1284,27 +1284,6 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn get_width(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getWidth",
-            "(Ljava/lang/String;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn get_char(
         &mut self,
         arg0: u16,
@@ -1339,6 +1318,27 @@ impl<'mc> MapFont<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_width(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getWidth",
+            "(Ljava/lang/String;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -1466,27 +1466,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn get_width(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getWidth",
-            "(Ljava/lang/String;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn get_char(
         &mut self,
         arg0: u16,
@@ -1521,6 +1500,27 @@ impl<'mc> MinecraftFont<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_width(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getWidth",
+            "(Ljava/lang/String;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -1871,22 +1871,6 @@ impl<'mc> MapCursorType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    #[deprecated]
-    pub fn by_value(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i8,
-    ) -> Result<crate::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
-        let cls = &jni.find_class("org/bukkit/map/MapCursor$Type")?;
-        let res = jni.call_static_method(
-            cls,
-            "byValue",
-            "(B)Lorg/bukkit/map/MapCursor$Type;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::map::MapCursorType::from_raw(&jni, obj)
-    }
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -1914,6 +1898,22 @@ impl<'mc> MapCursorType<'mc> {
             .call_method(&self.jni_object(), "getValue", "()B", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
+    }
+    #[deprecated]
+    pub fn by_value(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i8,
+    ) -> Result<crate::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
+        let cls = &jni.find_class("org/bukkit/map/MapCursor$Type")?;
+        let res = jni.call_static_method(
+            cls,
+            "byValue",
+            "(B)Lorg/bukkit/map/MapCursor$Type;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        crate::map::MapCursorType::from_raw(&jni, obj)
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2075,25 +2075,26 @@ impl<'mc> MapCursor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    #[deprecated]
     pub fn new_with_byte(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i8,
         arg1: i8,
         arg2: i8,
-        arg3: impl Into<&'mc crate::map::MapCursorType<'mc>>,
+        arg3: i8,
         arg4: bool,
         arg5: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Byte(arg0.into());
         let val_2 = jni::objects::JValueGen::Byte(arg1.into());
         let val_3 = jni::objects::JValueGen::Byte(arg2.into());
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
+        let val_4 = jni::objects::JValueGen::Byte(arg3.into());
         let val_5 = jni::objects::JValueGen::Bool(arg4.unwrap().into());
         let val_6 = jni::objects::JObject::from(jni.new_string(arg5.unwrap().into()).unwrap());
         let cls = &jni.find_class("org/bukkit/map/MapCursor")?;
         let res = jni.new_object(
             cls,
-            "(BBBLorg/bukkit/map/MapCursor$Type;ZLjava/lang/String;)V",
+            "(BBBBZLjava/lang/String;)V",
             &[
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
@@ -2119,19 +2120,45 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn x(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+    pub fn get_type(
+        &mut self,
+    ) -> Result<crate::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            "()Lorg/bukkit/map/MapCursor$Type;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::map::MapCursorType::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    #[deprecated]
+    pub fn raw_type(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getX", "()B", &[]);
+            .call_method(&self.jni_object(), "getRawType", "()B", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
-    pub fn y(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getY", "()B", &[]);
+            .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b().unwrap())
+        Ok(res.z().unwrap())
+    }
+    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setVisible",
+            "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn set_x(&mut self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Byte(arg0.into());
@@ -2173,23 +2200,19 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn x(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
+            .call_method(&self.jni_object(), "getX", "()B", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.b().unwrap())
     }
-    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setVisible",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+    pub fn y(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getY", "()B", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.b().unwrap())
     }
     #[deprecated]
     pub fn set_raw_type(&mut self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
@@ -2230,28 +2253,6 @@ impl<'mc> MapCursor<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/map/MapCursor$Type;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::map::MapCursorType::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    #[deprecated]
-    pub fn raw_type(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getRawType", "()B", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b().unwrap())
     }
     pub fn wait(
         &mut self,

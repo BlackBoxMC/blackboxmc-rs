@@ -519,8 +519,6 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                                 if gen == "javaString":
                                     gen = "String"
                                 gen = gen.replace("? extends","").replace("? super","").replace("?","dyn JNIRaw<'mc>")
-                                if(len(gen) >= 1):
-                                    gen = "Java"+gen
                                 # another special case: if it's an "Object" then no it isn't, silly.
                                 if ty == "java.lang.Object":
                                     generic_clauses.append(gen+": JNIRaw<'mc>")
@@ -1230,19 +1228,20 @@ def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
         temp_lib = libraries[".".join(val_resolved["package_name"].split(".")[0:2])]
         temp_pkg = temp_lib[val_resolved["package_name"]]
         typealone = "".join(filter(lambda f: f[0].isupper(), val_resolved["type_name_original"].split(".")))
-        temp_cls = temp_pkg[typealone]
-        if "generics" in temp_cls and "generics" in val_resolved:
-            if(len(temp_cls["generics"]) != len(val_resolved["generics"])):
-                return
-            m = list(filter(lambda f: f != "", generics_str_letters.split(",")))
-            if(len(temp_cls["generics"]) != len(m)):
-                return
-            similar = False not in map(lambda x, y: x == y, temp_cls["generics"], val_resolved["generics"])
-            if not similar:
-                return
-            else:
-                into_generics_str_letters += generics_str_letters
-    
+        if typealone in temp_pkg:
+            temp_cls = temp_pkg[typealone]
+            if "generics" in temp_cls and "generics" in val_resolved:
+                if(len(temp_cls["generics"]) != len(val_resolved["generics"])):
+                    return
+                m = list(filter(lambda f: f != "", generics_str_letters.split(",")))
+                if(len(temp_cls["generics"]) != len(m)):
+                    return
+                similar = False not in map(lambda x, y: x == y, temp_cls["generics"], val_resolved["generics"])
+                if not similar:
+                    return
+                else:
+                    into_generics_str_letters += generics_str_letters
+        
     file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> Into<"+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+">> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+"{\n"+
                             "   fn into(self) -> "+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+"> {\n"+
                             "       "+val_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n"+

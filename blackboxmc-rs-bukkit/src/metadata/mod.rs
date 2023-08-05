@@ -169,6 +169,13 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -242,13 +249,6 @@ impl<'mc> MetadataValue<'mc> {
             .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
     }
 }
 impl<'mc> JNIRaw<'mc> for MetadataValue<'mc> {
@@ -803,19 +803,19 @@ impl<'mc> LazyMetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
+    }
+    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -1016,19 +1016,19 @@ impl<'mc> FixedMetadataValue<'mc> {
         )?;
         crate::metadata::FixedMetadataValue::from_raw(&jni, res)
     }
-    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
+    }
+    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -1357,18 +1357,18 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
+    }
+    pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "invalidate", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 }

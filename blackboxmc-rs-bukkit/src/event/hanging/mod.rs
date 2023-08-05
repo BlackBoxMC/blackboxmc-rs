@@ -231,13 +231,6 @@ impl<'mc> HangingBreakEvent<'mc> {
 "(Lorg/bukkit/entity/Hanging;Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         crate::event::hanging::HangingBreakEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -249,6 +242,28 @@ impl<'mc> HangingBreakEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn cause(
+        &mut self,
+    ) -> Result<crate::event::hanging::HangingBreakEventRemoveCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::hanging::HangingBreakEventRemoveCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -275,21 +290,6 @@ impl<'mc> HangingBreakEvent<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    pub fn cause(
-        &mut self,
-    ) -> Result<crate::event::hanging::HangingBreakEventRemoveCause<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::hanging::HangingBreakEventRemoveCause::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn entity(&mut self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -464,13 +464,6 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -482,6 +475,28 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn cause(
+        &mut self,
+    ) -> Result<crate::event::hanging::HangingBreakEventRemoveCause<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCause",
+            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::hanging::HangingBreakEventRemoveCause::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -508,21 +523,6 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    pub fn cause(
-        &mut self,
-    ) -> Result<crate::event::hanging::HangingBreakEventRemoveCause<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCause",
-            "()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::hanging::HangingBreakEventRemoveCause::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn entity(&mut self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -687,13 +687,6 @@ impl<'mc> HangingPlaceEvent<'mc> {
 "(Lorg/bukkit/entity/Hanging;Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;Lorg/bukkit/inventory/EquipmentSlot;Lorg/bukkit/inventory/ItemStack;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6)])?;
         crate::event::hanging::HangingPlaceEvent::from_raw(&jni, res)
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -707,6 +700,13 @@ impl<'mc> HangingPlaceEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(

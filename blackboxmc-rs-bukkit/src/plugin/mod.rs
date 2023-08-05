@@ -268,6 +268,31 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn permissions(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPermissions",
+            "()Ljava/util/List;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     #[deprecated]
     pub fn class_loader_of(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -530,31 +555,6 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn permissions(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermissions",
-            "()Ljava/util/List;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -770,6 +770,37 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    pub fn compare_to_with_object(
+        &mut self,
+        arg0: std::option::Option<
+            impl Into<&'mc crate::plugin::RegisteredServiceProvider<dyn JNIRaw<'mc>>>,
+        >,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "compareTo",
+            "(Lorg/bukkit/plugin/RegisteredServiceProvider;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn priority(
+        &mut self,
+    ) -> Result<crate::plugin::ServicePriority<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPriority",
+            "()Lorg/bukkit/plugin/ServicePriority;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::ServicePriority::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -791,34 +822,6 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    pub fn compare_to_with_registered_service_provider(
-        &mut self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compareTo",
-            "(Ljava/lang/Object;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn priority(
-        &mut self,
-    ) -> Result<crate::plugin::ServicePriority<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPriority",
-            "()Lorg/bukkit/plugin/ServicePriority;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::ServicePriority::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn wait(
         &mut self,
@@ -1155,6 +1158,20 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn permissions(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPermissions",
+            "()Ljava/util/Set;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn get_plugin(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1370,16 +1387,16 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn is_plugin_enabled_with_plugin(
+    pub fn is_plugin_enabled_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPluginEnabled",
-            "(Ljava/lang/String;)Z",
+            "(Lorg/bukkit/plugin/Plugin;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -1464,20 +1481,6 @@ impl<'mc> PluginManager<'mc> {
             "getDefaultPermSubscriptions",
             "(Z)Ljava/util/Set;",
             &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn permissions(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermissions",
-            "()Ljava/util/Set;",
-            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
@@ -1616,12 +1619,19 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+    pub fn logger(
+        &mut self,
+    ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLogger",
+            "()Ljava/util/logging/Logger;",
+            &[],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        blackboxmc_java::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn description(
         &mut self,
@@ -1669,6 +1679,13 @@ impl<'mc> PluginBase<'mc> {
         crate::generator::BiomeProvider::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn config(
         &mut self,
@@ -1796,20 +1813,6 @@ impl<'mc> PluginBase<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::generator::ChunkGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn logger(
-        &mut self,
-    ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLogger",
-            "()Ljava/util/logging/Logger;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1942,81 +1945,6 @@ impl<'mc> ServicesManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn unregister_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregisterAll",
-            "(Lorg/bukkit/plugin/Plugin;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn get_registration(
-        &mut self,
-        arg0: jni::objects::JClass<'mc>,
-    ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRegistration",
-            "(Ljava/lang/Class;)Lorg/bukkit/plugin/RegisteredServiceProvider;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::RegisteredServiceProvider::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn get_registrations_with_class(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRegistrations",
-            "(Lorg/bukkit/plugin/Plugin;)Ljava/util/List;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn known_services(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKnownServices",
-            "()Ljava/util/Collection;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn is_provided_for(
-        &mut self,
-        arg0: jni::objects::JClass<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isProvidedFor",
-            "(Ljava/lang/Class;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn load(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -2055,6 +1983,80 @@ impl<'mc> ServicesManager<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn unregister_all(
+        &mut self,
+        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregisterAll",
+            "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn get_registration(
+        &mut self,
+        arg0: jni::objects::JClass<'mc>,
+    ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getRegistration",
+            "(Ljava/lang/Class;)Lorg/bukkit/plugin/RegisteredServiceProvider;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::RegisteredServiceProvider::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_registrations_with_plugin(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getRegistrations",
+            "(Ljava/lang/Class;)Ljava/util/Collection;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn known_services(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKnownServices",
+            "()Ljava/util/Collection;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_provided_for(
+        &mut self,
+        arg0: jni::objects::JClass<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isProvidedFor",
+            "(Ljava/lang/Class;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
 }
 impl<'mc> JNIRaw<'mc> for ServicesManager<'mc> {
@@ -2127,96 +2129,6 @@ impl<'mc> SimpleServicesManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn unregister_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregisterAll",
-            "(Lorg/bukkit/plugin/Plugin;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn get_registration(
-        &mut self,
-        arg0: jni::objects::JClass<'mc>,
-    ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRegistration",
-            "(Ljava/lang/Class;)Lorg/bukkit/plugin/RegisteredServiceProvider;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::RegisteredServiceProvider::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn get_registrations_with_plugin(
-        &mut self,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRegistrations",
-            "(Ljava/lang/Class;)Ljava/util/List;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn get_registrations_with_class(
-        &mut self,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRegistrations",
-            "(Ljava/lang/Class;)Ljava/util/Collection;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn known_services(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKnownServices",
-            "()Ljava/util/Collection;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn is_provided_for(
-        &mut self,
-        arg0: jni::objects::JClass<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isProvidedFor",
-            "(Ljava/lang/Class;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn load(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -2255,6 +2167,81 @@ impl<'mc> SimpleServicesManager<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn unregister_all(
+        &mut self,
+        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "unregisterAll",
+            "(Lorg/bukkit/plugin/Plugin;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn get_registration(
+        &mut self,
+        arg0: jni::objects::JClass<'mc>,
+    ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getRegistration",
+            "(Ljava/lang/Class;)Lorg/bukkit/plugin/RegisteredServiceProvider;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::RegisteredServiceProvider::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_registrations_with_class(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getRegistrations",
+            "(Lorg/bukkit/plugin/Plugin;)Ljava/util/List;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn known_services(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKnownServices",
+            "()Ljava/util/Set;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_provided_for(
+        &mut self,
+        arg0: jni::objects::JClass<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isProvidedFor",
+            "(Ljava/lang/Class;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -2389,6 +2376,13 @@ impl<'mc> TimedRegisteredListener<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    pub fn reset(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "reset", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn call_event(
         &mut self,
         arg0: impl Into<&'mc crate::event::Event<'mc>>,
@@ -2427,13 +2421,6 @@ impl<'mc> TimedRegisteredListener<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn reset(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "reset", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn listener(&mut self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2445,25 +2432,6 @@ impl<'mc> TimedRegisteredListener<'mc> {
         crate::event::Listener::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPlugin",
-            "()Lorg/bukkit/plugin/Plugin;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn is_ignoring_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isIgnoringCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn priority(
         &mut self,
@@ -2489,6 +2457,25 @@ impl<'mc> TimedRegisteredListener<'mc> {
             raw_obj,
             crate::event::EventPriority::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPlugin",
+            "()Lorg/bukkit/plugin/Plugin;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_ignoring_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isIgnoringCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -2710,6 +2697,31 @@ impl<'mc> RegisteredListener<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn priority(
+        &mut self,
+    ) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPriority",
+            "()Lorg/bukkit/event/EventPriority;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::event::EventPriority::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::event::EventPriority::from_string(variant_str).unwrap(),
+        )
+    }
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2742,31 +2754,6 @@ impl<'mc> RegisteredListener<'mc> {
             .call_method(&self.jni_object(), "isIgnoringCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn priority(
-        &mut self,
-    ) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPriority",
-            "()Lorg/bukkit/event/EventPriority;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::EventPriority::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::EventPriority::from_string(variant_str).unwrap(),
-        )
     }
     pub fn wait(
         &mut self,
@@ -2865,12 +2852,30 @@ impl<'mc> Plugin<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn logger(
+        &mut self,
+    ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLogger",
+            "()Ljava/util/logging/Logger;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn description(
         &mut self,
@@ -2918,6 +2923,13 @@ impl<'mc> Plugin<'mc> {
         crate::generator::BiomeProvider::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn config(
         &mut self,
@@ -3045,31 +3057,6 @@ impl<'mc> Plugin<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::generator::ChunkGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn logger(
-        &mut self,
-    ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLogger",
-            "()Ljava/util/logging/Logger;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

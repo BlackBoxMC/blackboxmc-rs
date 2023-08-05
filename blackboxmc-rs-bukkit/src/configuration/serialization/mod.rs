@@ -33,6 +33,26 @@ impl<'mc> ConfigurationSerialization<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn deserialize(
+        &mut self,
+        arg0: impl Into<&'mc blackboxmc_java::lang::JavaMap<javaString, dyn JNIRaw<'mc>>>,
+    ) -> Result<
+        crate::configuration::serialization::ConfigurationSerializable<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "deserialize",
+            "(Ljava/util/Map;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::serialization::ConfigurationSerializable::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )
+    }
     pub fn get_class_by_alias(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -96,6 +116,26 @@ impl<'mc> ConfigurationSerialization<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
         Ok(())
+    }
+    pub fn deserialize_object_with_map(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<
+            impl Into<&'mc blackboxmc_java::lang::JavaMap<javaString, dyn JNIRaw<'mc>>>,
+        >,
+        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+    ) -> Result<
+        crate::configuration::serialization::ConfigurationSerializable<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_2 = arg1.unwrap();
+        let cls =
+            &jni.find_class("org/bukkit/configuration/serialization/ConfigurationSerializable")?;
+        let res = jni.call_static_method(cls,"deserializeObject",
+"(Ljava/util/Map;Ljava/lang/Class;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+        let mut obj = res.l()?;
+        crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
     }
     pub fn wait(
         &mut self,
