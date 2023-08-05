@@ -289,7 +289,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -796,7 +796,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1305,7 +1305,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1895,7 +1895,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2411,7 +2411,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2953,7 +2953,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3404,7 +3404,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn set_charged_projectiles(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3474,7 +3474,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3946,7 +3946,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4443,7 +4443,7 @@ impl<'mc> Repairable<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4926,7 +4926,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn set_patterns(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::block::banner::JavaList<orgPattern, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::block::banner::JavaList<'mc, orgPattern>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5054,7 +5054,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5514,7 +5514,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn set_items(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5570,7 +5570,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -6079,7 +6079,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -6615,7 +6615,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -7112,7 +7112,7 @@ impl<'mc> Damageable<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -7579,7 +7579,7 @@ impl<'mc> FireworkMeta<'mc> {
     pub fn add_effects_with_firework_effects(
         &mut self,
         arg0: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::JavaIterable<orgFireworkEffect, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::JavaIterable<'mc, orgFireworkEffect>>,
         >,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 =
@@ -7669,7 +7669,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8289,7 +8289,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8798,7 +8798,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -9365,7 +9365,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -9815,7 +9815,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn set_recipes(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::JavaList<orgNamespacedKey, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::JavaList<'mc, orgNamespacedKey>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -9877,7 +9877,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -10496,7 +10496,7 @@ impl<'mc> MapMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -11159,7 +11159,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -11666,7 +11666,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -12243,7 +12243,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -12783,7 +12783,7 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn set_pages_with_strings(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_::JavaList<'mc, String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -12913,7 +12913,7 @@ impl<'mc> BookMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -13415,7 +13415,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     pub fn set_lore(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(

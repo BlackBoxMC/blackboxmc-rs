@@ -36,7 +36,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     pub fn new_with_random(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc crate::World<'mc>>>,
-    ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/noise/SimplexNoiseGenerator")?;
@@ -45,20 +45,20 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
             "(Lorg/bukkit/World;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, res)
+        crate::noise::SimplexNoiseGenerator::from_raw(&jni, res)
     }
     pub fn new_with_long(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
-    ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/noise/SimplexNoiseGenerator")?;
         let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)])?;
-        crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, res)
+        crate::noise::SimplexNoiseGenerator::from_raw(&jni, res)
     }
     pub fn instance(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator")?;
         let res = jni.call_static_method(
             cls,
@@ -67,7 +67,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
             &[],
         )?;
         let mut obj = res.l()?;
-        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
+        crate::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
     }
     pub fn noise_with_double(
         &mut self,
@@ -258,7 +258,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     pub fn new_with_random(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc crate::World<'mc>>>,
-    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator")?;
@@ -267,20 +267,20 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
             "(Lorg/bukkit/World;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, res)
+        crate::noise::PerlinNoiseGenerator::from_raw(&jni, res)
     }
     pub fn new_with_long(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
-    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator")?;
         let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)])?;
-        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, res)
+        crate::noise::PerlinNoiseGenerator::from_raw(&jni, res)
     }
     pub fn instance(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator")?;
         let res = jni.call_static_method(
             cls,
@@ -289,7 +289,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
             &[],
         )?;
         let mut obj = res.l()?;
-        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
+        crate::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
     }
     pub fn noise_with_double(
         &mut self,
@@ -482,7 +482,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
         arg1: std::option::Option<i32>,
-    ) -> Result<crate::util::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
@@ -495,13 +495,13 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         )?;
-        crate::util::noise::SimplexOctaveGenerator::from_raw(&jni, res)
+        crate::noise::SimplexOctaveGenerator::from_raw(&jni, res)
     }
     pub fn new_with_long(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
         arg1: std::option::Option<i32>,
-    ) -> Result<crate::util::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/noise/SimplexOctaveGenerator")?;
@@ -513,7 +513,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         )?;
-        crate::util::noise::SimplexOctaveGenerator::from_raw(&jni, res)
+        crate::noise::SimplexOctaveGenerator::from_raw(&jni, res)
     }
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -947,7 +947,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
         arg1: std::option::Option<i32>,
-    ) -> Result<crate::util::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinOctaveGenerator")?;
@@ -959,13 +959,13 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         )?;
-        crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
+        crate::noise::PerlinOctaveGenerator::from_raw(&jni, res)
     }
     pub fn new_with_world(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::World<'mc>>,
         arg1: std::option::Option<i32>,
-    ) -> Result<crate::util::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
@@ -978,7 +978,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
                 jni::objects::JValueGen::from(&val_2),
             ],
         )?;
-        crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
+        crate::noise::PerlinOctaveGenerator::from_raw(&jni, res)
     }
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -1185,10 +1185,10 @@ impl<'mc> NoiseGenerator<'mc> {
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::noise::NoiseGenerator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::noise::NoiseGenerator<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/util/noise/NoiseGenerator")?;
         let res = jni.new_object(cls, "()V", &[])?;
-        crate::util::noise::NoiseGenerator::from_raw(&jni, res)
+        crate::noise::NoiseGenerator::from_raw(&jni, res)
     }
     pub fn floor(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,

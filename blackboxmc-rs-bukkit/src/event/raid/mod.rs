@@ -195,7 +195,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         arg0: impl Into<&'mc crate::Raid<'mc>>,
         arg1: impl Into<&'mc crate::World<'mc>>,
         arg2: impl Into<&'mc crate::entity::Raider<'mc>>,
-        arg3: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgRaider, 'mc>>,
+        arg3: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgRaider>>,
     ) -> Result<crate::event::raid::RaidSpawnWaveEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -640,7 +640,7 @@ impl<'mc> RaidFinishEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::Raid<'mc>>,
         arg1: impl Into<&'mc crate::World<'mc>>,
-        arg2: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgPlayer, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgPlayer>>,
     ) -> Result<crate::event::raid::RaidFinishEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

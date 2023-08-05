@@ -522,9 +522,7 @@ impl<'mc> Permission<'mc> {
         arg0: impl Into<&'mc String>,
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc crate::permissions::PermissionDefault<'mc>>,
-        arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaString, javaBoolean, 'mc>>,
-        >,
+        arg3: std::option::Option<impl Into<&'mc blackboxmc_::JavaMap<'mc, String, Boolean>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
@@ -671,7 +669,7 @@ impl<'mc> Permission<'mc> {
     }
     pub fn load_permissions(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc crate::permissions::PermissionDefault<'mc>>,
     ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
@@ -688,11 +686,11 @@ impl<'mc> Permission<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
         arg1: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
+            impl Into<&'mc blackboxmc_::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
         >,
         arg2: std::option::Option<impl Into<&'mc crate::permissions::PermissionDefault<'mc>>>,
         arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::permissions::JavaList<orgPermission, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::permissions::JavaList<'mc, orgPermission>>,
         >,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());

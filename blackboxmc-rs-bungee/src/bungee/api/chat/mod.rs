@@ -130,7 +130,7 @@ impl<'mc> TextComponent<'mc> {
     }
     pub fn set_extra(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::md_5::bungee::api::chat::JavaList<netBaseComponent, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::md_5::bungee::api::chat::JavaList<'mc, netBaseComponent>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -994,7 +994,7 @@ impl<'mc> BaseComponent<'mc> {
     }
     pub fn set_extra(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::md_5::bungee::api::chat::JavaList<netBaseComponent, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::md_5::bungee::api::chat::JavaList<'mc, netBaseComponent>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1620,7 +1620,7 @@ impl<'mc> SelectorComponent<'mc> {
     }
     pub fn set_extra(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::md_5::bungee::api::chat::JavaList<netBaseComponent, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::md_5::bungee::api::chat::JavaList<'mc, netBaseComponent>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2275,7 +2275,7 @@ impl<'mc> ScoreComponent<'mc> {
     }
     pub fn set_extra(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::md_5::bungee::api::chat::JavaList<netBaseComponent, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::md_5::bungee::api::chat::JavaList<'mc, netBaseComponent>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3325,7 +3325,7 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     pub fn set_with(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::md_5::bungee::api::chat::JavaList<netBaseComponent, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::md_5::bungee::api::chat::JavaList<'mc, netBaseComponent>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3391,7 +3391,7 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     pub fn set_extra(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::md_5::bungee::api::chat::JavaList<netBaseComponent, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::md_5::bungee::api::chat::JavaList<'mc, netBaseComponent>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4152,7 +4152,7 @@ impl<'mc> KeybindComponent<'mc> {
     }
     pub fn set_extra(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::md_5::bungee::api::chat::JavaList<netBaseComponent, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::md_5::bungee::api::chat::JavaList<'mc, netBaseComponent>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(

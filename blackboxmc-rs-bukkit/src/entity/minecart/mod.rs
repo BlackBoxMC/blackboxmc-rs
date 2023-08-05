@@ -126,7 +126,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn flying_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFlyingVelocityMod",
@@ -134,13 +134,13 @@ impl<'mc> ExplosiveMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -154,7 +154,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn derailed_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDerailedVelocityMod",
@@ -162,13 +162,13 @@ impl<'mc> ExplosiveMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -259,7 +259,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -271,7 +271,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -279,7 +279,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -488,9 +488,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -498,7 +496,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1472,7 +1470,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn flying_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFlyingVelocityMod",
@@ -1480,13 +1478,13 @@ impl<'mc> HopperMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1500,7 +1498,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn derailed_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDerailedVelocityMod",
@@ -1508,13 +1506,13 @@ impl<'mc> HopperMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1605,7 +1603,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1617,7 +1615,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -1625,7 +1623,7 @@ impl<'mc> HopperMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1834,9 +1832,7 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -1844,7 +1840,7 @@ impl<'mc> HopperMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2860,7 +2856,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn flying_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFlyingVelocityMod",
@@ -2868,13 +2864,13 @@ impl<'mc> StorageMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2888,7 +2884,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn derailed_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDerailedVelocityMod",
@@ -2896,13 +2892,13 @@ impl<'mc> StorageMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2993,7 +2989,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3005,7 +3001,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -3013,7 +3009,7 @@ impl<'mc> StorageMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3222,9 +3218,7 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -3232,7 +3226,7 @@ impl<'mc> StorageMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4248,7 +4242,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn flying_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFlyingVelocityMod",
@@ -4256,13 +4250,13 @@ impl<'mc> SpawnerMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4276,7 +4270,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn derailed_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDerailedVelocityMod",
@@ -4284,13 +4278,13 @@ impl<'mc> SpawnerMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4381,7 +4375,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4393,7 +4387,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -4401,7 +4395,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4610,9 +4604,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -4620,7 +4612,7 @@ impl<'mc> SpawnerMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -5594,7 +5586,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn flying_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFlyingVelocityMod",
@@ -5602,13 +5594,13 @@ impl<'mc> PoweredMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5622,7 +5614,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn derailed_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDerailedVelocityMod",
@@ -5630,13 +5622,13 @@ impl<'mc> PoweredMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5727,7 +5719,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5739,7 +5731,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -5747,7 +5739,7 @@ impl<'mc> PoweredMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -5956,9 +5948,7 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -5966,7 +5956,7 @@ impl<'mc> PoweredMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -6922,7 +6912,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn flying_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFlyingVelocityMod",
@@ -6930,13 +6920,13 @@ impl<'mc> RideableMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -6950,7 +6940,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn derailed_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDerailedVelocityMod",
@@ -6958,13 +6948,13 @@ impl<'mc> RideableMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -7055,7 +7045,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -7067,7 +7057,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -7075,7 +7065,7 @@ impl<'mc> RideableMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -7284,9 +7274,7 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -7294,7 +7282,7 @@ impl<'mc> RideableMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -8292,7 +8280,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn flying_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getFlyingVelocityMod",
@@ -8300,13 +8288,13 @@ impl<'mc> CommandMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_flying_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8320,7 +8308,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn derailed_velocity_mod(
         &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDerailedVelocityMod",
@@ -8328,13 +8316,13 @@ impl<'mc> CommandMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_derailed_velocity_mod(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8425,7 +8413,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8437,7 +8425,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -8445,7 +8433,7 @@ impl<'mc> CommandMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -8654,9 +8642,7 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -8664,7 +8650,7 @@ impl<'mc> CommandMinecart<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

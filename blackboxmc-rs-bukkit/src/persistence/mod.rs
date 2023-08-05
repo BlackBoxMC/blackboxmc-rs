@@ -596,7 +596,7 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn has(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<T, Z, 'mc>>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -612,7 +612,9 @@ impl<'mc> PersistentDataContainer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn keys(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn keys(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ K>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getKeys", "()Ljava/util/Set;", &[]);
@@ -638,7 +640,7 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn get(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<T, Z, 'mc>>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -656,7 +658,7 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn set(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<T, Z, 'mc>>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
         arg2: Z,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -678,7 +680,7 @@ impl<'mc> PersistentDataContainer<'mc> {
     pub fn get_or_default(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::persistence::PersistentDataType<T, Z, 'mc>>,
+        arg1: impl Into<&'mc crate::persistence::PersistentDataType<'mc, T, Z>>,
         arg2: Z,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };

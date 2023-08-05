@@ -1198,7 +1198,7 @@ impl<'mc> LimitedRegion<'mc> {
         arg0: impl Into<&'mc crate::Location<'mc>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<bool>,
-        arg3: std::option::Option<impl Into<&'mc crate::util::Consumer<T, 'mc>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Consumer<'mc, T>>>,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };

@@ -811,7 +811,7 @@ impl<'mc> BrewEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
         arg1: impl Into<&'mc crate::inventory::BrewerInventory<'mc>>,
-        arg2: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
         arg3: i32,
     ) -> Result<crate::event::inventory::BrewEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -6608,9 +6608,7 @@ impl<'mc> InventoryDragEvent<'mc> {
         arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
         arg2: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
         arg3: bool,
-        arg4: impl Into<
-            &'mc blackboxmc_java::lang::bukkit::inventory::JavaMap<javaInteger, orgItemStack, 'mc>,
-        >,
+        arg4: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaMap<'mc, Integer, orgItemStack>>,
     ) -> Result<crate::event::inventory::InventoryDragEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

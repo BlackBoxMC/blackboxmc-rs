@@ -223,7 +223,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn get_keys(
         &mut self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ K>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -637,7 +637,7 @@ impl<'mc> FileConfiguration<'mc> {
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
         arg1: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
+            impl Into<&'mc blackboxmc_::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
         >,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
@@ -731,7 +731,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn get_list_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaList<dyn JNIRaw<'mc>>>>,
+        arg1: std::option::Option<impl Into<&'mc blackboxmc_::JavaList<dyn JNIRaw<'mc>>>>,
     ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
@@ -951,8 +951,8 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn get_vector_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        arg1: std::option::Option<impl Into<&'mc crate::Vector<'mc>>>,
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let val_2 =
@@ -967,7 +967,7 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1076,7 +1076,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn set_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -1095,7 +1095,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn set_inline_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -1294,7 +1294,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     }
     pub fn set_header(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -1320,7 +1320,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     }
     pub fn set_footer(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -1932,7 +1932,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn get_keys(
         &mut self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ K>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2346,7 +2346,7 @@ impl<'mc> YamlConfiguration<'mc> {
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
         arg1: std::option::Option<
-            impl Into<&'mc blackboxmc_java::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
+            impl Into<&'mc blackboxmc_::JavaMap<dyn JNIRaw<'mc>, dyn JNIRaw<'mc>>>,
         >,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
@@ -2440,7 +2440,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn get_list_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaList<dyn JNIRaw<'mc>>>>,
+        arg1: std::option::Option<impl Into<&'mc blackboxmc_::JavaList<dyn JNIRaw<'mc>>>>,
     ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
@@ -2660,8 +2660,8 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn get_vector_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        arg1: std::option::Option<impl Into<&'mc crate::Vector<'mc>>>,
+    ) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let val_2 =
@@ -2676,7 +2676,7 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2785,7 +2785,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn set_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -2804,7 +2804,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn set_inline_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

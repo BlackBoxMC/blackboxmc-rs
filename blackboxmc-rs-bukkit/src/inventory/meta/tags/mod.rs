@@ -387,7 +387,7 @@ impl<'mc> CustomItemTagContainer<'mc> {
     pub fn set_custom_tag(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<T, Z, 'mc>>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc, T, Z>>,
         arg2: Z,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -409,7 +409,7 @@ impl<'mc> CustomItemTagContainer<'mc> {
     pub fn has_custom_tag(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<T, Z, 'mc>>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc, T, Z>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -428,7 +428,7 @@ impl<'mc> CustomItemTagContainer<'mc> {
     pub fn get_custom_tag(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<T, Z, 'mc>>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc, T, Z>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

@@ -980,7 +980,7 @@ impl<'mc> PlayerInteractEvent<'mc> {
         arg3: impl Into<&'mc crate::block::Block<'mc>>,
         arg4: std::option::Option<impl Into<&'mc crate::block::BlockFace<'mc>>>,
         arg5: std::option::Option<impl Into<&'mc crate::inventory::EquipmentSlot<'mc>>>,
-        arg6: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg6: std::option::Option<impl Into<&'mc crate::Vector<'mc>>>,
     ) -> Result<crate::event::player::PlayerInteractEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -1231,9 +1231,7 @@ impl<'mc> PlayerInteractEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn clicked_position(
-        &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn clicked_position(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getClickedPosition",
@@ -1241,7 +1239,7 @@ impl<'mc> PlayerInteractEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1405,7 +1403,7 @@ impl<'mc> AsyncPlayerChatPreviewEvent<'mc> {
         arg0: bool,
         arg1: impl Into<&'mc crate::entity::Player<'mc>>,
         arg2: impl Into<&'mc String>,
-        arg3: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaSet<orgPlayer, 'mc>>,
+        arg3: impl Into<&'mc blackboxmc_::bukkit::entity::JavaSet<'mc, orgPlayer>>,
     ) -> Result<crate::event::player::AsyncPlayerChatPreviewEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -8995,7 +8993,7 @@ impl<'mc> PlayerCommandSendEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::lang::JavaCollection<javaString, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::JavaCollection<'mc, String>>,
     ) -> Result<crate::event::player::PlayerCommandSendEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -9196,7 +9194,7 @@ impl<'mc> PlayerChatTabCompleteEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
         arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc blackboxmc_java::lang::JavaCollection<javaString, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::JavaCollection<'mc, String>>,
     ) -> Result<crate::event::player::PlayerChatTabCompleteEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -9426,7 +9424,7 @@ impl<'mc> PlayerVelocityEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg1: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg1: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<crate::event::player::PlayerVelocityEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -9464,7 +9462,7 @@ impl<'mc> PlayerVelocityEvent<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -9476,7 +9474,7 @@ impl<'mc> PlayerVelocityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -9484,7 +9482,7 @@ impl<'mc> PlayerVelocityEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -12425,7 +12423,7 @@ impl<'mc> PlayerInteractAtEntityEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
         arg1: impl Into<&'mc crate::entity::Entity<'mc>>,
-        arg2: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg2: std::option::Option<impl Into<&'mc crate::Vector<'mc>>>,
         arg3: std::option::Option<impl Into<&'mc crate::inventory::EquipmentSlot<'mc>>>,
     ) -> Result<crate::event::player::PlayerInteractAtEntityEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -12468,9 +12466,7 @@ impl<'mc> PlayerInteractAtEntityEvent<'mc> {
         let mut obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    pub fn clicked_position(
-        &mut self,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn clicked_position(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getClickedPosition",
@@ -12478,7 +12474,7 @@ impl<'mc> PlayerInteractAtEntityEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -15109,7 +15105,7 @@ impl<'mc> PlayerChatEvent<'mc> {
         arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<impl Into<&'mc String>>,
         arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::entity::JavaSet<orgPlayer, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::entity::JavaSet<'mc, orgPlayer>>,
         >,
     ) -> Result<crate::event::player::PlayerChatEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
@@ -15804,7 +15800,7 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
         arg1: impl Into<&'mc crate::block::Block<'mc>>,
         arg2: std::option::Option<impl Into<&'mc crate::inventory::EquipmentSlot<'mc>>>,
         arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
         >,
     ) -> Result<crate::event::player::PlayerHarvestBlockEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -16301,7 +16297,7 @@ impl<'mc> PlayerCommandPreprocessEvent<'mc> {
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
         arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::entity::JavaSet<orgPlayer, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::entity::JavaSet<'mc, orgPlayer>>,
         >,
     ) -> Result<crate::event::player::PlayerCommandPreprocessEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -18456,7 +18452,7 @@ impl<'mc> AsyncPlayerChatEvent<'mc> {
         arg0: bool,
         arg1: impl Into<&'mc crate::entity::Player<'mc>>,
         arg2: impl Into<&'mc String>,
-        arg3: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaSet<orgPlayer, 'mc>>,
+        arg3: impl Into<&'mc blackboxmc_::bukkit::entity::JavaSet<'mc, orgPlayer>>,
     ) -> Result<crate::event::player::AsyncPlayerChatEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

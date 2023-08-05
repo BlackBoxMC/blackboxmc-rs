@@ -156,7 +156,7 @@ def func_signature_format(ty, increment, returning, options_start_at, generic_le
             if (internal_do_into or is_string) and not returning:
                 thing += "impl Into<&'mc "
             if "<" in ty["type_name_resolved"] and "'mc" not in ty["type_name_resolved"]:
-                ty["type_name_resolved"] = ty["type_name_resolved"].replace(">",",'mc>")
+                ty["type_name_resolved"] = ty["type_name_resolved"].replace("<","<'mc,")
             thing += ty["type_name_resolved"]
             if(internal):
                 if "'mc" not in ty["type_name_resolved"]:
@@ -380,6 +380,7 @@ def correct_extends_syntax(text):
             text = text.replace(str(gen),res)
         else:
             text = text.replace(str(gen),"Into<"+res+">")
+    text = text.replace("java","")
     return text
 def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor,is_trait, upper_generic_letters):
     type_name_resolved = ""
@@ -468,7 +469,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                         to_replace = library_name_format(library_resolves[crate_name])
 
                     type_name_resolved = type_name_resolved.replace(
-                        crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
+                        crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "").replace("util::","").replace("lang::","")
 
     parts = type_name_resolved.split("::")
     for p in parts:
@@ -549,7 +550,16 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         # is there only one upper generic, and one default generic?
         if len(upper_generics_list) == 1 and len(default_generics) == 1:
             generics = upper_generics_list
-    
+        # christ i want to be done with this ok 
+        # lets make rules for certain method names now
+        if method is not None:
+            if method["method"]["name"] == "keySet" or method["method"]["name"] == "getKeys":
+                generics.append("K")
+            if method["method"]["name"] == "values":
+                generics.append("V")
+            if method["method"]["name"] == "entrySet":
+                generics.append("JavaMapEntry<K,V>")
+
     if method is not None:
         # ....hey by any chance is the method a "public" method?
         if "isDefault" in method["method"]:
@@ -1194,8 +1204,10 @@ def get_generics(val, mc_included,upper_generics):
                             generics_letters.append(f[0])
                             generics_types.append(f[0]+": Into<crate::Java"+tyname+"<'mc>>")
                         else:
-                            generics_letters.append(f[0]+f[1])
-                            concrete_types.append(f[0]+f[1])
+                            yeah = java_type_to_rust("",f[0]+f[1],None,0,True,None,False,False,upper_generics)
+                            if yeah is not None:
+                                generics_letters.append("Java"+yeah["type_name_resolved"])
+                                concrete_types.append("Java"+yeah["type_name_resolved"])
                 generics_str_where = ",".join(generics_types)
             if mc_included:
                 generics_str_letters += ", "

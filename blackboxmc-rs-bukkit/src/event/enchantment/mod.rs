@@ -39,13 +39,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         arg2: impl Into<&'mc crate::block::Block<'mc>>,
         arg3: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
         arg4: i32,
-        arg5: impl Into<
-            &'mc blackboxmc_java::bukkit::enchantments::lang::JavaMap<
-                orgEnchantment,
-                javaInteger,
-                'mc,
-            >,
-        >,
+        arg5: impl Into<&'mc blackboxmc_::bukkit::enchantments::JavaMap<'mc, orgEnchantment, Integer>>,
         arg6: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
         arg7: i32,
         arg8: i32,

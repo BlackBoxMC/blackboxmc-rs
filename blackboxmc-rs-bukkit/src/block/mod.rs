@@ -8159,9 +8159,7 @@ impl<'mc> Block<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -8169,7 +8167,7 @@ impl<'mc> Block<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -8283,17 +8281,17 @@ impl<'mc> Block<'mc> {
     pub fn ray_trace(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg1: impl Into<&'mc crate::Vector<'mc>>,
         arg2: f64,
         arg3: impl Into<&'mc crate::FluidCollisionMode<'mc>>,
-    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"rayTrace","(Lorg/bukkit/Location;Lorg/bukkit/util/Vector;DLorg/bukkit/FluidCollisionMode;)Lorg/bukkit/util/RayTraceResult;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+        crate::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -8524,7 +8522,7 @@ impl<'mc> Block<'mc> {
     }
     pub fn collision_shape(
         &mut self,
-    ) -> Result<crate::util::VoxelShape<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::VoxelShape<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCollisionShape",
@@ -8532,7 +8530,7 @@ impl<'mc> Block<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::VoxelShape::from_raw(&self.jni_ref(), unsafe {
+        crate::VoxelShape::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -12695,7 +12693,7 @@ impl<'mc> Structure<'mc> {
     }
     pub fn relative_position(
         &mut self,
-    ) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::BlockVector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRelativePosition",
@@ -12703,7 +12701,7 @@ impl<'mc> Structure<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BlockVector::from_raw(&self.jni_ref(), unsafe {
+        crate::BlockVector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -12766,7 +12764,7 @@ impl<'mc> Structure<'mc> {
     }
     pub fn set_relative_position(
         &mut self,
-        arg0: impl Into<&'mc crate::util::BlockVector<'mc>>,
+        arg0: impl Into<&'mc crate::BlockVector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -12780,7 +12778,7 @@ impl<'mc> Structure<'mc> {
     }
     pub fn structure_size(
         &mut self,
-    ) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::BlockVector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStructureSize",
@@ -12788,13 +12786,13 @@ impl<'mc> Structure<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BlockVector::from_raw(&self.jni_ref(), unsafe {
+        crate::BlockVector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_structure_size(
         &mut self,
-        arg0: impl Into<&'mc crate::util::BlockVector<'mc>>,
+        arg0: impl Into<&'mc crate::BlockVector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -14472,7 +14470,7 @@ impl<'mc> Banner<'mc> {
     }
     pub fn set_patterns(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::block::banner::JavaList<orgPattern, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::block::banner::JavaList<'mc, orgPattern>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -16098,7 +16096,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     pub fn get_slot(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(

@@ -35,7 +35,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     pub fn deserialize(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaMap<javaString, dyn JNIRaw<'mc>>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<String, dyn JNIRaw<'mc>>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
@@ -119,9 +119,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     pub fn deserialize_object_with_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<
-            impl Into<&'mc blackboxmc_java::lang::JavaMap<javaString, dyn JNIRaw<'mc>>>,
-        >,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_::JavaMap<String, dyn JNIRaw<'mc>>>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,

@@ -728,7 +728,7 @@ impl<'mc> IndexHelpTopic<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc String>,
         arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::help::JavaCollection<orgHelpTopic, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::help::JavaCollection<'mc, orgHelpTopic>>,
         >,
         arg4: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<crate::help::IndexHelpTopic<'mc>, Box<dyn std::error::Error>> {

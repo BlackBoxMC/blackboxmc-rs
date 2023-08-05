@@ -3813,7 +3813,7 @@ impl<'mc> ItemStack<'mc> {
     }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaString, javaObject, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<'mc, String, Object>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/inventory/ItemStack")?;
@@ -3992,13 +3992,7 @@ impl<'mc> ItemStack<'mc> {
     }
     pub fn add_enchantments(
         &mut self,
-        arg0: impl Into<
-            &'mc blackboxmc_java::bukkit::enchantments::lang::JavaMap<
-                orgEnchantment,
-                javaInteger,
-                'mc,
-            >,
-        >,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::enchantments::JavaMap<'mc, orgEnchantment, Integer>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4050,13 +4044,7 @@ impl<'mc> ItemStack<'mc> {
     }
     pub fn add_unsafe_enchantments(
         &mut self,
-        arg0: impl Into<
-            &'mc blackboxmc_java::bukkit::enchantments::lang::JavaMap<
-                orgEnchantment,
-                javaInteger,
-                'mc,
-            >,
-        >,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::enchantments::JavaMap<'mc, orgEnchantment, Integer>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4160,7 +4148,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     pub fn new_with_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::Tag<crate::Material, 'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc crate::Tag<'mc, crate::Material>>>,
     ) -> Result<crate::inventory::RecipeChoiceMaterialChoice<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -6780,7 +6768,7 @@ impl<'mc> Merchant<'mc> {
     }
     pub fn set_recipes(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgMerchantRecipe, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgMerchantRecipe>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -10446,7 +10434,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     pub fn set_ingredients(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(

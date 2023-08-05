@@ -485,7 +485,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
         arg1: impl Into<&'mc crate::block::BlockState<'mc>>,
         arg2: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg3: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgItem, 'mc>>,
+        arg3: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgItem>>,
     ) -> Result<crate::event::block::BlockDropItemEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -1147,7 +1147,7 @@ impl<'mc> BellResonateEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgLivingEntity, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgLivingEntity>>,
     ) -> Result<crate::event::block::BellResonateEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -1346,7 +1346,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlock, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlock>>,
         arg2: f32,
     ) -> Result<crate::event::block::BlockExplodeEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -2042,7 +2042,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlockState>>,
         arg1: impl Into<&'mc crate::block::Block<'mc>>,
         arg2: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
         arg3: impl Into<&'mc crate::entity::Player<'mc>>,
@@ -3360,7 +3360,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlock, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlock>>,
         arg2: impl Into<&'mc crate::block::BlockFace<'mc>>,
     ) -> Result<crate::event::block::BlockPistonRetractEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -3879,7 +3879,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
         arg1: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg2: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlockState>>,
     ) -> Result<crate::event::block::BlockFertilizeEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -4818,7 +4818,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4830,7 +4830,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -4838,7 +4838,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -6483,7 +6483,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlockState>>,
     ) -> Result<crate::event::block::SpongeAbsorbEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -8288,7 +8288,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::block::Block<'mc>>,
         arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-        arg2: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg2: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<crate::event::block::BlockDispenseEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -8354,7 +8354,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
     }
     pub fn set_velocity(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8366,7 +8366,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn velocity(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn velocity(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVelocity",
@@ -8374,7 +8374,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

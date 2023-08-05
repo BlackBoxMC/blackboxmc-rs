@@ -27,7 +27,7 @@ impl<'mc> ProjectileSource<'mc> {
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg1: std::option::Option<impl Into<&'mc crate::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap();
         let val_2 =
@@ -98,7 +98,7 @@ impl<'mc> BlockProjectileSource<'mc> {
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg1: std::option::Option<impl Into<&'mc crate::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap();
         let val_2 =

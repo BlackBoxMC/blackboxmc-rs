@@ -810,7 +810,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     pub fn new_with_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlockState>>,
         arg1: impl Into<&'mc crate::World<'mc>>,
         arg2: std::option::Option<impl Into<&'mc crate::entity::Entity<'mc>>>,
         arg3: std::option::Option<
@@ -1231,7 +1231,7 @@ impl<'mc> LootGenerateEvent<'mc> {
         arg2: impl Into<&'mc crate::inventory::InventoryHolder<'mc>>,
         arg3: impl Into<&'mc crate::loot::LootTable<'mc>>,
         arg4: impl Into<&'mc crate::loot::LootContext<'mc>>,
-        arg5: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+        arg5: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
         arg6: bool,
     ) -> Result<crate::event::world::LootGenerateEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -1347,7 +1347,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     pub fn set_loot(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaCollection<orgItemStack, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaCollection<'mc, orgItemStack>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1694,7 +1694,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::World<'mc>>,
         arg1: impl Into<&'mc crate::generator::structure::Structure<'mc>>,
-        arg2: impl Into<&'mc crate::util::BoundingBox<'mc>>,
+        arg2: impl Into<&'mc crate::BoundingBox<'mc>>,
         arg3: i32,
         arg4: i32,
     ) -> Result<crate::event::world::AsyncStructureSpawnEvent<'mc>, Box<dyn std::error::Error>>
@@ -1730,9 +1730,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn bounding_box(
-        &mut self,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
+    pub fn bounding_box(&mut self) -> Result<crate::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoundingBox",
@@ -1740,7 +1738,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BoundingBox::from_raw(&self.jni_ref(), unsafe {
+        crate::BoundingBox::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2332,7 +2330,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::Chunk<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgEntity, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgEntity>>,
     ) -> Result<crate::event::world::EntitiesUnloadEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -2537,7 +2535,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::Chunk<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgEntity, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgEntity>>,
     ) -> Result<crate::event::world::EntitiesLoadEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -3176,7 +3174,7 @@ impl<'mc> StructureGrowEvent<'mc> {
         arg1: impl Into<&'mc crate::TreeType<'mc>>,
         arg2: bool,
         arg3: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg4: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+        arg4: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlockState>>,
     ) -> Result<crate::event::world::StructureGrowEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

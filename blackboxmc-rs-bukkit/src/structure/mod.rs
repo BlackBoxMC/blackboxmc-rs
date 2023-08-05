@@ -283,7 +283,7 @@ impl<'mc> Structure<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn size(&mut self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
+    pub fn size(&mut self) -> Result<crate::BlockVector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getSize",
@@ -291,7 +291,7 @@ impl<'mc> Structure<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::BlockVector::from_raw(&self.jni_ref(), unsafe {
+        crate::BlockVector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -340,7 +340,7 @@ impl<'mc> Structure<'mc> {
     pub fn place_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::RegionAccessor<'mc>>,
-        arg1: impl Into<&'mc crate::util::BlockVector<'mc>>,
+        arg1: impl Into<&'mc crate::BlockVector<'mc>>,
         arg2: bool,
         arg3: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
         arg4: impl Into<&'mc crate::block::structure::Mirror<'mc>>,

@@ -1446,7 +1446,7 @@ impl<'mc> Server<'mc> {
     }
     pub fn server_icon(
         &mut self,
-    ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getServerIcon",
@@ -1454,14 +1454,14 @@ impl<'mc> Server<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::CachedServerIcon::from_raw(&self.jni_ref(), unsafe {
+        crate::CachedServerIcon::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn load_server_icon_with_file(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1470,7 +1470,7 @@ impl<'mc> Server<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::CachedServerIcon::from_raw(&self.jni_ref(), unsafe {
+        crate::CachedServerIcon::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2729,11 +2729,11 @@ impl<'mc> World<'mc> {
     pub fn ray_trace_blocks_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg1: impl Into<&'mc crate::Vector<'mc>>,
         arg2: std::option::Option<f64>,
         arg3: std::option::Option<impl Into<&'mc crate::FluidCollisionMode<'mc>>>,
         arg4: std::option::Option<bool>,
-    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
@@ -2743,7 +2743,7 @@ impl<'mc> World<'mc> {
         let val_5 = jni::objects::JValueGen::Bool(arg4.unwrap().into());
         let res = self.jni_ref().call_method(&self.jni_object(),"rayTraceBlocks","(Lorg/bukkit/Location;Lorg/bukkit/util/Vector;DLorg/bukkit/FluidCollisionMode;Z)Lorg/bukkit/util/RayTraceResult;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+        crate::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3219,7 +3219,7 @@ impl<'mc> World<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
         arg1: std::option::Option<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
-        arg2: std::option::Option<impl Into<&'mc crate::util::Consumer<crate::entity::Item, 'mc>>>,
+        arg2: std::option::Option<impl Into<&'mc crate::Consumer<'mc, crate::entity::Item>>>,
     ) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -3248,7 +3248,7 @@ impl<'mc> World<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
         arg1: std::option::Option<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
-        arg2: std::option::Option<impl Into<&'mc crate::util::Consumer<crate::entity::Item, 'mc>>>,
+        arg2: std::option::Option<impl Into<&'mc crate::Consumer<'mc, crate::entity::Item>>>,
     ) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -3378,7 +3378,7 @@ impl<'mc> World<'mc> {
     }
     pub fn get_game_rule_value_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::GameRule<T, 'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc crate::GameRule<'mc, T>>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -3722,7 +3722,7 @@ impl<'mc> World<'mc> {
     pub fn spawn_arrow_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg1: impl Into<&'mc crate::Vector<'mc>>,
         arg2: f32,
         arg3: std::option::Option<f32>,
         arg4: std::option::Option<jni::objects::JClass<'mc>>,
@@ -4525,7 +4525,7 @@ impl<'mc> World<'mc> {
     }
     pub fn get_game_rule_default(
         &mut self,
-        arg0: impl Into<&'mc crate::GameRule<T, 'mc>>,
+        arg0: impl Into<&'mc crate::GameRule<'mc, T>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4539,7 +4539,7 @@ impl<'mc> World<'mc> {
     }
     pub fn set_game_rule(
         &mut self,
-        arg0: impl Into<&'mc crate::GameRule<T, 'mc>>,
+        arg0: impl Into<&'mc crate::GameRule<'mc, T>>,
         arg1: T,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -4562,14 +4562,14 @@ impl<'mc> World<'mc> {
         arg1: impl Into<&'mc crate::generator::structure::Structure<'mc>>,
         arg2: i32,
         arg3: std::option::Option<bool>,
-    ) -> Result<crate::util::StructureSearchResult<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::StructureSearchResult<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
         let val_4 = jni::objects::JValueGen::Bool(arg3.unwrap().into());
         let res = self.jni_ref().call_method(&self.jni_object(),"locateNearestStructure","(Lorg/bukkit/Location;Lorg/bukkit/generator/structure/Structure;IZ)Lorg/bukkit/util/StructureSearchResult;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::StructureSearchResult::from_raw(&self.jni_ref(), unsafe {
+        crate::StructureSearchResult::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4839,7 +4839,7 @@ impl<'mc> World<'mc> {
         arg0: impl Into<&'mc crate::Location<'mc>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<bool>,
-        arg3: std::option::Option<impl Into<&'mc crate::util::Consumer<T, 'mc>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Consumer<'mc, T>>>,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -6398,7 +6398,7 @@ impl<'mc> GameEvent<'mc> {
     }
     pub fn values(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, /*3*/ V>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Collection")?;
         let res = jni.call_static_method(cls, "values", "()Ljava/util/Collection;", &[])?;
         let mut obj = res.l()?;
@@ -7393,7 +7393,7 @@ impl<'mc> Color<'mc> {
     }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaString, javaObject, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<'mc, String, Object>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/Color")?;
@@ -17483,7 +17483,7 @@ impl<'mc> Bukkit<'mc> {
     }
     pub fn server_icon(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/util/CachedServerIcon")?;
         let res = jni.call_static_method(
             cls,
@@ -17492,7 +17492,7 @@ impl<'mc> Bukkit<'mc> {
             &[],
         )?;
         let mut obj = res.l()?;
-        crate::util::CachedServerIcon::from_raw(&jni, obj)
+        crate::CachedServerIcon::from_raw(&jni, obj)
     }
     pub fn set_idle_timeout(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19736,7 +19736,7 @@ impl<'mc> MusicInstrument<'mc> {
     }
     pub fn values(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc, /*3*/ V>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Collection")?;
         let res = jni.call_static_method(cls, "values", "()Ljava/util/Collection;", &[])?;
         let mut obj = res.l()?;
@@ -20019,7 +20019,7 @@ impl<'mc> FireworkEffectBuilder<'mc> {
     }
     pub fn with_color_with_color(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaIterable<dyn JNIRaw<'mc>>>>,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_::JavaIterable<dyn JNIRaw<'mc>>>>,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -20051,7 +20051,7 @@ impl<'mc> FireworkEffectBuilder<'mc> {
     }
     pub fn with_fade_with_color(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaIterable<dyn JNIRaw<'mc>>>>,
+        arg0: std::option::Option<impl Into<&'mc blackboxmc_::JavaIterable<dyn JNIRaw<'mc>>>>,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -20438,7 +20438,7 @@ impl<'mc> FireworkEffect<'mc> {
     }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaString, javaObject, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<'mc, String, Object>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
@@ -21782,7 +21782,7 @@ impl<'mc> RegionAccessor<'mc> {
         arg0: impl Into<&'mc crate::Location<'mc>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<bool>,
-        arg3: std::option::Option<impl Into<&'mc crate::util::Consumer<T, 'mc>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Consumer<'mc, T>>>,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -32556,7 +32556,7 @@ impl<'mc> Location<'mc> {
     }
     pub fn add_with_location(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc crate::Vector<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
@@ -32793,7 +32793,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
-    pub fn direction(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn direction(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDirection",
@@ -32801,13 +32801,13 @@ impl<'mc> Location<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_direction(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -32842,7 +32842,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn to_vector(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn to_vector(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "toVector",
@@ -32850,7 +32850,7 @@ impl<'mc> Location<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -32874,7 +32874,7 @@ impl<'mc> Location<'mc> {
     }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaString, javaObject, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<'mc, String, Object>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/Location")?;

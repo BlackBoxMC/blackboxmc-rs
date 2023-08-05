@@ -344,7 +344,7 @@ impl<'mc> ConversationFactory<'mc> {
     }
     pub fn with_initial_session_data(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaObject, javaObject, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<'mc, Object, Object>>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1157,9 +1157,7 @@ impl<'mc> Conversation<'mc> {
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
         arg1: impl Into<&'mc crate::conversations::Conversable<'mc>>,
         arg2: std::option::Option<impl Into<&'mc crate::conversations::Prompt<'mc>>>,
-        arg3: std::option::Option<
-            impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaObject, javaObject, 'mc>>,
-        >,
+        arg3: std::option::Option<impl Into<&'mc blackboxmc_::JavaMap<'mc, Object, Object>>>,
     ) -> Result<crate::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
@@ -2916,7 +2914,7 @@ impl<'mc> ConversationContext<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
         arg1: impl Into<&'mc crate::conversations::Conversable<'mc>>,
-        arg2: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaObject, javaObject, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::JavaMap<'mc, Object, Object>>,
     ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

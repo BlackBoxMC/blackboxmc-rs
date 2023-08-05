@@ -3011,9 +3011,7 @@ impl<'mc> JavaLoggingMXBean<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn logger_names(
-        &mut self,
-    ) -> Result<crate::JavaList<'mc, String>, Box<dyn std::error::Error>> {
+    pub fn logger_names(&mut self) -> Result<crate::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLoggerNames",
@@ -4100,7 +4098,7 @@ impl<'mc> JavaLogManager<'mc> {
     pub fn get_logger(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<crate::logging::JavaLogger<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4130,7 +4128,7 @@ impl<'mc> JavaLogManager<'mc> {
     }
     pub fn logger_names(
         &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, String>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLoggerNames",

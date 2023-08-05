@@ -643,7 +643,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::lang::lang::JavaMap<javaString, javaObject, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaMap<'mc, String, Object>>,
     ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/attribute/AttributeModifier")?;

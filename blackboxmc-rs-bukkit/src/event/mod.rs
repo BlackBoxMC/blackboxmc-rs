@@ -83,9 +83,7 @@ impl<'mc> HandlerList<'mc> {
     }
     pub fn register_all(
         &mut self,
-        arg0: impl Into<
-            &'mc blackboxmc_java::bukkit::plugin::JavaCollection<orgRegisteredListener, 'mc>,
-        >,
+        arg0: impl Into<&'mc blackboxmc_::bukkit::plugin::JavaCollection<'mc, orgRegisteredListener>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(

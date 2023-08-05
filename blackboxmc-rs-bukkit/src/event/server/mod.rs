@@ -869,7 +869,7 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         arg0: bool,
         arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::command::JavaSet<orgCommandSender, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::command::JavaSet<'mc, orgCommandSender>>,
         >,
     ) -> Result<crate::event::server::BroadcastMessageEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
@@ -1256,7 +1256,7 @@ impl<'mc> TabCompleteEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<crate::event::server::TabCompleteEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
@@ -1362,7 +1362,7 @@ impl<'mc> TabCompleteEvent<'mc> {
     }
     pub fn set_completions(
         &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::lang::JavaList<javaString, 'mc>>,
+        arg0: impl Into<&'mc blackboxmc_::JavaList<'mc, String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2861,7 +2861,7 @@ impl<'mc> ServerListPingEvent<'mc> {
     }
     pub fn set_server_icon(
         &mut self,
-        arg0: impl Into<&'mc crate::util::CachedServerIcon<'mc>>,
+        arg0: impl Into<&'mc crate::CachedServerIcon<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(

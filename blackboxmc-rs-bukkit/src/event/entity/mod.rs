@@ -36,7 +36,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Entity<'mc>>,
         arg1: impl Into<&'mc crate::Location<'mc>>,
-        arg2: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlock, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlock>>,
         arg3: f32,
     ) -> Result<crate::event::entity::EntityExplodeEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -855,14 +855,22 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         arg2: impl Into<&'mc crate::event::entity::EntityDamageEventDamageCause<'mc>>,
         arg3: std::option::Option<
             impl Into<
-                &'mc blackboxmc_java::bukkit::event::entity::lang::JavaMap<
-                    orgEntityDamageEventDamageModifier,
-                    javaDouble,
+                &'mc blackboxmc_::bukkit::event::entity::JavaMap<
                     'mc,
+                    orgEntityDamageEventDamageModifier,
+                    Double,
                 >,
             >,
         >,
-        arg4: std::option::Option<impl Into<&'mc blackboxmc_java::bukkit::event::entity::google::common::base::lang::lang::JavaMap<orgEntityDamageEventDamageModifier,  comFunction< javaDouble, javaDouble,'mc>,'mc>>>,
+        arg4: std::option::Option<
+            impl Into<
+                &'mc blackboxmc_::bukkit::event::entity::google::common::base::JavaMap<
+                    'mc,
+                    orgEntityDamageEventDamageModifier,
+                    comFunction<'mc, Double, Double>,
+                >,
+            >,
+        >,
     ) -> Result<crate::event::entity::EntityDamageByBlockEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -4719,7 +4727,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Piglin<'mc>>,
         arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-        arg2: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+        arg2: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
     ) -> Result<crate::event::entity::PiglinBarterEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -5236,7 +5244,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::LivingEntity<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::block::JavaList<orgBlockState, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::block::JavaList<'mc, orgBlockState>>,
         arg2: impl Into<&'mc crate::PortalType<'mc>>,
     ) -> Result<crate::event::entity::EntityCreatePortalEvent<'mc>, Box<dyn std::error::Error>>
     {
@@ -6805,14 +6813,22 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         arg2: impl Into<&'mc crate::event::entity::EntityDamageEventDamageCause<'mc>>,
         arg3: std::option::Option<
             impl Into<
-                &'mc blackboxmc_java::bukkit::event::entity::lang::JavaMap<
-                    orgEntityDamageEventDamageModifier,
-                    javaDouble,
+                &'mc blackboxmc_::bukkit::event::entity::JavaMap<
                     'mc,
+                    orgEntityDamageEventDamageModifier,
+                    Double,
                 >,
             >,
         >,
-        arg4: std::option::Option<impl Into<&'mc blackboxmc_java::bukkit::event::entity::google::common::base::lang::lang::JavaMap<orgEntityDamageEventDamageModifier,  comFunction< javaDouble, javaDouble,'mc>,'mc>>>,
+        arg4: std::option::Option<
+            impl Into<
+                &'mc blackboxmc_::bukkit::event::entity::google::common::base::JavaMap<
+                    'mc,
+                    orgEntityDamageEventDamageModifier,
+                    comFunction<'mc, Double, Double>,
+                >,
+            >,
+        >,
     ) -> Result<crate::event::entity::EntityDamageByEntityEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -11825,7 +11841,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
     pub fn new_with_player(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
         arg2: i32,
         arg3: i32,
         arg4: i32,
@@ -12196,7 +12212,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::AreaEffectCloud<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgLivingEntity, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgLivingEntity>>,
     ) -> Result<crate::event::entity::AreaEffectCloudApplyEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -14474,8 +14490,8 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         arg0: impl Into<&'mc crate::entity::Entity<'mc>>,
         arg1: impl Into<&'mc crate::Location<'mc>>,
         arg2: impl Into<&'mc crate::Location<'mc>>,
-        arg3: impl Into<&'mc crate::util::Vector<'mc>>,
-        arg4: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg3: impl Into<&'mc crate::Vector<'mc>>,
+        arg4: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<crate::event::entity::EntityPortalExitEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -14514,7 +14530,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         let mut obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    pub fn before(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn before(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBefore",
@@ -14522,11 +14538,11 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn after(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn after(&mut self) -> Result<crate::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAfter",
@@ -14534,13 +14550,13 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+        crate::Vector::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     pub fn set_after(
         &mut self,
-        arg0: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg0: impl Into<&'mc crate::Vector<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -15164,14 +15180,22 @@ impl<'mc> EntityDamageEvent<'mc> {
         arg1: impl Into<&'mc crate::event::entity::EntityDamageEventDamageCause<'mc>>,
         arg2: std::option::Option<
             impl Into<
-                &'mc blackboxmc_java::bukkit::event::entity::lang::JavaMap<
-                    orgEntityDamageEventDamageModifier,
-                    javaDouble,
+                &'mc blackboxmc_::bukkit::event::entity::JavaMap<
                     'mc,
+                    orgEntityDamageEventDamageModifier,
+                    Double,
                 >,
             >,
         >,
-        arg3: std::option::Option<impl Into<&'mc blackboxmc_java::bukkit::event::entity::google::common::base::lang::lang::JavaMap<orgEntityDamageEventDamageModifier,  comFunction< javaDouble, javaDouble,'mc>,'mc>>>,
+        arg3: std::option::Option<
+            impl Into<
+                &'mc blackboxmc_::bukkit::event::entity::google::common::base::JavaMap<
+                    'mc,
+                    orgEntityDamageEventDamageModifier,
+                    comFunction<'mc, Double, Double>,
+                >,
+            >,
+        >,
     ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
@@ -15485,7 +15509,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::LivingEntity<'mc>>,
         arg1: std::option::Option<
-            impl Into<&'mc blackboxmc_java::bukkit::inventory::JavaList<orgItemStack, 'mc>>,
+            impl Into<&'mc blackboxmc_::bukkit::inventory::JavaList<'mc, orgItemStack>>,
         >,
         arg2: std::option::Option<i32>,
     ) -> Result<crate::event::entity::EntityDeathEvent<'mc>, Box<dyn std::error::Error>> {
@@ -19534,7 +19558,7 @@ impl<'mc> EntityTransformEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::Entity<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::bukkit::entity::JavaList<orgEntity, 'mc>>,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::entity::JavaList<'mc, orgEntity>>,
         arg2: impl Into<&'mc crate::event::entity::EntityTransformEventTransformReason<'mc>>,
     ) -> Result<crate::event::entity::EntityTransformEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -19804,9 +19828,7 @@ impl<'mc> PotionSplashEvent<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::ThrownPotion<'mc>>,
-        arg1: impl Into<
-            &'mc blackboxmc_java::bukkit::entity::lang::JavaMap<orgLivingEntity, javaDouble, 'mc>,
-        >,
+        arg1: impl Into<&'mc blackboxmc_::bukkit::entity::JavaMap<'mc, orgLivingEntity, Double>>,
     ) -> Result<crate::event::entity::PotionSplashEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

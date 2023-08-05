@@ -40,7 +40,7 @@ where
     }
     pub fn values(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ T, /*3*/ V>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Set")?;
         let res = jni.call_static_method(cls, "values", "()Ljava/util/Set;", &[])?;
         let mut obj = res.l()?;
