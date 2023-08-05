@@ -122,11 +122,6 @@ impl<'mc> StructureType<'mc> {
         })
     }
 }
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for StructureType<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Structure<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -263,10 +258,5 @@ impl<'mc> Structure<'mc> {
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for Structure<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

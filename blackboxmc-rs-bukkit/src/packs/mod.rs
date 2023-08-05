@@ -113,7 +113,7 @@ impl<'mc> DataPackCompatibility<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -223,20 +223,6 @@ impl<'mc> DataPack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn compatibility(
         &mut self,
     ) -> Result<crate::packs::DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
@@ -258,9 +244,23 @@ impl<'mc> DataPack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDescription",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn requested_features(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRequestedFeatures",
@@ -319,11 +319,6 @@ impl<'mc> JNIRaw<'mc> for DataPack<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for DataPack<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements DataPackManager. Needed for returning it from Java.
 pub struct DataPackManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -353,7 +348,7 @@ impl<'mc> DataPackManager<'mc> {
     pub fn get_enabled_data_packs(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -368,7 +363,7 @@ impl<'mc> DataPackManager<'mc> {
     }
     pub fn data_packs(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDataPacks",
@@ -399,7 +394,7 @@ impl<'mc> DataPackManager<'mc> {
     pub fn get_disabled_data_packs(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -557,7 +552,7 @@ impl<'mc> DataPackSource<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",

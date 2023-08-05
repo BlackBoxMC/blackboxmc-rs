@@ -178,13 +178,6 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleUpdateEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct VehicleEnterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -398,18 +391,6 @@ impl<'mc> VehicleEnterEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for VehicleEnterEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleEnterEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleEntityCollisionEvent<'mc>(
@@ -668,20 +649,6 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>>
-    for VehicleEntityCollisionEvent<'mc>
-{
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc /* parse_into_impl */>>
-    for VehicleEntityCollisionEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct VehicleExitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -899,18 +866,6 @@ impl<'mc> VehicleExitEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for VehicleExitEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleExitEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct VehicleCollisionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1077,13 +1032,6 @@ impl<'mc> VehicleCollisionEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleCollisionEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleBlockCollisionEvent<'mc>(
@@ -1285,13 +1233,6 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc /* parse_into_impl */>>
-    for VehicleBlockCollisionEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct VehicleCreateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1488,18 +1429,6 @@ impl<'mc> VehicleCreateEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for VehicleCreateEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleCreateEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleMoveEvent<'mc>(
@@ -1709,13 +1638,6 @@ impl<'mc> VehicleMoveEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleMoveEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleDestroyEvent<'mc>(
@@ -1931,18 +1853,6 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for VehicleDestroyEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleDestroyEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct VehicleDamageEvent<'mc>(
@@ -2181,18 +2091,6 @@ impl<'mc> VehicleDamageEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for VehicleDamageEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */>>
-    for VehicleDamageEvent<'mc>
-{
-    fn into(self) -> crate::event::vehicle::VehicleEvent<'mc /* parse_into_impl */> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct VehicleEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2356,10 +2254,5 @@ impl<'mc> VehicleEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for VehicleEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
-        crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

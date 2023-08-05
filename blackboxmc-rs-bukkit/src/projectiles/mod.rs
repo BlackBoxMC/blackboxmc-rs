@@ -127,10 +127,3 @@ impl<'mc> JNIRaw<'mc> for BlockProjectileSource<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::projectiles::ProjectileSource<'mc /* parse_into_impl */>>
-    for BlockProjectileSource<'mc>
-{
-    fn into(self) -> crate::projectiles::ProjectileSource<'mc /* parse_into_impl */> {
-        crate::projectiles::ProjectileSource::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}

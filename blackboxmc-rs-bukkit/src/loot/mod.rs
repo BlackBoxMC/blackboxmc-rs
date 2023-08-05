@@ -26,7 +26,7 @@ impl<'mc> LootTable<'mc> {
         &mut self,
         arg0: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
         arg1: impl Into<&'mc crate::loot::LootContext<'mc>>,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -87,11 +87,6 @@ impl<'mc> JNIRaw<'mc> for LootTable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for LootTable<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements Lootable. Needed for returning it from Java.
 pub struct Lootable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -134,20 +129,6 @@ impl<'mc> Lootable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_loot_table(
-        &mut self,
-        arg0: impl Into<&'mc crate::loot::LootTable<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLootTable",
-            "(Lorg/bukkit/loot/LootTable;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn loot_table(
         &mut self,
     ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
@@ -161,6 +142,20 @@ impl<'mc> Lootable<'mc> {
         crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_loot_table(
+        &mut self,
+        arg0: impl Into<&'mc crate::loot::LootTable<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLootTable",
+            "(Lorg/bukkit/loot/LootTable;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 }
 impl<'mc> JNIRaw<'mc> for Lootable<'mc> {

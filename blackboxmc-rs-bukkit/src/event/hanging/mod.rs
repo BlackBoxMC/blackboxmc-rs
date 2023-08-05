@@ -117,7 +117,7 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -397,18 +397,6 @@ impl<'mc> HangingBreakEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for HangingBreakEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::hanging::HangingEvent<'mc /* parse_into_impl */>>
-    for HangingBreakEvent<'mc>
-{
-    fn into(self) -> crate::event::hanging::HangingEvent<'mc /* parse_into_impl */> {
-        crate::event::hanging::HangingEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct HangingBreakByEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -640,13 +628,6 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::hanging::HangingBreakEvent<'mc /* parse_into_impl */>>
-    for HangingBreakByEntityEvent<'mc>
-{
-    fn into(self) -> crate::event::hanging::HangingBreakEvent<'mc /* parse_into_impl */> {
-        crate::event::hanging::HangingBreakEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct HangingPlaceEvent<'mc>(
@@ -945,18 +926,6 @@ impl<'mc> HangingPlaceEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for HangingPlaceEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::hanging::HangingEvent<'mc /* parse_into_impl */>>
-    for HangingPlaceEvent<'mc>
-{
-    fn into(self) -> crate::event::hanging::HangingEvent<'mc /* parse_into_impl */> {
-        crate::event::hanging::HangingEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct HangingEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1107,10 +1076,5 @@ impl<'mc> HangingEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for HangingEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
-        crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

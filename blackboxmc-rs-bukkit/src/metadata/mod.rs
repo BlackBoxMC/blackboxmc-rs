@@ -53,7 +53,7 @@ where
         &mut self,
         arg0: T,
         arg1: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -144,16 +144,6 @@ pub struct MetadataValue<'mc>(
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> MetadataValue<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "MetadataValue", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -316,7 +306,7 @@ impl<'mc> Metadatable<'mc> {
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -416,7 +406,7 @@ where
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::metadata::MetadataStoreBase<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::metadata::MetadataStoreBase<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/metadata/MetadataStoreBase")?;
         let res = jni.new_object(cls, "()V", &[])?;
         crate::metadata::MetadataStoreBase::from_raw(&jni, res)
@@ -447,7 +437,7 @@ where
         &mut self,
         arg0: T,
         arg1: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let res = self.jni_ref().call_method(
@@ -711,7 +701,7 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -974,13 +964,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::metadata::MetadataValueAdapter<'mc /* parse_into_impl */>>
-    for LazyMetadataValue<'mc>
-{
-    fn into(self) -> crate::metadata::MetadataValueAdapter<'mc /* parse_into_impl */> {
-        crate::metadata::MetadataValueAdapter::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct FixedMetadataValue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1194,13 +1177,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::metadata::LazyMetadataValue<'mc /* parse_into_impl */>>
-    for FixedMetadataValue<'mc>
-{
-    fn into(self) -> crate::metadata::LazyMetadataValue<'mc /* parse_into_impl */> {
-        crate::metadata::LazyMetadataValue::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct MetadataValueAdapter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1394,12 +1370,5 @@ impl<'mc> MetadataValueAdapter<'mc> {
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
-    }
-}
-impl<'mc> Into<crate::metadata::MetadataValue<'mc /* parse_into_impl */>>
-    for MetadataValueAdapter<'mc>
-{
-    fn into(self) -> crate::metadata::MetadataValue<'mc /* parse_into_impl */> {
-        crate::metadata::MetadataValue::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

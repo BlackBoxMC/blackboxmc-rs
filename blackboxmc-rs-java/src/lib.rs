@@ -42,22 +42,6 @@ impl<'mc> JavaCalendarBuilder<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::JavaCalendarBuilder::from_raw(&jni, res)
     }
-    pub fn set_lenient(
-        &mut self,
-        arg0: bool,
-    ) -> Result<crate::JavaCalendarBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLenient",
-            "(Z)Ljava/util/Calendar$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaCalendarBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_time_zone(
         &mut self,
         arg0: impl Into<&'mc crate::JavaTimeZone<'mc>>,
@@ -98,16 +82,15 @@ impl<'mc> JavaCalendarBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_instant_with_long(
+    pub fn set_instant_with_date(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaDate<'mc>>>,
+        arg0: std::option::Option<i64>,
     ) -> Result<crate::JavaCalendarBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setInstant",
-            "(Ljava/util/Date;)Ljava/util/Calendar$Builder;",
+            "(J)Ljava/util/Calendar$Builder;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -227,6 +210,22 @@ impl<'mc> JavaCalendarBuilder<'mc> {
             &self.jni_object(),
             "setLocale",
             "(Ljava/util/Locale;)Ljava/util/Calendar$Builder;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaCalendarBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_lenient(
+        &mut self,
+        arg0: bool,
+    ) -> Result<crate::JavaCalendarBuilder<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLenient",
+            "(Z)Ljava/util/Calendar$Builder;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -380,7 +379,7 @@ where
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaArrayList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaArrayList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let cls = &jni.find_class("java/util/ArrayList")?;
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -408,7 +407,7 @@ where
     pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -419,7 +418,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -451,7 +453,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -511,7 +513,7 @@ where
         &mut self,
         arg0: i32,
         arg1: i32,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -528,7 +530,9 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -556,7 +560,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -568,27 +572,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all_with_collection(
+    pub fn set(
         &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(ILjava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: i32,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -621,52 +609,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn sort(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "sort",
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaListIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -689,20 +635,6 @@ where
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -796,21 +728,6 @@ impl<'mc> JavaPropertyResourceBundle<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn keys<S>(&mut self) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKeys",
-            "()Ljava/util/Enumeration;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaEnumeration::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn handle_get_object(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -825,23 +742,19 @@ impl<'mc> JavaPropertyResourceBundle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn get_string(
+    pub fn keys(
         &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    ) -> Result<crate::JavaEnumeration<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getString",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            "getKeys",
+            "()Ljava/util/Enumeration;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        crate::JavaEnumeration::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn locale(&mut self) -> Result<crate::JavaLocale<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -903,6 +816,24 @@ impl<'mc> JavaPropertyResourceBundle<'mc> {
         )?;
         Ok(())
     }
+    pub fn get_string(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getString",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn contains_key(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -917,7 +848,7 @@ impl<'mc> JavaPropertyResourceBundle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -1013,13 +944,6 @@ impl<'mc> JavaPropertyResourceBundle<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::JavaResourceBundle<'mc /* parse_into_impl */>>
-    for JavaPropertyResourceBundle<'mc>
-{
-    fn into(self) -> crate::JavaResourceBundle<'mc /* parse_into_impl */> {
-        crate::JavaResourceBundle::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaAbstractMap<'mc, K, V>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1087,7 +1011,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1098,7 +1022,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -1138,7 +1066,7 @@ where
             .to_string_lossy()
             .to_string())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -1178,7 +1106,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -1186,20 +1114,6 @@ where
         crate::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn put_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn contains_key(
         &mut self,
@@ -1215,7 +1129,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -1300,7 +1214,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put_if_absent(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -1319,7 +1237,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -1333,15 +1251,6 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
-    }
-}
-impl<'mc, K, V> Into<crate::JavaMap<'mc /* parse_into_impl */, K, V>> for JavaAbstractMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaTreeSet<'mc, E>(
@@ -1384,33 +1293,36 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaSortedSet<'mc, E>>>,
-    ) -> Result<crate::JavaTreeSet<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/TreeSet")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/SortedSet;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaTreeSet::from_raw(&jni, res)
+    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "pollFirst",
+            "()Ljava/lang/Object;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
     }
-    pub fn new_with_comparator(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, E>>>,
-    ) -> Result<crate::JavaTreeSet<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/TreeSet")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaTreeSet::from_raw(&jni, res)
+    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
+    pub fn descending_iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "descendingIterator",
+            "()Ljava/util/Iterator;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn sub_set_with_object(
         &mut self,
@@ -1418,7 +1330,7 @@ where
         arg1: std::option::Option<bool>,
         arg2: std::option::Option<E>,
         arg3: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let val_3 = arg2.unwrap().jni_object();
@@ -1443,7 +1355,7 @@ where
         &mut self,
         arg0: std::option::Option<E>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -1464,7 +1376,7 @@ where
         &mut self,
         arg0: std::option::Option<E>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -1483,7 +1395,7 @@ where
     }
     pub fn descending_set(
         &mut self,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingSet",
@@ -1495,7 +1407,10 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn ceiling(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn ceiling(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1506,7 +1421,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn higher(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn higher(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1516,37 +1434,6 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
-    }
-    pub fn poll_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pollFirst",
-            "()Ljava/lang/Object;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-    pub fn poll_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-    pub fn descending_iterator(
-        &mut self,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "descendingIterator",
-            "()Ljava/util/Iterator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn add(&mut self, arg0: E) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
@@ -1573,14 +1460,17 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn floor(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn floor(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1612,7 +1502,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -1638,7 +1530,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "last", "()Ljava/lang/Object;", &[]);
@@ -1647,7 +1539,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -1659,28 +1551,17 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "first", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn lower(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn lower(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1693,7 +1574,7 @@ where
     }
     pub fn comparator(
         &mut self,
-    ) -> Result<crate::JavaComparator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "comparator",
@@ -1726,20 +1607,6 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1750,34 +1617,6 @@ where
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -1868,16 +1707,12 @@ impl<'mc> JavaCurrency<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn get_symbol(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaLocale<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+    pub fn symbol(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getSymbol",
-            "(Ljava/util/Locale;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            "()Ljava/lang/String;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
@@ -1886,12 +1721,9 @@ impl<'mc> JavaCurrency<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn available_currencies<C>(
+    pub fn available_currencies(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        C: Into<Currency>,
-    {
+    ) -> Result<crate::JavaSet<'mc, Currency>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Set")?;
         let res =
             jni.call_static_method(cls, "getAvailableCurrencies", "()Ljava/util/Set;", &[])?;
@@ -1940,12 +1772,16 @@ impl<'mc> JavaCurrency<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn get_display_name(
+        &mut self,
+        arg0: impl Into<&'mc crate::JavaLocale<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDisplayName",
-            "()Ljava/lang/String;",
-            &[],
+            "(Ljava/util/Locale;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
@@ -2083,25 +1919,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<crate::JavaVector<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Vector")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Collection;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaVector::from_raw(&jni, res)
-    }
     pub fn new_with_int(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<i32>,
-    ) -> Result<crate::JavaVector<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaVector<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let cls = &jni.find_class("java/util/Vector")?;
@@ -2114,6 +1936,19 @@ where
             ],
         )?;
         crate::JavaVector::from_raw(&jni, res)
+    }
+    pub fn copy_into(
+        &mut self,
+        arg0: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copyInto",
+            "(Ljava/lang/Object;)V",
+            &[],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn set_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -2177,7 +2012,9 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn first_element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first_element(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "firstElement",
@@ -2187,7 +2024,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn last_element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last_element(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lastElement",
@@ -2219,19 +2058,6 @@ where
             "addElement",
             "(LE;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn copy_into(
-        &mut self,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyInto",
-            "(Ljava/lang/Object;)V",
-            &[],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -2269,7 +2095,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2312,7 +2141,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -2382,7 +2211,7 @@ where
         &mut self,
         arg0: i32,
         arg1: i32,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -2399,7 +2228,9 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -2427,7 +2258,7 @@ where
     }
     pub fn elements(
         &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaEnumeration<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "elements",
@@ -2441,7 +2272,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -2453,27 +2284,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all_with_collection(
+    pub fn set(
         &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(ILjava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: i32,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -2513,7 +2328,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn element_at(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element_at(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2524,52 +2342,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn sort(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "sort",
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaListIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2581,20 +2357,6 @@ where
         crate::JavaListIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -2685,20 +2447,6 @@ impl<'mc> JavaEnumMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new_with_map(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaEnumMap<'mc>>>,
-    ) -> Result<crate::JavaEnumMap<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/EnumMap")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/EnumMap;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaEnumMap::from_raw(&jni, res)
-    }
     pub fn new_with_class(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -2779,7 +2527,7 @@ impl<'mc> JavaEnumMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn values<V>(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>>
+    pub fn values<V>(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>>
     where
         V: JNIRaw<'mc>,
     {
@@ -2826,7 +2574,7 @@ impl<'mc> JavaEnumMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -2834,20 +2582,6 @@ impl<'mc> JavaEnumMap<'mc> {
         crate::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn put_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn contains_key(
         &mut self,
@@ -2863,7 +2597,7 @@ impl<'mc> JavaEnumMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set<K>(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
+    pub fn key_set<K>(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>>
     where
         K: JNIRaw<'mc>,
     {
@@ -3189,9 +2923,7 @@ impl<'mc> JavaSpliteratorsAbstractIntSpliterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -3202,13 +2934,6 @@ impl<'mc> JavaSpliteratorsAbstractIntSpliterator<'mc> {
         crate::JavaComparator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> Into<crate::JavaSpliteratorOfInt<'mc /* parse_into_impl */>>
-    for JavaSpliteratorsAbstractIntSpliterator<'mc>
-{
-    fn into(self) -> crate::JavaSpliteratorOfInt<'mc /* parse_into_impl */> {
-        crate::JavaSpliteratorOfInt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaStringJoiner<'mc>(
@@ -3497,41 +3222,6 @@ impl<'mc> JavaGregorianCalendar<'mc> {
         )?;
         crate::JavaGregorianCalendar::from_raw(&jni, res)
     }
-    pub fn time_zone(&mut self) -> Result<crate::JavaTimeZone<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTimeZone",
-            "()Ljava/util/TimeZone;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaTimeZone::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn is_leap_year(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLeapYear",
-            "(I)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn gregorian_change(&mut self) -> Result<crate::JavaDate<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getGregorianChange",
-            "()Ljava/util/Date;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaDate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn calendar_type(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3549,14 +3239,14 @@ impl<'mc> JavaGregorianCalendar<'mc> {
     pub fn roll_with_int(
         &mut self,
         arg0: i32,
-        arg1: std::option::Option<bool>,
+        arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "roll",
-            "(IZ)V",
+            "(II)V",
             &[
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
@@ -3702,6 +3392,41 @@ impl<'mc> JavaGregorianCalendar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn time_zone(&mut self) -> Result<crate::JavaTimeZone<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTimeZone",
+            "()Ljava/util/TimeZone;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaTimeZone::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn is_leap_year(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLeapYear",
+            "(I)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn gregorian_change(&mut self) -> Result<crate::JavaDate<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getGregorianChange",
+            "()Ljava/util/Date;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaDate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn add(&mut self, arg0: i32, arg1: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
@@ -3745,55 +3470,12 @@ impl<'mc> JavaGregorianCalendar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn set_time(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTime",
-            "(Ljava/util/Date;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn set_time_in_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTimeInMillis",
-            "(J)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn set_lenient(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLenient",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn time_in_millis(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTimeInMillis", "()J", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
-    }
     pub fn get_display_names(
         &mut self,
         arg0: i32,
         arg1: i32,
         arg2: impl Into<&'mc crate::JavaLocale<'mc>>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
@@ -3814,7 +3496,7 @@ impl<'mc> JavaGregorianCalendar<'mc> {
     }
     pub fn available_calendar_types(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Set")?;
         let res =
             jni.call_static_method(cls, "getAvailableCalendarTypes", "()Ljava/util/Set;", &[])?;
@@ -3867,31 +3549,57 @@ impl<'mc> JavaGregorianCalendar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn get_display_name(
+    pub fn time(&mut self) -> Result<crate::JavaDate<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getTime", "()Ljava/util/Date;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaDate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_time(
         &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: impl Into<&'mc crate::JavaLocale<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getDisplayName",
-            "(IILjava/util/Locale;)Ljava/lang/String;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
+            "setTime",
+            "(Ljava/util/Date;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_time_in_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTimeInMillis",
+            "(J)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_lenient(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLenient",
+            "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn time_in_millis(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res = self
             .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+            .call_method(&self.jni_object(), "getTimeInMillis", "()J", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j().unwrap())
     }
     pub fn before(
         &mut self,
@@ -3921,14 +3629,31 @@ impl<'mc> JavaGregorianCalendar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn time(&mut self) -> Result<crate::JavaDate<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getTime", "()Ljava/util/Date;", &[]);
+    pub fn get_display_name(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: impl Into<&'mc crate::JavaLocale<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDisplayName",
+            "(IILjava/util/Locale;)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        crate::JavaDate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn get(&mut self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -4071,11 +3796,6 @@ impl<'mc> JavaGregorianCalendar<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::JavaCalendar<'mc /* parse_into_impl */>> for JavaGregorianCalendar<'mc> {
-    fn into(self) -> crate::JavaCalendar<'mc /* parse_into_impl */> {
-        crate::JavaCalendar::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements JavaRandomAccess. Needed for returning it from Java.
 pub struct JavaRandomAccess<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4157,7 +3877,7 @@ where
     pub fn load_installed(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaServiceLoader<'mc, S>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaServiceLoader<'mc, /*3*/ S>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let cls = &jni.find_class("java/util/ServiceLoader")?;
         let res = jni.call_static_method(
@@ -4191,7 +3911,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
         arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaClassLoader<'mc>>>,
-    ) -> Result<crate::JavaServiceLoader<'mc, S>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaServiceLoader<'mc, /*3*/ S>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap();
         let val_2 =
             unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
@@ -4208,7 +3928,9 @@ where
         let mut obj = res.l()?;
         crate::JavaServiceLoader::from_raw(&jni, obj)
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ S>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -4222,7 +3944,7 @@ where
     }
     pub fn find_first(
         &mut self,
-    ) -> Result<crate::JavaOptional<'mc, S>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaOptional<'mc, /*3*/ S>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "findFirst",
@@ -4297,7 +4019,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, S>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ S>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -4544,21 +4266,6 @@ impl<'mc> JavaTimeZone<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::JavaTimeZone::from_raw(&jni, res)
     }
-    pub fn get_time_zone_with_zone_id(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<crate::JavaTimeZone<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/util/TimeZone")?;
-        let res = jni.call_static_method(
-            cls,
-            "getTimeZone",
-            "(Ljava/lang/String;)Ljava/util/TimeZone;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaTimeZone::from_raw(&jni, obj)
-    }
     pub fn raw_offset(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4640,12 +4347,63 @@ impl<'mc> JavaTimeZone<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn get_time_zone_with_zone_id(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+    ) -> Result<crate::JavaTimeZone<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
+        let cls = &jni.find_class("java/util/TimeZone")?;
+        let res = jni.call_static_method(
+            cls,
+            "getTimeZone",
+            "(Ljava/lang/String;)Ljava/util/TimeZone;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let mut obj = res.l()?;
+        crate::JavaTimeZone::from_raw(&jni, obj)
+    }
+    pub fn get_display_name_with_locale(
+        &mut self,
+        arg0: std::option::Option<bool>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDisplayName",
-            "()Ljava/lang/String;",
-            &[],
+            "(ZI)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_display_name_with_boolean(
+        &mut self,
+        arg0: bool,
+        arg1: i32,
+        arg2: std::option::Option<impl Into<&'mc crate::JavaLocale<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDisplayName",
+            "(ZILjava/util/Locale;)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
@@ -4829,11 +4587,18 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn first_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "firstKey", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
     pub fn sub_map(
         &mut self,
         arg0: K,
         arg1: K,
-    ) -> Result<crate::JavaSortedMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSortedMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -4853,7 +4618,7 @@ where
     pub fn head_map(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaSortedMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSortedMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4869,7 +4634,7 @@ where
     pub fn tail_map(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaSortedMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSortedMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4882,21 +4647,14 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn last_key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn last_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "lastKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn first_key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "firstKey", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -4908,7 +4666,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -4917,7 +4675,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -4926,9 +4684,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "comparator",
@@ -4962,7 +4718,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4973,7 +4729,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -5052,21 +4812,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn put_all(
+    pub fn put_if_absent(
         &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -5113,7 +4863,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -5140,15 +4890,6 @@ where
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc, K, V> Into<crate::JavaMap<'mc /* parse_into_impl */, K, V>> for JavaSortedMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaAbstractMapSimpleImmutableEntry<'mc, K, V>(
@@ -5201,8 +4942,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<K>,
         arg1: std::option::Option<V>,
-    ) -> Result<crate::JavaAbstractMapSimpleImmutableEntry<'mc, K, V>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::JavaAbstractMapSimpleImmutableEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = arg1.unwrap().jni_object();
         let cls = &jni.find_class("java/util/AbstractMap$SimpleImmutableEntry")?;
@@ -5248,21 +4988,24 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn value(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getValue", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn set_value(&mut self, arg0: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn set_value(
+        &mut self,
+        arg0: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5418,23 +5161,6 @@ impl<'mc> JavaArrays<'mc> {
         let res = jni.call_static_method(cls, "mismatch", "(FF)I", &[])?;
         Ok(res.i().unwrap())
     }
-    pub fn mismatch_with_booleans(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-        arg1: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
-        arg2: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "mismatch",
-            "(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/Comparator;)I",
-            &[jni::objects::JValueGen::from(&val_3)],
-        )?;
-        Ok(res.i().unwrap())
-    }
     pub fn mismatch_with_chars(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<jni::objects::JObject<'mc>>,
@@ -5485,37 +5211,6 @@ impl<'mc> JavaArrays<'mc> {
                 jni::objects::JValueGen::from(&val_3),
                 jni::objects::JValueGen::from(&val_5),
                 jni::objects::JValueGen::from(&val_6),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn mismatch_with_longs(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-        arg1: i32,
-        arg2: i32,
-        arg3: Vec<jni::objects::JObject<'mc>>,
-        arg4: i32,
-        arg5: std::option::Option<i32>,
-        arg6: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.unwrap().into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
-        let val_7 =
-            unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "mismatch",
-            "(Ljava/lang/Object;IILjava/lang/Object;IILjava/util/Comparator;)I",
-            &[
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_5),
-                jni::objects::JValueGen::from(&val_6),
-                jni::objects::JValueGen::from(&val_7),
             ],
         )?;
         Ok(res.i().unwrap())
@@ -5572,30 +5267,6 @@ impl<'mc> JavaArrays<'mc> {
         let res = jni.call_static_method(cls, "parallelSort", "(D)V", &[])?;
         Ok(())
     }
-    pub fn parallel_sort_with_shorts(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "parallelSort",
-            "(Ljava/lang/Object;IILjava/util/Comparator;)V",
-            &[
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        )?;
-        Ok(())
-    }
     pub fn parallel_sort_with_longs(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<u16>,
@@ -5618,7 +5289,7 @@ impl<'mc> JavaArrays<'mc> {
     }
     pub fn parallel_sort_with_objects(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<impl Into<blackboxmc_java::JavaComparable<'mc>>>,
+        arg0: Vec<impl Into<&'mc blackboxmc_java::JavaComparable<'mc>>>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5740,33 +5411,6 @@ impl<'mc> JavaArrays<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
-    pub fn binary_search_with_longs(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-        arg1: i32,
-        arg2: i32,
-        arg3: std::option::Option<T>,
-        arg4: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = arg3.unwrap().jni_object();
-        let val_5 =
-            unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "binarySearch",
-            "(Ljava/lang/Object;IILT;Ljava/util/Comparator;)I",
-            &[
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-                jni::objects::JValueGen::from(&val_5),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
     pub fn equals_with_object(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<f64>>,
@@ -5846,37 +5490,6 @@ impl<'mc> JavaArrays<'mc> {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("boolean")?;
         let res = jni.call_static_method(cls, "equals", "(CC)Z", &[])?;
-        Ok(res.z().unwrap())
-    }
-    pub fn equals_with_objects(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-        arg1: i32,
-        arg2: i32,
-        arg3: Vec<jni::objects::JObject<'mc>>,
-        arg4: i32,
-        arg5: i32,
-        arg6: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
-        let val_7 =
-            unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(
-            cls,
-            "equals",
-            "(Ljava/lang/Object;IILjava/lang/Object;IILjava/util/Comparator;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_5),
-                jni::objects::JValueGen::from(&val_6),
-                jni::objects::JValueGen::from(&val_7),
-            ],
-        )?;
         Ok(res.z().unwrap())
     }
     pub fn equals_with_chars(
@@ -6096,37 +5709,6 @@ impl<'mc> JavaArrays<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
-    pub fn compare_with_doubles(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-        arg1: i32,
-        arg2: i32,
-        arg3: Vec<jni::objects::JObject<'mc>>,
-        arg4: i32,
-        arg5: std::option::Option<i32>,
-        arg6: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.unwrap().into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
-        let val_7 =
-            unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "compare",
-            "(Ljava/lang/Object;IILjava/lang/Object;IILjava/util/Comparator;)I",
-            &[
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_5),
-                jni::objects::JValueGen::from(&val_6),
-                jni::objects::JValueGen::from(&val_7),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
     pub fn compare_with_chars(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<i32>,
@@ -6334,7 +5916,7 @@ impl<'mc> JavaArrays<'mc> {
         arg0: Vec<jni::objects::JObject<'mc>>,
         arg1: i32,
         arg2: std::option::Option<i32>,
-    ) -> Result<crate::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaSpliterator<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -6380,7 +5962,7 @@ impl<'mc> JavaArrays<'mc> {
     pub fn as_list<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaList<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -6462,30 +6044,6 @@ impl<'mc> JavaArrays<'mc> {
             &[
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn sort_with_shorts(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "sort",
-            "(Ljava/lang/Object;IILjava/util/Comparator;)V",
-            &[
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
             ],
         )?;
         Ok(())
@@ -6661,7 +6219,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6672,7 +6230,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -6701,7 +6263,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -6719,21 +6281,6 @@ where
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Map")?;
-        let res = jni.call_static_method(
-            cls,
-            "copyOf",
-            "(Ljava/util/Map;)Ljava/util/Map;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaMap::from_raw(&jni, obj)
     }
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -6800,7 +6347,7 @@ where
         arg17: std::option::Option<V>,
         arg18: std::option::Option<K>,
         arg19: std::option::Option<V>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = arg1.unwrap().jni_object();
         let val_3 = arg2.unwrap().jni_object();
@@ -6852,7 +6399,7 @@ where
         let mut obj = res.l()?;
         crate::JavaMap::from_raw(&jni, obj)
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -6861,21 +6408,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn put_all(
+    pub fn put_if_absent(
         &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -6894,7 +6431,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: K,
         arg1: V,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let cls = &jni.find_class("java/util/Map$Entry")?;
@@ -6924,7 +6461,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -6951,7 +6488,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -6968,8 +6505,8 @@ where
     }
     pub fn of_entries(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<impl Into<crate::JavaMapEntry<'mc>>>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<Javacrate::JavaMapEntry<K, V, 'mc>>,
+    ) -> Result<crate::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Map")?;
         let res = jni.call_static_method(
             cls,
@@ -7042,7 +6579,7 @@ where
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaWeakHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaWeakHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let cls = &jni.find_class("java/util/WeakHashMap")?;
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -7052,7 +6589,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
-    ) -> Result<crate::JavaWeakHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaWeakHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let cls = &jni.find_class("java/util/WeakHashMap")?;
@@ -7088,7 +6625,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7099,7 +6636,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -7114,7 +6655,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -7147,7 +6688,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -7155,20 +6696,6 @@ where
         crate::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn put_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn contains_key(
         &mut self,
@@ -7184,7 +6711,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -7301,7 +6828,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put_if_absent(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -7320,7 +6851,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -7334,25 +6865,6 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
-    }
-}
-impl<'mc, K, V> Into<crate::JavaMap<'mc /* parse_into_impl */, K, V>> for JavaWeakHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaMap::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc, K, V> Into<crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V>>
-    for JavaWeakHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaAbstractMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JavaSet. Needed for returning it from Java.
@@ -7430,21 +6942,6 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(
-            cls,
-            "copyOf",
-            "(Ljava/util/Collection;)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSet::from_raw(&jni, obj)
-    }
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7466,7 +6963,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -7481,7 +6980,7 @@ where
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Set")?;
         let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/Set;", &[])?;
         let mut obj = res.l()?;
@@ -7499,7 +6998,7 @@ where
         arg7: E,
         arg8: E,
         arg9: std::option::Option<E>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let val_3 = arg2.jni_object();
@@ -7547,7 +7046,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -7558,62 +7057,6 @@ where
         crate::JavaSpliterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
 }
 impl<'mc, E> JNIRaw<'mc> for JavaSet<'mc, E>
@@ -8065,7 +7508,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -8086,62 +7531,6 @@ where
             &self.jni_object(),
             "contains",
             "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -8210,7 +7599,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -8265,7 +7654,7 @@ where
         &mut self,
         arg0: E,
         arg1: E,
-    ) -> Result<crate::JavaSortedSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSortedSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -8285,7 +7674,7 @@ where
     pub fn head_set(
         &mut self,
         arg0: E,
-    ) -> Result<crate::JavaSortedSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSortedSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8301,7 +7690,7 @@ where
     pub fn tail_set(
         &mut self,
         arg0: E,
-    ) -> Result<crate::JavaSortedSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSortedSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8314,7 +7703,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "last", "()Ljava/lang/Object;", &[]);
@@ -8323,7 +7712,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -8335,7 +7724,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "first", "()Ljava/lang/Object;", &[]);
@@ -8344,7 +7733,7 @@ where
     }
     pub fn comparator(
         &mut self,
-    ) -> Result<crate::JavaComparator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "comparator",
@@ -8423,7 +7812,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -8444,62 +7835,6 @@ where
             &self.jni_object(),
             "contains",
             "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -8792,21 +8127,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
@@ -8838,7 +8159,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -8859,48 +8182,6 @@ where
             &self.jni_object(),
             "contains",
             "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -8969,7 +8250,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -8992,14 +8273,14 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn poll(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
@@ -9324,6 +8605,20 @@ impl<'mc> JavaSimpleTimeZone<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    pub fn set_id(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setID",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn get_time_zone_with_zone_id(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -9339,26 +8634,48 @@ impl<'mc> JavaSimpleTimeZone<'mc> {
         let mut obj = res.l()?;
         crate::JavaTimeZone::from_raw(&jni, obj)
     }
-    pub fn set_id(
+    pub fn get_display_name_with_locale(
         &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setID",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        arg0: std::option::Option<bool>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDisplayName",
-            "()Ljava/lang/String;",
-            &[],
+            "(ZI)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn get_display_name_with_boolean(
+        &mut self,
+        arg0: bool,
+        arg1: i32,
+        arg2: std::option::Option<impl Into<&'mc crate::JavaLocale<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_3 =
+            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDisplayName",
+            "(ZILjava/util/Locale;)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
@@ -9441,11 +8758,6 @@ impl<'mc> JavaSimpleTimeZone<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::JavaTimeZone<'mc /* parse_into_impl */>> for JavaSimpleTimeZone<'mc> {
-    fn into(self) -> crate::JavaTimeZone<'mc /* parse_into_impl */> {
-        crate::JavaTimeZone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaListResourceBundle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9488,21 +8800,6 @@ impl<'mc> JavaListResourceBundle<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::JavaListResourceBundle::from_raw(&jni, res)
     }
-    pub fn keys<S>(&mut self) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKeys",
-            "()Ljava/util/Enumeration;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaEnumeration::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn handle_get_object(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -9517,23 +8814,19 @@ impl<'mc> JavaListResourceBundle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn get_string(
+    pub fn keys(
         &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    ) -> Result<crate::JavaEnumeration<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getString",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            "getKeys",
+            "()Ljava/util/Enumeration;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        crate::JavaEnumeration::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn locale(&mut self) -> Result<crate::JavaLocale<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -9595,6 +8888,24 @@ impl<'mc> JavaListResourceBundle<'mc> {
         )?;
         Ok(())
     }
+    pub fn get_string(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getString",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn contains_key(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -9609,7 +8920,7 @@ impl<'mc> JavaListResourceBundle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -9705,13 +9016,6 @@ impl<'mc> JavaListResourceBundle<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::JavaResourceBundle<'mc /* parse_into_impl */>>
-    for JavaListResourceBundle<'mc>
-{
-    fn into(self) -> crate::JavaResourceBundle<'mc /* parse_into_impl */> {
-        crate::JavaResourceBundle::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaAbstractMapSimpleEntry<'mc, K, V>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9762,7 +9066,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<K>,
         arg1: std::option::Option<V>,
-    ) -> Result<crate::JavaAbstractMapSimpleEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaAbstractMapSimpleEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = arg1.unwrap().jni_object();
         let cls = &jni.find_class("java/util/AbstractMap$SimpleEntry")?;
@@ -9808,21 +9112,24 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn value(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getValue", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn set_value(&mut self, arg0: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn set_value(
+        &mut self,
+        arg0: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10028,21 +9335,21 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn poll(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
@@ -10091,7 +9398,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -10119,7 +9428,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -10130,62 +9439,6 @@ where
         crate::JavaSpliterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
 }
 impl<'mc, E> JNIRaw<'mc> for JavaQueue<'mc, E>
@@ -10248,7 +9501,7 @@ where
     }
     pub fn try_split(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "trySplit",
@@ -10280,7 +9533,7 @@ where
     }
     pub fn comparator(
         &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -10345,7 +9598,7 @@ where
     }
     pub fn as_iterator(
         &mut self,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "asIterator",
@@ -10364,7 +9617,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn next_element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn next_element(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextElement",
@@ -10433,7 +9688,7 @@ where
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaHashtable<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaHashtable<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let cls = &jni.find_class("java/util/Hashtable")?;
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -10443,7 +9698,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
-    ) -> Result<crate::JavaHashtable<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaHashtable<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let cls = &jni.find_class("java/util/Hashtable")?;
@@ -10479,7 +9734,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10490,7 +9745,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -10530,7 +9789,7 @@ where
             .to_string_lossy()
             .to_string())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -10549,7 +9808,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -10613,9 +9872,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn elements(
-        &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn elements(&mut self) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "elements",
@@ -10627,7 +9884,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -10636,21 +9893,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn put_all(
+    pub fn put_if_absent(
         &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -10679,7 +9926,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn keys(&mut self) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn keys(&mut self) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "keys",
@@ -10691,7 +9938,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -10718,7 +9965,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -10774,25 +10021,6 @@ where
         Ok(())
     }
 }
-impl<'mc, K, V> Into<crate::JavaMap<'mc /* parse_into_impl */, K, V>> for JavaHashtable<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaMap::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc, K, V> Into<crate::JavaDictionary<'mc /* parse_into_impl */, K, V>>
-    for JavaHashtable<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaDictionary<'mc /* parse_into_impl */, K, V> {
-        crate::JavaDictionary::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaCalendar<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10824,61 +10052,6 @@ impl<'mc> JavaCalendar<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn set_time(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTime",
-            "(Ljava/util/Date;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn set_time_in_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTimeInMillis",
-            "(J)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn set_lenient(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLenient",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn time_in_millis(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTimeInMillis", "()J", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
-    }
-    pub fn time_zone(&mut self) -> Result<crate::JavaTimeZone<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getTimeZone",
-            "()Ljava/util/TimeZone;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaTimeZone::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn calendar_type(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -10957,16 +10130,12 @@ impl<'mc> JavaCalendar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn get_display_names<S, I>(
+    pub fn get_display_names(
         &mut self,
         arg0: i32,
         arg1: i32,
         arg2: impl Into<&'mc crate::JavaLocale<'mc>>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-        I: Into<Integer>,
-    {
+    ) -> Result<crate::JavaMap<'mc, String, Integer>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
@@ -10985,12 +10154,9 @@ impl<'mc> JavaCalendar<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn available_calendar_types<S>(
+    pub fn available_calendar_types(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    ) -> Result<crate::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Set")?;
         let res =
             jni.call_static_method(cls, "getAvailableCalendarTypes", "()Ljava/util/Set;", &[])?;
@@ -11122,35 +10288,69 @@ impl<'mc> JavaCalendar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn get_display_name<S, I>(
+    pub fn time(&mut self) -> Result<crate::JavaDate<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getTime", "()Ljava/util/Date;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaDate::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_time(
         &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: impl Into<&'mc crate::JavaLocale<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-        I: Into<Integer>,
-    {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getDisplayName",
-            "(IILjava/util/Locale;)Ljava/lang/String;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
+            "setTime",
+            "(Ljava/util/Date;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_time_in_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTimeInMillis",
+            "(J)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_lenient(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLenient",
+            "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn time_in_millis(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTimeInMillis", "()J", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j().unwrap())
+    }
+    pub fn time_zone(&mut self) -> Result<crate::JavaTimeZone<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getTimeZone",
+            "()Ljava/util/TimeZone;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        crate::JavaTimeZone::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn before(
         &mut self,
@@ -11180,14 +10380,31 @@ impl<'mc> JavaCalendar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn time(&mut self) -> Result<crate::JavaDate<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getTime", "()Ljava/util/Date;", &[]);
+    pub fn get_display_name(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: impl Into<&'mc crate::JavaLocale<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDisplayName",
+            "(IILjava/util/Locale;)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
-        crate::JavaDate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn add(&mut self, arg0: i32, arg1: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -11204,10 +10421,7 @@ impl<'mc> JavaCalendar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn get<S>(&mut self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    pub fn get(&mut self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11439,20 +10653,6 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn add(&mut self, arg0: E) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
@@ -11510,7 +10710,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -11531,48 +10733,6 @@ where
             &self.jni_object(),
             "contains",
             "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -11620,7 +10780,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -12050,37 +11210,16 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaMap<'mc, K, V>>>,
-    ) -> Result<crate::JavaTreeMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/TreeMap")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaTreeMap::from_raw(&jni, res)
-    }
-    pub fn new_with_comparator(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<crate::JavaTreeMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/TreeMap")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaTreeMap::from_raw(&jni, res)
+    pub fn first_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "firstKey", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
     }
     pub fn navigable_key_set(
         &mut self,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "navigableKeySet",
@@ -12094,7 +11233,7 @@ where
     }
     pub fn descending_key_set(
         &mut self,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingKeySet",
@@ -12108,7 +11247,7 @@ where
     }
     pub fn descending_map(
         &mut self,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingMap",
@@ -12126,7 +11265,7 @@ where
         arg1: std::option::Option<bool>,
         arg2: std::option::Option<K>,
         arg3: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let val_3 = arg2.unwrap().jni_object();
@@ -12151,7 +11290,7 @@ where
         &mut self,
         arg0: std::option::Option<K>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -12172,7 +11311,7 @@ where
         &mut self,
         arg0: std::option::Option<K>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -12189,14 +11328,17 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn last_key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn last_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "lastKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn lower_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn lower_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12207,7 +11349,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn floor_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn floor_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12218,7 +11363,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn ceiling_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn ceiling_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12229,7 +11377,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn higher_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn higher_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12242,7 +11393,7 @@ where
     }
     pub fn poll_first_entry(
         &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pollFirstEntry",
@@ -12256,7 +11407,7 @@ where
     }
     pub fn poll_last_entry(
         &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pollLastEntry",
@@ -12268,9 +11419,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn first_entry(
-        &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    pub fn first_entry(&mut self) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "firstEntry",
@@ -12282,9 +11431,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn last_entry(
-        &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    pub fn last_entry(&mut self) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lastEntry",
@@ -12299,7 +11446,7 @@ where
     pub fn lower_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12315,7 +11462,7 @@ where
     pub fn floor_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12331,7 +11478,7 @@ where
     pub fn ceiling_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12347,7 +11494,7 @@ where
     pub fn higher_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12359,13 +11506,6 @@ where
         crate::JavaMapEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn first_key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "firstKey", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
     }
     pub fn remove_with_object(
         &mut self,
@@ -12389,7 +11529,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12400,7 +11540,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -12415,7 +11559,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -12427,7 +11571,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn clone(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -12470,7 +11614,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -12479,21 +11623,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn put_all(
+    pub fn put_if_absent(
         &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -12522,7 +11656,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -12545,9 +11679,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "comparator",
@@ -12642,7 +11774,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -12656,26 +11788,6 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
-    }
-}
-impl<'mc, K, V> Into<crate::JavaNavigableMap<'mc /* parse_into_impl */, K, V>>
-    for JavaTreeMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaNavigableMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaNavigableMap::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc, K, V> Into<crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V>>
-    for JavaTreeMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaAbstractMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JavaDeque. Needed for returning it from Java.
@@ -12718,7 +11830,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn pop(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
@@ -12747,7 +11859,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn poll_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pollFirst",
@@ -12757,7 +11869,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn poll_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
@@ -12775,7 +11887,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn remove_first(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeFirst",
@@ -12785,14 +11899,14 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getFirst", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "peekFirst",
@@ -12827,7 +11941,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn remove_last(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeLast",
@@ -12837,14 +11953,14 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peekLast", "()Ljava/lang/Object;", &[]);
@@ -12878,7 +11994,7 @@ where
     }
     pub fn descending_iterator(
         &mut self,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingIterator",
@@ -12922,7 +12038,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -12948,35 +12066,21 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn poll(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
@@ -13020,7 +12124,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -13031,48 +12135,6 @@ where
         crate::JavaSpliterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
 }
 impl<'mc, E> JNIRaw<'mc> for JavaDeque<'mc, E>
@@ -13677,9 +12739,7 @@ impl<'mc> JavaStringTokenizer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn as_iterator(
-        &mut self,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn as_iterator(&mut self) -> Result<crate::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "asIterator",
@@ -13902,7 +12962,7 @@ where
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaLinkedHashSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaLinkedHashSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let cls = &jni.find_class("java/util/LinkedHashSet")?;
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -13912,7 +12972,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
-    ) -> Result<crate::JavaLinkedHashSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaLinkedHashSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let cls = &jni.find_class("java/util/LinkedHashSet")?;
@@ -13928,7 +12988,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -13965,7 +13025,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -13993,7 +13053,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -14040,20 +13102,6 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14064,48 +13112,6 @@ where
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -14285,49 +13291,6 @@ impl<'mc> JavaLocale<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn filter_tags_with_list<S>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-        arg2: std::option::Option<impl Into<&'mc crate::JavaLocaleFilteringMode<'mc>>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(cls,"filterTags",
-"(Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
-    }
-    pub fn lookup_tag(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "lookupTag",
-            "(Ljava/util/List;Ljava/util/Collection;)Ljava/lang/String;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn strip_extensions(
         &mut self,
     ) -> Result<crate::JavaLocale<'mc>, Box<dyn std::error::Error>> {
@@ -14342,10 +13305,7 @@ impl<'mc> JavaLocale<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_extension<C>(&mut self, arg0: u16) -> Result<String, Box<dyn std::error::Error>>
-    where
-        C: Into<Character>,
-    {
+    pub fn get_extension(&mut self, arg0: u16) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Char(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14360,12 +13320,9 @@ impl<'mc> JavaLocale<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn extension_keys<C>(
+    pub fn extension_keys(
         &mut self,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        C: Into<Character>,
-    {
+    ) -> Result<crate::JavaSet<'mc, Character>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getExtensionKeys",
@@ -14424,6 +13381,20 @@ impl<'mc> JavaLocale<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getISO3Country",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn language(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLanguage",
             "()Ljava/lang/String;",
             &[],
         );
@@ -14518,12 +13489,9 @@ impl<'mc> JavaLocale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn unicode_locale_attributes<S>(
+    pub fn unicode_locale_attributes(
         &mut self,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    ) -> Result<crate::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getUnicodeLocaleAttributes",
@@ -14553,12 +13521,9 @@ impl<'mc> JavaLocale<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn unicode_locale_keys<S>(
+    pub fn unicode_locale_keys(
         &mut self,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    ) -> Result<crate::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getUnicodeLocaleKeys",
@@ -14569,20 +13534,6 @@ impl<'mc> JavaLocale<'mc> {
         crate::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn language(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLanguage",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     pub fn equals(
         &mut self,
@@ -14630,47 +13581,6 @@ impl<'mc> JavaLocale<'mc> {
         let res = jni.call_static_method(cls, "getDefault", "()Ljava/util/Locale;", &[])?;
         let mut obj = res.l()?;
         crate::JavaLocale::from_raw(&jni, obj)
-    }
-    pub fn lookup(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<crate::JavaLocale<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Locale")?;
-        let res = jni.call_static_method(
-            cls,
-            "lookup",
-            "(Ljava/util/List;Ljava/util/Collection;)Ljava/util/Locale;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaLocale::from_raw(&jni, obj)
-    }
-    pub fn filter_with_list<L>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-        arg2: std::option::Option<impl Into<&'mc crate::JavaLocaleFilteringMode<'mc>>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        L: Into<Locale>,
-    {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(cls,"filter",
-"(Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
     }
     pub fn wait(
         &mut self,
@@ -14759,7 +13669,7 @@ where
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let cls = &jni.find_class("java/util/HashMap")?;
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -14769,7 +13679,7 @@ where
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
-    ) -> Result<crate::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let cls = &jni.find_class("java/util/HashMap")?;
@@ -14805,7 +13715,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14816,7 +13726,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -14831,7 +13745,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -14843,7 +13757,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn clone(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -14893,7 +13807,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -14902,21 +13816,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn put_all(
+    pub fn put_if_absent(
         &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -14945,7 +13849,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -14972,7 +13876,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -15058,25 +13962,6 @@ where
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc, K, V> Into<crate::JavaMap<'mc /* parse_into_impl */, K, V>> for JavaHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaMap::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc, K, V> Into<crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V>>
-    for JavaHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaAbstractMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaIdentityHashMap<'mc, K, V>(
@@ -15124,20 +14009,6 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaMap<'mc, K, V>>>,
-    ) -> Result<crate::JavaIdentityHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/IdentityHashMap")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaIdentityHashMap::from_raw(&jni, res)
-    }
     pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -15160,7 +14031,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15171,7 +14042,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -15200,7 +14075,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -15219,7 +14094,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -15247,7 +14122,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -15255,20 +14130,6 @@ where
         crate::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn put_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn contains_key(
         &mut self,
@@ -15284,7 +14145,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -15380,7 +14241,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put_if_absent(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -15399,7 +14264,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -15413,26 +14278,6 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
-    }
-}
-impl<'mc, K, V> Into<crate::JavaMap<'mc /* parse_into_impl */, K, V>>
-    for JavaIdentityHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaMap::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc, K, V> Into<crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V>>
-    for JavaIdentityHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaAbstractMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaAbstractMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JavaSpliteratorOfPrimitive. Needed for returning it from Java.
@@ -15501,9 +14346,7 @@ impl<'mc> JavaSpliteratorOfPrimitive<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -15577,26 +14420,12 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaMap<'mc, K, V>>>,
-    ) -> Result<crate::JavaLinkedHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/LinkedHashMap")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaLinkedHashMap::from_raw(&jni, res)
-    }
     pub fn new_with_int(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<bool>,
-    ) -> Result<crate::JavaLinkedHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaLinkedHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
@@ -15615,7 +14444,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15626,7 +14455,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -15645,7 +14474,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -15654,7 +14483,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -15681,7 +14510,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -15715,7 +14544,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -15730,7 +14563,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn clone(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -15773,21 +14606,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn put_all(
+    pub fn put_if_absent(
         &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -15887,26 +14710,6 @@ where
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc, K, V> Into<crate::JavaMap<'mc /* parse_into_impl */, K, V>>
-    for JavaLinkedHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaMap::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc, K, V> Into<crate::JavaHashMap<'mc /* parse_into_impl */, K, V>>
-    for JavaLinkedHashMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaHashMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaHashMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaAbstractSequentialList<'mc, E>(
@@ -15985,7 +14788,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15996,7 +14802,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -16008,27 +14816,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all_with_collection(
+    pub fn set(
         &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(ILjava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: i32,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -16046,7 +14838,7 @@ where
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaListIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16119,7 +14911,7 @@ where
         &mut self,
         arg0: i32,
         arg1: i32,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -16175,48 +14967,6 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -16259,7 +15009,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -16270,20 +15020,6 @@ where
         crate::JavaSpliterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn sort(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "sort",
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 }
 impl<'mc, E> Into<crate::JavaAbstractList<'mc /* parse_into_impl */, E>>
@@ -16357,7 +15093,7 @@ where
     }
     pub fn reverse_order(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Comparator")?;
         let res = jni.call_static_method(cls, "reverseOrder", "()Ljava/util/Comparator;", &[])?;
         let mut obj = res.l()?;
@@ -16365,7 +15101,7 @@ where
     }
     pub fn reversed(
         &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "reversed",
@@ -16379,39 +15115,9 @@ where
     }
     pub fn natural_order(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Comparator")?;
         let res = jni.call_static_method(cls, "naturalOrder", "()Ljava/util/Comparator;", &[])?;
-        let mut obj = res.l()?;
-        crate::JavaComparator::from_raw(&jni, obj)
-    }
-    pub fn nulls_first(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, T>>,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Comparator")?;
-        let res = jni.call_static_method(
-            cls,
-            "nullsFirst",
-            "(Ljava/util/Comparator;)Ljava/util/Comparator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaComparator::from_raw(&jni, obj)
-    }
-    pub fn nulls_last(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, T>>,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Comparator")?;
-        let res = jni.call_static_method(
-            cls,
-            "nullsLast",
-            "(Ljava/util/Comparator;)Ljava/util/Comparator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
         let mut obj = res.l()?;
         crate::JavaComparator::from_raw(&jni, obj)
     }
@@ -16700,25 +15406,6 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn next_int(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "nextInt",
-            "(II)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -16737,6 +15424,25 @@ impl<'mc> JavaRandom<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
+    }
+    pub fn next_int(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "nextInt",
+            "(II)I",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -16825,11 +15531,6 @@ impl<'mc> JavaRandom<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> Into<crate::random::JavaRandomGenerator<'mc /* parse_into_impl */>> for JavaRandom<'mc> {
-    fn into(self) -> crate::random::JavaRandomGenerator<'mc /* parse_into_impl */> {
-        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements JavaList. Needed for returning it from Java.
 pub struct JavaList<'mc, E>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16881,7 +15582,7 @@ where
     pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<E, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16892,7 +15593,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16923,21 +15627,6 @@ where
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(
-            cls,
-            "copyOf",
-            "(Ljava/util/Collection;)Ljava/util/List;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
     }
     pub fn index_of(
         &mut self,
@@ -16992,7 +15681,7 @@ where
         &mut self,
         arg0: i32,
         arg1: i32,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -17009,7 +15698,9 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -17024,7 +15715,7 @@ where
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/List")?;
         let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/List;", &[])?;
         let mut obj = res.l()?;
@@ -17042,7 +15733,7 @@ where
         arg7: E,
         arg8: E,
         arg9: std::option::Option<E>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let val_3 = arg2.jni_object();
@@ -17090,7 +15781,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -17102,27 +15793,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all_with_collection(
+    pub fn set(
         &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(ILjava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: i32,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -17137,52 +15812,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn sort(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "sort",
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaListIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17194,20 +15827,6 @@ where
         crate::JavaListIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
 }
 impl<'mc, E> JNIRaw<'mc> for JavaList<'mc, E>
@@ -17438,509 +16057,9 @@ impl<'mc> JavaCollections<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn shuffle_with_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaList<'mc, E>>>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaRandom<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "shuffle",
-            "(Ljava/util/List;Ljava/util/Random;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn rotate(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: i32,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "rotate",
-            "(Ljava/util/List;I)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn index_of_sub_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "indexOfSubList",
-            "(Ljava/util/List;Ljava/util/List;)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn last_index_of_sub_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "lastIndexOfSubList",
-            "(Ljava/util/List;Ljava/util/List;)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn unmodifiable_collection<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Collection")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableCollection",
-            "(Ljava/util/Collection;)Ljava/util/Collection;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaCollection::from_raw(&jni, obj)
-    }
-    pub fn unmodifiable_sorted_set<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSortedSet<'mc, E>>,
-    ) -> Result<crate::JavaSortedSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/SortedSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableSortedSet",
-            "(Ljava/util/SortedSet;)Ljava/util/SortedSet;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSortedSet::from_raw(&jni, obj)
-    }
-    pub fn unmodifiable_navigable_set<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaNavigableSet<'mc, E>>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/NavigableSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableNavigableSet",
-            "(Ljava/util/NavigableSet;)Ljava/util/NavigableSet;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaNavigableSet::from_raw(&jni, obj)
-    }
-    pub fn unmodifiable_sorted_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSortedMap<'mc, K, V>>,
-    ) -> Result<crate::JavaSortedMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/SortedMap")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableSortedMap",
-            "(Ljava/util/SortedMap;)Ljava/util/SortedMap;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSortedMap::from_raw(&jni, obj)
-    }
-    pub fn unmodifiable_navigable_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaNavigableMap<'mc, K, V>>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/NavigableMap")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableNavigableMap",
-            "(Ljava/util/NavigableMap;)Ljava/util/NavigableMap;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaNavigableMap::from_raw(&jni, obj)
-    }
-    pub fn synchronized_sorted_set<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSortedSet<'mc, E>>,
-    ) -> Result<crate::JavaSortedSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/SortedSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedSortedSet",
-            "(Ljava/util/SortedSet;)Ljava/util/SortedSet;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSortedSet::from_raw(&jni, obj)
-    }
-    pub fn synchronized_navigable_set<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaNavigableSet<'mc, E>>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/NavigableSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedNavigableSet",
-            "(Ljava/util/NavigableSet;)Ljava/util/NavigableSet;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaNavigableSet::from_raw(&jni, obj)
-    }
-    pub fn synchronized_list<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedList",
-            "(Ljava/util/List;)Ljava/util/List;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
-    }
-    pub fn synchronized_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Map")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedMap",
-            "(Ljava/util/Map;)Ljava/util/Map;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaMap::from_raw(&jni, obj)
-    }
-    pub fn synchronized_sorted_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSortedMap<'mc, K, V>>,
-    ) -> Result<crate::JavaSortedMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/SortedMap")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedSortedMap",
-            "(Ljava/util/SortedMap;)Ljava/util/SortedMap;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSortedMap::from_raw(&jni, obj)
-    }
-    pub fn synchronized_navigable_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaNavigableMap<'mc, K, V>>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/NavigableMap")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedNavigableMap",
-            "(Ljava/util/NavigableMap;)Ljava/util/NavigableMap;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaNavigableMap::from_raw(&jni, obj)
-    }
-    pub fn checked_collection<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-        arg1: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let cls = &jni.find_class("java/util/Collection")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedCollection",
-            "(Ljava/util/Collection;Ljava/lang/Class;)Ljava/util/Collection;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaCollection::from_raw(&jni, obj)
-    }
-    pub fn checked_queue<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaQueue<'mc, E>>,
-        arg1: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaQueue<'mc, E>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let cls = &jni.find_class("java/util/Queue")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedQueue",
-            "(Ljava/util/Queue;Ljava/lang/Class;)Ljava/util/Queue;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaQueue::from_raw(&jni, obj)
-    }
-    pub fn checked_set<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSet<'mc, E>>,
-        arg1: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedSet",
-            "(Ljava/util/Set;Ljava/lang/Class;)Ljava/util/Set;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSet::from_raw(&jni, obj)
-    }
-    pub fn checked_sorted_set<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSortedSet<'mc, E>>,
-        arg1: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaSortedSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let cls = &jni.find_class("java/util/SortedSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedSortedSet",
-            "(Ljava/util/SortedSet;Ljava/lang/Class;)Ljava/util/SortedSet;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSortedSet::from_raw(&jni, obj)
-    }
-    pub fn checked_navigable_set<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaNavigableSet<'mc, E>>,
-        arg1: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let cls = &jni.find_class("java/util/NavigableSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedNavigableSet",
-            "(Ljava/util/NavigableSet;Ljava/lang/Class;)Ljava/util/NavigableSet;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaNavigableSet::from_raw(&jni, obj)
-    }
-    pub fn checked_list<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedList",
-            "(Ljava/util/List;Ljava/lang/Class;)Ljava/util/List;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
-    }
-    pub fn checked_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-        arg1: jni::objects::JClass<'mc>,
-        arg2: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let val_3 = arg2;
-        let cls = &jni.find_class("java/util/Map")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedMap",
-            "(Ljava/util/Map;Ljava/lang/Class;Ljava/lang/Class;)Ljava/util/Map;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaMap::from_raw(&jni, obj)
-    }
-    pub fn checked_sorted_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSortedMap<'mc, K, V>>,
-        arg1: jni::objects::JClass<'mc>,
-        arg2: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaSortedMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let val_3 = arg2;
-        let cls = &jni.find_class("java/util/SortedMap")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedSortedMap",
-            "(Ljava/util/SortedMap;Ljava/lang/Class;Ljava/lang/Class;)Ljava/util/SortedMap;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSortedMap::from_raw(&jni, obj)
-    }
-    pub fn checked_navigable_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaNavigableMap<'mc, K, V>>,
-        arg1: jni::objects::JClass<'mc>,
-        arg2: jni::objects::JClass<'mc>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let val_3 = arg2;
-        let cls = &jni.find_class("java/util/NavigableMap")?;
-        let res = jni.call_static_method(
-            cls,
-            "checkedNavigableMap",
-            "(Ljava/util/NavigableMap;Ljava/lang/Class;Ljava/lang/Class;)Ljava/util/NavigableMap;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaNavigableMap::from_raw(&jni, obj)
-    }
     pub fn empty_list_iterator<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaListIterator<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -17952,7 +16071,7 @@ impl<'mc> JavaCollections<'mc> {
     }
     pub fn empty_set<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -17963,7 +16082,7 @@ impl<'mc> JavaCollections<'mc> {
     }
     pub fn empty_sorted_set<E>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaSortedSet<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaSortedSet<'mc>, Box<dyn std::error::Error>>
     where
         E: JNIRaw<'mc>,
     {
@@ -17974,7 +16093,7 @@ impl<'mc> JavaCollections<'mc> {
     }
     pub fn empty_navigable_set<E>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaNavigableSet<'mc>, Box<dyn std::error::Error>>
     where
         E: JNIRaw<'mc>,
     {
@@ -17986,7 +16105,7 @@ impl<'mc> JavaCollections<'mc> {
     }
     pub fn empty_map<K, V>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaMap<'mc>, Box<dyn std::error::Error>>
     where
         K: JNIRaw<'mc>,
         V: JNIRaw<'mc>,
@@ -17998,7 +16117,7 @@ impl<'mc> JavaCollections<'mc> {
     }
     pub fn empty_sorted_map<K, V>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaSortedMap<'mc, K, V>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaSortedMap<'mc>, Box<dyn std::error::Error>>
     where
         K: JNIRaw<'mc>,
         V: JNIRaw<'mc>,
@@ -18010,7 +16129,7 @@ impl<'mc> JavaCollections<'mc> {
     }
     pub fn empty_navigable_map<K, V>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>>
     where
         K: JNIRaw<'mc>,
         V: JNIRaw<'mc>,
@@ -18024,7 +16143,7 @@ impl<'mc> JavaCollections<'mc> {
     pub fn singleton<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: T,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -18042,7 +16161,7 @@ impl<'mc> JavaCollections<'mc> {
     pub fn singleton_list<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: T,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaList<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -18061,7 +16180,7 @@ impl<'mc> JavaCollections<'mc> {
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: K,
         arg1: V,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaMap<'mc>, Box<dyn std::error::Error>>
     where
         K: JNIRaw<'mc>,
         V: JNIRaw<'mc>,
@@ -18081,246 +16200,9 @@ impl<'mc> JavaCollections<'mc> {
         let mut obj = res.l()?;
         crate::JavaMap::from_raw(&jni, obj)
     }
-    pub fn frequency(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-        arg1: jni::objects::JObject<'mc>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1;
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "frequency",
-            "(Ljava/util/Collection;Ljava/lang/Object;)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn disjoint(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-        arg1: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(
-            cls,
-            "disjoint",
-            "(Ljava/util/Collection;Ljava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn as_lifo_queue<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaDeque<'mc, E>>,
-    ) -> Result<crate::JavaQueue<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Queue")?;
-        let res = jni.call_static_method(
-            cls,
-            "asLifoQueue",
-            "(Ljava/util/Deque;)Ljava/util/Queue;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaQueue::from_raw(&jni, obj)
-    }
-    pub fn unmodifiable_map<K, V>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<crate::JavaMap<'mc, K, V>, Box<dyn std::error::Error>>
-    where
-        K: JNIRaw<'mc>,
-        V: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Map")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableMap",
-            "(Ljava/util/Map;)Ljava/util/Map;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaMap::from_raw(&jni, obj)
-    }
-    pub fn swap(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "swap",
-            "(Ljava/util/List;II)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn binary_search_with_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: std::option::Option<T>,
-        arg2: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 = arg1.unwrap().jni_object();
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "binarySearch",
-            "(Ljava/util/List;LT;Ljava/util/Comparator;)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn min_with_collection(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/lang/Object")?;
-        let res = jni.call_static_method(
-            cls,
-            "min",
-            "(Ljava/util/Collection;Ljava/util/Comparator;)Ljava/lang/Object;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.l().unwrap())
-    }
-    pub fn max_with_collection(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/lang/Object")?;
-        let res = jni.call_static_method(
-            cls,
-            "max",
-            "(Ljava/util/Collection;Ljava/util/Comparator;)Ljava/lang/Object;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.l().unwrap())
-    }
-    pub fn replace_all(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: T,
-        arg2: T,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1.jni_object();
-        let val_3 = arg2.jni_object();
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(
-            cls,
-            "replaceAll",
-            "(Ljava/util/List;LT;LT;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        Ok(res.z().unwrap())
-    }
-    pub fn fill(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: T,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = arg1.jni_object();
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "fill",
-            "(Ljava/util/List;LT;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn list<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaEnumeration<'mc, E>>,
-    ) -> Result<crate::JavaArrayList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/ArrayList")?;
-        let res = jni.call_static_method(
-            cls,
-            "list",
-            "(Ljava/util/Enumeration;)Ljava/util/ArrayList;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaArrayList::from_raw(&jni, obj)
-    }
-    pub fn add_all(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-        arg1: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("boolean")?;
-        let res = jni.call_static_method(
-            cls,
-            "addAll",
-            "(Ljava/util/Collection;Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.z().unwrap())
-    }
     pub fn empty_enumeration<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -18330,27 +16212,9 @@ impl<'mc> JavaCollections<'mc> {
         let mut obj = res.l()?;
         crate::JavaEnumeration::from_raw(&jni, obj)
     }
-    pub fn new_set_from_map<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(
-            cls,
-            "newSetFromMap",
-            "(Ljava/util/Map;)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSet::from_raw(&jni, obj)
-    }
     pub fn empty_list<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaList<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -18359,81 +16223,9 @@ impl<'mc> JavaCollections<'mc> {
         let mut obj = res.l()?;
         crate::JavaList::from_raw(&jni, obj)
     }
-    pub fn unmodifiable_set<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSet<'mc, E>>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableSet",
-            "(Ljava/util/Set;)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSet::from_raw(&jni, obj)
-    }
-    pub fn enumeration<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Enumeration")?;
-        let res = jni.call_static_method(
-            cls,
-            "enumeration",
-            "(Ljava/util/Collection;)Ljava/util/Enumeration;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaEnumeration::from_raw(&jni, obj)
-    }
-    pub fn synchronized_set<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaSet<'mc, E>>,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedSet",
-            "(Ljava/util/Set;)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSet::from_raw(&jni, obj)
-    }
-    pub fn synchronized_collection<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Collection")?;
-        let res = jni.call_static_method(
-            cls,
-            "synchronizedCollection",
-            "(Ljava/util/Collection;)Ljava/util/Collection;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaCollection::from_raw(&jni, obj)
-    }
     pub fn empty_iterator<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaIterator<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -18442,30 +16234,11 @@ impl<'mc> JavaCollections<'mc> {
         let mut obj = res.l()?;
         crate::JavaIterator::from_raw(&jni, obj)
     }
-    pub fn copy(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "copy",
-            "(Ljava/util/List;Ljava/util/List;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(())
-    }
     pub fn n_copies<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: T,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaList<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -18483,81 +16256,6 @@ impl<'mc> JavaCollections<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::JavaList::from_raw(&jni, obj)
-    }
-    pub fn unmodifiable_list<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(
-            cls,
-            "unmodifiableList",
-            "(Ljava/util/List;)Ljava/util/List;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
-    }
-    pub fn reverse<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "reverse",
-            "(Ljava/util/List;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(())
-    }
-    pub fn sort_with_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaList<'mc, E>>>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(
-            cls,
-            "sort",
-            "(Ljava/util/List;Ljava/util/Comparator;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(())
-    }
-    pub fn reverse_order<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Comparator")?;
-        let res = jni.call_static_method(
-            cls,
-            "reverseOrder",
-            "(Ljava/util/Comparator;)Ljava/util/Comparator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaComparator::from_raw(&jni, obj)
     }
     pub fn wait(
         &mut self,
@@ -18672,25 +16370,11 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<crate::JavaHashSet<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/HashSet")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Collection;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaHashSet::from_raw(&jni, res)
-    }
     pub fn new_with_int(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
-    ) -> Result<crate::JavaHashSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaHashSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
         let cls = &jni.find_class("java/util/HashSet")?;
@@ -18729,7 +16413,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -18757,7 +16441,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -18785,7 +16471,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -18818,20 +16504,6 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18842,48 +16514,6 @@ where
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -19017,7 +16647,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19088,7 +16721,7 @@ where
         &mut self,
         arg0: i32,
         arg1: i32,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -19105,7 +16738,9 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -19117,27 +16752,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all_with_collection(
+    pub fn set(
         &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(ILjava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: i32,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -19155,7 +16774,7 @@ where
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaListIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19207,48 +16826,6 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -19291,7 +16868,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -19302,20 +16879,6 @@ where
         crate::JavaSpliterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn sort(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "sort",
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 }
 impl<'mc, E> Into<crate::JavaList<'mc /* parse_into_impl */, E>> for JavaAbstractList<'mc, E>
@@ -19378,7 +16941,7 @@ where
     pub fn of_nullable(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: T,
-    ) -> Result<crate::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaOptional<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let cls = &jni.find_class("java/util/Optional")?;
         let res = jni.call_static_method(
@@ -19390,7 +16953,7 @@ where
         let mut obj = res.l()?;
         crate::JavaOptional::from_raw(&jni, obj)
     }
-    pub fn get(&mut self) -> Result<T, Box<dyn std::error::Error>> {
+    pub fn get(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "get", "()Ljava/lang/Object;", &[]);
@@ -19439,7 +17002,7 @@ where
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: T,
-    ) -> Result<crate::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaOptional<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let cls = &jni.find_class("java/util/Optional")?;
         let res = jni.call_static_method(
@@ -19453,7 +17016,7 @@ where
     }
     pub fn empty(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaOptional<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Optional")?;
         let res = jni.call_static_method(cls, "empty", "()Ljava/util/Optional;", &[])?;
         let mut obj = res.l()?;
@@ -19466,7 +17029,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn or_else(&mut self, arg0: T) -> Result<T, Box<dyn std::error::Error>> {
+    pub fn or_else(
+        &mut self,
+        arg0: T,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19559,20 +17125,6 @@ impl<'mc> JavaBitSet<'mc> {
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
         crate::JavaBitSet::from_raw(&jni, res)
     }
-    pub fn and(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaBitSet<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "and",
-            "(Ljava/util/BitSet;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn cardinality(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19663,6 +17215,20 @@ impl<'mc> JavaBitSet<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "or",
+            "(Ljava/util/BitSet;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn and(
+        &mut self,
+        arg0: impl Into<&'mc crate::JavaBitSet<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "and",
             "(Ljava/util/BitSet;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -19927,7 +17493,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn next(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
@@ -19966,7 +17532,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn previous(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn previous(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "previous", "()Ljava/lang/Object;", &[]);
@@ -20036,53 +17602,6 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<crate::JavaPriorityQueue<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/PriorityQueue")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Collection;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaPriorityQueue::from_raw(&jni, res)
-    }
-    pub fn new_with_sorted_set(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, E>>>,
-    ) -> Result<crate::JavaPriorityQueue<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/PriorityQueue")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaPriorityQueue::from_raw(&jni, res)
-    }
-    pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, E>>>,
-    ) -> Result<crate::JavaPriorityQueue<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/PriorityQueue")?;
-        let res = jni.new_object(
-            cls,
-            "(ILjava/util/Comparator;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        crate::JavaPriorityQueue::from_raw(&jni, res)
-    }
     pub fn offer(&mut self, arg0: E) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
@@ -20133,7 +17652,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -20161,7 +17682,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -20173,51 +17694,23 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn poll(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn comparator(
         &mut self,
-    ) -> Result<crate::JavaComparator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "comparator",
@@ -20229,21 +17722,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
@@ -20265,20 +17744,6 @@ where
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
@@ -20525,20 +17990,6 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<crate::JavaLinkedList<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/LinkedList")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Collection;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::JavaLinkedList::from_raw(&jni, res)
-    }
     pub fn push(&mut self, arg0: E) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
@@ -20550,7 +18001,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn pop(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
@@ -20579,7 +18030,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn poll_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pollFirst",
@@ -20589,7 +18040,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn poll_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
@@ -20607,7 +18058,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn remove_first(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeFirst",
@@ -20617,14 +18070,14 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getFirst", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "peekFirst",
@@ -20659,7 +18112,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn remove_last(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeLast",
@@ -20669,14 +18124,14 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peekLast", "()Ljava/lang/Object;", &[]);
@@ -20710,7 +18165,7 @@ where
     }
     pub fn descending_iterator(
         &mut self,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingIterator",
@@ -20755,7 +18210,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20766,7 +18224,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn clone(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -20831,7 +18289,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -20843,27 +18301,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all_with_collection(
+    pub fn set(
         &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(ILjava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: i32,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -20878,21 +18320,21 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn poll(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
@@ -20902,7 +18344,7 @@ where
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaListIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20915,7 +18357,9 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -20952,7 +18396,7 @@ where
         &mut self,
         arg0: i32,
         arg1: i32,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -20984,48 +18428,6 @@ where
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
@@ -21066,20 +18468,6 @@ where
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn sort(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "sort",
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -21151,12 +18539,15 @@ where
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaStack<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaStack<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Stack")?;
         let res = jni.new_object(cls, "()V", &[])?;
         crate::JavaStack::from_raw(&jni, res)
     }
-    pub fn push(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn push(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21167,7 +18558,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn pop(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
@@ -21181,7 +18572,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn peek(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
@@ -21201,6 +18592,19 @@ where
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn copy_into(
+        &mut self,
+        arg0: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copyInto",
+            "(Ljava/lang/Object;)V",
+            &[],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn set_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -21264,7 +18668,9 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn first_element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first_element(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "firstElement",
@@ -21274,7 +18680,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn last_element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last_element(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lastElement",
@@ -21306,19 +18714,6 @@ where
             "addElement",
             "(LE;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn copy_into(
-        &mut self,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyInto",
-            "(Ljava/lang/Object;)V",
-            &[],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -21356,7 +18751,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn get(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21399,7 +18797,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn clone(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
@@ -21469,7 +18867,7 @@ where
         &mut self,
         arg0: i32,
         arg1: i32,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaList<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         let res = self.jni_ref().call_method(
@@ -21486,7 +18884,9 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -21514,7 +18914,7 @@ where
     }
     pub fn elements(
         &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaEnumeration<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "elements",
@@ -21528,7 +18928,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -21540,27 +18940,11 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all_with_collection(
+    pub fn set(
         &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaCollection<'mc, E>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(ILjava/util/Collection;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn set(&mut self, arg0: i32, arg1: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: i32,
+        arg1: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -21600,7 +18984,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn element_at(&mut self, arg0: i32) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element_at(
+        &mut self,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21611,52 +18998,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn sort(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaComparator<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "sort",
-            "(Ljava/util/Comparator;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaListIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21668,20 +19013,6 @@ where
         crate::JavaListIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -21807,7 +19138,7 @@ impl<'mc> JavaSpliterators<'mc> {
     }
     pub fn empty_spliterator<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaSpliterator<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -21854,30 +19185,6 @@ impl<'mc> JavaSpliterators<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::JavaPrimitiveIteratorOfInt::from_raw(&jni, obj)
-    }
-    pub fn spliterator_unknown_size_with_primitive_iteratorof_long<T>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaIterator<'mc, E>>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>>
-    where
-        T: JNIRaw<'mc>,
-    {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let cls = &jni.find_class("java/util/Spliterator")?;
-        let res = jni.call_static_method(
-            cls,
-            "spliteratorUnknownSize",
-            "(Ljava/util/Iterator;I)Ljava/util/Spliterator;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaSpliterator::from_raw(&jni, obj)
     }
     pub fn spliterator_unknown_size_with_primitive_iteratorof_int<T>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22027,7 +19334,7 @@ impl<'mc> JavaSpliterators<'mc> {
         arg1: i32,
         arg2: i32,
         arg3: std::option::Option<i32>,
-    ) -> Result<crate::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>>
+    ) -> Result<crate::JavaSpliterator<'mc>, Box<dyn std::error::Error>>
     where
         T: JNIRaw<'mc>,
     {
@@ -22201,26 +19508,6 @@ impl<'mc> JavaLocaleLanguageRange<'mc> {
         )?;
         crate::JavaLocaleLanguageRange::from_raw(&jni, res)
     }
-    pub fn map_equivalents(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-        arg1: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(
-            cls,
-            "mapEquivalents",
-            "(Ljava/util/List;Ljava/util/Map;)Ljava/util/List;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
-    }
     pub fn range(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22238,27 +19525,6 @@ impl<'mc> JavaLocaleLanguageRange<'mc> {
             .call_method(&self.jni_object(), "getWeight", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
-    }
-    pub fn parse_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::JavaMap<'mc, K, V>>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/List")?;
-        let res = jni.call_static_method(
-            cls,
-            "parse",
-            "(Ljava/lang/String;Ljava/util/Map;)Ljava/util/List;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaList::from_raw(&jni, obj)
     }
     pub fn equals(
         &mut self,
@@ -22427,9 +19693,7 @@ impl<'mc> JavaSpliteratorOfDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -22456,13 +19720,6 @@ impl<'mc> JNIRaw<'mc> for JavaSpliteratorOfDouble<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::JavaSpliteratorOfPrimitive<'mc /* parse_into_impl */>>
-    for JavaSpliteratorOfDouble<'mc>
-{
-    fn into(self) -> crate::JavaSpliteratorOfPrimitive<'mc /* parse_into_impl */> {
-        crate::JavaSpliteratorOfPrimitive::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaEventListenerProxy<'mc, T>(
@@ -22511,8 +19768,7 @@ where
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::JavaEventListener<'mc>>,
-    ) -> Result<crate::JavaEventListenerProxy<'mc, INTO<EVENTLISTENER>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::JavaEventListenerProxy<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("java/util/EventListenerProxy")?;
         let res = jni.new_object(
@@ -22524,7 +19780,7 @@ where
     }
     pub fn listener(
         &mut self,
-    ) -> Result<crate::JavaEventListener<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaEventListener<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getListener",
@@ -22644,28 +19900,10 @@ impl<'mc> JavaResourceBundleControl<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn get_control(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<crate::JavaResourceBundleControl<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/ResourceBundle$Control")?;
-        let res = jni.call_static_method(
-            cls,
-            "getControl",
-            "(Ljava/util/List;)Ljava/util/ResourceBundle$Control;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaResourceBundleControl::from_raw(&jni, obj)
-    }
-    pub fn get_formats<S>(
+    pub fn get_formats(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    ) -> Result<crate::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -22678,14 +19916,11 @@ impl<'mc> JavaResourceBundleControl<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_candidate_locales<L>(
+    pub fn get_candidate_locales(
         &mut self,
         arg0: impl Into<&'mc String>,
         arg1: impl Into<&'mc crate::JavaLocale<'mc>>,
-    ) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        L: Into<Locale>,
-    {
+    ) -> Result<crate::JavaList<'mc, Locale>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -22802,21 +20037,6 @@ impl<'mc> JavaResourceBundleControl<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn get_no_fallback_control(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaList<'mc, E>>,
-    ) -> Result<crate::JavaResourceBundleControl<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/ResourceBundle$Control")?;
-        let res = jni.call_static_method(
-            cls,
-            "getNoFallbackControl",
-            "(Ljava/util/List;)Ljava/util/ResourceBundle$Control;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaResourceBundleControl::from_raw(&jni, obj)
     }
     pub fn to_resource_name(
         &mut self,
@@ -23016,28 +20236,6 @@ impl<'mc> JavaObjects<'mc> {
             &[
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res.i().unwrap())
-    }
-    pub fn compare(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: T,
-        arg1: T,
-        arg2: impl Into<&'mc crate::JavaComparator<'mc, T>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.jni_object();
-        let val_2 = arg1.jni_object();
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let cls = &jni.find_class("int")?;
-        let res = jni.call_static_method(
-            cls,
-            "compare",
-            "(LT;LT;Ljava/util/Comparator;)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
             ],
         )?;
         Ok(res.i().unwrap())
@@ -23318,7 +20516,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -23346,7 +20546,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -23357,62 +20557,6 @@ where
         crate::JavaSpliterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
 }
 impl<'mc, E> JNIRaw<'mc> for JavaCollection<'mc, E>
@@ -23467,39 +20611,6 @@ impl<'mc> JavaResourceBundle<'mc> {
         let cls = &jni.find_class("java/util/ResourceBundle")?;
         let res = jni.new_object(cls, "()V", &[])?;
         crate::JavaResourceBundle::from_raw(&jni, res)
-    }
-    pub fn get_string(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getString",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn keys<S>(&mut self) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKeys",
-            "()Ljava/util/Enumeration;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaEnumeration::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn locale(&mut self) -> Result<crate::JavaLocale<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -23561,6 +20672,38 @@ impl<'mc> JavaResourceBundle<'mc> {
         )?;
         Ok(())
     }
+    pub fn get_string(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getString",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn keys(
+        &mut self,
+    ) -> Result<crate::JavaEnumeration<'mc, String>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getKeys",
+            "()Ljava/util/Enumeration;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaEnumeration::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn contains_key(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -23575,10 +20718,7 @@ impl<'mc> JavaResourceBundle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn key_set<S>(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -23767,9 +20907,7 @@ impl<'mc> JavaSpliteratorOfInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -23796,13 +20934,6 @@ impl<'mc> JNIRaw<'mc> for JavaSpliteratorOfInt<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::JavaSpliteratorOfPrimitive<'mc /* parse_into_impl */>>
-    for JavaSpliteratorOfInt<'mc>
-{
-    fn into(self) -> crate::JavaSpliteratorOfPrimitive<'mc /* parse_into_impl */> {
-        crate::JavaSpliteratorOfPrimitive::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JavaPrimitiveIteratorOfInt. Needed for returning it from Java.
@@ -23917,7 +21048,7 @@ where
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::JavaDictionary<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaDictionary<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/Dictionary")?;
         let res = jni.new_object(cls, "()V", &[])?;
         crate::JavaDictionary::from_raw(&jni, res)
@@ -23925,7 +21056,7 @@ where
     pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -23939,7 +21070,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -23950,7 +21081,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -23979,9 +21114,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn elements(
-        &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn elements(&mut self) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "elements",
@@ -23993,7 +21126,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn keys(&mut self) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn keys(&mut self) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "keys",
@@ -24374,6 +21507,13 @@ impl<'mc> JavaScanner<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn next_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextDouble", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d().unwrap())
+    }
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -24387,13 +21527,6 @@ impl<'mc> JavaScanner<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn next_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextDouble", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
     }
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -24682,13 +21815,44 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "pollFirst",
+            "()Ljava/lang/Object;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
+    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
+    pub fn descending_iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "descendingIterator",
+            "()Ljava/util/Iterator;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn sub_set_with_object(
         &mut self,
         arg0: E,
         arg1: std::option::Option<bool>,
         arg2: std::option::Option<E>,
         arg3: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let val_3 = arg2.unwrap().jni_object();
@@ -24713,7 +21877,7 @@ where
         &mut self,
         arg0: std::option::Option<E>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -24734,7 +21898,7 @@ where
         &mut self,
         arg0: std::option::Option<E>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -24753,7 +21917,7 @@ where
     }
     pub fn descending_set(
         &mut self,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingSet",
@@ -24765,7 +21929,10 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn ceiling(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn ceiling(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -24776,7 +21943,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn higher(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn higher(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -24787,38 +21957,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn poll_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pollFirst",
-            "()Ljava/lang/Object;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-    pub fn poll_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-    pub fn descending_iterator(
+    pub fn floor(
         &mut self,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "descendingIterator",
-            "()Ljava/util/Iterator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn floor(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -24829,7 +21971,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -24841,7 +21985,10 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn lower(&mut self, arg0: E) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn lower(
+        &mut self,
+        arg0: E,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -24852,7 +21999,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "last", "()Ljava/lang/Object;", &[]);
@@ -24861,7 +22008,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -24873,7 +22020,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "first", "()Ljava/lang/Object;", &[]);
@@ -24882,7 +22029,7 @@ where
     }
     pub fn comparator(
         &mut self,
-    ) -> Result<crate::JavaComparator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "comparator",
@@ -24970,62 +22117,6 @@ where
             &self.jni_object(),
             "contains",
             "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -25194,7 +22285,7 @@ where
     }
     pub fn navigable_key_set(
         &mut self,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "navigableKeySet",
@@ -25208,7 +22299,7 @@ where
     }
     pub fn descending_key_set(
         &mut self,
-    ) -> Result<crate::JavaNavigableSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingKeySet",
@@ -25222,7 +22313,7 @@ where
     }
     pub fn descending_map(
         &mut self,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingMap",
@@ -25240,7 +22331,7 @@ where
         arg1: std::option::Option<bool>,
         arg2: std::option::Option<K>,
         arg3: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let val_3 = arg2.unwrap().jni_object();
@@ -25265,7 +22356,7 @@ where
         &mut self,
         arg0: std::option::Option<K>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -25286,7 +22377,7 @@ where
         &mut self,
         arg0: std::option::Option<K>,
         arg1: std::option::Option<bool>,
-    ) -> Result<crate::JavaNavigableMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaNavigableMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.unwrap().jni_object();
         let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
         let res = self.jni_ref().call_method(
@@ -25303,7 +22394,10 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn lower_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn lower_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25314,7 +22408,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn floor_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn floor_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25325,7 +22422,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn ceiling_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn ceiling_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25336,7 +22436,10 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn higher_key(&mut self, arg0: K) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn higher_key(
+        &mut self,
+        arg0: K,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25349,7 +22452,7 @@ where
     }
     pub fn poll_first_entry(
         &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pollFirstEntry",
@@ -25363,7 +22466,7 @@ where
     }
     pub fn poll_last_entry(
         &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pollLastEntry",
@@ -25375,9 +22478,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn first_entry(
-        &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    pub fn first_entry(&mut self) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "firstEntry",
@@ -25389,9 +22490,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn last_entry(
-        &mut self,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    pub fn last_entry(&mut self) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lastEntry",
@@ -25406,7 +22505,7 @@ where
     pub fn lower_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25422,7 +22521,7 @@ where
     pub fn floor_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25438,7 +22537,7 @@ where
     pub fn ceiling_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25454,7 +22553,7 @@ where
     pub fn higher_entry(
         &mut self,
         arg0: K,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaMapEntry<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25467,21 +22566,21 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn last_key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "lastKey", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-    pub fn first_key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn first_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "firstKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn last_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "lastKey", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -25493,7 +22592,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -25502,7 +22601,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -25511,9 +22610,7 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "comparator",
@@ -25547,7 +22644,7 @@ where
     pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25558,7 +22655,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn put(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn put(
+        &mut self,
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -25637,21 +22738,11 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn put_all(
+    pub fn put_if_absent(
         &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn put_if_absent(&mut self, arg0: K, arg1: V) -> Result<V, Box<dyn std::error::Error>> {
+        arg0: K,
+        arg1: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -25698,7 +22789,7 @@ where
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: V,
-    ) -> Result<V, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1.jni_object();
         let res = self.jni_ref().call_method(
@@ -25725,16 +22816,6 @@ where
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc, K, V> Into<crate::JavaSortedMap<'mc /* parse_into_impl */, K, V>>
-    for JavaNavigableMap<'mc, K, V>
-where
-    K: JNIRaw<'mc>,
-    V: JNIRaw<'mc>,
-{
-    fn into(self) -> crate::JavaSortedMap<'mc /* parse_into_impl */, K, V> {
-        crate::JavaSortedMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaFormatter<'mc>(
@@ -26006,7 +23087,7 @@ where
     }
     pub fn try_split(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "trySplit",
@@ -26117,7 +23198,7 @@ where
     }
     pub fn comparator(
         &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaComparator<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -26284,7 +23365,7 @@ impl<'mc> JavaProperties<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn values(&mut self) -> Result<crate::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "values",
@@ -26367,9 +23448,7 @@ impl<'mc> JavaProperties<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn elements(
-        &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn elements(&mut self) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "elements",
@@ -26381,7 +23460,7 @@ impl<'mc> JavaProperties<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
@@ -26389,20 +23468,6 @@ impl<'mc> JavaProperties<'mc> {
         crate::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn put_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "putAll",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn put_if_absent(
         &mut self,
@@ -26456,7 +23521,7 @@ impl<'mc> JavaProperties<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn keys(&mut self) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn keys(&mut self) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "keys",
@@ -26468,7 +23533,7 @@ impl<'mc> JavaProperties<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn key_set(&mut self) -> Result<crate::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
@@ -26512,7 +23577,7 @@ impl<'mc> JavaProperties<'mc> {
     }
     pub fn property_names(
         &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaEnumeration<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "propertyNames",
@@ -26524,12 +23589,9 @@ impl<'mc> JavaProperties<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn string_property_names<S>(
+    pub fn string_property_names(
         &mut self,
-    ) -> Result<crate::JavaSet<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    ) -> Result<crate::JavaSet<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "stringPropertyNames",
@@ -26763,9 +23825,7 @@ impl<'mc> JavaSpliteratorsAbstractLongSpliterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -26776,13 +23836,6 @@ impl<'mc> JavaSpliteratorsAbstractLongSpliterator<'mc> {
         crate::JavaComparator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> Into<crate::JavaSpliteratorOfLong<'mc /* parse_into_impl */>>
-    for JavaSpliteratorsAbstractLongSpliterator<'mc>
-{
-    fn into(self) -> crate::JavaSpliteratorOfLong<'mc /* parse_into_impl */> {
-        crate::JavaSpliteratorOfLong::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaTimerTask<'mc>(
@@ -26954,7 +24007,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn next(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
@@ -27068,9 +24121,7 @@ impl<'mc> JavaSpliteratorOfLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -27097,13 +24148,6 @@ impl<'mc> JNIRaw<'mc> for JavaSpliteratorOfLong<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::JavaSpliteratorOfPrimitive<'mc /* parse_into_impl */>>
-    for JavaSpliteratorOfLong<'mc>
-{
-    fn into(self) -> crate::JavaSpliteratorOfPrimitive<'mc /* parse_into_impl */> {
-        crate::JavaSpliteratorOfPrimitive::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JavaPrimitiveIterator. Needed for returning it from Java.
@@ -27195,38 +24239,6 @@ where
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn comparing_by_key(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Comparator")?;
-        let res = jni.call_static_method(
-            cls,
-            "comparingByKey",
-            "(Ljava/util/Comparator;)Ljava/util/Comparator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaComparator::from_raw(&jni, obj)
-    }
-    pub fn comparing_by_value(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaComparator<'mc, T>>>,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Comparator")?;
-        let res = jni.call_static_method(
-            cls,
-            "comparingByValue",
-            "(Ljava/util/Comparator;)Ljava/util/Comparator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaComparator::from_raw(&jni, obj)
-    }
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -27248,36 +24260,24 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaMapEntry<'mc>>,
-    ) -> Result<crate::JavaMapEntry<'mc, K, V>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/Map$Entry")?;
-        let res = jni.call_static_method(
-            cls,
-            "copyOf",
-            "(Ljava/util/Map$Entry;)Ljava/util/Map$Entry;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaMapEntry::from_raw(&jni, obj)
-    }
-    pub fn value(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getValue", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn key(&mut self) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn set_value(&mut self, arg0: V) -> Result<V, Box<dyn std::error::Error>> {
+    pub fn set_value(
+        &mut self,
+        arg0: V,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -27352,24 +24352,6 @@ impl<'mc> JavaEnumSet<'mc> {
         let mut obj = res.l()?;
         crate::JavaEnumSet::from_raw(&jni, obj)
     }
-    pub fn complement_of<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::JavaEnumSet<'mc>>,
-    ) -> Result<crate::JavaEnumSet<'mc>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/EnumSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "complementOf",
-            "(Ljava/util/EnumSet;)Ljava/util/EnumSet;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaEnumSet::from_raw(&jni, obj)
-    }
     pub fn range<E>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>,
@@ -27404,25 +24386,6 @@ impl<'mc> JavaEnumSet<'mc> {
         crate::JavaEnumSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn copy_of_with_collection<E>(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::JavaEnumSet<'mc>>>,
-    ) -> Result<crate::JavaEnumSet<'mc>, Box<dyn std::error::Error>>
-    where
-        E: JNIRaw<'mc>,
-    {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/util/EnumSet")?;
-        let res = jni.call_static_method(
-            cls,
-            "copyOf",
-            "(Ljava/util/EnumSet;)Ljava/util/EnumSet;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::JavaEnumSet::from_raw(&jni, obj)
     }
     pub fn of_with_enum<E>(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27487,20 +24450,6 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn add(&mut self, arg0: E) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let res = self.jni_ref().call_method(
@@ -27558,7 +24507,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -27579,48 +24528,6 @@ impl<'mc> JavaEnumSet<'mc> {
             &self.jni_object(),
             "contains",
             "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -27668,7 +24575,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -27726,7 +24633,7 @@ where
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-    ) -> Result<crate::JavaArrayDeque<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaArrayDeque<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let cls = &jni.find_class("java/util/ArrayDeque")?;
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
@@ -27743,7 +24650,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn pop(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
@@ -27772,7 +24679,7 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn poll_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pollFirst",
@@ -27782,7 +24689,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn poll_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
@@ -27800,7 +24707,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn remove_first(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeFirst",
@@ -27810,14 +24719,14 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getFirst", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek_first(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "peekFirst",
@@ -27852,7 +24761,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn remove_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn remove_last(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeLast",
@@ -27862,14 +24773,14 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek_last(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peekLast", "()Ljava/lang/Object;", &[]);
@@ -27903,7 +24814,7 @@ where
     }
     pub fn descending_iterator(
         &mut self,
-    ) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "descendingIterator",
@@ -27940,7 +24851,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn clone(&mut self) -> Result<crate::JavaArrayDeque<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn clone(
+        &mut self,
+    ) -> Result<crate::JavaArrayDeque<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "clone",
@@ -27973,7 +24886,9 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn iterator(&mut self) -> Result<crate::JavaIterator<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn iterator(
+        &mut self,
+    ) -> Result<crate::JavaIterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "iterator",
@@ -28001,7 +24916,7 @@ where
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<crate::JavaSpliterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::JavaSpliterator<'mc, /*3*/ E>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -28013,68 +24928,26 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn add_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn poll(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn peek(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn element(&mut self) -> Result<E, Box<dyn std::error::Error>> {
+    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
-    }
-    pub fn remove_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn retain_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -28086,20 +24959,6 @@ where
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn contains_all(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaCollection<'mc, E>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn wait(
         &mut self,
@@ -28252,17 +25111,6 @@ impl<'mc> JavaDate<'mc> {
         )?;
         crate::JavaDate::from_raw(&jni, res)
     }
-    pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTime",
-            "(J)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     #[deprecated]
     pub fn set_date(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -28413,49 +25261,6 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn before(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "before",
-            "(Ljava/util/Date;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn after(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "after",
-            "(Ljava/util/Date;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    #[deprecated]
-    pub fn parse(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("long")?;
-        let res = jni.call_static_method(
-            cls,
-            "parse",
-            "(Ljava/lang/String;)J",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.j().unwrap())
-    }
     pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -28510,6 +25315,60 @@ impl<'mc> JavaDate<'mc> {
             ],
         )?;
         Ok(res.j().unwrap())
+    }
+    pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTime",
+            "(J)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    #[deprecated]
+    pub fn parse(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("long")?;
+        let res = jni.call_static_method(
+            cls,
+            "parse",
+            "(Ljava/lang/String;)J",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(res.j().unwrap())
+    }
+    pub fn before(
+        &mut self,
+        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "before",
+            "(Ljava/util/Date;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn after(
+        &mut self,
+        arg0: impl Into<&'mc crate::JavaDate<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "after",
+            "(Ljava/util/Date;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn equals(
         &mut self,
@@ -28906,38 +25765,6 @@ impl<'mc> JavaLocaleBuilder<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::JavaLocaleBuilder::from_raw(&jni, res)
     }
-    pub fn set_locale(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaLocale<'mc>>,
-    ) -> Result<crate::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLocale",
-            "(Ljava/util/Locale;)Ljava/util/Locale$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn set_language_tag(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLanguageTag",
-            "(Ljava/lang/String;)Ljava/util/Locale$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_language(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -29090,12 +25917,44 @@ impl<'mc> JavaLocaleBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn set_locale(
+        &mut self,
+        arg0: impl Into<&'mc crate::JavaLocale<'mc>>,
+    ) -> Result<crate::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLocale",
+            "(Ljava/util/Locale;)Ljava/util/Locale$Builder;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn build(&mut self) -> Result<crate::JavaLocale<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "build", "()Ljava/util/Locale;", &[]);
         let res = self.jni_ref().translate_error(res)?;
         crate::JavaLocale::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_language_tag(
+        &mut self,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<crate::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLanguageTag",
+            "(Ljava/lang/String;)Ljava/util/Locale$Builder;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -29560,23 +26419,6 @@ impl<'mc> JavaSplittableRandom<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> Into<crate::random::JavaRandomGenerator<'mc /* parse_into_impl */>>
-    for JavaSplittableRandom<'mc>
-{
-    fn into(self) -> crate::random::JavaRandomGenerator<'mc /* parse_into_impl */> {
-        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::random::JavaRandomGeneratorSplittableGenerator<'mc /* parse_into_impl */>>
-    for JavaSplittableRandom<'mc>
-{
-    fn into(
-        self,
-    ) -> crate::random::JavaRandomGeneratorSplittableGenerator<'mc /* parse_into_impl */> {
-        crate::random::JavaRandomGeneratorSplittableGenerator::from_raw(&self.jni_ref(), self.1)
-            .unwrap()
-    }
-}
 pub struct JavaSpliteratorsAbstractDoubleSpliterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -29758,9 +26600,7 @@ impl<'mc> JavaSpliteratorsAbstractDoubleSpliterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn comparator(
-        &mut self,
-    ) -> Result<crate::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn comparator(&mut self) -> Result<crate::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComparator",
@@ -29771,13 +26611,6 @@ impl<'mc> JavaSpliteratorsAbstractDoubleSpliterator<'mc> {
         crate::JavaComparator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> Into<crate::JavaSpliteratorOfDouble<'mc /* parse_into_impl */>>
-    for JavaSpliteratorsAbstractDoubleSpliterator<'mc>
-{
-    fn into(self) -> crate::JavaSpliteratorOfDouble<'mc /* parse_into_impl */> {
-        crate::JavaSpliteratorOfDouble::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub mod logging;
@@ -29930,7 +26763,7 @@ impl<'mc> JavaThrowable<'mc> {
     }
     pub fn set_stack_trace(
         &mut self,
-        arg0: Vec<impl Into<crate::JavaStackTraceElement<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::JavaStackTraceElement<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),

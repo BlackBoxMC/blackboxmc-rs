@@ -42,7 +42,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
     pub fn send_message_with_base_component(
         &mut self,
         arg0: std::option::Option<
-            Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
+            Vec<impl Into<&'mc blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -58,7 +58,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         &mut self,
         arg0: u128,
         arg1: std::option::Option<
-            Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
+            Vec<impl Into<&'mc blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let upper = (arg0.unwrap() >> 64) as u64 as i64;
@@ -205,7 +205,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     pub fn send_message_with_string(
         &mut self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: std::option::Option<Vec<impl Into<&'mc String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -323,7 +323,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -361,13 +361,6 @@ impl<'mc> JNIRaw<'mc> for RemoteConsoleCommandSender<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::command::CommandSender<'mc /* parse_into_impl */>>
-    for RemoteConsoleCommandSender<'mc>
-{
-    fn into(self) -> crate::command::CommandSender<'mc /* parse_into_impl */> {
-        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct SimpleCommandMap<'mc>(
@@ -417,25 +410,6 @@ impl<'mc> SimpleCommandMap<'mc> {
         )?;
         crate::command::SimpleCommandMap::from_raw(&jni, res)
     }
-    pub fn register_all(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "registerAll",
-            "(Ljava/lang/String;Ljava/util/List;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn clear_commands(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -464,7 +438,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 =
@@ -479,7 +453,7 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     pub fn commands(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCommands",
@@ -622,11 +596,6 @@ impl<'mc> SimpleCommandMap<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::command::CommandMap<'mc /* parse_into_impl */>> for SimpleCommandMap<'mc> {
-    fn into(self) -> crate::command::CommandMap<'mc /* parse_into_impl */> {
-        crate::command::CommandMap::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct FormattedCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -665,7 +634,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
-        arg1: Vec<impl Into<String>>,
+        arg1: Vec<impl Into<&'mc String>>,
     ) -> Result<crate::command::FormattedCommandAlias<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/command/FormattedCommandAlias")?;
@@ -680,7 +649,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc String>,
-        arg2: Vec<impl Into<String>>,
+        arg2: Vec<impl Into<&'mc String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -738,6 +707,24 @@ impl<'mc> FormattedCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn tab_complete_with_command_sender(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<&'mc String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        let val_4 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_4)]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -751,24 +738,6 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_4)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn set_description(
         &mut self,
@@ -802,22 +771,6 @@ impl<'mc> FormattedCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_aliases(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
-            "(Ljava/util/List;)Lorg/bukkit/command/Command;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -836,7 +789,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -1065,27 +1018,12 @@ impl<'mc> FormattedCommandAlias<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::command::Command<'mc /* parse_into_impl */>> for FormattedCommandAlias<'mc> {
-    fn into(self) -> crate::command::Command<'mc /* parse_into_impl */> {
-        crate::command::Command::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements TabCompleter. Needed for returning it from Java.
 pub struct TabCompleter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> TabCompleter<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "TabCompleter", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1109,8 +1047,8 @@ impl<'mc> TabCompleter<'mc> {
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc crate::command::Command<'mc>>,
         arg2: impl Into<&'mc String>,
-        arg3: Vec<impl Into<String>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+        arg3: Vec<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
@@ -1136,16 +1074,6 @@ pub struct CommandExecutor<'mc>(
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> CommandExecutor<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "CommandExecutor", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -1171,7 +1099,7 @@ impl<'mc> CommandExecutor<'mc> {
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc crate::command::Command<'mc>>,
         arg2: impl Into<&'mc String>,
-        arg3: Vec<impl Into<String>>,
+        arg3: Vec<impl Into<&'mc String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -1244,7 +1172,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     pub fn send_message_with_string(
         &mut self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: std::option::Option<Vec<impl Into<&'mc String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1362,7 +1290,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -1476,20 +1404,6 @@ impl<'mc> JNIRaw<'mc> for ConsoleCommandSender<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::command::CommandSender<'mc /* parse_into_impl */>>
-    for ConsoleCommandSender<'mc>
-{
-    fn into(self) -> crate::command::CommandSender<'mc /* parse_into_impl */> {
-        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::conversations::Conversable<'mc /* parse_into_impl */>>
-    for ConsoleCommandSender<'mc>
-{
-    fn into(self) -> crate::conversations::Conversable<'mc /* parse_into_impl */> {
-        crate::conversations::Conversable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements PluginIdentifiableCommand. Needed for returning it from Java.
@@ -1615,6 +1529,24 @@ impl<'mc> Command<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn tab_complete_with_command_sender(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<&'mc String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        let val_4 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_4)]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1628,24 +1560,6 @@ impl<'mc> Command<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_4)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn set_description(
         &mut self,
@@ -1679,22 +1593,6 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_aliases(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
-            "(Ljava/util/List;)Lorg/bukkit/command/Command;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1713,7 +1611,7 @@ impl<'mc> Command<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -1870,7 +1768,7 @@ impl<'mc> Command<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc String>,
-        arg2: Vec<impl Into<String>>,
+        arg2: Vec<impl Into<&'mc String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -1999,7 +1897,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
-        arg1: Vec<impl Into<crate::command::Command<'mc>>>,
+        arg1: Vec<impl Into<&'mc crate::command::Command<'mc>>>,
     ) -> Result<crate::command::MultipleCommandAlias<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("org/bukkit/command/MultipleCommandAlias")?;
@@ -2014,7 +1912,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc String>,
-        arg2: Vec<impl Into<String>>,
+        arg2: Vec<impl Into<&'mc String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -2072,6 +1970,24 @@ impl<'mc> MultipleCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn tab_complete_with_command_sender(
+        &mut self,
+        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg1: impl Into<&'mc String>,
+        arg2: std::option::Option<Vec<impl Into<&'mc String>>>,
+        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        let val_4 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_4)]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2085,24 +2001,6 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
-    }
-    pub fn tab_complete_with_command_sender(
-        &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
-        arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"tabComplete","(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/Location;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_4)]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn set_description(
         &mut self,
@@ -2136,22 +2034,6 @@ impl<'mc> MultipleCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_aliases(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
-            "(Ljava/util/List;)Lorg/bukkit/command/Command;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2170,7 +2052,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -2399,11 +2281,6 @@ impl<'mc> MultipleCommandAlias<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::command::Command<'mc /* parse_into_impl */>> for MultipleCommandAlias<'mc> {
-    fn into(self) -> crate::command::Command<'mc /* parse_into_impl */> {
-        crate::command::Command::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct PluginCommandYamlParser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2449,7 +2326,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
     pub fn parse(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("java/util/List")?;
         let res = jni.call_static_method(
@@ -2616,7 +2493,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     pub fn send_message_with_string(
         &mut self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: std::option::Option<Vec<impl Into<&'mc String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2734,7 +2611,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -2774,29 +2651,12 @@ impl<'mc> JNIRaw<'mc> for ProxiedCommandSender<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::command::CommandSender<'mc /* parse_into_impl */>>
-    for ProxiedCommandSender<'mc>
-{
-    fn into(self) -> crate::command::CommandSender<'mc /* parse_into_impl */> {
-        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements TabExecutor. Needed for returning it from Java.
 pub struct TabExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
 impl<'mc> TabExecutor<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "TabExecutor", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -2820,8 +2680,8 @@ impl<'mc> TabExecutor<'mc> {
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc crate::command::Command<'mc>>,
         arg2: impl Into<&'mc String>,
-        arg3: Vec<impl Into<String>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+        arg3: Vec<impl Into<&'mc String>>,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
@@ -2836,7 +2696,7 @@ impl<'mc> TabExecutor<'mc> {
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc crate::command::Command<'mc>>,
         arg2: impl Into<&'mc String>,
-        arg3: Vec<impl Into<String>>,
+        arg3: Vec<impl Into<&'mc String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -2853,16 +2713,6 @@ impl<'mc> JNIRaw<'mc> for TabExecutor<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::command::TabCompleter<'mc /* parse_into_impl */>> for TabExecutor<'mc> {
-    fn into(self) -> crate::command::TabCompleter<'mc /* parse_into_impl */> {
-        crate::command::TabCompleter::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::command::CommandExecutor<'mc /* parse_into_impl */>> for TabExecutor<'mc> {
-    fn into(self) -> crate::command::CommandExecutor<'mc /* parse_into_impl */> {
-        crate::command::CommandExecutor::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements CommandSender. Needed for returning it from Java.
@@ -2917,7 +2767,7 @@ impl<'mc> CommandSender<'mc> {
     }
     pub fn send_message_with_string(
         &mut self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: std::option::Option<Vec<impl Into<&'mc String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3035,7 +2885,7 @@ impl<'mc> CommandSender<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -3075,11 +2925,6 @@ impl<'mc> JNIRaw<'mc> for CommandSender<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::permissions::Permissible<'mc /* parse_into_impl */>> for CommandSender<'mc> {
-    fn into(self) -> crate::permissions::Permissible<'mc /* parse_into_impl */> {
-        crate::permissions::Permissible::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements CommandMap. Needed for returning it from Java.
 pub struct CommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3103,25 +2948,6 @@ impl<'mc> CommandMap<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn register_all(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "registerAll",
-            "(Ljava/lang/String;Ljava/util/List;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn clear_commands(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3151,7 +2977,7 @@ impl<'mc> CommandMap<'mc> {
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<&'mc String>>,
         arg2: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let val_2 =
@@ -3254,9 +3080,9 @@ impl<'mc> PluginCommand<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<Vec<impl Into<String>>>,
+        arg2: std::option::Option<Vec<impl Into<&'mc String>>>,
         arg3: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
@@ -3351,7 +3177,7 @@ impl<'mc> PluginCommand<'mc> {
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
         arg1: impl Into<&'mc String>,
-        arg2: Vec<impl Into<String>>,
+        arg2: Vec<impl Into<&'mc String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -3455,22 +3281,6 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_aliases(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
-            "(Ljava/util/List;)Lorg/bukkit/command/Command;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3489,7 +3299,7 @@ impl<'mc> PluginCommand<'mc> {
     }
     pub fn aliases(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAliases", "()Ljava/util/List;", &[]);
@@ -3707,18 +3517,6 @@ impl<'mc> PluginCommand<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::command::PluginIdentifiableCommand<'mc /* parse_into_impl */>>
-    for PluginCommand<'mc>
-{
-    fn into(self) -> crate::command::PluginIdentifiableCommand<'mc /* parse_into_impl */> {
-        crate::command::PluginIdentifiableCommand::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::command::Command<'mc /* parse_into_impl */>> for PluginCommand<'mc> {
-    fn into(self) -> crate::command::Command<'mc /* parse_into_impl */> {
-        crate::command::Command::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements BlockCommandSender. Needed for returning it from Java.
 pub struct BlockCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3785,7 +3583,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     pub fn send_message_with_string(
         &mut self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: std::option::Option<Vec<impl Into<&'mc String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3903,7 +3701,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     pub fn effective_permissions(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffectivePermissions",
@@ -3941,13 +3739,6 @@ impl<'mc> JNIRaw<'mc> for BlockCommandSender<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::command::CommandSender<'mc /* parse_into_impl */>>
-    for BlockCommandSender<'mc>
-{
-    fn into(self) -> crate::command::CommandSender<'mc /* parse_into_impl */> {
-        crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub mod defaults;

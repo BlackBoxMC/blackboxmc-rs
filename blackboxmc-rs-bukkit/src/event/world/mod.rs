@@ -193,18 +193,6 @@ impl<'mc> WorldUnloadEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for WorldUnloadEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>>
-    for WorldUnloadEvent<'mc>
-{
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct SpawnChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -399,13 +387,6 @@ impl<'mc> SpawnChangeEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>>
-    for SpawnChangeEvent<'mc>
-{
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct ChunkLoadEvent<'mc>(
@@ -606,11 +587,6 @@ impl<'mc> ChunkLoadEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::world::ChunkEvent<'mc /* parse_into_impl */>> for ChunkLoadEvent<'mc> {
-    fn into(self) -> crate::event::world::ChunkEvent<'mc /* parse_into_impl */> {
-        crate::event::world::ChunkEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct PortalCreateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -730,7 +706,7 @@ impl<'mc> PortalCreateEventCreateReason<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -832,26 +808,12 @@ impl<'mc> PortalCreateEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new_with_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-        arg1: impl Into<&'mc crate::World<'mc>>,
-        arg2: std::option::Option<impl Into<&'mc crate::entity::Entity<'mc>>>,
-        arg3: std::option::Option<
-            impl Into<&'mc crate::event::world::PortalCreateEventCreateReason<'mc>>,
-        >,
-    ) -> Result<crate::event::world::PortalCreateEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/world/PortalCreateEvent")?;
-        let res = jni.new_object(cls,
-"(Ljava/util/List;Lorg/bukkit/World;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/world/PortalCreateEvent$CreateReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
-        crate::event::world::PortalCreateEvent::from_raw(&jni, res)
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn reason(
         &mut self,
@@ -867,13 +829,6 @@ impl<'mc> PortalCreateEvent<'mc> {
         crate::event::world::PortalCreateEventCreateReason::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn handlers(
         &mut self,
@@ -901,9 +856,7 @@ impl<'mc> PortalCreateEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn blocks(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn blocks(&mut self) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlocks", "()Ljava/util/List;", &[]);
@@ -1037,18 +990,6 @@ impl<'mc> PortalCreateEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for PortalCreateEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>>
-    for PortalCreateEvent<'mc>
-{
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct WorldInitEvent<'mc>(
@@ -1228,11 +1169,6 @@ impl<'mc> WorldInitEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>> for WorldInitEvent<'mc> {
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct LootGenerateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1266,28 +1202,6 @@ impl<'mc> LootGenerateEvent<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::World<'mc>>,
-        arg1: impl Into<&'mc crate::entity::Entity<'mc>>,
-        arg2: impl Into<&'mc crate::inventory::InventoryHolder<'mc>>,
-        arg3: impl Into<&'mc crate::loot::LootTable<'mc>>,
-        arg4: impl Into<&'mc crate::loot::LootContext<'mc>>,
-        arg5: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-        arg6: bool,
-    ) -> Result<crate::event::world::LootGenerateEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let val_6 = unsafe { jni::objects::JObject::from_raw(arg5.into().jni_object().clone()) };
-        let val_7 = jni::objects::JValueGen::Bool(arg6.into());
-        let cls = &jni.find_class("org/bukkit/event/world/LootGenerateEvent")?;
-        let res = jni.new_object(cls,
-"(Lorg/bukkit/World;Lorg/bukkit/entity/Entity;Lorg/bukkit/inventory/InventoryHolder;Lorg/bukkit/loot/LootTable;Lorg/bukkit/loot/LootContext;Ljava/util/List;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7)])?;
-        crate::event::world::LootGenerateEvent::from_raw(&jni, res)
     }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1388,23 +1302,7 @@ impl<'mc> LootGenerateEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_loot(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaCollection<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLoot",
-            "(Ljava/util/Collection;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn loot(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn loot(&mut self) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLoot", "()Ljava/util/List;", &[]);
@@ -1521,18 +1419,6 @@ impl<'mc> LootGenerateEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for LootGenerateEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>>
-    for LootGenerateEvent<'mc>
-{
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct WorldLoadEvent<'mc>(
@@ -1710,11 +1596,6 @@ impl<'mc> WorldLoadEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>> for WorldLoadEvent<'mc> {
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct AsyncStructureSpawnEvent<'mc>(
@@ -1961,20 +1842,6 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>>
-    for AsyncStructureSpawnEvent<'mc>
-{
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>>
-    for AsyncStructureSpawnEvent<'mc>
-{
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct ChunkPopulateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2159,13 +2026,6 @@ impl<'mc> ChunkPopulateEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::world::ChunkEvent<'mc /* parse_into_impl */>>
-    for ChunkPopulateEvent<'mc>
-{
-    fn into(self) -> crate::event::world::ChunkEvent<'mc /* parse_into_impl */> {
-        crate::event::world::ChunkEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct ChunkUnloadEvent<'mc>(
@@ -2378,13 +2238,6 @@ impl<'mc> ChunkUnloadEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::world::ChunkEvent<'mc /* parse_into_impl */>>
-    for ChunkUnloadEvent<'mc>
-{
-    fn into(self) -> crate::event::world::ChunkEvent<'mc /* parse_into_impl */> {
-        crate::event::world::ChunkEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct EntitiesUnloadEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2419,24 +2272,6 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::Chunk<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::event::world::EntitiesUnloadEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/world/EntitiesUnloadEvent")?;
-        let res = jni.new_object(
-            cls,
-            "(Lorg/bukkit/Chunk;Ljava/util/List;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        crate::event::world::EntitiesUnloadEvent::from_raw(&jni, res)
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2453,7 +2288,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     pub fn entities(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEntities",
@@ -2588,13 +2423,6 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::world::ChunkEvent<'mc /* parse_into_impl */>>
-    for EntitiesUnloadEvent<'mc>
-{
-    fn into(self) -> crate::event::world::ChunkEvent<'mc /* parse_into_impl */> {
-        crate::event::world::ChunkEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct EntitiesLoadEvent<'mc>(
@@ -2631,24 +2459,6 @@ impl<'mc> EntitiesLoadEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::Chunk<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::event::world::EntitiesLoadEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/world/EntitiesLoadEvent")?;
-        let res = jni.new_object(
-            cls,
-            "(Lorg/bukkit/Chunk;Ljava/util/List;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        crate::event::world::EntitiesLoadEvent::from_raw(&jni, res)
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2665,7 +2475,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     pub fn entities(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEntities",
@@ -2800,13 +2610,6 @@ impl<'mc> EntitiesLoadEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::world::ChunkEvent<'mc /* parse_into_impl */>>
-    for EntitiesLoadEvent<'mc>
-{
-    fn into(self) -> crate::event::world::ChunkEvent<'mc /* parse_into_impl */> {
-        crate::event::world::ChunkEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct GenericGameEvent<'mc>(
@@ -3072,18 +2875,6 @@ impl<'mc> GenericGameEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for GenericGameEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>>
-    for GenericGameEvent<'mc>
-{
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct WorldEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3252,11 +3043,6 @@ impl<'mc> WorldEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for WorldEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
-        crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct StructureGrowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3291,24 +3077,6 @@ impl<'mc> StructureGrowEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: impl Into<&'mc crate::TreeType<'mc>>,
-        arg2: bool,
-        arg3: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg4: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::event::world::StructureGrowEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/world/StructureGrowEvent")?;
-        let res = jni.new_object(cls,
-"(Lorg/bukkit/Location;Lorg/bukkit/TreeType;ZLorg/bukkit/entity/Player;Ljava/util/List;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
-        crate::event::world::StructureGrowEvent::from_raw(&jni, res)
-    }
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3342,9 +3110,7 @@ impl<'mc> StructureGrowEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn blocks(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn blocks(&mut self) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlocks", "()Ljava/util/List;", &[]);
@@ -3522,18 +3288,6 @@ impl<'mc> StructureGrowEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for StructureGrowEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>>
-    for StructureGrowEvent<'mc>
-{
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct ChunkEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3692,11 +3446,6 @@ impl<'mc> ChunkEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>> for ChunkEvent<'mc> {
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct TimeSkipEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3816,7 +3565,7 @@ impl<'mc> TimeSkipEventSkipReason<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -4117,16 +3866,6 @@ impl<'mc> TimeSkipEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for TimeSkipEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>> for TimeSkipEvent<'mc> {
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct WorldSaveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4302,10 +4041,5 @@ impl<'mc> WorldSaveEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>> for WorldSaveEvent<'mc> {
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

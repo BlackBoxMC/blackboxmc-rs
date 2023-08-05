@@ -91,7 +91,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     pub fn remaining_criteria(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRemainingCriteria",
@@ -105,7 +105,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     pub fn awarded_criteria(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAwardedCriteria",
@@ -222,20 +222,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -249,6 +235,20 @@ impl<'mc> AdvancementDisplay<'mc> {
             .call_method(&self.jni_object(), "getY", "()F", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
+    }
+    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDescription",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -355,7 +355,7 @@ impl<'mc> Advancement<'mc> {
     }
     pub fn criteria(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCriteria",
@@ -401,10 +401,5 @@ impl<'mc> JNIRaw<'mc> for Advancement<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for Advancement<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

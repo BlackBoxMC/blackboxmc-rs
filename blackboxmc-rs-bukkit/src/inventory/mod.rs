@@ -43,7 +43,7 @@ impl<'mc> CartographyInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -51,6 +51,21 @@ impl<'mc> CartographyInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -67,40 +82,6 @@ impl<'mc> CartographyInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -125,8 +106,8 @@ impl<'mc> CartographyInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -140,7 +121,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -153,7 +134,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -192,7 +173,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -200,6 +181,25 @@ impl<'mc> CartographyInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -240,7 +240,7 @@ impl<'mc> CartographyInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -334,7 +334,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -354,13 +354,6 @@ impl<'mc> JNIRaw<'mc> for CartographyInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>>
-    for CartographyInventory<'mc>
-{
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Recipe. Needed for returning it from Java.
@@ -461,6 +454,20 @@ impl<'mc> StonecuttingRecipe<'mc> {
 "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::inventory::StonecuttingRecipe::from_raw(&jni, res)
     }
+    pub fn result(
+        &mut self,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResult",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn set_input(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -483,20 +490,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInput",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -645,16 +638,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::inventory::Recipe<'mc /* parse_into_impl */>> for StonecuttingRecipe<'mc> {
-    fn into(self) -> crate::inventory::Recipe<'mc /* parse_into_impl */> {
-        crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for StonecuttingRecipe<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct FurnaceRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -781,12 +764,12 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn input(
+    pub fn result(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getInput",
+            "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -795,12 +778,12 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn result(
+    pub fn input(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getResult",
+            "getInput",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -1110,7 +1093,7 @@ impl<'mc> HorseInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1118,6 +1101,21 @@ impl<'mc> HorseInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -1134,40 +1132,6 @@ impl<'mc> HorseInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -1192,8 +1156,8 @@ impl<'mc> HorseInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -1207,7 +1171,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1220,7 +1184,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1259,7 +1223,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -1267,6 +1231,25 @@ impl<'mc> HorseInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -1307,7 +1290,7 @@ impl<'mc> HorseInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1401,7 +1384,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -1421,13 +1404,6 @@ impl<'mc> JNIRaw<'mc> for HorseInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc /* parse_into_impl */>>
-    for HorseInventory<'mc>
-{
-    fn into(self) -> crate::inventory::AbstractHorseInventory<'mc /* parse_into_impl */> {
-        crate::inventory::AbstractHorseInventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements DoubleChestInventory. Needed for returning it from Java.
@@ -1515,7 +1491,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1523,6 +1499,21 @@ impl<'mc> DoubleChestInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -1540,40 +1531,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1583,8 +1540,8 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -1598,7 +1555,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1611,7 +1568,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1650,7 +1607,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -1658,6 +1615,25 @@ impl<'mc> DoubleChestInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -1698,7 +1674,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1792,7 +1768,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -1812,13 +1788,6 @@ impl<'mc> JNIRaw<'mc> for DoubleChestInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>>
-    for DoubleChestInventory<'mc>
-{
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements ComplexRecipe. Needed for returning it from Java.
@@ -1881,16 +1850,6 @@ impl<'mc> JNIRaw<'mc> for ComplexRecipe<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::inventory::Recipe<'mc /* parse_into_impl */>> for ComplexRecipe<'mc> {
-    fn into(self) -> crate::inventory::Recipe<'mc /* parse_into_impl */> {
-        crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for ComplexRecipe<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements BlockInventoryHolder. Needed for returning it from Java.
 pub struct BlockInventoryHolder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1951,13 +1910,6 @@ impl<'mc> JNIRaw<'mc> for BlockInventoryHolder<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::InventoryHolder<'mc /* parse_into_impl */>>
-    for BlockInventoryHolder<'mc>
-{
-    fn into(self) -> crate::inventory::InventoryHolder<'mc /* parse_into_impl */> {
-        crate::inventory::InventoryHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements JukeboxInventory. Needed for returning it from Java.
@@ -2045,7 +1997,7 @@ impl<'mc> JukeboxInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2053,6 +2005,21 @@ impl<'mc> JukeboxInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -2070,40 +2037,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2113,8 +2046,8 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -2128,7 +2061,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2141,7 +2074,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2180,7 +2113,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -2188,6 +2121,25 @@ impl<'mc> JukeboxInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -2228,7 +2180,7 @@ impl<'mc> JukeboxInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2322,7 +2274,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -2342,11 +2294,6 @@ impl<'mc> JNIRaw<'mc> for JukeboxInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for JukeboxInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct SmithingRecipe<'mc>(
@@ -2525,16 +2472,6 @@ impl<'mc> SmithingRecipe<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::inventory::Recipe<'mc /* parse_into_impl */>> for SmithingRecipe<'mc> {
-    fn into(self) -> crate::inventory::Recipe<'mc /* parse_into_impl */> {
-        crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for SmithingRecipe<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct CraftingRecipe<'mc>(
@@ -2735,16 +2672,6 @@ impl<'mc> CraftingRecipe<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::inventory::Recipe<'mc /* parse_into_impl */>> for CraftingRecipe<'mc> {
-    fn into(self) -> crate::inventory::Recipe<'mc /* parse_into_impl */> {
-        crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for CraftingRecipe<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct InventoryView<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2897,7 +2824,7 @@ impl<'mc> InventoryViewProperty<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -3375,11 +3302,24 @@ impl<'mc> CampfireRecipe<'mc> {
 "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;FI)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::inventory::CampfireRecipe::from_raw(&jni, res)
     }
+    pub fn result(
+        &mut self,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResult",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn set_input(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3398,20 +3338,6 @@ impl<'mc> CampfireRecipe<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInput",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -3449,8 +3375,7 @@ impl<'mc> CampfireRecipe<'mc> {
     pub fn set_input_choice(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::RecipeChoice<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3694,6 +3619,20 @@ impl<'mc> ItemStack<'mc> {
         )?;
         crate::inventory::ItemStack::from_raw(&jni, res)
     }
+    pub fn set_type(
+        &mut self,
+        arg0: impl Into<&'mc crate::Material<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setType",
+            "(Lorg/bukkit/Material;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn data(
         &mut self,
     ) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
@@ -3708,39 +3647,23 @@ impl<'mc> ItemStack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    #[deprecated]
-    pub fn set_durability(&mut self, arg0: i16) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Short(arg0.into());
+    pub fn set_data(
+        &mut self,
+        arg0: impl Into<&'mc crate::material::MaterialData<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setDurability",
-            "(S)V",
+            "setData",
+            "(Lorg/bukkit/material/MaterialData;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_amount(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAmount",
-            "(I)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAmount", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
@@ -3748,35 +3671,6 @@ impl<'mc> ItemStack<'mc> {
         blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn deserialize(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/inventory/ItemStack")?;
-        let res = jni.call_static_method(
-            cls,
-            "deserialize",
-            "(Ljava/util/Map;)Lorg/bukkit/inventory/ItemStack;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::inventory::ItemStack::from_raw(&jni, obj)
-    }
-    pub fn set_type(
-        &mut self,
-        arg0: impl Into<&'mc crate::Material<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setType",
-            "(Lorg/bukkit/Material;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn translation_key(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3796,6 +3690,39 @@ impl<'mc> ItemStack<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMaxStackSize", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    pub fn get_enchantment_level(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getEnchantmentLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    #[deprecated]
+    pub fn set_durability(&mut self, arg0: i16) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Short(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDurability",
+            "(S)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAmount", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -3820,33 +3747,16 @@ impl<'mc> ItemStack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_data(
-        &mut self,
-        arg0: impl Into<&'mc crate::material::MaterialData<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+    pub fn set_amount(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setData",
-            "(Lorg/bukkit/material/MaterialData;)V",
+            "setAmount",
+            "(I)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn get_enchantment_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantmentLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
     }
     #[deprecated]
     pub fn durability(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
@@ -3900,7 +3810,7 @@ impl<'mc> ItemStack<'mc> {
     }
     pub fn enchantments(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnchantments",
@@ -3911,20 +3821,6 @@ impl<'mc> ItemStack<'mc> {
         blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn add_enchantments(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addEnchantments",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn add_enchantment(
         &mut self,
@@ -3960,20 +3856,6 @@ impl<'mc> ItemStack<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_unsafe_enchantments(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc, K, V>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addUnsafeEnchantments",
-            "(Ljava/util/Map;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -4102,30 +3984,6 @@ impl<'mc> ItemStack<'mc> {
         Ok(())
     }
 }
-impl<'mc>
-    Into<
-        crate::configuration::serialization::ConfigurationSerializable<
-            'mc, /* parse_into_impl */
-        >,
-    > for ItemStack<'mc>
-{
-    fn into(
-        self,
-    ) -> crate::configuration::serialization::ConfigurationSerializable<
-        'mc, /* parse_into_impl */
-    > {
-        crate::configuration::serialization::ConfigurationSerializable::from_raw(
-            &self.jni_ref(),
-            self.1,
-        )
-        .unwrap()
-    }
-}
-impl<'mc> Into<crate::Translatable<'mc /* parse_into_impl */>> for ItemStack<'mc> {
-    fn into(self) -> crate::Translatable<'mc /* parse_into_impl */> {
-        crate::Translatable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct RecipeChoiceMaterialChoice<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4175,20 +4033,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         )?;
         crate::inventory::RecipeChoiceMaterialChoice::from_raw(&jni, res)
     }
-    pub fn new_with_materials(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::Tag<'mc, INTO<KEYED>>>>,
-    ) -> Result<crate::inventory::RecipeChoiceMaterialChoice<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/inventory/RecipeChoice$MaterialChoice")?;
-        let res = jni.new_object(
-            cls,
-            "(Lorg/bukkit/Tag;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::inventory::RecipeChoiceMaterialChoice::from_raw(&jni, res)
-    }
     pub fn item_stack(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -4205,7 +4049,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     pub fn choices(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getChoices", "()Ljava/util/List;", &[]);
@@ -4507,7 +4351,7 @@ impl<'mc> Inventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -4515,6 +4359,21 @@ impl<'mc> Inventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -4531,40 +4390,6 @@ impl<'mc> Inventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -4589,8 +4414,8 @@ impl<'mc> Inventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -4604,7 +4429,7 @@ impl<'mc> Inventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4617,7 +4442,7 @@ impl<'mc> Inventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4656,7 +4481,7 @@ impl<'mc> Inventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -4664,6 +4489,25 @@ impl<'mc> Inventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -4704,7 +4548,7 @@ impl<'mc> Inventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4798,7 +4642,7 @@ impl<'mc> Inventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -4855,23 +4699,9 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new_with_item_stack(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>>,
-    ) -> Result<crate::inventory::RecipeChoiceExactChoice<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/inventory/RecipeChoice$ExactChoice")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/List;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::inventory::RecipeChoiceExactChoice::from_raw(&jni, res)
-    }
     pub fn new_with_item_stacks(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<Vec<impl Into<crate::inventory::ItemStack<'mc>>>>,
+        arg0: std::option::Option<Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>>,
     ) -> Result<crate::inventory::RecipeChoiceExactChoice<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/inventory/RecipeChoice$ExactChoice")?;
         let res = jni.new_object(cls, "(Lorg/bukkit/inventory/ItemStack;)V", &[])?;
@@ -4893,7 +4723,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     pub fn choices(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getChoices", "()Ljava/util/List;", &[]);
@@ -5056,7 +4886,7 @@ impl<'mc> LecternInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5064,6 +4894,21 @@ impl<'mc> LecternInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -5081,40 +4926,6 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5124,8 +4935,8 @@ impl<'mc> LecternInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -5139,7 +4950,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5152,7 +4963,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5191,7 +5002,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -5199,6 +5010,25 @@ impl<'mc> LecternInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -5239,7 +5069,7 @@ impl<'mc> LecternInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5333,7 +5163,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -5353,11 +5183,6 @@ impl<'mc> JNIRaw<'mc> for LecternInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for LecternInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements LoomInventory. Needed for returning it from Java.
@@ -5403,7 +5228,7 @@ impl<'mc> LoomInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5411,6 +5236,21 @@ impl<'mc> LoomInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -5427,40 +5267,6 @@ impl<'mc> LoomInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -5485,8 +5291,8 @@ impl<'mc> LoomInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -5500,7 +5306,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5513,7 +5319,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5552,7 +5358,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -5560,6 +5366,25 @@ impl<'mc> LoomInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -5600,7 +5425,7 @@ impl<'mc> LoomInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5694,7 +5519,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -5714,11 +5539,6 @@ impl<'mc> JNIRaw<'mc> for LoomInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for LoomInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BrewerInventory. Needed for returning it from Java.
@@ -5834,7 +5654,7 @@ impl<'mc> BrewerInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -5842,6 +5662,21 @@ impl<'mc> BrewerInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -5859,40 +5694,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5902,8 +5703,8 @@ impl<'mc> BrewerInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -5917,7 +5718,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5930,7 +5731,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5969,7 +5770,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -5977,6 +5778,25 @@ impl<'mc> BrewerInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -6017,7 +5837,7 @@ impl<'mc> BrewerInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6111,7 +5931,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -6131,11 +5951,6 @@ impl<'mc> JNIRaw<'mc> for BrewerInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for BrewerInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct ShapedRecipe<'mc>(
@@ -6192,11 +6007,11 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     pub fn shape(
         &mut self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: std::option::Option<Vec<impl Into<&'mc String>>>,
     ) -> Result<crate::inventory::ShapedRecipe<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "shape",
+            "getShape",
             "(Ljava/lang/String;)Lorg/bukkit/inventory/ShapedRecipe;",
             &[],
         );
@@ -6233,7 +6048,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     pub fn ingredient_map(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIngredientMap",
@@ -6247,7 +6062,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     pub fn choice_map(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getChoiceMap",
@@ -6421,11 +6236,6 @@ impl<'mc> ShapedRecipe<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::inventory::CraftingRecipe<'mc /* parse_into_impl */>> for ShapedRecipe<'mc> {
-    fn into(self) -> crate::inventory::CraftingRecipe<'mc /* parse_into_impl */> {
-        crate::inventory::CraftingRecipe::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct SmithingTransformRecipe<'mc>(
@@ -6622,13 +6432,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::inventory::SmithingRecipe<'mc /* parse_into_impl */>>
-    for SmithingTransformRecipe<'mc>
-{
-    fn into(self) -> crate::inventory::SmithingRecipe<'mc /* parse_into_impl */> {
-        crate::inventory::SmithingRecipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub enum EquipmentSlotEnum {
     Hand,
     OffHand,
@@ -6733,7 +6536,7 @@ impl<'mc> Merchant<'mc> {
     }
     pub fn recipes(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getRecipes", "()Ljava/util/List;", &[]);
@@ -6741,20 +6544,6 @@ impl<'mc> Merchant<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    pub fn set_recipes(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setRecipes",
-            "(Ljava/util/List;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn get_recipe(
         &mut self,
@@ -6853,21 +6642,6 @@ impl<'mc> ItemFactory<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn as_meta_for_with_item_meta(
-        &mut self,
-        arg0: impl Into<&'mc crate::inventory::meta::ItemMeta<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"asMetaFor","(Lorg/bukkit/inventory/meta/ItemMeta;Lorg/bukkit/inventory/ItemStack;)Lorg/bukkit/inventory/meta/ItemMeta;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn get_item_meta(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -6879,6 +6653,21 @@ impl<'mc> ItemFactory<'mc> {
             "(Lorg/bukkit/Material;)Lorg/bukkit/inventory/meta/ItemMeta;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn as_meta_for_with_item_meta(
+        &mut self,
+        arg0: impl Into<&'mc crate::inventory::meta::ItemMeta<'mc>>,
+        arg1: std::option::Option<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(&self.jni_object(),"asMetaFor","(Lorg/bukkit/inventory/meta/ItemMeta;Lorg/bukkit/inventory/ItemStack;)Lorg/bukkit/inventory/meta/ItemMeta;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -7066,6 +6855,18 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn holder(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHolder",
+            "()Lorg/bukkit/entity/Entity;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn set_item_with_equipment_slot(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::EquipmentSlot<'mc>>,
@@ -7089,18 +6890,6 @@ impl<'mc> EntityEquipment<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn holder(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getHolder",
-            "()Lorg/bukkit/entity/Entity;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     #[deprecated]
     pub fn item_in_hand(
@@ -7338,7 +7127,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     pub fn set_armor_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7575,7 +7364,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -7583,6 +7372,21 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -7600,40 +7404,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7643,8 +7413,8 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -7658,7 +7428,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7671,7 +7441,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7710,7 +7480,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -7718,6 +7488,25 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -7758,7 +7547,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7852,7 +7641,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -7872,13 +7661,6 @@ impl<'mc> JNIRaw<'mc> for ChiseledBookshelfInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>>
-    for ChiseledBookshelfInventory<'mc>
-{
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct ShapelessRecipe<'mc>(
@@ -8068,7 +7850,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     pub fn ingredient_list(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIngredientList",
@@ -8082,7 +7864,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     pub fn choice_list(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getChoiceList",
@@ -8258,13 +8040,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::inventory::CraftingRecipe<'mc /* parse_into_impl */>>
-    for ShapelessRecipe<'mc>
-{
-    fn into(self) -> crate::inventory::CraftingRecipe<'mc /* parse_into_impl */> {
-        crate::inventory::CraftingRecipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements AnvilInventory. Needed for returning it from Java.
 pub struct AnvilInventory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8378,7 +8153,7 @@ impl<'mc> AnvilInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8386,6 +8161,21 @@ impl<'mc> AnvilInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -8402,40 +8192,6 @@ impl<'mc> AnvilInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -8460,8 +8216,8 @@ impl<'mc> AnvilInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -8475,7 +8231,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8488,7 +8244,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8527,7 +8283,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -8535,6 +8291,25 @@ impl<'mc> AnvilInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -8575,7 +8350,7 @@ impl<'mc> AnvilInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8669,7 +8444,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -8689,11 +8464,6 @@ impl<'mc> JNIRaw<'mc> for AnvilInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for AnvilInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements RecipeChoice. Needed for returning it from Java.
@@ -8917,7 +8687,7 @@ impl<'mc> EnchantingInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -8925,6 +8695,21 @@ impl<'mc> EnchantingInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -8941,21 +8726,6 @@ impl<'mc> EnchantingInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -8980,8 +8750,8 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -8995,7 +8765,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9008,7 +8778,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9047,7 +8817,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -9095,7 +8865,7 @@ impl<'mc> EnchantingInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9189,7 +8959,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -9209,13 +8979,6 @@ impl<'mc> JNIRaw<'mc> for EnchantingInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>>
-    for EnchantingInventory<'mc>
-{
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct BlastingRecipe<'mc>(
@@ -9270,11 +9033,24 @@ impl<'mc> BlastingRecipe<'mc> {
 "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;FI)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::inventory::BlastingRecipe::from_raw(&jni, res)
     }
+    pub fn result(
+        &mut self,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResult",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn set_input(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9293,20 +9069,6 @@ impl<'mc> BlastingRecipe<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInput",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -9344,8 +9106,7 @@ impl<'mc> BlastingRecipe<'mc> {
     pub fn set_input_choice(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::RecipeChoice<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9582,11 +9343,24 @@ impl<'mc> SmokingRecipe<'mc> {
 "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;FI)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::inventory::SmokingRecipe::from_raw(&jni, res)
     }
+    pub fn result(
+        &mut self,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResult",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn set_input(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9605,20 +9379,6 @@ impl<'mc> SmokingRecipe<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInput",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResult",
             "()Lorg/bukkit/inventory/ItemStack;",
             &[],
         );
@@ -9656,8 +9416,7 @@ impl<'mc> SmokingRecipe<'mc> {
     pub fn set_input_choice(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::RecipeChoice<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9912,7 +9671,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     pub fn set_matrix(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9942,7 +9701,7 @@ impl<'mc> CraftingInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -9950,6 +9709,21 @@ impl<'mc> CraftingInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -9966,40 +9740,6 @@ impl<'mc> CraftingInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -10024,8 +9764,8 @@ impl<'mc> CraftingInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -10039,7 +9779,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10052,7 +9792,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10091,7 +9831,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -10099,6 +9839,25 @@ impl<'mc> CraftingInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -10139,7 +9898,7 @@ impl<'mc> CraftingInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10233,7 +9992,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -10253,11 +10012,6 @@ impl<'mc> JNIRaw<'mc> for CraftingInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for CraftingInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct MerchantRecipe<'mc>(
@@ -10384,23 +10138,9 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_ingredients(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setIngredients",
-            "(Ljava/util/List;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn ingredients(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIngredients",
@@ -10625,11 +10365,6 @@ impl<'mc> MerchantRecipe<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::inventory::Recipe<'mc /* parse_into_impl */>> for MerchantRecipe<'mc> {
-    fn into(self) -> crate::inventory::Recipe<'mc /* parse_into_impl */> {
-        crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements MerchantInventory. Needed for returning it from Java.
 pub struct MerchantInventory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10710,7 +10445,7 @@ impl<'mc> MerchantInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -10718,6 +10453,21 @@ impl<'mc> MerchantInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -10734,40 +10484,6 @@ impl<'mc> MerchantInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -10792,8 +10508,8 @@ impl<'mc> MerchantInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -10807,7 +10523,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10820,7 +10536,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10859,7 +10575,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -10867,6 +10583,25 @@ impl<'mc> MerchantInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -10907,7 +10642,7 @@ impl<'mc> MerchantInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11001,7 +10736,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -11021,11 +10756,6 @@ impl<'mc> JNIRaw<'mc> for MerchantInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for MerchantInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements LlamaInventory. Needed for returning it from Java.
@@ -11129,7 +10859,7 @@ impl<'mc> LlamaInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -11137,6 +10867,21 @@ impl<'mc> LlamaInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -11153,40 +10898,6 @@ impl<'mc> LlamaInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -11211,8 +10922,8 @@ impl<'mc> LlamaInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -11226,7 +10937,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11239,7 +10950,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11278,7 +10989,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -11286,6 +10997,25 @@ impl<'mc> LlamaInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -11326,7 +11056,7 @@ impl<'mc> LlamaInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11420,7 +11150,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -11440,13 +11170,6 @@ impl<'mc> JNIRaw<'mc> for LlamaInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::AbstractHorseInventory<'mc /* parse_into_impl */>>
-    for LlamaInventory<'mc>
-{
-    fn into(self) -> crate::inventory::AbstractHorseInventory<'mc /* parse_into_impl */> {
-        crate::inventory::AbstractHorseInventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements GrindstoneInventory. Needed for returning it from Java.
@@ -11494,7 +11217,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -11502,6 +11225,21 @@ impl<'mc> GrindstoneInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -11518,40 +11256,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -11576,8 +11280,8 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -11591,7 +11295,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11604,7 +11308,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11643,7 +11347,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -11651,6 +11355,25 @@ impl<'mc> GrindstoneInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -11691,7 +11414,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11785,7 +11508,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -11805,13 +11528,6 @@ impl<'mc> JNIRaw<'mc> for GrindstoneInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>>
-    for GrindstoneInventory<'mc>
-{
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct CookingRecipe<'mc, T>(
@@ -11861,8 +11577,7 @@ where
         arg2: impl Into<&'mc crate::inventory::RecipeChoice<'mc>>,
         arg3: f32,
         arg4: std::option::Option<i32>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
@@ -11873,11 +11588,24 @@ where
 "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;FI)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::inventory::CookingRecipe::from_raw(&jni, res)
     }
+    pub fn result(
+        &mut self,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResult",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn set_input(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11892,7 +11620,7 @@ where
     }
     pub fn input(
         &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInput",
@@ -11904,23 +11632,9 @@ where
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc, T>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResult",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn category(
         &mut self,
-    ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc, T>, Box<dyn std::error::Error>>
+    ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11947,8 +11661,7 @@ where
     pub fn set_input_choice(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::RecipeChoice<'mc>>,
-    ) -> Result<crate::inventory::CookingRecipe<'mc, INTO<COOKINGRECIPE>>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<crate::inventory::CookingRecipe<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11963,7 +11676,7 @@ where
     }
     pub fn input_choice(
         &mut self,
-    ) -> Result<crate::inventory::RecipeChoice<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInputChoice",
@@ -12050,7 +11763,7 @@ where
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc, T>, Box<dyn std::error::Error>> {
+    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getKey",
@@ -12180,7 +11893,7 @@ impl<'mc> StonecutterInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -12188,6 +11901,21 @@ impl<'mc> StonecutterInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -12204,40 +11932,6 @@ impl<'mc> StonecutterInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -12262,8 +11956,8 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -12277,7 +11971,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12290,7 +11984,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12329,7 +12023,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -12337,6 +12031,25 @@ impl<'mc> StonecutterInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -12377,7 +12090,7 @@ impl<'mc> StonecutterInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12471,7 +12184,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -12491,13 +12204,6 @@ impl<'mc> JNIRaw<'mc> for StonecutterInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>>
-    for StonecutterInventory<'mc>
-{
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub enum CreativeCategoryEnum {
@@ -12677,7 +12383,7 @@ impl<'mc> SmithingInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -12685,6 +12391,21 @@ impl<'mc> SmithingInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -12701,40 +12422,6 @@ impl<'mc> SmithingInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -12759,8 +12446,8 @@ impl<'mc> SmithingInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -12774,7 +12461,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12787,7 +12474,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12826,7 +12513,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -12834,6 +12521,25 @@ impl<'mc> SmithingInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -12874,7 +12580,7 @@ impl<'mc> SmithingInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12968,7 +12674,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -12988,11 +12694,6 @@ impl<'mc> JNIRaw<'mc> for SmithingInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for SmithingInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements PlayerInventory. Needed for returning it from Java.
@@ -13037,6 +12738,20 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn holder(
+        &mut self,
+    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHolder",
+            "()Lorg/bukkit/entity/HumanEntity;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::entity::HumanEntity::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn set_item_with_equipment_slot(
         &mut self,
         arg0: i32,
@@ -13056,20 +12771,6 @@ impl<'mc> PlayerInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn holder(
-        &mut self,
-    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getHolder",
-            "()Lorg/bukkit/entity/HumanEntity;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::HumanEntity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     #[deprecated]
     pub fn item_in_hand(
@@ -13271,7 +12972,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     pub fn set_armor_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13284,7 +12985,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     pub fn set_extra_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13316,7 +13017,7 @@ impl<'mc> PlayerInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -13324,6 +13025,21 @@ impl<'mc> PlayerInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -13341,21 +13057,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13365,8 +13066,8 @@ impl<'mc> PlayerInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -13380,7 +13081,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13393,7 +13094,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13432,7 +13133,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -13480,7 +13181,7 @@ impl<'mc> PlayerInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13574,7 +13275,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -13594,11 +13295,6 @@ impl<'mc> JNIRaw<'mc> for PlayerInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for PlayerInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements FurnaceInventory. Needed for returning it from Java.
@@ -13742,7 +13438,7 @@ impl<'mc> FurnaceInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -13750,6 +13446,21 @@ impl<'mc> FurnaceInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -13767,40 +13478,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13810,8 +13487,8 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -13825,7 +13502,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13838,7 +13515,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13877,7 +13554,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -13885,6 +13562,25 @@ impl<'mc> FurnaceInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -13925,7 +13621,7 @@ impl<'mc> FurnaceInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14019,7 +13715,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -14039,11 +13735,6 @@ impl<'mc> JNIRaw<'mc> for FurnaceInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for FurnaceInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements AbstractHorseInventory. Needed for returning it from Java.
@@ -14120,7 +13811,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -14128,6 +13819,21 @@ impl<'mc> AbstractHorseInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -14144,40 +13850,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn set_item(
-        &mut self,
-        arg0: i32,
-        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItem",
-            "(ILorg/bukkit/inventory/ItemStack;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -14202,8 +13874,8 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -14217,7 +13889,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14230,7 +13902,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14269,7 +13941,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -14277,6 +13949,25 @@ impl<'mc> AbstractHorseInventory<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn set_item(
+        &mut self,
+        arg0: i32,
+        arg1: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setItem",
+            "(ILorg/bukkit/inventory/ItemStack;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn remove_with_item_stack(
         &mut self,
@@ -14317,7 +14008,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14411,7 +14102,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -14431,13 +14122,6 @@ impl<'mc> JNIRaw<'mc> for AbstractHorseInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>>
-    for AbstractHorseInventory<'mc>
-{
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements BeaconInventory. Needed for returning it from Java.
@@ -14505,7 +14189,7 @@ impl<'mc> BeaconInventory<'mc> {
     pub fn all_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -14513,6 +14197,21 @@ impl<'mc> BeaconInventory<'mc> {
             "all",
             "(Lorg/bukkit/Material;)Ljava/util/HashMap;",
             &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn add_item(
+        &mut self,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addItem",
+            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
@@ -14529,21 +14228,6 @@ impl<'mc> BeaconInventory<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn add_item(
-        &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addItem",
-            "(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaHashMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn holder(
         &mut self,
@@ -14568,8 +14252,8 @@ impl<'mc> BeaconInventory<'mc> {
     }
     pub fn remove_item(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaHashMap<'mc, K, V>, Box<dyn std::error::Error>> {
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeItem",
@@ -14583,7 +14267,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     pub fn set_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14596,7 +14280,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     pub fn set_storage_contents(
         &mut self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg0: Vec<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14635,7 +14319,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     pub fn viewers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getViewers", "()Ljava/util/List;", &[]);
@@ -14683,7 +14367,7 @@ impl<'mc> BeaconInventory<'mc> {
     pub fn iterator(
         &mut self,
         arg0: std::option::Option<i32>,
-    ) -> Result<blackboxmc_java::JavaListIterator<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14777,7 +14461,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     pub fn spliterator(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSpliterator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSpliterator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "spliterator",
@@ -14797,11 +14481,6 @@ impl<'mc> JNIRaw<'mc> for BeaconInventory<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::inventory::Inventory<'mc /* parse_into_impl */>> for BeaconInventory<'mc> {
-    fn into(self) -> crate::inventory::Inventory<'mc /* parse_into_impl */> {
-        crate::inventory::Inventory::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct SmithingTrimRecipe<'mc>(
@@ -14993,20 +14672,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::inventory::ComplexRecipe<'mc /* parse_into_impl */>>
-    for SmithingTrimRecipe<'mc>
-{
-    fn into(self) -> crate::inventory::ComplexRecipe<'mc /* parse_into_impl */> {
-        crate::inventory::ComplexRecipe::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::inventory::SmithingRecipe<'mc /* parse_into_impl */>>
-    for SmithingTrimRecipe<'mc>
-{
-    fn into(self) -> crate::inventory::SmithingRecipe<'mc /* parse_into_impl */> {
-        crate::inventory::SmithingRecipe::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub mod meta;

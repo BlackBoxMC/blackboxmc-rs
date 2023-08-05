@@ -130,7 +130,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     }
     pub fn reversed(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "reversed",
@@ -293,7 +293,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     pub fn reversed(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaComparator<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "reversed",
@@ -340,7 +340,7 @@ where
     pub fn create_topic(
         &mut self,
         arg0: impl Into<&'mc crate::command::Command<'mc>>,
-    ) -> Result<crate::help::HelpTopic<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -380,16 +380,6 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopic<'mc> {
     }
 }
 impl<'mc> HelpTopic<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "HelpTopic", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -620,7 +610,7 @@ impl<'mc> HelpMap<'mc> {
     }
     pub fn help_topics(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getHelpTopics",
@@ -646,28 +636,9 @@ impl<'mc> HelpMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn register_help_topic_factory(
-        &mut self,
-        arg0: jni::objects::JClass<'mc>,
-        arg1: impl Into<&'mc crate::help::HelpTopicFactory<'mc, INTO<COMMAND>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "registerHelpTopicFactory",
-            "(Ljava/lang/Class;Lorg/bukkit/help/HelpTopicFactory;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn ignored_plugins(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIgnoredPlugins",
@@ -729,25 +700,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn new_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc String>,
-        arg3: std::option::Option<impl Into<&'mc blackboxmc_java::JavaCollection<'mc, E>>>,
-        arg4: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<crate::help::IndexHelpTopic<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
-        let val_3 = jni::objects::JObject::from(jni.new_string(arg2.unwrap().into()).unwrap());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let val_5 = jni::objects::JObject::from(jni.new_string(arg4.unwrap().into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/help/IndexHelpTopic")?;
-        let res = jni.new_object(cls,
-"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Collection;Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
-        crate::help::IndexHelpTopic::from_raw(&jni, res)
     }
     pub fn can_see(
         &mut self,
@@ -910,11 +862,6 @@ impl<'mc> IndexHelpTopic<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::help::HelpTopic<'mc /* parse_into_impl */>> for IndexHelpTopic<'mc> {
-    fn into(self) -> crate::help::HelpTopic<'mc /* parse_into_impl */> {
-        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct GenericCommandHelpTopic<'mc>(
@@ -1126,10 +1073,5 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::help::HelpTopic<'mc /* parse_into_impl */>> for GenericCommandHelpTopic<'mc> {
-    fn into(self) -> crate::help::HelpTopic<'mc /* parse_into_impl */> {
-        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

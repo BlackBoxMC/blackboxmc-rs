@@ -268,9 +268,34 @@ impl<'mc> Pattern<'mc> {
         )?;
         crate::block::banner::Pattern::from_raw(&jni, res)
     }
+    pub fn pattern(
+        &mut self,
+    ) -> Result<crate::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPattern",
+            "()Lorg/bukkit/block/banner/PatternType;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::block::banner::PatternType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::block::banner::PatternType::from_string(variant_str).unwrap(),
+        )
+    }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
@@ -300,31 +325,6 @@ impl<'mc> Pattern<'mc> {
             &self.jni_ref(),
             raw_obj,
             crate::DyeColor::from_string(variant_str).unwrap(),
-        )
-    }
-    pub fn pattern(
-        &mut self,
-    ) -> Result<crate::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPattern",
-            "()Lorg/bukkit/block/banner/PatternType;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::banner::PatternType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::banner::PatternType::from_string(variant_str).unwrap(),
         )
     }
     pub fn equals(
@@ -398,24 +398,5 @@ impl<'mc> Pattern<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc>
-    Into<
-        crate::configuration::serialization::ConfigurationSerializable<
-            'mc, /* parse_into_impl */
-        >,
-    > for Pattern<'mc>
-{
-    fn into(
-        self,
-    ) -> crate::configuration::serialization::ConfigurationSerializable<
-        'mc, /* parse_into_impl */
-    > {
-        crate::configuration::serialization::ConfigurationSerializable::from_raw(
-            &self.jni_ref(),
-            self.1,
-        )
-        .unwrap()
     }
 }

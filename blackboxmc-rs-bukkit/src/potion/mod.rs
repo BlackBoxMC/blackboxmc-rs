@@ -262,13 +262,6 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::potion::PotionEffectType<'mc /* parse_into_impl */>>
-    for PotionEffectTypeWrapper<'mc>
-{
-    fn into(self) -> crate::potion::PotionEffectType<'mc /* parse_into_impl */> {
-        crate::potion::PotionEffectType::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct PotionData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -493,6 +486,20 @@ impl<'mc> Potion<'mc> {
         )?;
         crate::potion::Potion::from_raw(&jni, res)
     }
+    pub fn set_type(
+        &mut self,
+        arg0: impl Into<&'mc crate::potion::PotionType<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setType",
+            "(Lorg/bukkit/potion/PotionType;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -511,23 +518,9 @@ impl<'mc> Potion<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn set_type(
-        &mut self,
-        arg0: impl Into<&'mc crate::potion::PotionType<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setType",
-            "(Lorg/bukkit/potion/PotionType;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn effects(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffects",
@@ -893,7 +886,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     pub fn serialize(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
@@ -1062,25 +1055,6 @@ impl<'mc> PotionEffect<'mc> {
         Ok(())
     }
 }
-impl<'mc>
-    Into<
-        crate::configuration::serialization::ConfigurationSerializable<
-            'mc, /* parse_into_impl */
-        >,
-    > for PotionEffect<'mc>
-{
-    fn into(
-        self,
-    ) -> crate::configuration::serialization::ConfigurationSerializable<
-        'mc, /* parse_into_impl */
-    > {
-        crate::configuration::serialization::ConfigurationSerializable::from_raw(
-            &self.jni_ref(),
-            self.1,
-        )
-        .unwrap()
-    }
-}
 pub struct PotionEffectType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1129,15 +1103,6 @@ impl<'mc> PotionEffectType<'mc> {
         )?;
         Ok(())
     }
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getColor", "()Lorg/bukkit/Color;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Color::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -1152,6 +1117,15 @@ impl<'mc> PotionEffectType<'mc> {
         )?;
         let mut obj = res.l()?;
         crate::potion::PotionEffectType::from_raw(&jni, obj)
+    }
+    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getColor", "()Lorg/bukkit/Color;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Color::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn create_effect(
         &mut self,
@@ -1331,11 +1305,6 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for PotionEffectType<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements PotionBrewer. Needed for returning it from Java.
 pub struct PotionBrewer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1365,7 +1334,7 @@ impl<'mc> PotionBrewer<'mc> {
         arg0: impl Into<&'mc crate::potion::PotionType<'mc>>,
         arg1: bool,
         arg2: bool,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
@@ -1412,7 +1381,7 @@ impl<'mc> PotionBrewer<'mc> {
     pub fn get_effects_from_damage(
         &mut self,
         arg0: i32,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

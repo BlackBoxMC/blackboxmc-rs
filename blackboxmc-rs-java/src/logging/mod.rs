@@ -320,11 +320,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::logging::JavaFormatter<'mc /* parse_into_impl */>> for JavaXMLFormatter<'mc> {
-    fn into(self) -> crate::logging::JavaFormatter<'mc /* parse_into_impl */> {
-        crate::logging::JavaFormatter::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -357,6 +352,24 @@ impl<'mc> JavaFormatter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    pub fn format_message(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "formatMessage",
+            "(Ljava/util/logging/LogRecord;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn get_head(
         &mut self,
         arg0: impl Into<&'mc crate::logging::JavaHandler<'mc>>,
@@ -384,24 +397,6 @@ impl<'mc> JavaFormatter<'mc> {
             &self.jni_object(),
             "getTail",
             "(Ljava/util/logging/Handler;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn format_message(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "formatMessage",
-            "(Ljava/util/logging/LogRecord;)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -575,20 +570,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn is_loggable(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/LogRecord;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_encoding(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -602,6 +583,20 @@ impl<'mc> JavaSocketHandler<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn is_loggable(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/LogRecord;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -807,13 +802,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::logging::JavaStreamHandler<'mc /* parse_into_impl */>>
-    for JavaSocketHandler<'mc>
-{
-    fn into(self) -> crate::logging::JavaStreamHandler<'mc /* parse_into_impl */> {
-        crate::logging::JavaStreamHandler::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaSimpleFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -873,6 +861,24 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    pub fn format_message(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "formatMessage",
+            "(Ljava/util/logging/LogRecord;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn get_head(
         &mut self,
         arg0: impl Into<&'mc crate::logging::JavaHandler<'mc>>,
@@ -900,24 +906,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             &self.jni_object(),
             "getTail",
             "(Ljava/util/logging/Handler;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn format_message(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "formatMessage",
-            "(Ljava/util/logging/LogRecord;)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -1000,13 +988,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::logging::JavaFormatter<'mc /* parse_into_impl */>>
-    for JavaSimpleFormatter<'mc>
-{
-    fn into(self) -> crate::logging::JavaFormatter<'mc /* parse_into_impl */> {
-        crate::logging::JavaFormatter::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1038,20 +1019,6 @@ impl<'mc> JavaHandler<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn is_loggable(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/LogRecord;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn filter(
         &mut self,
@@ -1204,6 +1171,20 @@ impl<'mc> JavaHandler<'mc> {
         crate::logging::JavaLevel::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn is_loggable(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/LogRecord;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1349,20 +1330,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         )?;
         crate::logging::JavaMemoryHandler::from_raw(&jni, res)
     }
-    pub fn is_loggable(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/LogRecord;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn push(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1411,6 +1378,20 @@ impl<'mc> JavaMemoryHandler<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn is_loggable(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/LogRecord;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1637,11 +1618,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::logging::JavaHandler<'mc /* parse_into_impl */>> for JavaMemoryHandler<'mc> {
-    fn into(self) -> crate::logging::JavaHandler<'mc /* parse_into_impl */> {
-        crate::logging::JavaHandler::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaLogger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1674,35 +1650,6 @@ impl<'mc> JavaLogger<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn warning_with_supplier(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "warning",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn is_loggable(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLevel<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/Level;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn filter(
         &mut self,
     ) -> Result<crate::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
@@ -1717,129 +1664,30 @@ impl<'mc> JavaLogger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn resource_bundle(
+    pub fn config_with_supplier(
         &mut self,
-    ) -> Result<crate::JavaResourceBundle<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResourceBundle",
-            "()Ljava/util/ResourceBundle;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::JavaResourceBundle::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn set_resource_bundle(
-        &mut self,
-        arg0: impl Into<&'mc crate::JavaResourceBundle<'mc>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setResourceBundle",
-            "(Ljava/util/ResourceBundle;)V",
+            "config",
+            "(Ljava/lang/String;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResourceBundleName",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn set_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLevel<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(Ljava/util/logging/Level;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn set_filter(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaFilter<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFilter",
-            "(Ljava/util/logging/Filter;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn add_handler(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaHandler<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addHandler",
-            "(Ljava/util/logging/Handler;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn remove_handler(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaHandler<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeHandler",
-            "(Ljava/util/logging/Handler;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn set_use_parent_handlers(
-        &mut self,
-        arg0: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setUseParentHandlers",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn get_anonymous_logger(
+    pub fn anonymous_logger(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
     ) -> Result<crate::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
         let cls = &jni.find_class("java/util/logging/Logger")?;
         let res = jni.call_static_method(
             cls,
             "getAnonymousLogger",
-            "(Ljava/lang/String;)Ljava/util/logging/Logger;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            "()Ljava/util/logging/Logger;",
+            &[],
         )?;
         let mut obj = res.l()?;
         crate::logging::JavaLogger::from_raw(&jni, obj)
@@ -1857,15 +1705,14 @@ impl<'mc> JavaLogger<'mc> {
         arg1: impl Into<&'mc String>,
         arg2: impl Into<&'mc String>,
         arg3: impl Into<&'mc String>,
-        arg4: std::option::Option<jni::objects::JObject<'mc>>,
+        arg4: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
         let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
         let val_4 =
             jni::objects::JObject::from(self.jni_ref().new_string(arg3.unwrap().into()).unwrap());
-        let val_5 = arg4.unwrap();
-        let res = self.jni_ref().call_method(&self.jni_object(),"logp","(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = self.jni_ref().call_method(&self.jni_object(),"logp","(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1996,16 +1843,113 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn finest_with_supplier(
+    pub fn resource_bundle(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+    ) -> Result<crate::JavaResourceBundle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "finest",
-            "(Ljava/lang/String;)V",
+            "getResourceBundle",
+            "()Ljava/util/ResourceBundle;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::JavaResourceBundle::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn set_resource_bundle(
+        &mut self,
+        arg0: impl Into<&'mc crate::JavaResourceBundle<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setResourceBundle",
+            "(Ljava/util/ResourceBundle;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResourceBundleName",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn set_level(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLevel<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(Ljava/util/logging/Level;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_filter(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaFilter<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFilter",
+            "(Ljava/util/logging/Filter;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn add_handler(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaHandler<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addHandler",
+            "(Ljava/util/logging/Handler;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn remove_handler(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaHandler<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeHandler",
+            "(Ljava/util/logging/Handler;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_use_parent_handlers(
+        &mut self,
+        arg0: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setUseParentHandlers",
+            "(Z)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
@@ -2023,6 +1967,20 @@ impl<'mc> JavaLogger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn is_loggable(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLevel<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/Level;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2034,25 +1992,17 @@ impl<'mc> JavaLogger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn log_with_level(
+    pub fn info_with_supplier(
         &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLevel<'mc>>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: std::option::Option<impl Into<&'mc String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
-        let val_3 = arg2.unwrap();
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "log",
-            "(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Object;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
+            "info",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -2240,20 +2190,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn is_loggable(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/LogRecord;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_encoding(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2267,6 +2203,20 @@ impl<'mc> JavaConsoleHandler<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn is_loggable(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/LogRecord;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2470,13 +2420,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::logging::JavaStreamHandler<'mc /* parse_into_impl */>>
-    for JavaConsoleHandler<'mc>
-{
-    fn into(self) -> crate::logging::JavaStreamHandler<'mc /* parse_into_impl */> {
-        crate::logging::JavaStreamHandler::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaFileHandler<'mc>(
@@ -2579,20 +2522,6 @@ impl<'mc> JavaFileHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn is_loggable(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/LogRecord;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_encoding(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2606,6 +2535,20 @@ impl<'mc> JavaFileHandler<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn is_loggable(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/LogRecord;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2809,13 +2752,6 @@ impl<'mc> JavaFileHandler<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::logging::JavaStreamHandler<'mc /* parse_into_impl */>>
-    for JavaFileHandler<'mc>
-{
-    fn into(self) -> crate::logging::JavaStreamHandler<'mc /* parse_into_impl */> {
-        crate::logging::JavaStreamHandler::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct JavaLoggingPermission<'mc>(
@@ -3064,10 +3000,9 @@ impl<'mc> JavaLoggingMXBean<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn logger_names<S>(&mut self) -> Result<crate::JavaList<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    pub fn logger_names(
+        &mut self,
+    ) -> Result<crate::JavaList<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLoggerNames",
@@ -3186,18 +3121,6 @@ impl<'mc> JavaLogRecord<'mc> {
             ],
         )?;
         crate::logging::JavaLogRecord::from_raw(&jni, res)
-    }
-    #[deprecated]
-    pub fn set_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setMillis",
-            "(J)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn millis(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
@@ -3488,6 +3411,18 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    #[deprecated]
+    pub fn set_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setMillis",
+            "(J)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3609,20 +3544,6 @@ impl<'mc> JavaStreamHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn is_loggable(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/LogRecord;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn set_encoding(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3650,6 +3571,20 @@ impl<'mc> JavaStreamHandler<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn is_loggable(
+        &mut self,
+        arg0: impl Into<&'mc crate::logging::JavaLogRecord<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/LogRecord;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3862,11 +3797,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::logging::JavaHandler<'mc /* parse_into_impl */>> for JavaStreamHandler<'mc> {
-    fn into(self) -> crate::logging::JavaHandler<'mc /* parse_into_impl */> {
-        crate::logging::JavaHandler::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct JavaLevel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4067,33 +3997,6 @@ impl<'mc> JavaLogManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn log_manager(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::logging::JavaLogManager<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/logging/LogManager")?;
-        let res = jni.call_static_method(
-            cls,
-            "getLogManager",
-            "()Ljava/util/logging/LogManager;",
-            &[],
-        )?;
-        let mut obj = res.l()?;
-        crate::logging::JavaLogManager::from_raw(&jni, obj)
-    }
-    pub fn add_logger(
-        &mut self,
-        arg0: impl Into<&'mc crate::logging::JavaLogger<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addLogger",
-            "(Ljava/util/logging/Logger;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     #[deprecated]
     pub fn logging_mxbean(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4138,12 +4041,36 @@ impl<'mc> JavaLogManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn logger_names<S>(
+    pub fn log_manager(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::logging::JavaLogManager<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/util/logging/LogManager")?;
+        let res = jni.call_static_method(
+            cls,
+            "getLogManager",
+            "()Ljava/util/logging/LogManager;",
+            &[],
+        )?;
+        let mut obj = res.l()?;
+        crate::logging::JavaLogManager::from_raw(&jni, obj)
+    }
+    pub fn add_logger(
         &mut self,
-    ) -> Result<crate::JavaEnumeration<'mc, E>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+        arg0: impl Into<&'mc crate::logging::JavaLogger<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addLogger",
+            "(Ljava/util/logging/Logger;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn logger_names(
+        &mut self,
+    ) -> Result<crate::JavaEnumeration<'mc, String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLoggerNames",
@@ -4173,13 +4100,10 @@ impl<'mc> JavaLogManager<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn get_logger<S>(
+    pub fn get_logger(
         &mut self,
         arg0: impl Into<&'mc String>,
-    ) -> Result<crate::logging::JavaLogger<'mc>, Box<dyn std::error::Error>>
-    where
-        S: Into<String>,
-    {
+    ) -> Result<crate::logging::JavaLogger<'mc, String>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

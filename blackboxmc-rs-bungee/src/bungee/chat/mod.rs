@@ -114,13 +114,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
-    for SelectorComponentSerializer<'mc>
-{
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
-        crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct TextComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -234,13 +227,6 @@ impl<'mc> TextComponentSerializer<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
-    for TextComponentSerializer<'mc>
-{
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
-        crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct BaseComponentSerializer<'mc>(
@@ -474,13 +460,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
-    for ScoreComponentSerializer<'mc>
-{
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
-        crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct TranslatableComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -595,13 +574,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
-    for TranslatableComponentSerializer<'mc>
-{
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
-        crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct KeybindComponentSerializer<'mc>(
@@ -720,13 +692,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */>>
-    for KeybindComponentSerializer<'mc>
-{
-    fn into(self) -> crate::bungee::chat::BaseComponentSerializer<'mc /* parse_into_impl */> {
-        crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct TranslationRegistry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -763,7 +728,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     pub fn providers(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getProviders",
@@ -926,7 +891,9 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     pub fn to_string_with_base_components(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
+        arg0: std::option::Option<
+            Vec<impl Into<&'mc crate::bungee::api::chat::BaseComponent<'mc>>>,
+        >,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/lang/String")?;
         let res = jni.call_static_method(

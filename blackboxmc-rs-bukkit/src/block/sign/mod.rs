@@ -183,8 +183,3 @@ impl<'mc> JNIRaw<'mc> for SignSide<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::material::Colorable<'mc /* parse_into_impl */>> for SignSide<'mc> {
-    fn into(self) -> crate::material::Colorable<'mc /* parse_into_impl */> {
-        crate::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}

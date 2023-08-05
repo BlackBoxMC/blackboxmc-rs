@@ -42,20 +42,6 @@ impl<'mc> ArmorTrim<'mc> {
 "(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         crate::inventory::meta::trim::ArmorTrim::from_raw(&jni, res)
     }
-    pub fn material(
-        &mut self,
-    ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMaterial",
-            "()Lorg/bukkit/inventory/meta/trim/TrimMaterial;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::trim::TrimMaterial::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn pattern(
         &mut self,
     ) -> Result<crate::inventory::meta::trim::TrimPattern<'mc>, Box<dyn std::error::Error>> {
@@ -67,6 +53,20 @@ impl<'mc> ArmorTrim<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::trim::TrimPattern::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn material(
+        &mut self,
+    ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getMaterial",
+            "()Lorg/bukkit/inventory/meta/trim/TrimMaterial;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::trim::TrimMaterial::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -189,11 +189,6 @@ impl<'mc> JNIRaw<'mc> for TrimMaterial<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for TrimMaterial<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements TrimPattern. Needed for returning it from Java.
 pub struct TrimPattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -238,10 +233,5 @@ impl<'mc> JNIRaw<'mc> for TrimPattern<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for TrimPattern<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

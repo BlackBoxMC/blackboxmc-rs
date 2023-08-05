@@ -117,7 +117,7 @@ impl<'mc> LightningStrikeEventCause<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -415,18 +415,6 @@ impl<'mc> LightningStrikeEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for LightningStrikeEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::weather::WeatherEvent<'mc /* parse_into_impl */>>
-    for LightningStrikeEvent<'mc>
-{
-    fn into(self) -> crate::event::weather::WeatherEvent<'mc /* parse_into_impl */> {
-        crate::event::weather::WeatherEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct ThunderChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -632,18 +620,6 @@ impl<'mc> ThunderChangeEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for ThunderChangeEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::weather::WeatherEvent<'mc /* parse_into_impl */>>
-    for ThunderChangeEvent<'mc>
-{
-    fn into(self) -> crate::event::weather::WeatherEvent<'mc /* parse_into_impl */> {
-        crate::event::weather::WeatherEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct WeatherChangeEvent<'mc>(
@@ -853,18 +829,6 @@ impl<'mc> WeatherChangeEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for WeatherChangeEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::weather::WeatherEvent<'mc /* parse_into_impl */>>
-    for WeatherChangeEvent<'mc>
-{
-    fn into(self) -> crate::event::weather::WeatherEvent<'mc /* parse_into_impl */> {
-        crate::event::weather::WeatherEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct WeatherEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1025,10 +989,5 @@ impl<'mc> WeatherEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::Event<'mc /* parse_into_impl */>> for WeatherEvent<'mc> {
-    fn into(self) -> crate::event::Event<'mc /* parse_into_impl */> {
-        crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

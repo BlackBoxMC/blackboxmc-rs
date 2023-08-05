@@ -22,9 +22,7 @@ impl<'mc> Palette<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn blocks(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    pub fn blocks(&mut self) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBlocks", "()Ljava/util/List;", &[]);
@@ -94,7 +92,7 @@ impl<'mc> StructureManager<'mc> {
     }
     pub fn structures(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc, K, V>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStructures",
@@ -264,7 +262,7 @@ impl<'mc> Structure<'mc> {
     }
     pub fn entities(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEntities",
@@ -285,7 +283,7 @@ impl<'mc> Structure<'mc> {
     }
     pub fn palettes(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPalettes",
@@ -385,12 +383,5 @@ impl<'mc> JNIRaw<'mc> for Structure<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc /* parse_into_impl */>>
-    for Structure<'mc>
-{
-    fn into(self) -> crate::persistence::PersistentDataHolder<'mc /* parse_into_impl */> {
-        crate::persistence::PersistentDataHolder::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

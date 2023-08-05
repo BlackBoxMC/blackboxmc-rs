@@ -67,20 +67,6 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn register_all(
-        &mut self,
-        arg0: impl Into<&'mc blackboxmc_java::JavaCollection<'mc, E>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "registerAll",
-            "(Ljava/util/Collection;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn unregister_all(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc crate::event::Listener<'mc>>>,
@@ -113,7 +99,7 @@ impl<'mc> HandlerList<'mc> {
     pub fn get_registered_listeners(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_java::JavaArrayList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("java/util/ArrayList")?;
         let res = jni.call_static_method(
@@ -127,7 +113,7 @@ impl<'mc> HandlerList<'mc> {
     }
     pub fn handler_lists(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaArrayList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("java/util/ArrayList")?;
         let res = jni.call_static_method(cls, "getHandlerLists", "()Ljava/util/ArrayList;", &[])?;
         let mut obj = res.l()?;
@@ -532,7 +518,7 @@ impl<'mc> EventResult<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",

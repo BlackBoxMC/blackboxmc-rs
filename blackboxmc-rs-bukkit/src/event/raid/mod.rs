@@ -156,11 +156,6 @@ impl<'mc> RaidEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::world::WorldEvent<'mc /* parse_into_impl */>> for RaidEvent<'mc> {
-    fn into(self) -> crate::event::world::WorldEvent<'mc /* parse_into_impl */> {
-        crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct RaidSpawnWaveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -195,30 +190,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::Raid<'mc>>,
-        arg1: impl Into<&'mc crate::World<'mc>>,
-        arg2: impl Into<&'mc crate::entity::Raider<'mc>>,
-        arg3: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::event::raid::RaidSpawnWaveEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/raid/RaidSpawnWaveEvent")?;
-        let res = jni.new_object(
-            cls,
-            "(Lorg/bukkit/Raid;Lorg/bukkit/World;Lorg/bukkit/entity/Raider;Ljava/util/List;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        )?;
-        crate::event::raid::RaidSpawnWaveEvent::from_raw(&jni, res)
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -235,7 +206,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
     }
     pub fn raiders(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getRaiders", "()Ljava/util/List;", &[]);
@@ -381,13 +352,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::raid::RaidEvent<'mc /* parse_into_impl */>>
-    for RaidSpawnWaveEvent<'mc>
-{
-    fn into(self) -> crate::event::raid::RaidEvent<'mc /* parse_into_impl */> {
-        crate::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct RaidTriggerEvent<'mc>(
@@ -614,16 +578,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::Cancellable<'mc /* parse_into_impl */>> for RaidTriggerEvent<'mc> {
-    fn into(self) -> crate::event::Cancellable<'mc /* parse_into_impl */> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::event::raid::RaidEvent<'mc /* parse_into_impl */>> for RaidTriggerEvent<'mc> {
-    fn into(self) -> crate::event::raid::RaidEvent<'mc /* parse_into_impl */> {
-        crate::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct RaidFinishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -658,27 +612,6 @@ impl<'mc> RaidFinishEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::Raid<'mc>>,
-        arg1: impl Into<&'mc crate::World<'mc>>,
-        arg2: impl Into<&'mc blackboxmc_java::JavaList<'mc, E>>,
-    ) -> Result<crate::event::raid::RaidFinishEvent<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/raid/RaidFinishEvent")?;
-        let res = jni.new_object(
-            cls,
-            "(Lorg/bukkit/Raid;Lorg/bukkit/World;Ljava/util/List;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        )?;
-        crate::event::raid::RaidFinishEvent::from_raw(&jni, res)
-    }
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -708,7 +641,7 @@ impl<'mc> RaidFinishEvent<'mc> {
     }
     pub fn winners(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getWinners", "()Ljava/util/List;", &[]);
@@ -829,11 +762,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::event::raid::RaidEvent<'mc /* parse_into_impl */>> for RaidFinishEvent<'mc> {
-    fn into(self) -> crate::event::raid::RaidEvent<'mc /* parse_into_impl */> {
-        crate::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct RaidStopEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -952,7 +880,7 @@ impl<'mc> RaidStopEventReason<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -1224,10 +1152,5 @@ impl<'mc> RaidStopEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::event::raid::RaidEvent<'mc /* parse_into_impl */>> for RaidStopEvent<'mc> {
-    fn into(self) -> crate::event::raid::RaidEvent<'mc /* parse_into_impl */> {
-        crate::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

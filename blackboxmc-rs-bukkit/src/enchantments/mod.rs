@@ -284,13 +284,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::enchantments::Enchantment<'mc /* parse_into_impl */>>
-    for EnchantmentWrapper<'mc>
-{
-    fn into(self) -> crate::enchantments::Enchantment<'mc /* parse_into_impl */> {
-        crate::enchantments::Enchantment::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct EnchantmentOffer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -612,7 +605,7 @@ impl<'mc> EnchantmentTarget<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -954,10 +947,5 @@ impl<'mc> Enchantment<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::Keyed<'mc /* parse_into_impl */>> for Enchantment<'mc> {
-    fn into(self) -> crate::Keyed<'mc /* parse_into_impl */> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }

@@ -76,20 +76,6 @@ impl<'mc> Chest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -112,6 +98,20 @@ impl<'mc> Chest<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -245,11 +245,6 @@ impl<'mc> Chest<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::DirectionalContainer<'mc /* parse_into_impl */>> for Chest<'mc> {
-    fn into(self) -> crate::material::DirectionalContainer<'mc /* parse_into_impl */> {
-        crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Diode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -317,20 +312,6 @@ impl<'mc> Diode<'mc> {
         )?;
         crate::material::Diode::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -360,6 +341,20 @@ impl<'mc> Diode<'mc> {
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn delay(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -525,21 +520,6 @@ impl<'mc> Diode<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Diode<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Diode<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Diode<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Pumpkin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -606,20 +586,6 @@ impl<'mc> Pumpkin<'mc> {
         )?;
         crate::material::Pumpkin::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -649,6 +615,20 @@ impl<'mc> Pumpkin<'mc> {
             .call_method(&self.jni_object(), "isLit", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -794,16 +774,6 @@ impl<'mc> Pumpkin<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Pumpkin<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Pumpkin<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct FlowerPot<'mc>(
@@ -1028,11 +998,6 @@ impl<'mc> FlowerPot<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for FlowerPot<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct PoweredRail<'mc>(
@@ -1309,16 +1274,6 @@ impl<'mc> PoweredRail<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for PoweredRail<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::ExtendedRails<'mc /* parse_into_impl */>> for PoweredRail<'mc> {
-    fn into(self) -> crate::material::ExtendedRails<'mc /* parse_into_impl */> {
-        crate::material::ExtendedRails::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct TripwireHook<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1403,6 +1358,13 @@ impl<'mc> TripwireHook<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+    pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
     pub fn set_facing_direction(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -1416,13 +1378,6 @@ impl<'mc> TripwireHook<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
     }
     pub fn set_connected(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1621,18 +1576,6 @@ impl<'mc> TripwireHook<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for TripwireHook<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
-    for TripwireHook<'mc>
-{
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
-        crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct SimpleAttachableMaterialData<'mc>(
@@ -1890,20 +1833,6 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>>
-    for SimpleAttachableMaterialData<'mc>
-{
-    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
-        crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
-    for SimpleAttachableMaterialData<'mc>
-{
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Openable. Needed for returning it from Java.
@@ -2219,13 +2148,6 @@ impl<'mc> Torch<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
-    for Torch<'mc>
-{
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
-        crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Comparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2293,20 +2215,6 @@ impl<'mc> Comparator<'mc> {
         )?;
         crate::material::Comparator::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2336,6 +2244,20 @@ impl<'mc> Comparator<'mc> {
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn set_subtraction_mode(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2508,21 +2430,6 @@ impl<'mc> Comparator<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Comparator<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Comparator<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Comparator<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Button<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2600,20 +2507,6 @@ impl<'mc> Button<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2627,6 +2520,20 @@ impl<'mc> Button<'mc> {
             &self.jni_object(),
             "setPowered",
             "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
@@ -2797,18 +2704,6 @@ impl<'mc> Button<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Button<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
-    for Button<'mc>
-{
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
-        crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Coal<'mc>(
@@ -3058,11 +2953,6 @@ impl<'mc> Coal<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Coal<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 /// An instantiatable struct that implements Colorable. Needed for returning it from Java.
@@ -3426,11 +3316,6 @@ impl<'mc> Tree<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for Tree<'mc> {
-    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
-        crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct PistonBaseMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3485,20 +3370,6 @@ impl<'mc> PistonBaseMaterial<'mc> {
         )?;
         crate::material::PistonBaseMaterial::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3535,6 +3406,20 @@ impl<'mc> PistonBaseMaterial<'mc> {
             &self.jni_object(),
             "setPowered",
             "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
@@ -3691,25 +3576,6 @@ impl<'mc> PistonBaseMaterial<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>>
-    for PistonBaseMaterial<'mc>
-{
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for PistonBaseMaterial<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
-    for PistonBaseMaterial<'mc>
-{
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct TrapDoor<'mc>(
@@ -4006,18 +3872,6 @@ impl<'mc> TrapDoor<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Openable<'mc /* parse_into_impl */>> for TrapDoor<'mc> {
-    fn into(self) -> crate::material::Openable<'mc /* parse_into_impl */> {
-        crate::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
-    for TrapDoor<'mc>
-{
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
-        crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Crops<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4263,11 +4117,6 @@ impl<'mc> Crops<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Crops<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct SpawnEgg<'mc>(
@@ -4517,11 +4366,6 @@ impl<'mc> SpawnEgg<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for SpawnEgg<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct MonsterEggs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4576,7 +4420,7 @@ impl<'mc> MonsterEggs<'mc> {
     }
     pub fn textures(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getTextures",
@@ -4771,11 +4615,6 @@ impl<'mc> MonsterEggs<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::TexturedMaterial<'mc /* parse_into_impl */>> for MonsterEggs<'mc> {
-    fn into(self) -> crate::material::TexturedMaterial<'mc /* parse_into_impl */> {
-        crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Furnace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4854,20 +4693,6 @@ impl<'mc> Furnace<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4890,6 +4715,20 @@ impl<'mc> Furnace<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -5021,11 +4860,6 @@ impl<'mc> Furnace<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */>> for Furnace<'mc> {
-    fn into(self) -> crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */> {
-        crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Rails<'mc>(
@@ -5282,11 +5116,6 @@ impl<'mc> Rails<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Rails<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Sapling<'mc>(
@@ -5560,11 +5389,6 @@ impl<'mc> Sapling<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for Sapling<'mc> {
-    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
-        crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements Redstone. Needed for returning it from Java.
 pub struct Redstone<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5661,6 +5485,29 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         )?;
         crate::material::PistonExtensionMaterial::from_raw(&jni, res)
     }
+    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFacing",
+            "()Lorg/bukkit/block/BlockFace;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::block::BlockFace::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::block::BlockFace::from_string(variant_str).unwrap(),
+        )
+    }
     pub fn attached_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -5699,29 +5546,6 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFacing",
-            "()Lorg/bukkit/block/BlockFace;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str).unwrap(),
-        )
     }
     pub fn is_sticky(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -5887,20 +5711,6 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>>
-    for PistonExtensionMaterial<'mc>
-{
-    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
-        crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
-    for PistonExtensionMaterial<'mc>
-{
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Lever<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5978,20 +5788,6 @@ impl<'mc> Lever<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6005,6 +5801,20 @@ impl<'mc> Lever<'mc> {
             &self.jni_object(),
             "setPowered",
             "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
@@ -6177,18 +5987,6 @@ impl<'mc> Lever<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Lever<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
-    for Lever<'mc>
-{
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
-        crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct DirectionalContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6243,20 +6041,6 @@ impl<'mc> DirectionalContainer<'mc> {
         )?;
         crate::material::DirectionalContainer::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6279,6 +6063,20 @@ impl<'mc> DirectionalContainer<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -6424,20 +6222,6 @@ impl<'mc> DirectionalContainer<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>>
-    for DirectionalContainer<'mc>
-{
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>>
-    for DirectionalContainer<'mc>
-{
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct NetherWarts<'mc>(
@@ -6687,11 +6471,6 @@ impl<'mc> NetherWarts<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for NetherWarts<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct MaterialData<'mc>(
@@ -7139,11 +6918,6 @@ impl<'mc> LongGrass<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for LongGrass<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Tripwire<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7371,11 +7145,6 @@ impl<'mc> Tripwire<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Tripwire<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct TexturedMaterial<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7455,7 +7224,7 @@ impl<'mc> TexturedMaterial<'mc> {
     }
     pub fn textures(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getTextures",
@@ -7627,11 +7396,6 @@ impl<'mc> TexturedMaterial<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for TexturedMaterial<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements PressureSensor. Needed for returning it from Java.
 pub struct PressureSensor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7741,20 +7505,6 @@ impl<'mc> Dispenser<'mc> {
         )?;
         crate::material::Dispenser::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7777,6 +7527,20 @@ impl<'mc> Dispenser<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn clone(
         &mut self,
@@ -7922,11 +7686,6 @@ impl<'mc> Dispenser<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */>> for Dispenser<'mc> {
-    fn into(self) -> crate::material::FurnaceAndDispenser<'mc /* parse_into_impl */> {
-        crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Cake<'mc>(
@@ -8161,11 +7920,6 @@ impl<'mc> Cake<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Cake<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Gate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8218,20 +7972,6 @@ impl<'mc> Gate<'mc> {
         )?;
         crate::material::Gate::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8254,6 +7994,20 @@ impl<'mc> Gate<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -8419,21 +8173,6 @@ impl<'mc> Gate<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Gate<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Openable<'mc /* parse_into_impl */>> for Gate<'mc> {
-    fn into(self) -> crate::material::Openable<'mc /* parse_into_impl */> {
-        crate::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Gate<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Step<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8506,7 +8245,7 @@ impl<'mc> Step<'mc> {
     }
     pub fn textures(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getTextures",
@@ -8699,11 +8438,6 @@ impl<'mc> Step<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::TexturedMaterial<'mc /* parse_into_impl */>> for Step<'mc> {
-    fn into(self) -> crate::material::TexturedMaterial<'mc /* parse_into_impl */> {
-        crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct SmoothBrick<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8758,7 +8492,7 @@ impl<'mc> SmoothBrick<'mc> {
     }
     pub fn textures(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaList<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getTextures",
@@ -8951,11 +8685,6 @@ impl<'mc> SmoothBrick<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::TexturedMaterial<'mc /* parse_into_impl */>> for SmoothBrick<'mc> {
-    fn into(self) -> crate::material::TexturedMaterial<'mc /* parse_into_impl */> {
-        crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Leaves<'mc>(
@@ -9264,11 +8993,6 @@ impl<'mc> Leaves<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for Leaves<'mc> {
-    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
-        crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Dye<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9516,16 +9240,6 @@ impl<'mc> Dye<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Colorable<'mc /* parse_into_impl */>> for Dye<'mc> {
-    fn into(self) -> crate::material::Colorable<'mc /* parse_into_impl */> {
-        crate::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Dye<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct PressurePlate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9724,16 +9438,6 @@ impl<'mc> PressurePlate<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::PressureSensor<'mc /* parse_into_impl */>> for PressurePlate<'mc> {
-    fn into(self) -> crate::material::PressureSensor<'mc /* parse_into_impl */> {
-        crate::material::PressureSensor::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for PressurePlate<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Observer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9800,20 +9504,6 @@ impl<'mc> Observer<'mc> {
         )?;
         crate::material::Observer::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9843,6 +9533,20 @@ impl<'mc> Observer<'mc> {
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -9990,21 +9694,6 @@ impl<'mc> Observer<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Observer<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Observer<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Observer<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Stairs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10057,20 +9746,6 @@ impl<'mc> Stairs<'mc> {
         )?;
         crate::material::Stairs::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10093,6 +9768,20 @@ impl<'mc> Stairs<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn is_inverted(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -10306,16 +9995,6 @@ impl<'mc> Stairs<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Stairs<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Stairs<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Sandstone<'mc>(
@@ -10567,11 +10246,6 @@ impl<'mc> Sandstone<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Sandstone<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct EnderChest<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10652,20 +10326,6 @@ impl<'mc> EnderChest<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10688,6 +10348,20 @@ impl<'mc> EnderChest<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -10819,13 +10493,6 @@ impl<'mc> EnderChest<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::DirectionalContainer<'mc /* parse_into_impl */>>
-    for EnderChest<'mc>
-{
-    fn into(self) -> crate::material::DirectionalContainer<'mc /* parse_into_impl */> {
-        crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct FurnaceAndDispenser<'mc>(
@@ -10896,20 +10563,6 @@ impl<'mc> FurnaceAndDispenser<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10932,6 +10585,20 @@ impl<'mc> FurnaceAndDispenser<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -11065,13 +10732,6 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::DirectionalContainer<'mc /* parse_into_impl */>>
-    for FurnaceAndDispenser<'mc>
-{
-    fn into(self) -> crate::material::DirectionalContainer<'mc /* parse_into_impl */> {
-        crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Bed<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11138,20 +10798,6 @@ impl<'mc> Bed<'mc> {
         )?;
         crate::material::Bed::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11174,6 +10820,20 @@ impl<'mc> Bed<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn is_head_of_bed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -11337,16 +10997,6 @@ impl<'mc> Bed<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Bed<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Bed<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct RedstoneWire<'mc>(
@@ -11545,16 +11195,6 @@ impl<'mc> RedstoneWire<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for RedstoneWire<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for RedstoneWire<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct WoodenStep<'mc>(
@@ -11810,11 +11450,6 @@ impl<'mc> WoodenStep<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Wood<'mc /* parse_into_impl */>> for WoodenStep<'mc> {
-    fn into(self) -> crate::material::Wood<'mc /* parse_into_impl */> {
-        crate::material::Wood::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Vine<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11846,20 +11481,6 @@ impl<'mc> Vine<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnumSet<'mc>>>,
-    ) -> Result<crate::material::Vine<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/material/Vine")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/EnumSet;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        crate::material::Vine::from_raw(&jni, res)
     }
     #[deprecated]
     pub fn new_with_block_faces(
@@ -12067,11 +11688,6 @@ impl<'mc> Vine<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Vine<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Wood<'mc>(
@@ -12316,11 +11932,6 @@ impl<'mc> Wood<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Wood<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Banner<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12373,6 +11984,29 @@ impl<'mc> Banner<'mc> {
         )?;
         crate::material::Banner::from_raw(&jni, res)
     }
+    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFacing",
+            "()Lorg/bukkit/block/BlockFace;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::block::BlockFace::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::block::BlockFace::from_string(variant_str).unwrap(),
+        )
+    }
     pub fn attached_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -12411,29 +12045,6 @@ impl<'mc> Banner<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFacing",
-            "()Lorg/bukkit/block/BlockFace;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str).unwrap(),
-        )
     }
     pub fn is_wall_banner(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -12588,16 +12199,6 @@ impl<'mc> Banner<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>> for Banner<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
-        crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Banner<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Mushroom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12740,7 +12341,7 @@ impl<'mc> Mushroom<'mc> {
     }
     pub fn painted_faces(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, E>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPaintedFaces",
@@ -12894,11 +12495,6 @@ impl<'mc> Mushroom<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Mushroom<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct RedstoneTorch<'mc>(
@@ -13168,16 +12764,6 @@ impl<'mc> RedstoneTorch<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for RedstoneTorch<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Torch<'mc /* parse_into_impl */>> for RedstoneTorch<'mc> {
-    fn into(self) -> crate::material::Torch<'mc /* parse_into_impl */> {
-        crate::material::Torch::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct CocoaPlant<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13297,7 +12883,7 @@ impl<'mc> CocoaPlantCocoaPlantSize<'mc> {
     }
     pub fn describe_constable(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc, T>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "describeConstable",
@@ -13451,6 +13037,29 @@ impl<'mc> CocoaPlant<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFacing",
+            "()Lorg/bukkit/block/BlockFace;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::block::BlockFace::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::block::BlockFace::from_string(variant_str).unwrap(),
+        )
+    }
     pub fn attached_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -13489,29 +13098,6 @@ impl<'mc> CocoaPlant<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFacing",
-            "()Lorg/bukkit/block/BlockFace;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str).unwrap(),
-        )
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -13673,21 +13259,6 @@ impl<'mc> CocoaPlant<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for CocoaPlant<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>> for CocoaPlant<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
-        crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for CocoaPlant<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Door<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13782,20 +13353,6 @@ impl<'mc> Door<'mc> {
         )?;
         crate::material::Door::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13818,6 +13375,20 @@ impl<'mc> Door<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -14068,21 +13639,6 @@ impl<'mc> Door<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Door<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Openable<'mc /* parse_into_impl */>> for Door<'mc> {
-    fn into(self) -> crate::material::Openable<'mc /* parse_into_impl */> {
-        crate::material::Openable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Door<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements Directional. Needed for returning it from Java.
 pub struct Directional<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14107,20 +13663,6 @@ impl<'mc> Directional<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14143,6 +13685,20 @@ impl<'mc> Directional<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 }
 impl<'mc> JNIRaw<'mc> for Directional<'mc> {
@@ -14410,11 +13966,6 @@ impl<'mc> ExtendedRails<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Rails<'mc /* parse_into_impl */>> for ExtendedRails<'mc> {
-    fn into(self) -> crate::material::Rails<'mc /* parse_into_impl */> {
-        crate::material::Rails::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Cauldron<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14618,11 +14169,6 @@ impl<'mc> Cauldron<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Cauldron<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Ladder<'mc>(
@@ -14886,13 +14432,6 @@ impl<'mc> Ladder<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */>>
-    for Ladder<'mc>
-{
-    fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc /* parse_into_impl */> {
-        crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15105,16 +14644,6 @@ impl<'mc> Command<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Command<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Command<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct DetectorRail<'mc>(
@@ -15391,16 +14920,6 @@ impl<'mc> DetectorRail<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::PressureSensor<'mc /* parse_into_impl */>> for DetectorRail<'mc> {
-    fn into(self) -> crate::material::PressureSensor<'mc /* parse_into_impl */> {
-        crate::material::PressureSensor::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::ExtendedRails<'mc /* parse_into_impl */>> for DetectorRail<'mc> {
-    fn into(self) -> crate::material::ExtendedRails<'mc /* parse_into_impl */> {
-        crate::material::ExtendedRails::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Hopper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15467,20 +14986,6 @@ impl<'mc> Hopper<'mc> {
         )?;
         crate::material::Hopper::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15510,6 +15015,20 @@ impl<'mc> Hopper<'mc> {
             .call_method(&self.jni_object(), "isPowered", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn set_active(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -15675,21 +15194,6 @@ impl<'mc> Hopper<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Hopper<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::Redstone<'mc /* parse_into_impl */>> for Hopper<'mc> {
-    fn into(self) -> crate::material::Redstone<'mc /* parse_into_impl */> {
-        crate::material::Redstone::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Hopper<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Skull<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15756,20 +15260,6 @@ impl<'mc> Skull<'mc> {
         )?;
         crate::material::Skull::from_raw(&jni, res)
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15792,6 +15282,20 @@ impl<'mc> Skull<'mc> {
             raw_obj,
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
+    }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -15939,16 +15443,6 @@ impl<'mc> Skull<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Skull<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Skull<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 pub struct Sign<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16001,6 +15495,29 @@ impl<'mc> Sign<'mc> {
         )?;
         crate::material::Sign::from_raw(&jni, res)
     }
+    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFacing",
+            "()Lorg/bukkit/block/BlockFace;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::block::BlockFace::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::block::BlockFace::from_string(variant_str).unwrap(),
+        )
+    }
     pub fn attached_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -16039,29 +15556,6 @@ impl<'mc> Sign<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFacing",
-            "()Lorg/bukkit/block/BlockFace;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::block::BlockFace::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::block::BlockFace::from_string(variant_str).unwrap(),
-        )
     }
     pub fn is_wall_sign(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -16214,16 +15708,6 @@ impl<'mc> Sign<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> Into<crate::material::Attachable<'mc /* parse_into_impl */>> for Sign<'mc> {
-    fn into(self) -> crate::material::Attachable<'mc /* parse_into_impl */> {
-        crate::material::Attachable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Sign<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub struct Wool<'mc>(
@@ -16473,16 +15957,6 @@ impl<'mc> Wool<'mc> {
         Ok(())
     }
 }
-impl<'mc> Into<crate::material::Colorable<'mc /* parse_into_impl */>> for Wool<'mc> {
-    fn into(self) -> crate::material::Colorable<'mc /* parse_into_impl */> {
-        crate::material::Colorable::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
-impl<'mc> Into<crate::material::MaterialData<'mc /* parse_into_impl */>> for Wool<'mc> {
-    fn into(self) -> crate::material::MaterialData<'mc /* parse_into_impl */> {
-        crate::material::MaterialData::from_raw(&self.jni_ref(), self.1).unwrap()
-    }
-}
 /// An instantiatable struct that implements Attachable. Needed for returning it from Java.
 pub struct Attachable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16532,20 +16006,6 @@ impl<'mc> Attachable<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
-    pub fn set_facing_direction(
-        &mut self,
-        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFacingDirection",
-            "(Lorg/bukkit/block/BlockFace;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16569,6 +16029,20 @@ impl<'mc> Attachable<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+    pub fn set_facing_direction(
+        &mut self,
+        arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFacingDirection",
+            "(Lorg/bukkit/block/BlockFace;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
 }
 impl<'mc> JNIRaw<'mc> for Attachable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -16577,11 +16051,6 @@ impl<'mc> JNIRaw<'mc> for Attachable<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> Into<crate::material::Directional<'mc /* parse_into_impl */>> for Attachable<'mc> {
-    fn into(self) -> crate::material::Directional<'mc /* parse_into_impl */> {
-        crate::material::Directional::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
 pub mod types;
