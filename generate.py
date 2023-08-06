@@ -20,8 +20,7 @@ reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", 
 library_resolves = {
     "net.md_5": "blackboxmc-rs-bungee",
     "org.bukkit": "blackboxmc-rs-bukkit",
-    "java.util": "blackboxmc-rs-java",  # NOTE: written by hand.
-    "java.lang": "blackboxmc-rs-java",  # NOTE: written by hand.
+    "java.util": "blackboxmc-rs-java",
 }
 
 parsed_classes = {}
@@ -32,6 +31,37 @@ excluded_classes = [
     "java.util.concurrent",                     # i want to lessen my workload and binding this is going to be pointless since your only option of multithreading is through BukkitRunnables.
     "java.util.stream",                         # unneeded when java's iterator is bound.
     "java.util.function",                       # useless unless i can do implement Into for the functions in question and that can't be done safely.
+
+    # dear sweet baby jesus i just want to be done with this and i will remove half of the java.util
+    # package if it means fucking getting this done.
+    "java.util.PropertyResourceBundle", "java.util.Currency", "java.util.EnumMap", "java.util.Spliterators",
+                        "java.util.Spliterators$AbstractIntSpliterator",
+                        "java.util.Spliterators$AbstractLongSpliterator", "java.util.Spliterators$AbstractSpliterator",
+                        "java.util.SplittableRandom", "java.util.AbstractMap$SimpleImmutableEntry", "java.util.Arrays", "java.util.GregorianCalendar",
+    "java.util.Locale", "java.util.Locale$Builder", "java.util.Locale$LanguageRange",
+    "java.util.NavigableMap", "java.util.NavigableSet",
+    "java.util.Base64$Decoder", "java.util.Base64$Encoder", "java.util.BitSet",
+                        "java.util.Calendar", "java.util.Calendar$Builder", "java.util.Collections",
+                        "java.util.Date", "java.util.Dictionary",
+                        "java.util.DoubleSummaryStatistics", "java.util.EnumSet",
+                        "java.util.EventListenerProxy", "java.util.EventObject", "java.util.FormattableFlags",
+                        "java.util.Formatter", "java.util.GregorianCalendar", "java.util.IntSummaryStatistics",
+                        "java.util.ListResourceBundle", "java.util.LongSummaryStatistics", "java.util.Objects",
+                        "java.util.Observable",
+                        "java.util.PriorityQueue",
+                        "java.util.Properties", "java.util.PropertyPermission",
+                        "java.util.Random", "java.util.ResourceBundle", "java.util.ResourceBundle$Control",
+                        "java.util.Scanner", "java.util.ServiceLoader", "java.util.SimpleTimeZone",
+                        "java.util.Stack", "java.util.StringJoiner",
+                        "java.util.StringTokenizer", "java.util.Timer", "java.util.TimerTask", "java.util.TimeZone", "java.util.Spliterator", "java.util.Spliterator$OfDouble", "java.util.Spliterator$OfInt",
+                        "java.util.Spliterator$OfLong", "java.util.Spliterator$OfPrimitive", "java.lang.StackTraceElement", "java.lang.Throwable",
+                        "java.util.logging.LoggingMXBean", "java.util.logging.FileHandler",
+                        "java.util.regex.Pattern", "java.util.regex.Matcher",
+                        "java.util.regex.MatchResult",
+                        "java.util.logging.LogManager",
+
+    # tempoerary
+    "java.util.SortedMap", "java.util.SortedSet"
 ]
 
 interface_names = []
@@ -553,20 +583,22 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         # christ i want to be done with this ok 
         # lets make rules for certain method names now
         if method is not None:
-            if method["method"]["name"] == "keySet" or method["method"]["name"] == "getKeys":
+            if method["method"]["name"] == "keySet" or method["method"]["name"] == "getKeys" or method["method"]["name"] == "keys":
                 generics.append("K")
             if method["method"]["name"] == "values":
                 generics.append("V")
             if method["method"]["name"] == "entrySet":
                 generics.append("JavaMapEntry<K,V>")
-
-    if method is not None:
-        # ....hey by any chance is the method a "public" method?
-        if "isDefault" in method["method"]:
-            default = method["method"]["isDefault"]
-            if default:
-                if(len(upper_generics_list) == len(generics)):
-                    generics = upper_generics_list
+            if method["method"]["name"] == "elements" and len(generics) == 0:
+                generics.append("V")
+            if method["method"]["name"] == "comparingByKey" or method["method"]["name"] == "comparingByValue":
+                return None
+            if method["method"]["name"] == "comparator" and len(generics) == 0:
+                generics.append("K") 
+        # ok if all else fails just fucking fall back to the default generics 
+        if len(generics) <= 0:
+            if ty != "java.lang.Object":
+                generics = upper_generics_list
 
     # by any change is the only generic in the type "T" and do we also only have one generic 
     if len(generics) == 1:
@@ -1026,7 +1058,7 @@ def parse_classes(library, val, classes):
         parsed_classes[mod_path] = [full_name]
 
     if mod_path not in file_cache :
-        file_cache[mod_path] = []
+        file_cache[mod_path] = ["#![allow(deprecated)]","#![feature(anonymous_lifetime_in_impl_trait)]","use blackboxmc_general::JNIRaw;","use color_eyre::eyre::Result;"]
 
     if (name == ""):
         return
@@ -1200,6 +1232,8 @@ def get_generics(val, mc_included,upper_generics):
                     else:
                         typarts = f[1].split(" ")
                         tyname = typarts[len(typarts)-1]
+                        if tyname == "Throwable":
+                            continue
                         if "extends" in f[1] or "super" in f[1]:
                             generics_letters.append(f[0])
                             generics_types.append(f[0]+": Into<crate::Java"+tyname+"<'mc>>")
@@ -1359,11 +1393,7 @@ for library in libraries:
 
     f1 = open(crate_dir+os.sep+"mod.rs", "r")
     f2 = open(crate_dir+os.sep+"lib.rs", "a")
-    f3 = open(crate_dir+os.sep+"lib.rs", "r")
 
-    lines = f3.readlines()
-    if(len(lines) == 0):
-        f2.write("#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse color_eyre::eyre::Result;")
     f2.write("".join(f1.readlines()))
     os.remove(crate_dir+os.sep+"mod.rs")
 

@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct PotionEffectTypeWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -486,6 +490,17 @@ impl<'mc> Potion<'mc> {
         )?;
         crate::potion::Potion::from_raw(&jni, res)
     }
+    pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(I)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn set_type(
         &mut self,
         arg0: impl Into<&'mc crate::potion::PotionType<'mc>>,
@@ -495,17 +510,6 @@ impl<'mc> Potion<'mc> {
             &self.jni_object(),
             "setType",
             "(Lorg/bukkit/potion/PotionType;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(I)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;

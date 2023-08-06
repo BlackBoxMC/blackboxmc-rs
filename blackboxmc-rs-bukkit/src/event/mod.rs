@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct HandlerList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -37,7 +41,21 @@ impl<'mc> HandlerList<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::event::HandlerList::from_raw(&jni, res)
     }
-    pub fn unregister_with_plugin(
+    pub fn register(
+        &mut self,
+        arg0: impl Into<&'mc crate::plugin::RegisteredListener<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            "(Lorg/bukkit/plugin/RegisteredListener;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    pub fn unregister_with_registered_listener(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::event::Listener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -52,30 +70,16 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn unregister_with_registered_listener(
+    pub fn unregister_with_plugin(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::plugin::RegisteredListener<'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregister",
-            "(Lorg/bukkit/plugin/RegisteredListener;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn register(
-        &mut self,
-        arg0: impl Into<&'mc crate::plugin::RegisteredListener<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            "(Lorg/bukkit/plugin/RegisteredListener;)V",
+            "(Lorg/bukkit/plugin/Plugin;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
@@ -452,26 +456,6 @@ impl<'mc> EventResult<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
-    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -512,21 +496,6 @@ impl<'mc> EventResult<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn compare_to_with_object(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compareTo",
-            "(Ljava/lang/Enum;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }

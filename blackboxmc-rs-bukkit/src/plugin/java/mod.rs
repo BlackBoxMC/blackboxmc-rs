@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct JavaPluginLoader<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -232,6 +236,18 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getServer",
+            "()Lorg/bukkit/Server;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Server::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn description(
         &mut self,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
@@ -275,18 +291,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getServer",
-            "()Lorg/bukkit/Server;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Server::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn get_command(
         &mut self,

@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct HelpTopicComparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -341,8 +345,8 @@ where
     }
     pub fn create_topic(
         &mut self,
-        arg0: impl Into<&'mc crate::command::Command<'mc>>,
-    ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
+        arg0: impl Into<&'mc crate::command::Command<'mc, /*3*/ T>>,
+    ) -> Result<crate::help::HelpTopic<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),

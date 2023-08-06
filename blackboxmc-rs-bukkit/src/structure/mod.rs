@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements Palette. Needed for returning it from Java.
 pub struct Palette<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -336,30 +340,6 @@ impl<'mc> Structure<'mc> {
             .call_method(&self.jni_object(), "getPaletteCount", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn place_with_location(
-        &mut self,
-        arg0: impl Into<&'mc crate::RegionAccessor<'mc>>,
-        arg1: impl Into<&'mc crate::BlockVector<'mc>>,
-        arg2: bool,
-        arg3: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
-        arg4: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
-        arg5: i32,
-        arg6: std::option::Option<f32>,
-        arg7: std::option::Option<impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
-        let val_7 = jni::objects::JValueGen::Float(arg6.unwrap().into());
-        let val_8 =
-            unsafe { jni::objects::JObject::from_raw(arg7.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"place","(Lorg/bukkit/RegionAccessor;Lorg/bukkit/util/BlockVector;ZLorg/bukkit/block/structure/StructureRotation;Lorg/bukkit/block/structure/Mirror;IFLjava/util/Random;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8)]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn persistent_data_container(
         &mut self,

@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ItemTagType. Needed for returning it from Java.
 pub struct ItemTagType<'mc, T, Z>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -56,7 +60,13 @@ where
     pub fn to_primitive(
         &mut self,
         arg0: Z,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<
+            &'mc crate::inventory::meta::tags::ItemTagAdapterContext<
+                'mc,
+                /*3*/ T,
+                /*3*/ Z,
+            >,
+        >,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -75,7 +85,13 @@ where
     pub fn from_primitive(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<
+            &'mc crate::inventory::meta::tags::ItemTagAdapterContext<
+                'mc,
+                /*3*/ T,
+                /*3*/ Z,
+            >,
+        >,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -227,7 +243,7 @@ where
     pub fn to_primitive(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, /*3*/ T>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -246,7 +262,7 @@ where
     pub fn from_primitive(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, /*3*/ T>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };

@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct MemoryConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -33,20 +37,6 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn configuration(
-        &mut self,
-    ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "configuration",
-            "()Lorg/bukkit/configuration/MemoryConfiguration;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::MemoryConfiguration::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn path_separator(
         &mut self,
         arg0: std::option::Option<u16>,
@@ -61,6 +51,20 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn configuration(
+        &mut self,
+    ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "configuration",
+            "()Lorg/bukkit/configuration/Configuration;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::Configuration::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -499,29 +503,6 @@ impl<'mc> MemorySection<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn get_item_stack_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -542,6 +523,29 @@ impl<'mc> MemorySection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1599,29 +1603,6 @@ impl<'mc> Configuration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn get_item_stack_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1642,6 +1623,29 @@ impl<'mc> Configuration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2645,29 +2649,6 @@ impl<'mc> MemoryConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn get_item_stack_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2688,6 +2669,29 @@ impl<'mc> MemoryConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3358,20 +3362,6 @@ impl<'mc> ConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn configuration(
-        &mut self,
-    ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "configuration",
-            "()Lorg/bukkit/configuration/Configuration;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::Configuration::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn path_separator(
         &mut self,
         arg0: std::option::Option<u16>,
@@ -3385,6 +3375,20 @@ impl<'mc> ConfigurationOptions<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::configuration::ConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn configuration(
+        &mut self,
+    ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "configuration",
+            "()Lorg/bukkit/configuration/Configuration;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::Configuration::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3805,29 +3809,6 @@ impl<'mc> ConfigurationSection<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn get_item_stack_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -3848,6 +3829,29 @@ impl<'mc> ConfigurationSection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 =
+            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_2 =
+            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

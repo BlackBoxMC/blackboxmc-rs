@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ChunkGeneratorChunkData. Needed for returning it from Java.
 pub struct ChunkGeneratorChunkData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24,64 +28,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    #[deprecated]
-    pub fn get_data(
-        &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<i8, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getData",
-            "(III)B",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b().unwrap())
-    }
-    pub fn set_region_with_int(
-        &mut self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-        arg3: i32,
-        arg4: i32,
-        arg5: i32,
-        arg6: std::option::Option<impl Into<&'mc crate::block::data::BlockData<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
-        let val_7 =
-            unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setRegion",
-            "(IIIIIILorg/bukkit/block/data/BlockData;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-                jni::objects::JValueGen::from(&val_5),
-                jni::objects::JValueGen::from(&val_6),
-                jni::objects::JValueGen::from(&val_7),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn get_type(
         &mut self,
@@ -117,6 +63,29 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             raw_obj,
             crate::Material::from_string(variant_str).unwrap(),
         )
+    }
+    #[deprecated]
+    pub fn get_data(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<i8, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getData",
+            "(III)B",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.b().unwrap())
     }
     pub fn get_block_data(
         &mut self,
@@ -177,27 +146,36 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             crate::block::Biome::from_string(variant_str).unwrap(),
         )
     }
-    pub fn set_block_with_int(
+    pub fn set_region_with_int(
         &mut self,
         arg0: i32,
         arg1: i32,
         arg2: i32,
-        arg3: std::option::Option<impl Into<&'mc crate::block::data::BlockData<'mc>>>,
+        arg3: i32,
+        arg4: i32,
+        arg5: i32,
+        arg6: std::option::Option<impl Into<&'mc crate::block::data::BlockData<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
+        let val_7 =
+            unsafe { jni::objects::JObject::from_raw(arg6.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setBlock",
-            "(IIILorg/bukkit/block/data/BlockData;)V",
+            "setRegion",
+            "(IIIIIILorg/bukkit/block/data/BlockData;)V",
             &[
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
                 jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+                jni::objects::JValueGen::from(&val_6),
+                jni::objects::JValueGen::from(&val_7),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -240,6 +218,32 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             .call_method(&self.jni_object(), "getMaxHeight", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn set_block_with_int(
+        &mut self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+        arg3: std::option::Option<impl Into<&'mc crate::material::MaterialData<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_4 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setBlock",
+            "(IIILorg/bukkit/material/MaterialData;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 }
 impl<'mc> JNIRaw<'mc> for ChunkGeneratorChunkData<'mc> {
@@ -710,25 +714,6 @@ impl<'mc> BlockPopulator<'mc> {
         let cls = &jni.find_class("org/bukkit/generator/BlockPopulator")?;
         let res = jni.new_object(cls, "()V", &[])?;
         crate::generator::BlockPopulator::from_raw(&jni, res)
-    }
-    pub fn populate_with_world(
-        &mut self,
-        arg0: impl Into<&'mc crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-        arg4: std::option::Option<impl Into<&'mc crate::generator::LimitedRegion<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
-        let val_5 =
-            unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"populate","(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;IILorg/bukkit/generator/LimitedRegion;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     pub fn wait(
         &mut self,
@@ -1343,74 +1328,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::generator::ChunkGenerator::from_raw(&jni, res)
     }
-    pub fn generate_noise(
-        &mut self,
-        arg0: impl Into<&'mc crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg2: i32,
-        arg3: i32,
-        arg4: impl Into<&'mc crate::generator::ChunkGeneratorChunkData<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"generateNoise","(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;IILorg/bukkit/generator/ChunkGenerator$ChunkData;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn generate_surface(
-        &mut self,
-        arg0: impl Into<&'mc crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg2: i32,
-        arg3: i32,
-        arg4: impl Into<&'mc crate::generator::ChunkGeneratorChunkData<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"generateSurface","(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;IILorg/bukkit/generator/ChunkGenerator$ChunkData;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn generate_bedrock(
-        &mut self,
-        arg0: impl Into<&'mc crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg2: i32,
-        arg3: i32,
-        arg4: impl Into<&'mc crate::generator::ChunkGeneratorChunkData<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"generateBedrock","(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;IILorg/bukkit/generator/ChunkGenerator$ChunkData;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn generate_caves(
-        &mut self,
-        arg0: impl Into<&'mc crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg2: i32,
-        arg3: i32,
-        arg4: impl Into<&'mc crate::generator::ChunkGeneratorChunkData<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"generateCaves","(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;IILorg/bukkit/generator/ChunkGenerator$ChunkData;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn get_default_biome_provider(
         &mut self,
         arg0: impl Into<&'mc crate::generator::WorldInfo<'mc>>,
@@ -1424,54 +1341,6 @@ impl<'mc> ChunkGenerator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::generator::BiomeProvider::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn get_base_height(
-        &mut self,
-        arg0: impl Into<&'mc crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg2: i32,
-        arg3: i32,
-        arg4: impl Into<&'mc crate::HeightMap<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBaseHeight",
-            "(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;IILorg/bukkit/HeightMap;)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-                jni::objects::JValueGen::from(&val_5),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    #[deprecated]
-    pub fn generate_chunk_data(
-        &mut self,
-        arg0: impl Into<&'mc crate::World<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg2: i32,
-        arg3: i32,
-        arg4: impl Into<&'mc crate::generator::ChunkGeneratorBiomeGrid<'mc>>,
-    ) -> Result<crate::generator::ChunkGeneratorChunkData<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = unsafe { jni::objects::JObject::from_raw(arg4.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"generateChunkData","(Lorg/bukkit/World;Ljava/util/Random;IILorg/bukkit/generator/ChunkGenerator$BiomeGrid;)Lorg/bukkit/generator/ChunkGenerator$ChunkData;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::generator::ChunkGeneratorChunkData::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1513,27 +1382,6 @@ impl<'mc> ChunkGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_fixed_spawn_location(
-        &mut self,
-        arg0: impl Into<&'mc crate::World<'mc>>,
-        arg1: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFixedSpawnLocation",
-            "(Lorg/bukkit/World;Ljava/util/Random;)Lorg/bukkit/Location;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     #[deprecated]
     pub fn is_parallel_capable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1542,173 +1390,11 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn should_generate_noise(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "shouldGenerateNoise",
-            "(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;II)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn should_generate_surface(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "shouldGenerateSurface",
-            "(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;II)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     #[deprecated]
     pub fn should_generate_bedrock(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "shouldGenerateBedrock", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn should_generate_caves(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "shouldGenerateCaves",
-            "(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;II)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn should_generate_decorations(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "shouldGenerateDecorations",
-            "(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;II)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn should_generate_mobs(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "shouldGenerateMobs",
-            "(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;II)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn should_generate_structures(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "shouldGenerateStructures",
-            "(Lorg/bukkit/generator/WorldInfo;Ljava/util/Random;II)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-            ],
-        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }

@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct BookMetaGeneration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31,26 +35,6 @@ impl<'mc> BookMetaGeneration<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -92,21 +76,6 @@ impl<'mc> BookMetaGeneration<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn compare_to_with_object(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compareTo",
-            "(Ljava/lang/Enum;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
@@ -301,19 +270,19 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -433,20 +402,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -488,6 +443,20 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -808,19 +777,19 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -940,20 +909,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -995,6 +950,20 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -1240,6 +1209,13 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l().unwrap())
+    }
     pub fn set_variant(
         &mut self,
         arg0: impl Into<&'mc crate::entity::AxolotlVariant<'mc>>,
@@ -1253,20 +1229,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::inventory::meta::AxolotlBucketMeta<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Lorg/bukkit/inventory/meta/AxolotlBucketMeta;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::AxolotlBucketMeta::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn has_variant(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -1317,19 +1279,19 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1449,20 +1411,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -1504,6 +1452,20 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -1774,13 +1736,6 @@ impl<'mc> SkullMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn has_owner(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasOwner", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn owning_player(
         &mut self,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -1794,6 +1749,13 @@ impl<'mc> SkullMeta<'mc> {
         crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn has_owner(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasOwner", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn set_owning_player(
         &mut self,
@@ -1907,19 +1869,19 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2039,20 +2001,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -2094,6 +2042,20 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -2423,19 +2385,19 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2555,20 +2517,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -2610,6 +2558,20 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -2848,13 +2810,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
-    pub fn has_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasCustomEffects", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn custom_effects(
         &mut self,
     ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
@@ -2868,6 +2823,13 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn has_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasCustomEffects", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn add_custom_effect(
         &mut self,
@@ -2965,19 +2927,19 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3097,20 +3059,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -3152,6 +3100,20 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -3486,19 +3448,19 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3618,20 +3580,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -3673,6 +3621,20 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -3958,19 +3920,19 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -4090,20 +4052,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -4145,6 +4093,20 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -4455,19 +4417,19 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -4587,20 +4549,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -4642,6 +4590,20 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -5066,19 +5028,19 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5198,20 +5160,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -5253,6 +5201,20 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -5582,19 +5544,19 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5714,20 +5676,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -5769,6 +5717,20 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -6091,19 +6053,19 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -6223,20 +6185,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -6278,6 +6226,20 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -6627,19 +6589,19 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -6759,20 +6721,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -6814,6 +6762,20 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -7124,19 +7086,19 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7256,20 +7218,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -7311,6 +7259,20 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -7576,23 +7538,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn add_effects_with_firework_effects(
-        &mut self,
-        arg0: std::option::Option<
-            impl Into<&'mc blackboxmc_::bukkit::JavaIterable<'mc, orgFireworkEffect>>,
-        >,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addEffects",
-            "(Ljava/lang/Iterable;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn add_effect(
         &mut self,
         arg0: impl Into<&'mc crate::FireworkEffect<'mc>>,
@@ -7681,19 +7626,19 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7813,20 +7758,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -7868,6 +7799,20 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -8134,13 +8079,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn has_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasCustomEffects", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn custom_effects(
         &mut self,
     ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
@@ -8154,6 +8092,13 @@ impl<'mc> PotionMeta<'mc> {
         blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    pub fn has_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hasCustomEffects", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn add_custom_effect(
         &mut self,
@@ -8301,19 +8246,19 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -8433,20 +8378,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -8488,6 +8419,20 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -8810,19 +8755,19 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -8942,20 +8887,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -8997,6 +8928,20 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -9377,19 +9322,19 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -9509,20 +9454,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -9564,6 +9495,20 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -9889,19 +9834,19 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -10021,20 +9966,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -10076,6 +10007,20 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -10508,19 +10453,19 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -10640,20 +10585,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -10695,6 +10626,20 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -11171,19 +11116,19 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -11303,20 +11248,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -11358,6 +11289,20 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -11678,19 +11623,19 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -11810,20 +11755,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -11865,6 +11796,20 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -12255,19 +12200,19 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -12387,20 +12332,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -12442,6 +12373,20 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -12925,19 +12870,19 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -13057,20 +13002,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -13112,6 +13043,20 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
@@ -13427,19 +13372,19 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn has_conflicting_enchant(
+    pub fn get_enchant_level(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "hasConflictingEnchant",
-            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            "getEnchantLevel",
+            "(Lorg/bukkit/enchantments/Enchantment;)I",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.i().unwrap())
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -13559,20 +13504,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_enchant_level(
-        &mut self,
-        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEnchantLevel",
-            "(Lorg/bukkit/enchantments/Enchantment;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
     pub fn enchants(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -13614,6 +13545,20 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeEnchant",
+            "(Lorg/bukkit/enchantments/Enchantment;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn has_conflicting_enchant(
+        &mut self,
+        arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasConflictingEnchant",
             "(Lorg/bukkit/enchantments/Enchantment;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );

@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct SimplexNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -477,25 +481,6 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
-    }
-    pub fn new_with_world(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaRandom<'mc>>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<crate::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let cls = &jni.find_class("org/bukkit/util/noise/SimplexOctaveGenerator")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/util/Random;I)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        crate::noise::SimplexOctaveGenerator::from_raw(&jni, res)
     }
     pub fn new_with_long(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,

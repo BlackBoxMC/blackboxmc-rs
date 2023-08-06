@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct MemoryKey<'mc, T>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -46,7 +50,9 @@ where
         let mut obj = res.l()?;
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(
+        &mut self,
+    ) -> Result<crate::NamespacedKey<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getKey",
@@ -60,7 +66,7 @@ where
     }
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
+        arg0: impl Into<&'mc crate::NamespacedKey<'mc, /*3*/ T>>,
     ) -> Result<crate::entity::memory::MemoryKey<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/entity/memory/MemoryKey")?;

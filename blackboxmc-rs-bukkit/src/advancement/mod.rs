@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements AdvancementProgress. Needed for returning it from Java.
 pub struct AdvancementProgress<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -72,22 +76,6 @@ impl<'mc> AdvancementProgress<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
-    }
-    pub fn get_date_awarded(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaDate<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDateAwarded",
-            "(Ljava/lang/String;)Ljava/util/Date;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaDate::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn remaining_criteria(
         &mut self,
@@ -254,20 +242,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             crate::advancement::AdvancementDisplayType::from_string(variant_str).unwrap(),
         )
     }
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -281,6 +255,20 @@ impl<'mc> AdvancementDisplay<'mc> {
             .call_method(&self.jni_object(), "getY", "()F", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
+    }
+    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDescription",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =

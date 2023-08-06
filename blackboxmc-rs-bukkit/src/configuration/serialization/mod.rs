@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct ConfigurationSerialization<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -53,20 +57,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    pub fn get_class_by_alias(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/lang/Class")?;
-        let res = jni.call_static_method(
-            cls,
-            "getClassByAlias",
-            "(Ljava/lang/String;)Ljava/lang/Class;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
     pub fn get_alias(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -103,16 +93,16 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
-    pub fn unregister_class_with_class(
+    pub fn unregister_class_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<jni::objects::JClass<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = arg0.unwrap();
         let cls = &jni.find_class("void")?;
         let res = jni.call_static_method(
             cls,
             "unregisterClass",
-            "(Ljava/lang/String;)V",
+            "(Ljava/lang/Class;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
         Ok(())
@@ -134,6 +124,20 @@ impl<'mc> ConfigurationSerialization<'mc> {
 "(Ljava/util/Map;Ljava/lang/Class;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         let mut obj = res.l()?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
+    }
+    pub fn get_class_by_alias(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/lang/Class")?;
+        let res = jni.call_static_method(
+            cls,
+            "getClassByAlias",
+            "(Ljava/lang/String;)Ljava/lang/Class;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn wait(
         &mut self,

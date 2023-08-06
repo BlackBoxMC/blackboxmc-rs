@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements Attributable. Needed for returning it from Java.
 pub struct Attributable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -183,31 +187,6 @@ impl<'mc> AttributeInstance<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn attribute(
-        &mut self,
-    ) -> Result<crate::attribute::Attribute<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAttribute",
-            "()Lorg/bukkit/attribute/Attribute;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::attribute::Attribute::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::attribute::Attribute::from_string(variant_str).unwrap(),
-        )
-    }
     pub fn modifiers(
         &mut self,
     ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
@@ -235,6 +214,31 @@ impl<'mc> AttributeInstance<'mc> {
             .call_method(&self.jni_object(), "getDefaultValue", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
+    }
+    pub fn attribute(
+        &mut self,
+    ) -> Result<crate::attribute::Attribute<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAttribute",
+            "()Lorg/bukkit/attribute/Attribute;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::attribute::Attribute::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::attribute::Attribute::from_string(variant_str).unwrap(),
+        )
     }
     pub fn base_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
@@ -331,26 +335,6 @@ impl<'mc> AttributeModifierOperation<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<blackboxmc_java::JavaEnum<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let mut obj = res.l()?;
-        blackboxmc_java::JavaEnum::from_raw(&jni, obj)
-    }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -391,21 +375,6 @@ impl<'mc> AttributeModifierOperation<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn compare_to_with_object(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaEnum<'mc>>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compareTo",
-            "(Ljava/lang/Enum;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }

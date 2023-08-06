@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ProjectileSource. Needed for returning it from Java.
 pub struct ProjectileSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,

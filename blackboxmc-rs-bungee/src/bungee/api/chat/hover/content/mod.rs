@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct Item<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for Item<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -46,14 +50,6 @@ crate::bungee::api::chat::hover::content::Item::from_raw(&jni,res
 let res = 
 self.jni_ref().translate_error(res)?;
 Ok(res.i().unwrap())}
-	pub fn tag(&mut self) 
--> Result<crate::bungee::api::chat::ItemTag<'mc, >, Box<dyn std::error::Error>>
-
-{let res = self.jni_ref().call_method(&self.jni_object(),"getTag","()Lnet/md_5/bungee/api/chat/ItemTag;",&[]);
-let res = 
-self.jni_ref().translate_error(res)?;
-crate::bungee::api::chat::ItemTag::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
-)}
 	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc, >) 
 -> Result<bool, Box<dyn std::error::Error>>
 
@@ -83,6 +79,14 @@ Ok(res.i().unwrap())}
 let res = 
 self.jni_ref().translate_error(res)?;
 Ok(self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string())}
+	pub fn tag(&mut self) 
+-> Result<crate::bungee::api::chat::ItemTag<'mc, >, Box<dyn std::error::Error>>
+
+{let res = self.jni_ref().call_method(&self.jni_object(),"getTag","()Lnet/md_5/bungee/api/chat/ItemTag;",&[]);
+let res = 
+self.jni_ref().translate_error(res)?;
+crate::bungee::api::chat::ItemTag::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
+)}
 	pub fn set_tag(&mut self,arg0: impl Into<&'mc crate::bungee::api::chat::ItemTag<'mc, >>) 
 -> Result<(), Box<dyn std::error::Error>>
 
@@ -97,6 +101,13 @@ Ok(())}
 let res = self.jni_ref().call_method(&self.jni_object(),"setCount","(I)V",&[jni::objects::JValueGen::from(&val_1)]);
 self.jni_ref().translate_error(res)?;
 Ok(())}
+	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(())}
 	pub fn required_action(&mut self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc, >, Box<dyn std::error::Error>>
 
@@ -105,13 +116,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
-	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
--> Result<(), Box<dyn std::error::Error>>
-
-{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
-self.jni_ref().translate_error(res)?;
-Ok(())}
 	pub fn assert_action(&mut self,arg0: impl Into<&'mc crate::bungee::api::chat::HoverEventAction<'mc, >>) 
 -> Result<(), Box<dyn std::error::Error>>
 
@@ -246,6 +250,13 @@ Ok(self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jn
 let res = 
 self.jni_ref().translate_error(res)?;
 Ok(self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string())}
+	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(())}
 	pub fn required_action(&mut self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc, >, Box<dyn std::error::Error>>
 
@@ -254,13 +265,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
-	pub fn set_id(&mut self,arg0: impl Into<&'mc String>) 
--> Result<(), Box<dyn std::error::Error>>
-
-{let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-let res = self.jni_ref().call_method(&self.jni_object(),"setId","(Ljava/lang/String;)V",&[jni::objects::JValueGen::from(&val_1)]);
-self.jni_ref().translate_error(res)?;
-Ok(())}
 	pub fn assert_action(&mut self,arg0: impl Into<&'mc crate::bungee::api::chat::HoverEventAction<'mc, >>) 
 -> Result<(), Box<dyn std::error::Error>>
 
@@ -532,13 +536,6 @@ Ok(self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jn
 let res = 
 self.jni_ref().translate_error(res)?;
 Ok(res.i().unwrap())}
-	pub fn assert_action(&mut self,arg0: impl Into<&'mc crate::bungee::api::chat::HoverEventAction<'mc, >>) 
--> Result<(), Box<dyn std::error::Error>>
-
-{let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone())};
-let res = self.jni_ref().call_method(&self.jni_object(),"assertAction","(Lnet/md_5/bungee/api/chat/HoverEvent$Action;)V",&[jni::objects::JValueGen::from(&val_1)]);
-self.jni_ref().translate_error(res)?;
-Ok(())}
 	pub fn required_action(&mut self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc, >, Box<dyn std::error::Error>>
 
@@ -547,6 +544,13 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
+	pub fn assert_action(&mut self,arg0: impl Into<&'mc crate::bungee::api::chat::HoverEventAction<'mc, >>) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone())};
+let res = self.jni_ref().call_method(&self.jni_object(),"assertAction","(Lnet/md_5/bungee/api/chat/HoverEvent$Action;)V",&[jni::objects::JValueGen::from(&val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(())}
 	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 

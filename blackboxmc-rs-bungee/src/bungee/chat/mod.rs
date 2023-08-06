@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub struct SelectorComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -874,23 +878,6 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     pub fn to_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "toString",
-            "(Ljava/lang/Object;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn to_string_with_base_component(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 =
@@ -900,6 +887,23 @@ impl<'mc> ComponentSerializer<'mc> {
             cls,
             "toString",
             "(Lnet/md_5/bungee/api/chat/BaseComponent;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn to_string_with_object(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = arg0.unwrap();
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "toString",
+            "(Ljava/lang/Object;)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
         Ok(jni

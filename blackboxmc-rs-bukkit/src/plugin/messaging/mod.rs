@@ -1,3 +1,7 @@
+#![allow(deprecated)]
+#![feature(anonymous_lifetime_in_impl_trait)]
+use blackboxmc_general::JNIRaw;
+use color_eyre::eyre::Result;
 pub enum PluginChannelDirectionEnum {
     Incoming,
     Outgoing,
@@ -182,21 +186,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn listener(
-        &mut self,
-    ) -> Result<crate::plugin::messaging::PluginMessageListener<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getListener",
-            "()Lorg/bukkit/plugin/messaging/PluginMessageListener;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::messaging::PluginMessageListener::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -231,6 +220,21 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    pub fn listener(
+        &mut self,
+    ) -> Result<crate::plugin::messaging::PluginMessageListener<'mc>, Box<dyn std::error::Error>>
+    {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getListener",
+            "()Lorg/bukkit/plugin/messaging/PluginMessageListener;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::messaging::PluginMessageListener::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
