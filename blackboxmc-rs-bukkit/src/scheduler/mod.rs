@@ -1,12 +1,11 @@
 #![allow(deprecated)]
-#![feature(anonymous_lifetime_in_impl_trait)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// An instantiatable struct that implements BukkitTask. Needed for returning it from Java.
-pub struct BukkitTask<'mc> {
-    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) obj: jni::objects::JObject<'mc>,
-}
+pub struct BukkitTask<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
 impl<'mc> BukkitTask<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23,10 +22,7 @@ impl<'mc> BukkitTask<'mc> {
             )
             .into())
         } else {
-            Ok(Self {
-                env: env.clone(),
-                obj: obj,
-            })
+            Ok(Self(env.clone(), obj))
         }
     }
     pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
@@ -43,6 +39,13 @@ impl<'mc> BukkitTask<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn is_sync(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSync", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
     pub fn owner(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -55,13 +58,6 @@ impl<'mc> BukkitTask<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_sync(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSync", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
     pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -72,18 +68,18 @@ impl<'mc> BukkitTask<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for BukkitTask<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.env.clone()
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 /// An instantiatable struct that implements BukkitWorker. Needed for returning it from Java.
-pub struct BukkitWorker<'mc> {
-    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) obj: jni::objects::JObject<'mc>,
-}
+pub struct BukkitWorker<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
 impl<'mc> BukkitWorker<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -100,10 +96,7 @@ impl<'mc> BukkitWorker<'mc> {
             )
             .into())
         } else {
-            Ok(Self {
-                env: env.clone(),
-                obj: obj,
-            })
+            Ok(Self(env.clone(), obj))
         }
     }
     pub fn owner(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -128,18 +121,18 @@ impl<'mc> BukkitWorker<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for BukkitWorker<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.env.clone()
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 /// An instantiatable struct that implements BukkitScheduler. Needed for returning it from Java.
-pub struct BukkitScheduler<'mc> {
-    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) obj: jni::objects::JObject<'mc>,
-}
+pub struct BukkitScheduler<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
 impl<'mc> BukkitScheduler<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -158,10 +151,7 @@ impl<'mc> BukkitScheduler<'mc> {
             )
             .into())
         } else {
-            Ok(Self {
-                env: env.clone(),
-                obj: obj,
-            })
+            Ok(Self(env.clone(), obj))
         }
     }
     pub fn is_queued(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
@@ -234,30 +224,68 @@ impl<'mc> BukkitScheduler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn active_workers(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getActiveWorkers",
+            "()Ljava/util/List;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    pub fn pending_tasks(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPendingTasks",
+            "()Ljava/util/List;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
 }
 impl<'mc> JNIRaw<'mc> for BukkitScheduler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.env.clone()
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-pub struct BukkitRunnable<'mc> {
-    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) obj: jni::objects::JObject<'mc>,
-}
+pub struct BukkitRunnable<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for BukkitRunnable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.env.clone()
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> BukkitRunnable<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "BukkitRunnable", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
@@ -275,10 +303,7 @@ impl<'mc> BukkitRunnable<'mc> {
             )
             .into())
         } else {
-            Ok(Self {
-                env: env.clone(),
-                obj: obj,
-            })
+            Ok(Self(env.clone(), obj))
         }
     }
     pub fn new(
@@ -450,44 +475,12 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self

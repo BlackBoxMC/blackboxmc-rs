@@ -1,5 +1,4 @@
 #![allow(deprecated)]
-#![feature(anonymous_lifetime_in_impl_trait)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 pub enum CookingBookCategoryEnum {
@@ -16,24 +15,24 @@ impl std::fmt::Display for CookingBookCategoryEnum {
         }
     }
 }
-pub struct CookingBookCategory<'mc> {
-    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) obj: jni::objects::JObject<'mc>,
-    pub enu: CookingBookCategoryEnum,
-}
+pub struct CookingBookCategory<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub CookingBookCategoryEnum,
+);
 impl<'mc> std::ops::Deref for CookingBookCategory<'mc> {
     type Target = CookingBookCategoryEnum;
     fn deref(&self) -> &Self::Target {
-        return &self.enu;
+        return &self.2;
     }
 }
 impl<'mc> JNIRaw<'mc> for CookingBookCategory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.env.clone()
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> CookingBookCategory<'mc> {
@@ -55,11 +54,7 @@ impl<'mc> CookingBookCategory<'mc> {
             )
             .into())
         } else {
-            Ok(Self {
-                env: env.clone(),
-                obj: obj,
-                enu: e,
-            })
+            Ok(Self(env.clone(), obj, e))
         }
     }
     pub const FOOD: CookingBookCategoryEnum = CookingBookCategoryEnum::Food;
@@ -90,24 +85,24 @@ impl std::fmt::Display for CraftingBookCategoryEnum {
         }
     }
 }
-pub struct CraftingBookCategory<'mc> {
-    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) obj: jni::objects::JObject<'mc>,
-    pub enu: CraftingBookCategoryEnum,
-}
+pub struct CraftingBookCategory<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub CraftingBookCategoryEnum,
+);
 impl<'mc> std::ops::Deref for CraftingBookCategory<'mc> {
     type Target = CraftingBookCategoryEnum;
     fn deref(&self) -> &Self::Target {
-        return &self.enu;
+        return &self.2;
     }
 }
 impl<'mc> JNIRaw<'mc> for CraftingBookCategory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.env.clone()
+        self.0.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> CraftingBookCategory<'mc> {
@@ -129,11 +124,7 @@ impl<'mc> CraftingBookCategory<'mc> {
             )
             .into())
         } else {
-            Ok(Self {
-                env: env.clone(),
-                obj: obj,
-                enu: e,
-            })
+            Ok(Self(env.clone(), obj, e))
         }
     }
     pub const BUILDING: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Building;

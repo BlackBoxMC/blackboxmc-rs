@@ -15,18 +15,19 @@ file_cache = {}
 # rust's reserved words; we use this to rename any functions
 reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", "false", "fn", "for", "if", "impl", "in", "let", "loop", "match",
                   "move", "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true", "type", "unsafe", "use", "where", "while",
-                  "abstract", "become", "box", "do", "final", "macro", "override", "priv", "typeof", "unsized", "virtual", "yield","await"]
+                  "abstract", "become", "box", "do", "final", "macro", "override", "priv", "typeof", "unsized", "virtual", "yield"]
 
 library_resolves = {
     "net.md_5": "blackboxmc-rs-bungee",
     "org.bukkit": "blackboxmc-rs-bukkit",
     "java.util": "blackboxmc-rs-java",
+    "java.lang": "blackboxmc-rs-java"
 }
 
 parsed_classes = {}
 excluded_classes = [
     "org.bukkit.plugin.SimplePluginManager",    # uses stuff that isn't being generated due to that java bug and i don't want to write an entire class binding for something that's getting deprecated anyways.
-    "java.lang.Thread",                         # i would have to bind all of java.lang for this and i don't feel like it sorry
+    "java.lang",                         # i would have to bind all of java.lang for this and i don't feel like it sorry
     
     "java.util.concurrent",                     # i want to lessen my workload and binding this is going to be pointless since your only option of multithreading is through BukkitRunnables.
     "java.util.stream",                         # unneeded when java's iterator is bound.
@@ -42,22 +43,20 @@ excluded_classes = [
     "java.util.NavigableMap", "java.util.NavigableSet",
     "java.util.Base64$Decoder", "java.util.Base64$Encoder", "java.util.BitSet",
                         "java.util.Calendar", "java.util.Calendar$Builder", "java.util.Collections",
-                        "java.util.Date", "java.util.Dictionary",
-                        "java.util.DoubleSummaryStatistics", "java.util.EnumSet",
+                        "java.util.Dictionary",
+                        "java.util.DoubleSummaryStatistics",
                         "java.util.EventListenerProxy", "java.util.EventObject", "java.util.FormattableFlags",
                         "java.util.Formatter", "java.util.GregorianCalendar", "java.util.IntSummaryStatistics",
                         "java.util.ListResourceBundle", "java.util.LongSummaryStatistics", "java.util.Objects",
                         "java.util.Observable",
                         "java.util.PriorityQueue",
                         "java.util.Properties", "java.util.PropertyPermission",
-                        "java.util.Random", "java.util.ResourceBundle", "java.util.ResourceBundle$Control",
+                        "java.util.ResourceBundle", "java.util.ResourceBundle$Control",
                         "java.util.Scanner", "java.util.ServiceLoader", "java.util.SimpleTimeZone",
                         "java.util.Stack", "java.util.StringJoiner",
                         "java.util.StringTokenizer", "java.util.Timer", "java.util.TimerTask", "java.util.TimeZone", "java.util.Spliterator", "java.util.Spliterator$OfDouble", "java.util.Spliterator$OfInt",
                         "java.util.Spliterator$OfLong", "java.util.Spliterator$OfPrimitive", "java.lang.StackTraceElement", "java.lang.Throwable",
                         "java.util.logging.LoggingMXBean", "java.util.logging.FileHandler",
-                        "java.util.regex.Pattern", "java.util.regex.Matcher",
-                        "java.util.regex.MatchResult",
                         "java.util.logging.LogManager",
 
     # tempoerary
@@ -67,9 +66,11 @@ excluded_classes = [
 interface_names = []
 filled_once = []
 bindings = {}
-omitted_classes = ["Striped64"]
+omitted_classes = []
 enums = []
 
+def library_name_format(libname):
+    return libname.replace("-","_").replace("_rs_","_")
 
 def in_excluded_classes(cl):
     if cl in excluded_classes:
@@ -78,9 +79,6 @@ def in_excluded_classes(cl):
         if cl.startswith(c):
             return True
     return False
-
-def library_name_format(libname):
-    return libname.replace("-","_").replace("_rs_","_")
 
 def mod_rs_folder_populate(dir):
     files = os.listdir(dir)
@@ -116,98 +114,74 @@ def snake_case_to_camel_case(string):
     return re.sub(r"_([a-z])", lambda f: f.group(1).upper(),
                     string.lower()).replace("_","")
 
-def func_signature_format(ty, increment, returning, options_start_at, generic_letters, upper_generic_letters,concrete_types):
+def func_signature_format(ty, increment, returning, options_start_at=-1):
     thing = ""
     internal_do_into = ty["type_name_resolved"].startswith("crate") or ty["type_name_resolved"].startswith("bukkit") or ty["type_name_resolved"].startswith("blackbox")
     is_string = ty["type_name_resolved"] == "String"
     internal = internal_do_into or ty["type_name_resolved"].startswith("jni")
     generic_letters = []
-    generic_args = ty["generic_clauses"]
-
-    generic_letters = list(filter(lambda f: f != "",generic_letters))
-    concrete_types = list(filter(lambda f: f != "", concrete_types))
-
-    generics = ty["generics"]
-    generic_str = ""
-    
-    if(len(generics) < 1) and len(generic_letters) >= 1 and ty["type_name_original"] != "java.lang.Object":
-        generics = generic_letters
-    if(len(generics) < 1) and len(upper_generic_letters) == 1 and ty["type_name_original"] != "java.lang.Object":
-        generics = upper_generic_letters
-        
-    if(len(generics) >= 1):
-        generics_ = []
-        n = 0
-        for gen in generics:
-            if len(concrete_types) < 1:
-                gen2 = re.search("(extends|super) ([A-Za-z\s]*)",gen)
-                if gen2 is not None:
-                    gen = "Into<"+gen2.group(2)+">"
-                if gen == "":
-                    if len(upper_generic_letters) >= n:
-                        generics_.append(upper_generic_letters[n])
-                    else:
-                        generics_.append(generic_letters[n])
-                else:
-                    generics_.append(gen)
-            n += 1
-        generics = generics_
-
-    generics += concrete_types
-    generic_str = ""
-
-    generic_str = ", "+",".join(generics)
-
-    if(len(generics) == 1 and ty["type_name_original"] == "java.lang.Object"):
-        if not returning:
-                thing += ty["type_name_lhand"]+": "
-        thing += generics[len(generics)-1]
+    generic_args = []
+    if(ty["type_name_lhand"] == "" and not returning):
+        thing += ty["type_name_resolved"]
     else:
-        if(len(generics) >= 1 and ty["type_name_original"] == "java.lang.Class"):
-            generics = []
-            generic_str = ""
-        if(ty["type_name_lhand"] == "" and not returning):
-            thing += ty["type_name_resolved"]
-        else:
-            if not returning:
-                thing += ty["type_name_lhand"]+": "
+        if not returning:
+            thing += ty["type_name_lhand"]+": "
 
-            if(options_start_at > -1):
-                if increment >= options_start_at:
-                    thing += "std::option::Option<"
+        if(options_start_at > -1):
+            if increment >= options_start_at:
+                thing += "std::option::Option<"
 
-            if(ty["type_name_resolved"].startswith("&dyn")):
-                old = ty["type_name_resolved"]
-                letter = chr(ord('a')+increment).upper()
-                ty["type_name_resolved"] = letter
-                generic_letters.append(letter[0])
-                generic_args.append(letter+": blackboxmc_general::JNIRaw<'mc> + "+old.replace("&dyn","")+"<'mc>")
+        if(ty["type_name_resolved"].startswith("&dyn")):
+            old = ty["type_name_resolved"]
+            letter = chr(ord('a')+increment).upper()
+            ty["type_name_resolved"] = letter
+            generic_letters.append(letter)
+            generic_args.append(letter+": blackboxmc_general::JNIRaw<'mc> + "+old.replace("&dyn","")+"<'mc>")
 
-            if ty["is_array"]:
-                thing += "Vec<"
+        if ty["is_array"]:
+            thing += "Vec<"
             if (internal_do_into or is_string) and not returning:
-                if len(generics) < 1:
-                    thing += "impl Into<&'mc "
-                else:
-                    thing += "&'mc "
-
-            if "<" in ty["type_name_resolved"] and "'mc" not in ty["type_name_resolved"]:
-                ty["type_name_resolved"] = ty["type_name_resolved"].replace("<","<'mc,")
-
+                thing += "impl Into<"
             thing += ty["type_name_resolved"]
-
             if(internal):
-                if "'mc" not in ty["type_name_resolved"]:
-                    thing += "<'mc"+generic_str+">"
-            if (internal_do_into or is_string) and not returning and len(generics) < 1:
+                thing += "<'mc>"
+            if (internal_do_into or is_string) and not returning:
                 thing += ">"
-            if ty["is_array"]:
+            thing += ">"
+        else:
+            if (internal_do_into or is_string) and not returning:
+                thing += "impl Into<&'mc "
+            if len(ty["generics"]) >= 1:
+                thing += ty["type_name_alone"]+"<"
+                j = []
+                for g in ty["generics"]:
+                    if len(g) >= 2:
+                        if g.startswith("crate") or g.startswith("bukkit") or g.startswith("jni") or g.startswith("blackbox") or g == "String":
+                            k = ""
+                            if not returning and not g.startswith("jni"):
+                                k += "impl Into<"
+                            if not g.endswith("<'mc>") and g != "String":
+                                k += g+"<'mc>"
+                            else:
+                                k += g
+                            if not returning and not g.startswith("jni"):
+                                k += ">"
+                            j.append(k)
+                        else:
+                            j.append(g)
+                    else:
+                        return None
+                thing += ",".join(j)
                 thing += ">"
-            if(options_start_at != -1):
-                if increment >= options_start_at:
-                    thing += ">"
-    while ",," in thing or ", ," in thing:
-        thing = thing.replace(", ,",",").replace(",,",",")
+            else:
+                thing += ty["type_name_resolved"]
+                if(internal):
+                    thing += "<'mc>"
+            if (internal_do_into or is_string) and not returning:
+                thing += ">"
+        if(options_start_at != -1):
+            if increment >= options_start_at:
+                thing += ">"
 
     return {
         "result": thing,
@@ -227,9 +201,6 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
         else:
             arg = "arg"+str(n)
 
-    if type["is_array"]:
-        return None
-
     if options_start_at > -1:
         if n >= options_start_at:
             arg += ".unwrap()"
@@ -237,9 +208,12 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
     ty = type["type_name_resolved"].replace("&dyn ","")
 
     if(ty.startswith("crate") or ty.startswith("blackbox")): # for internal types...
+        if "JavaEnum" in ty:
+            return None
+        
         # get the original object.
         fcall = ".into().jni_object().clone()"
-        if type["type_name_resolved"].startswith("&dyn") or len(type["generics"]) >= 1:
+        if type["type_name_resolved"].startswith("&dyn"):
             fcall = ".jni_object().clone()"
 
         return ["let "+var_prefix+"_"+str(n)+" = unsafe { jni::objects::JObject::from_raw("+arg+fcall+")};"]
@@ -252,7 +226,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 if class_name != "":
                     match(type["type_name_alone"]):
                         case "bool":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+arg+".into());"]
+                            return ["// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+arg+".into());"]
                         case "i8":
                             return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+arg+".into());"]
                         case "char" | "u16":
@@ -280,12 +254,107 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
             case "jni::objects::JObject" | "jni::objects::JClass":
                 # nothing to do
                 return ["let "+var_prefix+"_"+str(n)+" = "+arg+";"]
+            case "std::collections::HashMap":
+                match type["type_name_original"]:
+                    case "java.util.Map":
+                        c = [
+                            "let raw_"+var_prefix+"_"+str(n)+" = "+prefix+".new_object(\"java/util/HashMap\", \"()V\", &[]).unwrap();",
+                            "for (k, v) in "+arg+"{"
+                        ]
+
+                        t1 = java_type_from_rust(type["generics"][0])["class_name"]
+                        t2 = java_type_from_rust(type["generics"][1])["class_name"]
+
+                        c.append("\n\t\t".join(code_format({
+                            "type_name_resolved": type["generics"][0],
+                            "type_name_lhand": "k",
+                            "is_array": type["is_array"],
+                            "is_interface": type["is_interface"],
+                            "type_name_original": t1,
+                            "type_name_alone": type["generics"][0],
+                            "generics": type["generics"],
+                            "package_name": type["package_name"],
+                            "options_start_at": options_start_at,
+                            "usage_unsafe": False,
+                        }, prefix, 0, "map_val", "k", options_start_at)))
+
+                        c.append("\n\t\t".join(code_format({
+                            "type_name_resolved": type["generics"][1],
+                            "type_name_lhand": "v",
+                            "is_array": type["is_array"],
+                            "is_interface": type["is_interface"],
+                            "type_name_original": t2,
+                            "type_name_alone": type["generics"][1],
+                            "generics": type["generics"],
+                            "package_name": type["package_name"],
+                            "options_start_at": options_start_at,
+                            "usage_unsafe": False,
+                        }, prefix, 1, "map_val", "v", options_start_at)))
+
+                        c.append(
+                            prefix+".call_method(&raw_"+
+                                var_prefix+"_"+str(n)+","+
+                                "\"put\","
+                                "\"(L"+t1+"L"+t2+")V\","+
+                                "&[jni::objects::JValueGen::from(&map_val_0), jni::objects::JValueGen::from(&map_val_1)]"
+                            ")?;"
+                        )
+
+                        c.append("};")
+
+                        c.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(raw_"+var_prefix+"_"+str(n)+");")
+                        return c
+
+                    case _:
+                        print("Unhandled map type:\t\t"+type["type_name_original"],"\t\t",type["type_name_original"])
+                return None
+            case "Vec":
+                match type["type_name_original"]:
+                    case "java.util.List":
+                        c = [
+                            "let raw_"+var_prefix+"_"+str(n)+" = "+prefix+".new_object(\"java/util/ArrayList\", \"()V\", &[]).unwrap();",
+                            "for v in "+arg+"{"
+                        ]
+
+                        t1 = java_type_from_rust(type["generics"][0])["class_name"]
+
+                        co = code_format({
+                            "type_name_resolved": type["generics"][0],
+                            "type_name_lhand": "v",
+                            "is_array": type["is_array"],
+                            "is_interface": type["is_interface"],
+                            "type_name_original": t1,
+                            "type_name_alone": type["generics"][0],
+                            "generics": type["generics"],
+                            "package_name": type["package_name"],
+                            "options_start_at": options_start_at,
+                            "usage_unsafe": False,
+                        }, prefix, 0, "map_val", "v", options_start_at)
+                        if co is None:
+                            return None
+                        c.append("\n\t\t".join(co))
+
+                        c.append(
+                            prefix+".call_method("+
+                                "&raw_"+var_prefix+"_"+str(n)+","+
+                                "\"add\","
+                                "\"(L"+t1+")V\","+
+                                "&[jni::objects::JValueGen::from(&map_val_0)]"
+                            ")?;"
+                        )
+
+                        c.append("};")
+
+                        c.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(raw_"+var_prefix+"_"+str(n)+");")
+
+                        return c
+
+                    case _:
+                        print("Unhandled map type:\t\t"+type["type_name_original"],"\t\t",type["type_name_original"])
+                        return None
             case _:
-                if len(type["type_name_resolved"]) <= 1:
-                    return ["let "+var_prefix+"_"+str(n)+" = "+arg+".jni_object();"]
-                else:
-                    print("Untranslated argument:\t\t"+type["type_name_resolved"],"\t\t",type["type_name_original"])
-                    return None
+                print("Untranslated argument:\t\t"+type["type_name_alone"],"\t\t",type["type_name_original"])
+                return None
 
 def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at, is_constructor=False):
     if return_group["is_array"]:
@@ -333,7 +402,11 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         ".to_string_lossy()"+
                         ".to_string())"
             )
-        case "jni::objects::JObject": code.append("Ok(res.l().unwrap())")
+        case "jni::objects::JObject": 
+            if is_constructor:
+                code.append("Ok(res)")
+            else:
+                code.append("Ok(res.l().unwrap())")
         case "jni::objects::JClass":
             code.append("Ok(unsafe {"+
                         "jni::objects::JClass::from_raw(res.as_jni().l)"+
@@ -351,6 +424,8 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         "(r, g, b);"+
                         "Ok((r, g, b))")
         case _:
+            if return_group["type_name_resolved"] == "blackboxmc_java::JavaEnum":
+                return_group["type_name_resolved"] = "Self"
             if return_group["type_name_resolved"].startswith("&dyn "):
                 what = return_group["type_name_alone"].split("::")
                 name = what[len(what)-1]
@@ -375,7 +450,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                 if is_trait:
                     val_1 = "self.jni_ref()"
                 else:
-                    val_1 = "self.env"
+                    val_1 = "self.0"
                 val_2 = "unsafe { jni::objects::JObject::from_raw(res.l()"+end_line+".clone()) }"
             if return_group["type_name_original"] in enums:
                 code.append("let raw_obj = "+val_2+";let variant = "+val_1+".call_method(&raw_obj, \"toString\", \"()Ljava/lang/String;\", &[])"+end_line+";"+
@@ -410,34 +485,38 @@ def java_call_signature_format(types, return_type, is_constructor=False):
     else:
         return "("+"".join(results)+")"+java_letter_from_rust(return_type)
 
-def correct_extends_syntax(text):
-    gen2 = re.findall("(extends|super) (.*)",text)
-    for gen in gen2:
-        res = correct_extends_syntax(str(gen))
-        if len(res) <= 1:
-            text = text.replace(str(gen),res)
+def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False):
+    if method is not None and not is_constructor:
+        if returning:
+            parameter_type = method["method"]["genericReturnType"]
         else:
-            text = text.replace(str(gen),"Into<"+res+">")
-    return text
+            if i <= len(method["method"]["genericParameterTypes"]):
+                parameter_type = method["method"]["genericParameterTypes"][i]
+            else:
+                parameter_type = ""
+    else:
+        parameter_type = ""
 
-def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor,is_trait, upper_generic_letters):
-    type_name_resolved = ""
+    type_name_resolved = "jni::objects::JObject"
     is_array = False
     is_interface = False
     if ty.endswith("[]"):
         ty = ty.replace("[]", "")
         is_array = True
 
+    if not isinstance(library, bool):
+        if library.startswith("java"):
+            ty = "Java"+ty
+
     type_alone = ""
+    generics = []
+
+    usage_unsafe = False
 
     if ty.replace("com.destroystokyo.paper","org.bukkit") in interface_names:
         is_interface = True
 
     type_name_original = ty
-    package_name = ".".join(filter(lambda f: f.islower(), type_name_original.split(".")))
-    if in_excluded_classes(ty):
-        return None
-
     match ty:
         case "void":
             type_name_resolved = "()"
@@ -478,37 +557,31 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         case "java.lang.Object"  | "java.lang.reflect.Type" | "java.awt.Image" | "java.awt.image.BufferedImage":
             type_name_resolved = "jni::objects::JObject"
         case _:
-            if len(ty) <= 2:
-                type_name_resolved = ty
+            crate_name = ".".join(
+                filter(lambda f: f.lower() == f, ty.split(".")))
+
+            cont = True
+            while crate_name not in library_resolves and crate_name != "":
+                parts = crate_name.split(".")
+                parts.pop()
+                crate_name = ".".join(parts)
+
+            if crate_name == "":
+                usage_unsafe = True
             else:
-                if ty.startswith("java"):
-                    tynamealone = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
-                    type_name_resolved = package_name+".Java"+tynamealone
+                if crate_name == library or library is False:
+                    to_replace = "crate"
                 else:
-                    type_name_resolved = ty
-                type_name_resolved = ty
-                crate_name = ".".join(
-                    filter(lambda f: f.lower() == f, ty.split(".")))
+                    to_replace = library_name_format(library_resolves[crate_name])
+                    if to_replace == library_name_format(library_resolves["java.util"]):
+                        class_name = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
+                        ty = ty.replace(class_name, "Java"+class_name)
+                        
+                type_name_resolved = ty.replace(
+                    crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
 
-                cont = True
-                while crate_name not in library_resolves and crate_name != "":
-                    parts = crate_name.split(".")
-                    parts.pop()
-                    crate_name = ".".join(parts)
-
-                if crate_name == "":
-                    # it just so happens that the current external/unbound functions are stuff we don't care to implement anyways. but we'll leave this here for the future.
-                    #print("Unbound external class:",ty,"\t\t",method["method"]["name"])
-                    return None
-                else:
-                    if crate_name == library or library is False:
-                        to_replace = "crate"
-                    else:
-                        to_replace = library_name_format(library_resolves[crate_name])
-                    print(to_replace)
-                    type_name_resolved = type_name_resolved.replace(
-                        crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "").replace("util::","").replace("lang::","")
-
+    if type_alone == "":
+        type_alone = type_name_resolved
 
     parts = type_name_resolved.split("::")
     for p in parts:
@@ -530,104 +603,10 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
             options_start_at = -1
     else:
         options_start_at = -1
+    package_name = ".".join(filter(lambda f: f.islower(), type_name_original.split(".")))
 
-    upper_generics_list = list(filter(lambda f: f != "",upper_generic_letters.replace(" ","").split(",")))
-    generics = []
-    generic_clauses = []
-    if method is not None:
-        if len(generics) <= 0:
-            search = []
-            if returning:
-                if "genericReturnType" in method["method"]:
-                    search = method["method"]["genericReturnType"].split(".")
-            else:
-                if "genericParameterTypes" in method["method"]:
-                    search_ = method["method"]["genericParameterTypes"]
-                    if len(search_) > i:
-                        search = [search_[i]]
-            if len(search) >= 1:
-                n = i
-                for f in search:
-                    if in_excluded_classes(f):
-                        return None
-                    
-                    typ = java_type_to_rust("", f, None,n,returning,library,is_constructor,is_trait,upper_generic_letters)
-                    if typ is not None:
-                        if "::" in typ["type_name_resolved"] and typ["type_name_resolved"] != type_name_resolved:
-                            gen = correct_extends_syntax(typ["type_name_resolved"])
-                            # special case: some things return "Class<?>" but that's not supported
-                            if ty != "java.lang.Class":
-                                if gen == "javaString":
-                                    gen = "String"
-                                if "?" in gen:
-                                    if "extends" in gen or "super" in gen:
-                                        gen = gen.replace("? extends","").replace("? super","")
-                                    else:
-                                        gen = upper_generic_letters.replace(", ","")
-                                # another special case: if it's an "Object" then no it isn't, silly.
-                                if ty == "java.lang.Object":
-                                    generic_clauses.append(gen+": JNIRaw<'mc>")
-                                    type_name_resolved = gen
-                                    type_name_original = gen
-                                else:
-                                    if(len(gen) <= 1):
-                                        
-                                        generics.append(gen)
-                                        #generic_clauses.append(gen+": Into<"+gen+">")
-                                    else:
-                                        
-                                        type_name_resolved = gen
-                    n += 1
-
-                
-    # if the generics array is empty, then we have a few rules.
-    if len(generics) <= 0:
-        # first we have to get the default generics to know some stuff.
-        default_generics = []
-        if ".".join(package_name.split(".")[0:2]) in libraries:
-            temp_lib = libraries[".".join(package_name.split(".")[0:2])]
-            if package_name in temp_lib:
-                temp_pkg = temp_lib[package_name]
-                typealone = "".join(filter(lambda f: f[0].isupper(), type_name_original.split(".")))
-                if typealone.replace("$",".") in temp_pkg:
-                    temp_cls = temp_pkg[typealone.replace("$",".")]
-                    if "generics" in temp_cls:
-                        default_generics = temp_cls["generics"]
-        # is there only one upper generic, and one default generic?
-        if len(upper_generics_list) == 1 and len(default_generics) == 1:
-            generics = upper_generics_list
-        # christ i want to be done with this ok 
-        # lets make rules for certain method names now
-        if method is not None:
-            if method["method"]["name"] == "getKeys" or method["method"]["name"] == "keys":
-                generics.append("K")
-            if method["method"]["name"] == "values":
-                generics.append("V")
-            if method["method"]["name"] == "keySet":
-                #generics.append("JavaSet<'mc,K>")
-                generics.append("Set<'mc,K>")
-            if method["method"]["name"] == "entrySet":
-                #generics.append("JavaMapEntry<'mc,K,V>")
-                generics.append("MapEntry<'mc,K,V>")
-            if method["method"]["name"] == "elements" and len(generics) == 0:
-                generics.append("V")
-            if method["method"]["name"] == "comparingByKey" or method["method"]["name"] == "comparingByValue":
-                return None
-            if method["method"]["name"] == "comparator" and len(generics) == 0:
-                generics.append("K") 
-        # ok if all else fails just fucking fall back to the default generics 
-        if len(generics) <= 0:
-            if ty != "java.lang.Object":
-                generics = upper_generics_list
-
-    # by any change is the only generic in the type "T" and do we also only have one generic 
-    if len(generics) == 1:
-        if(generics[0] == "T"):
-            if len(upper_generics_list) == 1:
-                generics = upper_generics_list
-    if type_alone == "":
-        type_alone = type_name_resolved
-
+    if(in_excluded_classes(ty)):
+        return None
     return {
         "type_name_resolved": type_name_resolved,
         "type_name_lhand": type_name_lhand,
@@ -637,8 +616,8 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         "type_name_original": type_name_original,
         "type_name_alone": type_alone,
         "generics": generics,
-        "generic_clauses": generic_clauses,
         "options_start_at": options_start_at,
+        "usage_unsafe": usage_unsafe,
     }
 
 def java_type_from_rust(type):
@@ -676,7 +655,7 @@ def java_type_from_rust(type):
     }
 
 def java_letter_from_rust(type):
-    match(type):
+    match(type.replace("Java","")):
         case "java.lang.Boolean" | "boolean":
             return "Z"
         case "java.lang.Byte" | "byte":
@@ -698,9 +677,9 @@ def java_letter_from_rust(type):
         case "":
             return ""
         case _:
-            return "L"+type.replace(".","/")+";"
+            return "L"+type.replace(".","/").replace("Java","")+";"
 
-def gen_from_raw_func(name, is_enum, mod_path, has_generics):
+def gen_from_raw_func(name, is_enum, mod_path):
     impl_signature = []
     impl_signature.append("pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>")
     if is_enum:
@@ -720,20 +699,17 @@ def gen_from_raw_func(name, is_enum, mod_path, has_generics):
                 "    )\n"+
                 "    .into())\n"+
                 "} else {\n"+
-                "    Ok(Self{env: env.clone(), obj: obj")
+                "    Ok(Self(env.clone(), obj")
     if is_enum:
-        impl_signature.append(", enu: e")
-    if has_generics:
-        impl_signature.append(", inner: Vec::new()")
-    impl_signature.append("})\n"+
+        impl_signature.append(", e")
+    impl_signature.append("))\n"+
                 "}"
         )
-    
     impl_signature.append("}")
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
-def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor,upper_generic_letters):
+def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,variants,is_constructor):
     og_name = name
     impl_signature = []
 
@@ -745,6 +721,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         for (v,val_proper) in variants:
             impl_signature.append("\""+v+"\" => Some("+name+"Enum::"+val_proper+"),")
         impl_signature.append("_ => None}}")
+
 
     names = {}
     methods_ = {}
@@ -858,18 +835,9 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
     for k in new_methods:
         method = new_methods[k]
-        name = k
-        parameters = method["method"]["parameters"]
-        generic_parameter_types = method["method"]["genericParameterTypes"]
-        types = []
-        for i in range(len(parameters)):
-            x = parameters[i]
-            y = generic_parameter_types[i]
-            if(len(y) == 1 and x[1] == "java.lang.Object"):
-                types.append([x[0], y])
-            else:
-                types.append(x)
 
+        name = k
+        types = method["method"]["parameters"]
 
         if "options_start_at" in method["method"]:
             options_start_at = method["method"]["options_start_at"]
@@ -888,10 +856,10 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 "is_interface": False,
                 "type_name_original": "",
                 "type_name_alone": "",
-                "generics": [],
-                "generic_clauses": [],
+                "generics": "",
                 "package_name": "",
                 "options_start_at": options_start_at,
+                "usage_unsafe": False,
             })
         else:
             func_signature.append({
@@ -901,16 +869,16 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 "is_interface": False,
                 "type_name_original": "",
                 "type_name_alone": "",
-                "generics": [],
-                "generic_clauses": [],
+                "generics": "",
                 "package_name": "",
                 "options_start_at": options_start_at,
+                "usage_unsafe": False,
             })
         should_continue = True
         i = 0
         # make the function signature
         for type in types:
-            group = java_type_to_rust(type[0], type[1],method, i, False, library,is_constructor,is_trait,upper_generic_letters)
+            group = java_type_to_rust(type[0], type[1],method, i, False, library)
 
             if group is None:
                 should_continue = False
@@ -953,25 +921,24 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             n += 1
         if(not should_continue):
             continue
-        
-        gen = None
 
-        tyname = None
         if is_constructor:
-            tyname = method["method"]["name"]
+            return_group = java_type_to_rust("", method["method"]["name"], method, i, True, library, True)
         else:
-            tyname = method["method"]["returnType"]
-
-        return_group = java_type_to_rust("", tyname, method, i, True, library, True, is_trait, upper_generic_letters)
+            return_group = java_type_to_rust("", method["method"]["returnType"], method, i,True, library, False)
 
         if return_group is None:
             continue
-                
+
+        if("?" in return_group["type_name_resolved"]):
+            continue
+        
         if in_excluded_classes(return_group["type_name_original"]):
             continue
 
         if return_group["type_name_alone"] in omitted_classes:
             continue
+
 
         for generic in return_group["generics"]:
             parts = generic.split("::")
@@ -992,54 +959,42 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         func_signature_resolved_parts = []
         generic_letters = []
         generic_args = []
-        concrete_types = []
-
         j = 0
-        for ty in func_signature:
-            group = func_signature_format(ty,j,False,options_start_at,generic_letters,upper_generic_letters,concrete_types)
+        usage_unsafe = False
 
-            if group is None:
-                continue
+        for ty in func_signature:
+            if ty["usage_unsafe"]:
+                usage_unsafe = True
+            group = func_signature_format(ty,j,False,options_start_at)
 
             if group["result"] != "":
                 func_signature_resolved_parts.append(group["result"])
                 j += 1
-            
+
             generic_letters += group["generic_letters"]
             generic_args += group["generic_args"]
 
-        if "generics" in method["method"]:
-            gen = get_generics(method["method"], False,upper_generic_letters)
-            generic_letters += gen[0].split(",")
-            generic_args += gen[1].split(",")
-            concrete_types += gen[2]
 
-        return_type = func_signature_format(return_group,j,True,-1,generic_letters,upper_generic_letters,concrete_types)
+        return_type = func_signature_format(return_group,j,True)
+
         generic_letters_str = ""
-
-        if len(concrete_types) < 1 and len(generic_letters) >= 1:
-            st = ",".join(generic_letters)
-            if st != "":
-                generic_letters_str = "<"+st+">"
-
+        if len(generic_letters) >= 1:
+            generic_letters_str = "<"+",".join(generic_letters)+">"
         generic_args_str = ""
         if len(generic_args) >= 1:
-            st = ",".join(generic_args)
-            if st != "":
-                generic_args_str = " where "+st
+            generic_args_str = " where "+",".join(generic_args)
 
         func_signature_resolved = ",".join(func_signature_resolved_parts)
 
         if "annotations" in method["method"]:
             impl_signature += parse_annotations(method["method"]["annotations"])
 
-        
+        unsafe_str = ""
+        if usage_unsafe:
+            unsafe_str = "unsafe "
         impl_signature.append(
-            "\tpub fn "+name+generic_letters_str+"("+func_signature_resolved+") "
+            "\tpub "+unsafe_str+"fn "+name+generic_letters_str+"("+func_signature_resolved+") "
         )
-
-        if return_type is None:
-            continue
 
         impl_signature.append("-> Result<"+return_type["result"]+", Box<dyn std::error::Error>>")
 
@@ -1066,8 +1021,8 @@ def parse_classes(library, val, classes):
     name = val["name"].replace("$", "").replace("-", "_")
 
     full_name = val["packageName"]+"."+name
-    #if library.startswith("java"):
-    #    name = "Java"+name
+    if library.startswith("java"):
+        name = "Java"+name
     if in_excluded_classes(full_name):
         print("excluding "+full_name)
         return
@@ -1080,27 +1035,12 @@ def parse_classes(library, val, classes):
     else:
         parsed_classes[mod_path] = [full_name]
 
-    if mod_path not in file_cache :
-        file_cache[mod_path] = ["#![allow(deprecated)]","#![feature(anonymous_lifetime_in_impl_trait)]","use blackboxmc_general::JNIRaw;","use color_eyre::eyre::Result;"]
+    if mod_path not in file_cache:
+        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse color_eyre::eyre::Result;"]
 
     if (name == ""):
         return
 
-    # generics?
-    generics_str_letters, generics_str_where, _ = get_generics(val,True,None)
-    has_generics = False
-    if generics_str_where != "":
-        generics_str_where = " where "+generics_str_where
-
-    inner_parts_str = ""
-    if generics_str_letters != "":
-        parts = list(filter(lambda f: f != "" and f != " ",generics_str_letters.split(",")))
-        if len(parts) >= 2:
-            inner_parts_str = "inner: Vec<("+",".join(parts)+")>"
-            has_generics = True
-        elif len(parts) == 1: 
-            inner_parts_str = "inner: Vec<"+",".join(parts)+">"
-            has_generics = True
 
     if val["isEnum"]:  # enum generation
         file_cache[mod_path].append(
@@ -1139,21 +1079,21 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("}")
 
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc"+generics_str_letters+"> "+generics_str_where+" {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>, pub enu: "+name+"Enum,"+inner_parts_str+"}")
+            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
 
-        file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> std::ops::Deref for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
+        file_cache[mod_path].append("impl<'mc> std::ops::Deref for "+name+"<'mc> {")
         file_cache[mod_path].append("   type Target = "+name+"Enum;")
         file_cache[mod_path].append("   fn deref(&self) -> &Self::Target {")
-        file_cache[mod_path].append("       return &self.enu;")
+        file_cache[mod_path].append("       return &self.2;")
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
-        file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> JNIRaw<'mc> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
+        file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
         file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
-        file_cache[mod_path].append("        self.env.clone()")
+        file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
         file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
-        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }")
+        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("}")
 
@@ -1161,12 +1101,13 @@ def parse_classes(library, val, classes):
             for cl in val["classes"]:
                 parse_classes(library, cl, classes)
 
-        file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
 
-        gen_from_raw_func(name, True, mod_path, has_generics)
+        file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
+
+        gen_from_raw_func(name, True, mod_path)
 
         if "methods" in val:
-            parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False,generics_str_letters)
+            parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False)
 
         file_cache[mod_path].append("}")
 
@@ -1175,23 +1116,24 @@ def parse_classes(library, val, classes):
             "/// An instantiatable struct that implements "+name+". Needed for returning it from Java."
         )
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc"+generics_str_letters+"> "+generics_str_where+" {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,"+inner_parts_str+"}")
+            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+        )
         file_cache[mod_path].append(
-            "impl<'mc"+generics_str_letters+"> "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
-
-        gen_from_raw_func(name, False, mod_path, has_generics)
+            "impl<'mc> "+name+"<'mc> {")
+        
+        gen_from_raw_func(name, False, mod_path)
 
         if "methods" in val:
-            parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,generics_str_letters)
+            parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False)
         file_cache[mod_path].append("}")
 
-        file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> JNIRaw<'mc> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
+        file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
         file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
-        file_cache[mod_path].append("        self.env.clone()")
+        file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
         file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
-        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }")
+        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("}")
         #if "interfaces" in val:
@@ -1199,101 +1141,48 @@ def parse_classes(library, val, classes):
         #        print(inter["name"])
     else:  # struct generation
         file_cache[mod_path].append(
-            "pub struct "+name+"<'mc"+generics_str_letters+"> "+generics_str_where+" {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,"+inner_parts_str+"}")
+            "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
+        )
 
         if "classes" in val:
             for cl in val["classes"]:
                 parse_classes(library,cl, classes)
 
-        file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> blackboxmc_general::JNIRaw<'mc> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
+        file_cache[mod_path].append("impl<'mc> blackboxmc_general::JNIRaw<'mc> for "+name+"<'mc> {")
         file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
-        file_cache[mod_path].append("        self.env.clone()")
+        file_cache[mod_path].append("        self.0.clone()")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("    ")
         file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
-        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }")
+        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
         file_cache[mod_path].append("    }")
         file_cache[mod_path].append("}")
 
-        file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> "+name+"<'mc"+generics_str_letters+">"+generics_str_where+" {")
+        file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
-        gen_from_raw_func(name, False, mod_path, has_generics)
+        gen_from_raw_func(name, False, mod_path)
 
         if "constructors" in val:
-            parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True,generics_str_letters)
+            parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True)
 
         if "methods" in val:
-            parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False,generics_str_letters)
+            parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False)
 
         file_cache[mod_path].append("}")
 
     if not val["isEnum"]:
         if "interfaces" in val:
             for inter in val["interfaces"]:
-                parse_into_impl(inter,name,mod_path,generics_str_letters,generics_str_where)
+                parse_into_impl(inter,name,mod_path)
         if "superClass" in val:
             super_class = val["superClass"]
-            parse_into_impl(super_class,name,mod_path,generics_str_letters,generics_str_where)
+            parse_into_impl(super_class,name,mod_path)
 
-def get_generics(val, mc_included,upper_generics):
-    generics_letters = []
-    generics_types = []
-    generics_str_letters = ""
-    generics_str_where = ""
-    concrete_types = []
-    if isinstance(val, str):
-        if ".".join(val.split(".")[0:2]) in libraries:
-            temp_lib = libraries[".".join(val.split(".")[0:2])]
-            package_name = ".".join(filter(lambda f: f[0].islower(), val.split(".")))
-            if package_name in temp_lib:
-                temp_pkg = temp_lib[package_name]
-                typealone = "".join(filter(lambda f: f[0].isupper(), val.split(".")))
-                typealone = typealone.replace(".","$").replace("[]","")
-                if typealone in temp_pkg:
-                    temp_cls = temp_pkg[typealone]
-                    if "generics" in temp_cls:
-                        generics = temp_cls["generics"]
-    else:
-        if "generics" in val:
-            generics = list(map(lambda f: (f[0], f[1:]), filter(lambda f: f != "", val["generics"])))
-            if len(generics) >= 1:
-                for f in generics:
-                    if len(f[1]) <= 2:
-                        generics_letters.append(f[0])
-                        generics_types.append(f[0]+": JNIRaw<'mc>")
-                    else:
-                        typarts = f[1].split(" ")
-                        tyname = typarts[len(typarts)-1]
-                        if tyname == "Throwable":
-                            continue
-                        if "extends" in f[1] or "super" in f[1]:
-                            generics_letters.append(f[0])
-                            generics_types.append(f[0]+": Into<crate::Java"+tyname+"<'mc>>")
-                        else:
-                            yeah = java_type_to_rust("",f[0]+f[1],None,0,True,None,False,False,upper_generics)
-                            #if yeah is not None:
-                                #generics_letters.append("Java"+yeah["type_name_resolved"])
-                                #concrete_types.append("Java"+yeah["type_name_resolved"])
-                            if yeah is not None:
-                                generics_letters.append(yeah["type_name_resolved"])
-                                concrete_types.append(yeah["type_name_resolved"])
-                generics_str_where = ",".join(generics_types)
-            if mc_included:
-                generics_str_letters += ", "
-            generics_str_letters += ",".join(map(lambda f: f, generics_letters))
-    if upper_generics is not None:
-        if generics_str_letters == upper_generics.replace(" ","").replace(",",""):
-            return "","",[]
-    if upper_generics is not None:
-        for g in generics_str_letters.split(","):
-            if g in upper_generics:
-                generics_str_letters = generics_str_letters.replace(g,"").replace(",,",",")
-    return generics_str_letters, generics_str_where, concrete_types
-def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
+def parse_into_impl(val,name,mod_path):
     if val["packageName"].startswith("java"):
         if not val["packageName"].startswith("java.util"):
             return
-    val_resolved = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False, False, generics_str_letters)
+    val_resolved = java_type_to_rust("", val["packageName"]+"."+val["name"], None, 0, True, library, False)
 
     if val_resolved is None:
         return
@@ -1302,8 +1191,6 @@ def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
     if val_resolved["type_name_alone"] in omitted_classes:
         return
     
-    into_generics_str_letters = ""
-    
     # we want to check if the generics are the same.
     if ".".join(val_resolved["package_name"].split(".")[0:2]) in libraries:
         temp_lib = libraries[".".join(val_resolved["package_name"].split(".")[0:2])]
@@ -1311,23 +1198,19 @@ def parse_into_impl(val,name,mod_path,generics_str_letters,generics_str_where):
         typealone = "".join(filter(lambda f: f[0].isupper(), val_resolved["type_name_original"].split(".")))
         if typealone in temp_pkg:
             temp_cls = temp_pkg[typealone]
-            if "generics" in temp_cls and "generics" in val_resolved:
-                if(len(temp_cls["generics"]) != len(val_resolved["generics"])):
-                    return
-                m = list(filter(lambda f: f != "", generics_str_letters.split(",")))
-                if(len(temp_cls["generics"]) != len(m)):
-                    return
-                similar = False not in map(lambda x, y: x == y, temp_cls["generics"], val_resolved["generics"])
-                if not similar:
-                    return
-                else:
-                    into_generics_str_letters += generics_str_letters
-        
-    file_cache[mod_path].append("impl<'mc"+generics_str_letters+"> Into<"+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+">> for "+name+"<'mc"+generics_str_letters+">"+generics_str_where+"{\n"+
-                            "   fn into(self) -> "+val_resolved["type_name_resolved"]+"<'mc"+into_generics_str_letters+"> {\n"+
-                            "       "+val_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.obj).unwrap()\n"+
-                            "   }\n"+
+
+    if "impl<'mc> Into<"+val_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc>{\n" in file_cache[mod_path]:
+        return
+    
+    file_cache[mod_path].append("impl<'mc> Into<"+val_resolved["type_name_resolved"]+"<'mc>> for "+name+"<'mc>{\n")
+    file_cache[mod_path].append("fn into(self) -> "+val_resolved["type_name_resolved"]+"<'mc> {\n")
+    if val_resolved["type_name_resolved"] == "jni::objects::JObject":
+        file_cache[mod_path].append("self.1")
+    else:
+        file_cache[mod_path].append(val_resolved["type_name_resolved"]+"::from_raw(&self.jni_ref(), self.1).unwrap()\n")
+    file_cache[mod_path].append("   }\n"+
                             "}")
+
 
 def parse_annotations(annotations):
     strings = []
@@ -1353,15 +1236,12 @@ for library in libraries:
                 if classes[clas]["isEnum"]:
                     enums.append(classes[clas]["packageName"]+"."+classes[clas]["name"])
 
-
 for library in libraries:
     packages = libraries[library]
 
     crate_dir = ""
 
     if library in library_resolves:
-        #if library_resolves[library] == "blackboxmc-rs-java":
-        #    continue 
         crate_dir = os.path.join(library_resolves[library], "src")
     else:
         print("Unhandled library "+library +
@@ -1374,10 +1254,8 @@ for library in libraries:
         path = library.replace(".", os.sep)
         pathlib.Path(crate_dir+os.sep +
                     path).mkdir(parents=True, exist_ok=True)
-        filled_once.append(crate_dir)
-    
-    print("filled",filled_once,crate_dir)
-        
+    else:
+        filled_once.push(crate_dir)
 
     # make the appropriate directory if it doesn't already exist.
     path = library.replace(".", os.sep)
@@ -1425,12 +1303,8 @@ for library in libraries:
     file_cache = {}
 
     mod_rs_folder_populate(crate_dir)
-
-    f1 = open(crate_dir+os.sep+"mod.rs", "r")
-    f2 = open(crate_dir+os.sep+"lib.rs", "a")
-
-    f2.write("".join(f1.readlines()))
-    os.remove(crate_dir+os.sep+"mod.rs")
+    
+    os.rename(crate_dir+os.sep+"mod.rs", crate_dir+os.sep+"lib.rs")
 
 # inject any manually written code.
 for filename in os.listdir("additions"):
@@ -1455,14 +1329,10 @@ for filename in os.listdir("additions"):
             if append_to_struct is not None:
                 f2.seek(0)
                 newlines = f2.readlines()
-                try:
-                    at = int(newlines.index("impl<'mc> "+append_to_struct+"<'mc> {\n"))
-                    newlines.insert(at+1, lines)
-                    f2.truncate(0)
-                    f2.write("".join(newlines))
-                except Exception as ex:
-                    print(ex)
-                    continue
+                at = int(newlines.index("impl<'mc> "+append_to_struct+"<'mc> {\n"))
+                newlines.insert(at+1, lines)
+                f2.truncate(0)
+                f2.write("".join(newlines))
             else:
                 f2.write(lines)
             f2.close()
@@ -1471,7 +1341,7 @@ for filename in os.listdir("additions"):
 for i in range(0,4):
     wildcard = "*/*" * i
     for library in library_resolves:
-        resolved = library_resolves[library]
+        resolved = library_resolves[library] 
         os.system("rustfmt --unstable-features --skip-children ./"+resolved+"/src/*"+wildcard+".rs")
 
 os.system("cargo fix --allow-dirty --allow-staged --broken-code --jobs "+str(multiprocessing.cpu_count()))
