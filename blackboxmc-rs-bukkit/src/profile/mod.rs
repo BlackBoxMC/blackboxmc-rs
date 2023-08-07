@@ -3,10 +3,10 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// An instantiatable struct that implements PlayerTextures. Needed for returning it from Java.
-pub struct PlayerTextures<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PlayerTextures<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> PlayerTextures<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25,7 +25,10 @@ impl<'mc> PlayerTextures<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_signed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -73,24 +76,24 @@ impl<'mc> PlayerTextures<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for PlayerTextures<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct PlayerTexturesSkinModel<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PlayerTexturesSkinModel<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerTexturesSkinModel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> PlayerTexturesSkinModel<'mc> {
@@ -112,7 +115,10 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -157,20 +163,6 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -233,10 +225,10 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
     }
 }
 /// An instantiatable struct that implements PlayerProfile. Needed for returning it from Java.
-pub struct PlayerProfile<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PlayerProfile<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> PlayerProfile<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -253,7 +245,10 @@ impl<'mc> PlayerProfile<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -309,24 +304,13 @@ impl<'mc> PlayerProfile<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
 }
 impl<'mc> JNIRaw<'mc> for PlayerProfile<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }

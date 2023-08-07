@@ -2,17 +2,17 @@
 #![feature(anonymous_lifetime_in_impl_trait)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub struct DefaultPermissions<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct DefaultPermissions<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for DefaultPermissions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> DefaultPermissions<'mc> {
@@ -33,7 +33,10 @@ impl<'mc> DefaultPermissions<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn register_permission_with_permission(
@@ -48,28 +51,6 @@ impl<'mc> DefaultPermissions<'mc> {
         let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
         let res = jni.call_static_method(cls,"registerPermission",
 "(Lorg/bukkit/permissions/Permission;Lorg/bukkit/permissions/Permission;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
-        let mut obj = res.l()?;
-        crate::permissions::Permission::from_raw(&jni, obj)
-    }
-    pub fn register_permission_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::permissions::PermissionDefault<'mc>>,
-        arg3: std::option::Option<impl Into<&'mc blackboxmc_::JavaMap<'mc, String, Boolean>>>,
-        arg4: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
-    ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        let val_5 =
-            unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/permissions/Permission")?;
-        let res = jni.call_static_method(cls,"registerPermission",
-"(Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/permissions/PermissionDefault;Ljava/util/Map;Lorg/bukkit/permissions/Permission;)Lorg/bukkit/permissions/Permission;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         let mut obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
@@ -153,17 +134,17 @@ impl<'mc> DefaultPermissions<'mc> {
         Ok(())
     }
 }
-pub struct CommandPermissions<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct CommandPermissions<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for CommandPermissions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> CommandPermissions<'mc> {
@@ -184,7 +165,10 @@ impl<'mc> CommandPermissions<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn register_permissions(
@@ -275,17 +259,17 @@ impl<'mc> CommandPermissions<'mc> {
         Ok(())
     }
 }
-pub struct BroadcastPermissions<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BroadcastPermissions<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for BroadcastPermissions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> BroadcastPermissions<'mc> {
@@ -306,7 +290,10 @@ impl<'mc> BroadcastPermissions<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn register_permissions(

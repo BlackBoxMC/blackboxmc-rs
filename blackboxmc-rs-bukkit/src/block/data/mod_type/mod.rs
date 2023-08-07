@@ -3,10 +3,10 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// An instantiatable struct that implements PistonHead. Needed for returning it from Java.
-pub struct PistonHead<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PistonHead<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> PistonHead<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23,7 +23,10 @@ impl<'mc> PistonHead<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_short(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -109,15 +112,6 @@ impl<'mc> PistonHead<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -373,18 +367,18 @@ impl<'mc> PistonHead<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for PistonHead<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Chest. Needed for returning it from Java.
-pub struct Chest<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Chest<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Chest<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -401,7 +395,10 @@ impl<'mc> Chest<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_type(
@@ -468,15 +465,6 @@ impl<'mc> Chest<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -750,18 +738,18 @@ impl<'mc> Chest<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Chest<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements GlassPane. Needed for returning it from Java.
-pub struct GlassPane<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct GlassPane<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> GlassPane<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -778,17 +766,11 @@ impl<'mc> GlassPane<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn set_face(
         &mut self,
@@ -808,20 +790,6 @@ impl<'mc> GlassPane<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn allowed_faces(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAllowedFaces",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn has_face(
         &mut self,
@@ -1109,18 +1077,18 @@ impl<'mc> GlassPane<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for GlassPane<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements TripwireHook. Needed for returning it from Java.
-pub struct TripwireHook<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct TripwireHook<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> TripwireHook<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1137,7 +1105,10 @@ impl<'mc> TripwireHook<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_attached(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1446,15 +1417,6 @@ impl<'mc> TripwireHook<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1476,18 +1438,18 @@ impl<'mc> TripwireHook<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for TripwireHook<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements PitcherCrop. Needed for returning it from Java.
-pub struct PitcherCrop<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PitcherCrop<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> PitcherCrop<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1504,7 +1466,10 @@ impl<'mc> PitcherCrop<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1814,18 +1779,18 @@ impl<'mc> PitcherCrop<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for PitcherCrop<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Lectern. Needed for returning it from Java.
-pub struct Lectern<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Lectern<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Lectern<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1842,7 +1807,10 @@ impl<'mc> Lectern<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn has_book(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1888,15 +1856,6 @@ impl<'mc> Lectern<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -2170,18 +2129,18 @@ impl<'mc> Lectern<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Lectern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements DaylightDetector. Needed for returning it from Java.
-pub struct DaylightDetector<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct DaylightDetector<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> DaylightDetector<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2200,7 +2159,10 @@ impl<'mc> DaylightDetector<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_inverted(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2500,18 +2462,18 @@ impl<'mc> DaylightDetector<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for DaylightDetector<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements StructureBlock. Needed for returning it from Java.
-pub struct StructureBlock<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct StructureBlock<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> StructureBlock<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2530,7 +2492,10 @@ impl<'mc> StructureBlock<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn mode(
@@ -2816,18 +2781,18 @@ impl<'mc> StructureBlock<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for StructureBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements PinkPetals. Needed for returning it from Java.
-pub struct PinkPetals<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PinkPetals<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> PinkPetals<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2844,7 +2809,10 @@ impl<'mc> PinkPetals<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn flower_amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2908,15 +2876,6 @@ impl<'mc> PinkPetals<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -3172,18 +3131,18 @@ impl<'mc> PinkPetals<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for PinkPetals<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Piston. Needed for returning it from Java.
-pub struct Piston<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Piston<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Piston<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3200,7 +3159,10 @@ impl<'mc> Piston<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_extended(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3257,15 +3219,6 @@ impl<'mc> Piston<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -3521,18 +3474,18 @@ impl<'mc> Piston<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Piston<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements TNT. Needed for returning it from Java.
-pub struct TNT<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct TNT<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> TNT<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3549,7 +3502,10 @@ impl<'mc> TNT<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_unstable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3824,18 +3780,18 @@ impl<'mc> TNT<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for TNT<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Fence. Needed for returning it from Java.
-pub struct Fence<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Fence<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Fence<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3852,17 +3808,11 @@ impl<'mc> Fence<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn set_face(
         &mut self,
@@ -3882,20 +3832,6 @@ impl<'mc> Fence<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn allowed_faces(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAllowedFaces",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn has_face(
         &mut self,
@@ -4183,24 +4119,24 @@ impl<'mc> Fence<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Fence<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct BigDripleafTilt<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BigDripleafTilt<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for BigDripleafTilt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> BigDripleafTilt<'mc> {
@@ -4221,7 +4157,10 @@ impl<'mc> BigDripleafTilt<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4266,20 +4205,6 @@ impl<'mc> BigDripleafTilt<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -4341,17 +4266,17 @@ impl<'mc> BigDripleafTilt<'mc> {
         Ok(())
     }
 }
-pub struct WallHeight<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct WallHeight<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for WallHeight<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> WallHeight<'mc> {
@@ -4370,7 +4295,10 @@ impl<'mc> WallHeight<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4415,20 +4343,6 @@ impl<'mc> WallHeight<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -4491,10 +4405,10 @@ impl<'mc> WallHeight<'mc> {
     }
 }
 /// An instantiatable struct that implements SculkCatalyst. Needed for returning it from Java.
-pub struct SculkCatalyst<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SculkCatalyst<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> SculkCatalyst<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4511,7 +4425,10 @@ impl<'mc> SculkCatalyst<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_bloom(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4786,24 +4703,24 @@ impl<'mc> SculkCatalyst<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for SculkCatalyst<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct JigsawOrientation<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct JigsawOrientation<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for JigsawOrientation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> JigsawOrientation<'mc> {
@@ -4824,7 +4741,10 @@ impl<'mc> JigsawOrientation<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4869,20 +4789,6 @@ impl<'mc> JigsawOrientation<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -4945,10 +4851,10 @@ impl<'mc> JigsawOrientation<'mc> {
     }
 }
 /// An instantiatable struct that implements Furnace. Needed for returning it from Java.
-pub struct Furnace<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Furnace<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Furnace<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4965,7 +4871,10 @@ impl<'mc> Furnace<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -5004,15 +4913,6 @@ impl<'mc> Furnace<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -5286,18 +5186,18 @@ impl<'mc> Furnace<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Furnace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Sapling. Needed for returning it from Java.
-pub struct Sapling<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Sapling<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Sapling<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5314,7 +5214,10 @@ impl<'mc> Sapling<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn stage(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -5596,24 +5499,24 @@ impl<'mc> Sapling<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Sapling<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct SculkSensorPhase<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SculkSensorPhase<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for SculkSensorPhase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> SculkSensorPhase<'mc> {
@@ -5634,7 +5537,10 @@ impl<'mc> SculkSensorPhase<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5679,20 +5585,6 @@ impl<'mc> SculkSensorPhase<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -5755,10 +5647,10 @@ impl<'mc> SculkSensorPhase<'mc> {
     }
 }
 /// An instantiatable struct that implements WallHangingSign. Needed for returning it from Java.
-pub struct WallHangingSign<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct WallHangingSign<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> WallHangingSign<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5777,7 +5669,10 @@ impl<'mc> WallHangingSign<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -5816,15 +5711,6 @@ impl<'mc> WallHangingSign<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -6098,18 +5984,18 @@ impl<'mc> WallHangingSign<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for WallHangingSign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements TechnicalPiston. Needed for returning it from Java.
-pub struct TechnicalPiston<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct TechnicalPiston<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> TechnicalPiston<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6128,7 +6014,10 @@ impl<'mc> TechnicalPiston<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_type(
@@ -6196,15 +6085,6 @@ impl<'mc> TechnicalPiston<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -6460,18 +6340,18 @@ impl<'mc> TechnicalPiston<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for TechnicalPiston<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Switch. Needed for returning it from Java.
-pub struct Switch<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Switch<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Switch<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6488,7 +6368,10 @@ impl<'mc> Switch<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     #[deprecated]
@@ -6557,15 +6440,6 @@ impl<'mc> Switch<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -6868,18 +6742,18 @@ impl<'mc> Switch<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Switch<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements BubbleColumn. Needed for returning it from Java.
-pub struct BubbleColumn<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BubbleColumn<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> BubbleColumn<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6896,7 +6770,10 @@ impl<'mc> BubbleColumn<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_drag(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7171,18 +7048,18 @@ impl<'mc> BubbleColumn<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for BubbleColumn<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Bell. Needed for returning it from Java.
-pub struct Bell<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Bell<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Bell<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7199,7 +7076,10 @@ impl<'mc> Bell<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn attachment(
@@ -7266,15 +7146,6 @@ impl<'mc> Bell<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -7548,18 +7419,18 @@ impl<'mc> Bell<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Bell<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Bamboo. Needed for returning it from Java.
-pub struct Bamboo<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Bamboo<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Bamboo<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7576,7 +7447,10 @@ impl<'mc> Bamboo<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn leaves(
@@ -7911,18 +7785,18 @@ impl<'mc> Bamboo<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Bamboo<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Jigsaw. Needed for returning it from Java.
-pub struct Jigsaw<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Jigsaw<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Jigsaw<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -7939,7 +7813,10 @@ impl<'mc> Jigsaw<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn orientation(
@@ -8225,18 +8102,18 @@ impl<'mc> Jigsaw<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Jigsaw<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Chain. Needed for returning it from Java.
-pub struct Chain<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Chain<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Chain<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8253,7 +8130,10 @@ impl<'mc> Chain<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn axis(&mut self) -> Result<crate::Axis<'mc>, Box<dyn std::error::Error>> {
@@ -8289,15 +8169,6 @@ impl<'mc> Chain<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn axes(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAxes", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -8571,18 +8442,18 @@ impl<'mc> Chain<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Chain<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Lantern. Needed for returning it from Java.
-pub struct Lantern<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Lantern<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Lantern<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8599,7 +8470,10 @@ impl<'mc> Lantern<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_hanging(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8892,18 +8766,18 @@ impl<'mc> Lantern<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Lantern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Dispenser. Needed for returning it from Java.
-pub struct Dispenser<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Dispenser<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Dispenser<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8920,7 +8794,10 @@ impl<'mc> Dispenser<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_triggered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8977,15 +8854,6 @@ impl<'mc> Dispenser<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -9241,24 +9109,24 @@ impl<'mc> Dispenser<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Dispenser<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct StructureBlockMode<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct StructureBlockMode<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for StructureBlockMode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> StructureBlockMode<'mc> {
@@ -9279,7 +9147,10 @@ impl<'mc> StructureBlockMode<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -9324,20 +9195,6 @@ impl<'mc> StructureBlockMode<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -9400,10 +9257,10 @@ impl<'mc> StructureBlockMode<'mc> {
     }
 }
 /// An instantiatable struct that implements RespawnAnchor. Needed for returning it from Java.
-pub struct RespawnAnchor<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct RespawnAnchor<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> RespawnAnchor<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9420,7 +9277,10 @@ impl<'mc> RespawnAnchor<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn charges(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -9702,18 +9562,18 @@ impl<'mc> RespawnAnchor<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for RespawnAnchor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Cake. Needed for returning it from Java.
-pub struct Cake<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Cake<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Cake<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9730,7 +9590,10 @@ impl<'mc> Cake<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_bites(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -10012,18 +9875,18 @@ impl<'mc> Cake<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Cake<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements EndPortalFrame. Needed for returning it from Java.
-pub struct EndPortalFrame<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct EndPortalFrame<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> EndPortalFrame<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10042,7 +9905,10 @@ impl<'mc> EndPortalFrame<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn has_eye(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10099,15 +9965,6 @@ impl<'mc> EndPortalFrame<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -10363,18 +10220,18 @@ impl<'mc> EndPortalFrame<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for EndPortalFrame<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements DecoratedPot. Needed for returning it from Java.
-pub struct DecoratedPot<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct DecoratedPot<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> DecoratedPot<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10391,7 +10248,10 @@ impl<'mc> DecoratedPot<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -10430,15 +10290,6 @@ impl<'mc> DecoratedPot<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -10712,18 +10563,18 @@ impl<'mc> DecoratedPot<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for DecoratedPot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements GlowLichen. Needed for returning it from Java.
-pub struct GlowLichen<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct GlowLichen<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> GlowLichen<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10740,17 +10591,11 @@ impl<'mc> GlowLichen<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn set_face(
         &mut self,
@@ -10770,20 +10615,6 @@ impl<'mc> GlowLichen<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn allowed_faces(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAllowedFaces",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn has_face(
         &mut self,
@@ -11071,24 +10902,24 @@ impl<'mc> GlowLichen<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for GlowLichen<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct ComparatorMode<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct ComparatorMode<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for ComparatorMode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> ComparatorMode<'mc> {
@@ -11109,7 +10940,10 @@ impl<'mc> ComparatorMode<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -11154,20 +10988,6 @@ impl<'mc> ComparatorMode<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -11230,10 +11050,10 @@ impl<'mc> ComparatorMode<'mc> {
     }
 }
 /// An instantiatable struct that implements Observer. Needed for returning it from Java.
-pub struct Observer<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Observer<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Observer<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11250,7 +11070,10 @@ impl<'mc> Observer<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -11289,15 +11112,6 @@ impl<'mc> Observer<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -11571,18 +11385,18 @@ impl<'mc> Observer<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Observer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Stairs. Needed for returning it from Java.
-pub struct Stairs<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Stairs<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Stairs<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -11599,7 +11413,10 @@ impl<'mc> Stairs<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn shape(
@@ -11946,15 +11763,6 @@ impl<'mc> Stairs<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11976,24 +11784,24 @@ impl<'mc> Stairs<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Stairs<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct BellAttachment<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BellAttachment<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for BellAttachment<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> BellAttachment<'mc> {
@@ -12014,7 +11822,10 @@ impl<'mc> BellAttachment<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -12059,20 +11870,6 @@ impl<'mc> BellAttachment<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -12134,17 +11931,17 @@ impl<'mc> BellAttachment<'mc> {
         Ok(())
     }
 }
-pub struct DoorHinge<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct DoorHinge<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for DoorHinge<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> DoorHinge<'mc> {
@@ -12163,7 +11960,10 @@ impl<'mc> DoorHinge<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -12208,20 +12008,6 @@ impl<'mc> DoorHinge<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -12284,10 +12070,10 @@ impl<'mc> DoorHinge<'mc> {
     }
 }
 /// An instantiatable struct that implements CalibratedSculkSensor. Needed for returning it from Java.
-pub struct CalibratedSculkSensor<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct CalibratedSculkSensor<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> CalibratedSculkSensor<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12307,7 +12093,10 @@ impl<'mc> CalibratedSculkSensor<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -12346,15 +12135,6 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -12682,18 +12462,18 @@ impl<'mc> CalibratedSculkSensor<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for CalibratedSculkSensor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements EnderChest. Needed for returning it from Java.
-pub struct EnderChest<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct EnderChest<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> EnderChest<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -12710,7 +12490,10 @@ impl<'mc> EnderChest<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -12749,15 +12532,6 @@ impl<'mc> EnderChest<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -13031,18 +12805,18 @@ impl<'mc> EnderChest<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for EnderChest<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Bed. Needed for returning it from Java.
-pub struct Bed<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Bed<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Bed<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13059,7 +12833,10 @@ impl<'mc> Bed<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn part(
@@ -13133,15 +12910,6 @@ impl<'mc> Bed<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -13397,24 +13165,24 @@ impl<'mc> Bed<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Bed<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct ChestType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct ChestType<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChestType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> ChestType<'mc> {
@@ -13433,7 +13201,10 @@ impl<'mc> ChestType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -13478,20 +13249,6 @@ impl<'mc> ChestType<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -13554,10 +13311,10 @@ impl<'mc> ChestType<'mc> {
     }
 }
 /// An instantiatable struct that implements AmethystCluster. Needed for returning it from Java.
-pub struct AmethystCluster<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct AmethystCluster<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> AmethystCluster<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13576,7 +13333,10 @@ impl<'mc> AmethystCluster<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -13615,15 +13375,6 @@ impl<'mc> AmethystCluster<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -13897,18 +13648,18 @@ impl<'mc> AmethystCluster<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for AmethystCluster<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements NoteBlock. Needed for returning it from Java.
-pub struct NoteBlock<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct NoteBlock<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> NoteBlock<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -13925,7 +13676,10 @@ impl<'mc> NoteBlock<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn instrument(&mut self) -> Result<crate::Instrument<'mc>, Box<dyn std::error::Error>> {
@@ -14260,18 +14014,18 @@ impl<'mc> NoteBlock<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for NoteBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements MangrovePropagule. Needed for returning it from Java.
-pub struct MangrovePropagule<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct MangrovePropagule<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> MangrovePropagule<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14290,7 +14044,10 @@ impl<'mc> MangrovePropagule<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -14633,18 +14390,18 @@ impl<'mc> MangrovePropagule<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for MangrovePropagule<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements SculkSensor. Needed for returning it from Java.
-pub struct SculkSensor<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SculkSensor<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> SculkSensor<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -14661,7 +14418,10 @@ impl<'mc> SculkSensor<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn phase(
@@ -14990,18 +14750,18 @@ impl<'mc> SculkSensor<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for SculkSensor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements BigDripleaf. Needed for returning it from Java.
-pub struct BigDripleaf<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BigDripleaf<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> BigDripleaf<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15018,7 +14778,10 @@ impl<'mc> BigDripleaf<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn tilt(
@@ -15086,15 +14849,6 @@ impl<'mc> BigDripleaf<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -15368,18 +15122,18 @@ impl<'mc> BigDripleaf<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for BigDripleaf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Ladder. Needed for returning it from Java.
-pub struct Ladder<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Ladder<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Ladder<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15396,7 +15150,10 @@ impl<'mc> Ladder<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -15435,15 +15192,6 @@ impl<'mc> Ladder<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -15717,18 +15465,18 @@ impl<'mc> Ladder<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Ladder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Scaffolding. Needed for returning it from Java.
-pub struct Scaffolding<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Scaffolding<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Scaffolding<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -15745,7 +15493,10 @@ impl<'mc> Scaffolding<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16063,18 +15814,18 @@ impl<'mc> Scaffolding<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Scaffolding<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements BrewingStand. Needed for returning it from Java.
-pub struct BrewingStand<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BrewingStand<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> BrewingStand<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16091,7 +15842,10 @@ impl<'mc> BrewingStand<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn has_bottle(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16119,15 +15873,6 @@ impl<'mc> BrewingStand<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn bottles(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getBottles", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn maximum_bottles(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -16390,18 +16135,18 @@ impl<'mc> BrewingStand<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for BrewingStand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Fire. Needed for returning it from Java.
-pub struct Fire<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Fire<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Fire<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16418,7 +16163,10 @@ impl<'mc> Fire<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16697,15 +16445,6 @@ impl<'mc> Fire<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_face(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -16725,20 +16464,6 @@ impl<'mc> Fire<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn allowed_faces(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAllowedFaces",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn has_face(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -16756,18 +16481,18 @@ impl<'mc> Fire<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Fire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Hopper. Needed for returning it from Java.
-pub struct Hopper<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Hopper<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Hopper<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -16784,7 +16509,10 @@ impl<'mc> Hopper<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16841,15 +16569,6 @@ impl<'mc> Hopper<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -17105,18 +16824,18 @@ impl<'mc> Hopper<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Hopper<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Repeater. Needed for returning it from Java.
-pub struct Repeater<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Repeater<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Repeater<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17133,7 +16852,10 @@ impl<'mc> Repeater<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_locked(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17222,15 +16944,6 @@ impl<'mc> Repeater<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -17504,18 +17217,18 @@ impl<'mc> Repeater<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Repeater<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Slab. Needed for returning it from Java.
-pub struct Slab<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Slab<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Slab<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17532,7 +17245,10 @@ impl<'mc> Slab<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_type(
@@ -17835,18 +17551,18 @@ impl<'mc> Slab<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Slab<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Snow. Needed for returning it from Java.
-pub struct Snow<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Snow<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Snow<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -17863,7 +17579,10 @@ impl<'mc> Snow<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn layers(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18152,24 +17871,24 @@ impl<'mc> Snow<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Snow<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct RedstoneWireConnection<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct RedstoneWireConnection<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for RedstoneWireConnection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> RedstoneWireConnection<'mc> {
@@ -18191,7 +17910,10 @@ impl<'mc> RedstoneWireConnection<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -18236,20 +17958,6 @@ impl<'mc> RedstoneWireConnection<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -18312,10 +18020,10 @@ impl<'mc> RedstoneWireConnection<'mc> {
     }
 }
 /// An instantiatable struct that implements Cocoa. Needed for returning it from Java.
-pub struct Cocoa<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Cocoa<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Cocoa<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18332,7 +18040,10 @@ impl<'mc> Cocoa<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18648,30 +18359,21 @@ impl<'mc> Cocoa<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
 }
 impl<'mc> JNIRaw<'mc> for Cocoa<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Comparator. Needed for returning it from Java.
-pub struct Comparator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Comparator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Comparator<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -18688,7 +18390,10 @@ impl<'mc> Comparator<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn mode(
@@ -18755,15 +18460,6 @@ impl<'mc> Comparator<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -19037,18 +18733,18 @@ impl<'mc> Comparator<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Comparator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements RedstoneRail. Needed for returning it from Java.
-pub struct RedstoneRail<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct RedstoneRail<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> RedstoneRail<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19065,7 +18761,10 @@ impl<'mc> RedstoneRail<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19365,15 +19064,6 @@ impl<'mc> RedstoneRail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn shapes(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getShapes", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19395,18 +19085,18 @@ impl<'mc> RedstoneRail<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for RedstoneRail<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements CaveVinesPlant. Needed for returning it from Java.
-pub struct CaveVinesPlant<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct CaveVinesPlant<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> CaveVinesPlant<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19425,7 +19115,10 @@ impl<'mc> CaveVinesPlant<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_berries(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19700,18 +19393,18 @@ impl<'mc> CaveVinesPlant<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for CaveVinesPlant<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Light. Needed for returning it from Java.
-pub struct Light<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Light<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Light<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19728,7 +19421,10 @@ impl<'mc> Light<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -20028,18 +19724,18 @@ impl<'mc> Light<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Light<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements SmallDripleaf. Needed for returning it from Java.
-pub struct SmallDripleaf<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SmallDripleaf<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> SmallDripleaf<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20056,7 +19752,10 @@ impl<'mc> SmallDripleaf<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -20095,15 +19794,6 @@ impl<'mc> SmallDripleaf<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -20405,18 +20095,18 @@ impl<'mc> SmallDripleaf<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for SmallDripleaf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements TrapDoor. Needed for returning it from Java.
-pub struct TrapDoor<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct TrapDoor<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> TrapDoor<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20433,7 +20123,10 @@ impl<'mc> TrapDoor<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn half(
@@ -20752,15 +20445,6 @@ impl<'mc> TrapDoor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20818,18 +20502,18 @@ impl<'mc> TrapDoor<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for TrapDoor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Grindstone. Needed for returning it from Java.
-pub struct Grindstone<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Grindstone<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Grindstone<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20846,7 +20530,10 @@ impl<'mc> Grindstone<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -20885,15 +20572,6 @@ impl<'mc> Grindstone<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -21178,24 +20856,24 @@ impl<'mc> Grindstone<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Grindstone<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct PointedDripstoneThickness<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PointedDripstoneThickness<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for PointedDripstoneThickness<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> PointedDripstoneThickness<'mc> {
@@ -21217,7 +20895,10 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -21262,20 +20943,6 @@ impl<'mc> PointedDripstoneThickness<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -21338,10 +21005,10 @@ impl<'mc> PointedDripstoneThickness<'mc> {
     }
 }
 /// An instantiatable struct that implements Beehive. Needed for returning it from Java.
-pub struct Beehive<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Beehive<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Beehive<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21358,7 +21025,10 @@ impl<'mc> Beehive<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn maximum_honey_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -21422,15 +21092,6 @@ impl<'mc> Beehive<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -21686,18 +21347,18 @@ impl<'mc> Beehive<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Beehive<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements CoralWallFan. Needed for returning it from Java.
-pub struct CoralWallFan<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct CoralWallFan<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> CoralWallFan<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21714,7 +21375,10 @@ impl<'mc> CoralWallFan<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -21753,15 +21417,6 @@ impl<'mc> CoralWallFan<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -22035,18 +21690,18 @@ impl<'mc> CoralWallFan<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for CoralWallFan<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements SculkVein. Needed for returning it from Java.
-pub struct SculkVein<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SculkVein<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> SculkVein<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22063,17 +21718,11 @@ impl<'mc> SculkVein<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn set_face(
         &mut self,
@@ -22093,20 +21742,6 @@ impl<'mc> SculkVein<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn allowed_faces(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAllowedFaces",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn has_face(
         &mut self,
@@ -22394,24 +22029,24 @@ impl<'mc> SculkVein<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for SculkVein<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct SlabType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SlabType<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for SlabType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> SlabType<'mc> {
@@ -22430,7 +22065,10 @@ impl<'mc> SlabType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -22475,20 +22113,6 @@ impl<'mc> SlabType<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -22551,10 +22175,10 @@ impl<'mc> SlabType<'mc> {
     }
 }
 /// An instantiatable struct that implements Tripwire. Needed for returning it from Java.
-pub struct Tripwire<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Tripwire<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Tripwire<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22571,7 +22195,10 @@ impl<'mc> Tripwire<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_disarmed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22861,15 +22488,6 @@ impl<'mc> Tripwire<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn set_face(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -22888,20 +22506,6 @@ impl<'mc> Tripwire<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn allowed_faces(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAllowedFaces",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn has_face(
         &mut self,
@@ -22938,18 +22542,18 @@ impl<'mc> Tripwire<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Tripwire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Wall. Needed for returning it from Java.
-pub struct Wall<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Wall<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Wall<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22966,7 +22570,10 @@ impl<'mc> Wall<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn get_height(
@@ -23294,24 +22901,24 @@ impl<'mc> Wall<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Wall<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct StairsShape<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct StairsShape<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for StairsShape<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> StairsShape<'mc> {
@@ -23330,7 +22937,10 @@ impl<'mc> StairsShape<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -23375,20 +22985,6 @@ impl<'mc> StairsShape<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -23451,10 +23047,10 @@ impl<'mc> StairsShape<'mc> {
     }
 }
 /// An instantiatable struct that implements Farmland. Needed for returning it from Java.
-pub struct Farmland<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Farmland<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Farmland<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23471,7 +23067,10 @@ impl<'mc> Farmland<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn moisture(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -23753,18 +23352,18 @@ impl<'mc> Farmland<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Farmland<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Gate. Needed for returning it from Java.
-pub struct Gate<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Gate<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Gate<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23781,7 +23380,10 @@ impl<'mc> Gate<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_in_wall(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23838,15 +23440,6 @@ impl<'mc> Gate<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -24138,24 +23731,24 @@ impl<'mc> Gate<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Gate<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct SwitchFace<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SwitchFace<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for SwitchFace<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> SwitchFace<'mc> {
@@ -24174,7 +23767,10 @@ impl<'mc> SwitchFace<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -24219,20 +23815,6 @@ impl<'mc> SwitchFace<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -24295,10 +23877,10 @@ impl<'mc> SwitchFace<'mc> {
     }
 }
 /// An instantiatable struct that implements SculkShrieker. Needed for returning it from Java.
-pub struct SculkShrieker<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SculkShrieker<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> SculkShrieker<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24315,7 +23897,10 @@ impl<'mc> SculkShrieker<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_can_summon(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24626,18 +24211,18 @@ impl<'mc> SculkShrieker<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for SculkShrieker<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Leaves. Needed for returning it from Java.
-pub struct Leaves<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Leaves<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Leaves<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24654,7 +24239,10 @@ impl<'mc> Leaves<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_persistent(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24965,18 +24553,18 @@ impl<'mc> Leaves<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Leaves<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Campfire. Needed for returning it from Java.
-pub struct Campfire<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Campfire<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Campfire<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24993,7 +24581,10 @@ impl<'mc> Campfire<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_signal_fire(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25050,15 +24641,6 @@ impl<'mc> Campfire<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -25350,18 +24932,18 @@ impl<'mc> Campfire<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Campfire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Dripleaf. Needed for returning it from Java.
-pub struct Dripleaf<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Dripleaf<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Dripleaf<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25378,7 +24960,10 @@ impl<'mc> Dripleaf<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -25417,15 +25002,6 @@ impl<'mc> Dripleaf<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -25699,18 +25275,18 @@ impl<'mc> Dripleaf<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Dripleaf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements SeaPickle. Needed for returning it from Java.
-pub struct SeaPickle<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SeaPickle<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> SeaPickle<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25727,7 +25303,10 @@ impl<'mc> SeaPickle<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn pickles(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -26034,18 +25613,18 @@ impl<'mc> SeaPickle<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for SeaPickle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements RedstoneWallTorch. Needed for returning it from Java.
-pub struct RedstoneWallTorch<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct RedstoneWallTorch<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> RedstoneWallTorch<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26064,7 +25643,10 @@ impl<'mc> RedstoneWallTorch<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -26103,15 +25685,6 @@ impl<'mc> RedstoneWallTorch<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -26385,24 +25958,24 @@ impl<'mc> RedstoneWallTorch<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for RedstoneWallTorch<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct BedPart<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BedPart<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for BedPart<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> BedPart<'mc> {
@@ -26421,7 +25994,10 @@ impl<'mc> BedPart<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -26466,20 +26042,6 @@ impl<'mc> BedPart<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -26542,10 +26104,10 @@ impl<'mc> BedPart<'mc> {
     }
 }
 /// An instantiatable struct that implements RedstoneWire. Needed for returning it from Java.
-pub struct RedstoneWire<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct RedstoneWire<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> RedstoneWire<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26562,7 +26124,10 @@ impl<'mc> RedstoneWire<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn get_face(
@@ -26600,20 +26165,6 @@ impl<'mc> RedstoneWire<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn allowed_faces(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAllowedFaces",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -26894,18 +26445,18 @@ impl<'mc> RedstoneWire<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for RedstoneWire<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements WallSign. Needed for returning it from Java.
-pub struct WallSign<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct WallSign<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> WallSign<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26922,7 +26473,10 @@ impl<'mc> WallSign<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -26961,15 +26515,6 @@ impl<'mc> WallSign<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -27243,18 +26788,18 @@ impl<'mc> WallSign<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for WallSign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Jukebox. Needed for returning it from Java.
-pub struct Jukebox<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Jukebox<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Jukebox<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27271,7 +26816,10 @@ impl<'mc> Jukebox<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn has_record(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27535,18 +27083,18 @@ impl<'mc> Jukebox<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Jukebox<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Barrel. Needed for returning it from Java.
-pub struct Barrel<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Barrel<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Barrel<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27563,7 +27111,10 @@ impl<'mc> Barrel<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -27602,15 +27153,6 @@ impl<'mc> Barrel<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -27884,18 +27426,18 @@ impl<'mc> Barrel<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Barrel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements CommandBlock. Needed for returning it from Java.
-pub struct CommandBlock<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct CommandBlock<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> CommandBlock<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -27912,7 +27454,10 @@ impl<'mc> CommandBlock<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_conditional(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27969,15 +27514,6 @@ impl<'mc> CommandBlock<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -28233,18 +27769,18 @@ impl<'mc> CommandBlock<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for CommandBlock<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Door. Needed for returning it from Java.
-pub struct Door<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Door<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Door<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -28261,7 +27797,10 @@ impl<'mc> Door<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn hinge(
@@ -28608,15 +28147,6 @@ impl<'mc> Door<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -28656,18 +28186,18 @@ impl<'mc> Door<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Door<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements ChiseledBookshelf. Needed for returning it from Java.
-pub struct ChiseledBookshelf<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct ChiseledBookshelf<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> ChiseledBookshelf<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -28686,7 +28216,10 @@ impl<'mc> ChiseledBookshelf<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_slot_occupied(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
@@ -28718,20 +28251,6 @@ impl<'mc> ChiseledBookshelf<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn occupied_slots(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOccupiedSlots",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn maximum_occupied_slots(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
@@ -28776,15 +28295,6 @@ impl<'mc> ChiseledBookshelf<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -29040,18 +28550,18 @@ impl<'mc> ChiseledBookshelf<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for ChiseledBookshelf<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements HangingSign. Needed for returning it from Java.
-pub struct HangingSign<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct HangingSign<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> HangingSign<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -29068,7 +28578,10 @@ impl<'mc> HangingSign<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_attached(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -29398,18 +28911,18 @@ impl<'mc> HangingSign<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for HangingSign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Candle. Needed for returning it from Java.
-pub struct Candle<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Candle<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Candle<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -29426,7 +28939,10 @@ impl<'mc> Candle<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn candles(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -29744,18 +29260,18 @@ impl<'mc> Candle<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Candle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements PointedDripstone. Needed for returning it from Java.
-pub struct PointedDripstone<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PointedDripstone<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> PointedDripstone<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -29774,7 +29290,10 @@ impl<'mc> PointedDripstone<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn vertical_direction(
@@ -29815,20 +29334,6 @@ impl<'mc> PointedDripstone<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn vertical_directions(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getVerticalDirections",
-            "()Ljava/util/Set;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn thickness(
         &mut self,
@@ -30133,24 +29638,24 @@ impl<'mc> PointedDripstone<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for PointedDripstone<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct TechnicalPistonType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct TechnicalPistonType<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for TechnicalPistonType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> TechnicalPistonType<'mc> {
@@ -30171,7 +29676,10 @@ impl<'mc> TechnicalPistonType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -30216,20 +29724,6 @@ impl<'mc> TechnicalPistonType<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -30292,10 +29786,10 @@ impl<'mc> TechnicalPistonType<'mc> {
     }
 }
 /// An instantiatable struct that implements LightningRod. Needed for returning it from Java.
-pub struct LightningRod<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct LightningRod<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> LightningRod<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -30312,7 +29806,10 @@ impl<'mc> LightningRod<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -30351,15 +29848,6 @@ impl<'mc> LightningRod<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn rotate(
         &mut self,
@@ -30651,18 +30139,18 @@ impl<'mc> LightningRod<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for LightningRod<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Sign. Needed for returning it from Java.
-pub struct Sign<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Sign<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Sign<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -30679,7 +30167,10 @@ impl<'mc> Sign<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn rotation(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -30991,18 +30482,18 @@ impl<'mc> Sign<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Sign<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements CaveVines. Needed for returning it from Java.
-pub struct CaveVines<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct CaveVines<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> CaveVines<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -31019,7 +30510,10 @@ impl<'mc> CaveVines<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -31319,24 +30813,24 @@ impl<'mc> CaveVines<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for CaveVines<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct BambooLeaves<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct BambooLeaves<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for BambooLeaves<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> BambooLeaves<'mc> {
@@ -31355,7 +30849,10 @@ impl<'mc> BambooLeaves<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -31400,20 +30897,6 @@ impl<'mc> BambooLeaves<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -31476,10 +30959,10 @@ impl<'mc> BambooLeaves<'mc> {
     }
 }
 /// An instantiatable struct that implements TurtleEgg. Needed for returning it from Java.
-pub struct TurtleEgg<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct TurtleEgg<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> TurtleEgg<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -31496,7 +30979,10 @@ impl<'mc> TurtleEgg<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn eggs(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -31810,10 +31296,10 @@ impl<'mc> TurtleEgg<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for TurtleEgg<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }

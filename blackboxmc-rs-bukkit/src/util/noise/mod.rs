@@ -2,17 +2,17 @@
 #![feature(anonymous_lifetime_in_impl_trait)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub struct SimplexNoiseGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SimplexNoiseGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimplexNoiseGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> SimplexNoiseGenerator<'mc> {
@@ -34,7 +34,10 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new_with_random(
@@ -88,7 +91,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
+        let val_6 = jni::objects::JValueGen::Double(arg5.into());
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -119,7 +122,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.unwrap().into());
         let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
         let cls = &jni.find_class("double")?;
@@ -225,17 +228,17 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         Ok(())
     }
 }
-pub struct PerlinNoiseGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PerlinNoiseGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for PerlinNoiseGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> PerlinNoiseGenerator<'mc> {
@@ -256,7 +259,10 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new_with_random(
@@ -310,7 +316,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
+        let val_6 = jni::objects::JValueGen::Double(arg5.into());
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -341,7 +347,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.unwrap().into());
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.unwrap().into());
         let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
         let cls = &jni.find_class("double")?;
@@ -447,17 +453,17 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         Ok(())
     }
 }
-pub struct SimplexOctaveGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct SimplexOctaveGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimplexOctaveGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> SimplexOctaveGenerator<'mc> {
@@ -479,7 +485,10 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new_with_long(
@@ -487,7 +496,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         arg0: i64,
         arg1: std::option::Option<i32>,
     ) -> Result<crate::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/noise/SimplexOctaveGenerator")?;
         let res = jni.new_object(
@@ -526,7 +535,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Double(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
+        let val_6 = jni::objects::JValueGen::Double(arg5.into());
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -690,17 +699,17 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         Ok(())
     }
 }
-pub struct OctaveGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct OctaveGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for OctaveGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> OctaveGenerator<'mc> {
@@ -721,7 +730,10 @@ impl<'mc> OctaveGenerator<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
@@ -802,7 +814,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Double(arg3.into());
-        let val_5 = jni::objects::JValueGen::Double(arg4.unwrap().into());
+        let val_5 = jni::objects::JValueGen::Double(arg4.into());
         let val_6 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -893,17 +905,17 @@ impl<'mc> OctaveGenerator<'mc> {
         Ok(())
     }
 }
-pub struct PerlinOctaveGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct PerlinOctaveGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for PerlinOctaveGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> PerlinOctaveGenerator<'mc> {
@@ -925,7 +937,10 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new_with_random(
@@ -933,7 +948,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         arg0: i64,
         arg1: std::option::Option<i32>,
     ) -> Result<crate::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinOctaveGenerator")?;
         let res = jni.new_object(
@@ -951,8 +966,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         arg0: impl Into<&'mc crate::World<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<crate::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
         let cls = &jni.find_class("org/bukkit/util/noise/PerlinOctaveGenerator")?;
         let res = jni.new_object(
@@ -1043,7 +1057,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Double(arg3.into());
-        let val_5 = jni::objects::JValueGen::Double(arg4.unwrap().into());
+        let val_5 = jni::objects::JValueGen::Double(arg4.into());
         let val_6 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1134,17 +1148,17 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         Ok(())
     }
 }
-pub struct NoiseGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct NoiseGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for NoiseGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> NoiseGenerator<'mc> {
@@ -1165,7 +1179,10 @@ impl<'mc> NoiseGenerator<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new(
@@ -1204,7 +1221,7 @@ impl<'mc> NoiseGenerator<'mc> {
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        let val_6 = jni::objects::JValueGen::Double(arg5.unwrap().into());
+        let val_6 = jni::objects::JValueGen::Double(arg5.into());
         let val_7 = jni::objects::JValueGen::Bool(arg6.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

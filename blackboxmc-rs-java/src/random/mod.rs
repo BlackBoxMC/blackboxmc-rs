@@ -2,39 +2,42 @@
 #![feature(anonymous_lifetime_in_impl_trait)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub struct JavaRandomGeneratorFactory<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaRandomGeneratorFactory<'mc> {
+pub struct RandomGeneratorFactory<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+impl<'mc> blackboxmc_general::JNIRaw<'mc> for RandomGeneratorFactory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-impl<'mc> JavaRandomGeneratorFactory<'mc> {
+impl<'mc> RandomGeneratorFactory<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-                "Tried to instantiate JavaRandomGeneratorFactory from null object."
+                "Tried to instantiate RandomGeneratorFactory from null object."
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandomGeneratorFactory")?;
+        let (valid, name) = env.validate_name(&obj, "RandomGeneratorFactory")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a JavaRandomGeneratorFactory object, got {}",
+                "Invalid argument passed. Expected a RandomGeneratorFactory object, got {}",
                 name
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn equidistribution(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -136,50 +139,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn default(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::random::JavaRandomGeneratorFactory<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/random/RandomGeneratorFactory")?;
-        let res = jni.call_static_method(
-            cls,
-            "getDefault",
-            "()Ljava/util/random/RandomGeneratorFactory;",
-            &[],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGeneratorFactory::from_raw(&jni, obj)
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::random::JavaRandomGeneratorFactory<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGeneratorFactory")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGeneratorFactory;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGeneratorFactory::from_raw(&jni, obj)
-    }
-    pub fn create(
-        &mut self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "create",
-            "(J)Ljava/util/random/RandomGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -253,67 +212,35 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements JavaRandomGeneratorSplittableGenerator. Needed for returning it from Java.
-pub struct JavaRandomGeneratorSplittableGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
+/// An instantiatable struct that implements RandomGeneratorSplittableGenerator. Needed for returning it from Java.
+pub struct RandomGeneratorSplittableGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+impl<'mc> RandomGeneratorSplittableGenerator<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-                "Tried to instantiate JavaRandomGeneratorSplittableGenerator from null object."
+                "Tried to instantiate RandomGeneratorSplittableGenerator from null object."
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandomGeneratorSplittableGenerator")?;
+        let (valid, name) = env.validate_name(&obj, "RandomGeneratorSplittableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a JavaRandomGeneratorSplittableGenerator object, got {}",
+        "Invalid argument passed. Expected a RandomGeneratorSplittableGenerator object, got {}",
         name
     )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
-    }
-    pub fn split(
-        &mut self,
-        arg0: std::option::Option<
-            impl Into<&'mc crate::random::JavaRandomGeneratorSplittableGenerator<'mc>>,
-        >,
-    ) -> Result<
-        crate::random::JavaRandomGeneratorSplittableGenerator<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"split","(Ljava/util/random/RandomGenerator$SplittableGenerator;)Ljava/util/random/RandomGenerator$SplittableGenerator;",&[jni::objects::JValueGen::from(&val_1)]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorSplittableGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<
-        crate::random::JavaRandomGeneratorSplittableGenerator<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGenerator$SplittableGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$SplittableGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGeneratorSplittableGenerator::from_raw(&jni, obj)
     }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -439,59 +366,44 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorSplittableGenerator<'mc> {
+impl<'mc> JNIRaw<'mc> for RandomGeneratorSplittableGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaRandomGeneratorStreamableGenerator. Needed for returning it from Java.
-pub struct JavaRandomGeneratorStreamableGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
+/// An instantiatable struct that implements RandomGeneratorStreamableGenerator. Needed for returning it from Java.
+pub struct RandomGeneratorStreamableGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+impl<'mc> RandomGeneratorStreamableGenerator<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-                "Tried to instantiate JavaRandomGeneratorStreamableGenerator from null object."
+                "Tried to instantiate RandomGeneratorStreamableGenerator from null object."
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandomGeneratorStreamableGenerator")?;
+        let (valid, name) = env.validate_name(&obj, "RandomGeneratorStreamableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a JavaRandomGeneratorStreamableGenerator object, got {}",
+        "Invalid argument passed. Expected a RandomGeneratorStreamableGenerator object, got {}",
         name
     )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<
-        crate::random::JavaRandomGeneratorStreamableGenerator<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGenerator$StreamableGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$StreamableGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGeneratorStreamableGenerator::from_raw(&jni, obj)
     }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -617,40 +529,43 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorStreamableGenerator<'mc> {
+impl<'mc> JNIRaw<'mc> for RandomGeneratorStreamableGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaRandomGeneratorLeapableGenerator. Needed for returning it from Java.
-pub struct JavaRandomGeneratorLeapableGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
+/// An instantiatable struct that implements RandomGeneratorLeapableGenerator. Needed for returning it from Java.
+pub struct RandomGeneratorLeapableGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+impl<'mc> RandomGeneratorLeapableGenerator<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-                "Tried to instantiate JavaRandomGeneratorLeapableGenerator from null object."
+                "Tried to instantiate RandomGeneratorLeapableGenerator from null object."
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandomGeneratorLeapableGenerator")?;
+        let (valid, name) = env.validate_name(&obj, "RandomGeneratorLeapableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a JavaRandomGeneratorLeapableGenerator object, got {}",
+        "Invalid argument passed. Expected a RandomGeneratorLeapableGenerator object, got {}",
         name
     )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn leap_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
@@ -667,52 +582,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn copy_and_leap(
-        &mut self,
-    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyAndLeap",
-            "()Ljava/util/random/RandomGenerator$JumpableGenerator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::random::JavaRandomGeneratorLeapableGenerator<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGenerator$LeapableGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$LeapableGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGeneratorLeapableGenerator::from_raw(&jni, obj)
-    }
-    pub fn copy(
-        &mut self,
-    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            "()Ljava/util/random/RandomGenerator$JumpableGenerator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -726,20 +595,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             .call_method(&self.jni_object(), "jumpDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
-    }
-    pub fn copy_and_jump(
-        &mut self,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyAndJump",
-            "()Ljava/util/random/RandomGenerator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
@@ -865,40 +720,43 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorLeapableGenerator<'mc> {
+impl<'mc> JNIRaw<'mc> for RandomGeneratorLeapableGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaRandomGeneratorArbitrarilyJumpableGenerator. Needed for returning it from Java.
-pub struct JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
+/// An instantiatable struct that implements RandomGeneratorArbitrarilyJumpableGenerator. Needed for returning it from Java.
+pub struct RandomGeneratorArbitrarilyJumpableGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+impl<'mc> RandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-        "Tried to instantiate JavaRandomGeneratorArbitrarilyJumpableGenerator from null object.")
+        "Tried to instantiate RandomGeneratorArbitrarilyJumpableGenerator from null object.")
             .into());
         }
         let (valid, name) =
-            env.validate_name(&obj, "JavaRandomGeneratorArbitrarilyJumpableGenerator")?;
+            env.validate_name(&obj, "RandomGeneratorArbitrarilyJumpableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a JavaRandomGeneratorArbitrarilyJumpableGenerator object, got {}",
+        "Invalid argument passed. Expected a RandomGeneratorArbitrarilyJumpableGenerator object, got {}",
         name
     )
     .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn jump(
@@ -914,26 +772,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn copy_and_jump(
-        &mut self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<
-        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyAndJump",
-            "(D)Ljava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator::from_raw(
-            &self.jni_ref(),
-            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
-        )
     }
     pub fn jump_power_of_two(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -953,61 +791,12 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<
-        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>,
-        Box<dyn std::error::Error>,
-    > {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls =
-            &jni.find_class("java/util/random/RandomGenerator$ArbitrarilyJumpableGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator::from_raw(&jni, obj)
-    }
-    pub fn copy(
-        &mut self,
-    ) -> Result<crate::random::JavaRandomGeneratorLeapableGenerator<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            "()Ljava/util/random/RandomGenerator$LeapableGenerator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorLeapableGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn leap_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "leapDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
-    }
-    pub fn copy_and_leap(
-        &mut self,
-    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyAndLeap",
-            "()Ljava/util/random/RandomGenerator$JumpableGenerator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
@@ -1140,39 +929,42 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
+impl<'mc> JNIRaw<'mc> for RandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaRandomGenerator. Needed for returning it from Java.
-pub struct JavaRandomGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaRandomGenerator<'mc> {
+/// An instantiatable struct that implements RandomGenerator. Needed for returning it from Java.
+pub struct RandomGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+impl<'mc> RandomGenerator<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
-                eyre::eyre!("Tried to instantiate JavaRandomGenerator from null object.").into(),
+                eyre::eyre!("Tried to instantiate RandomGenerator from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandomGenerator")?;
+        let (valid, name) = env.validate_name(&obj, "RandomGenerator")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a JavaRandomGenerator object, got {}",
+                "Invalid argument passed. Expected a RandomGenerator object, got {}",
                 name
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1279,34 +1071,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn default(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "getDefault",
-            "()Ljava/util/random/RandomGenerator;",
-            &[],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
-    }
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -1327,40 +1091,43 @@ impl<'mc> JavaRandomGenerator<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaRandomGenerator<'mc> {
+impl<'mc> JNIRaw<'mc> for RandomGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaRandomGeneratorJumpableGenerator. Needed for returning it from Java.
-pub struct JavaRandomGeneratorJumpableGenerator<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
+/// An instantiatable struct that implements RandomGeneratorJumpableGenerator. Needed for returning it from Java.
+pub struct RandomGeneratorJumpableGenerator<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+impl<'mc> RandomGeneratorJumpableGenerator<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-                "Tried to instantiate JavaRandomGeneratorJumpableGenerator from null object."
+                "Tried to instantiate RandomGeneratorJumpableGenerator from null object."
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandomGeneratorJumpableGenerator")?;
+        let (valid, name) = env.validate_name(&obj, "RandomGeneratorJumpableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a JavaRandomGeneratorJumpableGenerator object, got {}",
+        "Invalid argument passed. Expected a RandomGeneratorJumpableGenerator object, got {}",
         name
     )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
@@ -1377,51 +1144,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn copy_and_jump(
-        &mut self,
-    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyAndJump",
-            "()Ljava/util/random/RandomGenerator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
-    {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/util/random/RandomGenerator$JumpableGenerator")?;
-        let res = jni.call_static_method(
-            cls,
-            "of",
-            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$JumpableGenerator;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let mut obj = res.l()?;
-        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&jni, obj)
-    }
-    pub fn copy(
-        &mut self,
-    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
-    {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copy",
-            "()Ljava/util/random/RandomGenerator$JumpableGenerator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1546,12 +1268,12 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         Ok(res.d().unwrap())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorJumpableGenerator<'mc> {
+impl<'mc> JNIRaw<'mc> for RandomGeneratorJumpableGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }

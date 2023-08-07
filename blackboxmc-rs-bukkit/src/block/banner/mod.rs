@@ -92,24 +92,24 @@ impl std::fmt::Display for PatternTypeEnum {
         }
     }
 }
-pub struct PatternType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub PatternTypeEnum,
-);
+pub struct PatternType<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+    pub enu: PatternTypeEnum,
+}
 impl<'mc> std::ops::Deref for PatternType<'mc> {
     type Target = PatternTypeEnum;
     fn deref(&self) -> &Self::Target {
-        return &self.2;
+        return &self.enu;
     }
 }
 impl<'mc> JNIRaw<'mc> for PatternType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> PatternType<'mc> {
@@ -129,7 +129,11 @@ impl<'mc> PatternType<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj, e))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+                enu: e,
+            })
         }
     }
     pub const BASE: PatternTypeEnum = PatternTypeEnum::Base;
@@ -220,17 +224,17 @@ impl<'mc> PatternType<'mc> {
         }
     }
 }
-pub struct Pattern<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Pattern<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for Pattern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> Pattern<'mc> {
@@ -249,7 +253,10 @@ impl<'mc> Pattern<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new_with_map(
@@ -293,17 +300,6 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -314,10 +310,10 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
-            .0
+            .env
             .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
         let variant_str = self
-            .0
+            .env
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
@@ -339,10 +335,10 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
-            .0
+            .env
             .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
         let variant_str = self
-            .0
+            .env
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();

@@ -3,13 +3,15 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// An instantiatable struct that implements ItemTagType. Needed for returning it from Java.
-pub struct ItemTagType<'mc, T, Z>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-)
+pub struct ItemTagType<'mc, T, Z>
 where
     T: JNIRaw<'mc>,
-    Z: JNIRaw<'mc>;
+    Z: JNIRaw<'mc>,
+{
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+    inner: Vec<(T, Z)>,
+}
 impl<'mc, T, Z> ItemTagType<'mc, T, Z>
 where
     T: JNIRaw<'mc>,
@@ -30,7 +32,11 @@ where
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+                inner: Vec::new(),
+            })
         }
     }
     pub fn primitive_type(
@@ -60,16 +66,10 @@ where
     pub fn to_primitive(
         &mut self,
         arg0: Z,
-        arg1: impl Into<
-            &'mc crate::inventory::meta::tags::ItemTagAdapterContext<
-                'mc,
-                /*3*/ T,
-                /*3*/ Z,
-            >,
-        >,
+        arg1: &'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, T, Z>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "toPrimitive",
@@ -85,16 +85,10 @@ where
     pub fn from_primitive(
         &mut self,
         arg0: T,
-        arg1: impl Into<
-            &'mc crate::inventory::meta::tags::ItemTagAdapterContext<
-                'mc,
-                /*3*/ T,
-                /*3*/ Z,
-            >,
-        >,
+        arg1: &'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, T, Z>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "fromPrimitive",
@@ -114,18 +108,18 @@ where
     Z: JNIRaw<'mc>,
 {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements ItemTagAdapterContext. Needed for returning it from Java.
-pub struct ItemTagAdapterContext<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct ItemTagAdapterContext<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> ItemTagAdapterContext<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -145,7 +139,10 @@ impl<'mc> ItemTagAdapterContext<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new_tag_container(
@@ -166,29 +163,31 @@ impl<'mc> ItemTagAdapterContext<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for ItemTagAdapterContext<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct ItemTagTypePrimitiveTagType<'mc, T>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-)
+pub struct ItemTagTypePrimitiveTagType<'mc, T>
 where
-    T: JNIRaw<'mc>;
+    T: JNIRaw<'mc>,
+{
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+    inner: Vec<T>,
+}
 impl<'mc, T> blackboxmc_general::JNIRaw<'mc> for ItemTagTypePrimitiveTagType<'mc, T>
 where
     T: JNIRaw<'mc>,
 {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, T> ItemTagTypePrimitiveTagType<'mc, T>
@@ -213,7 +212,11 @@ where
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+                inner: Vec::new(),
+            })
         }
     }
     pub fn primitive_type(
@@ -243,10 +246,10 @@ where
     pub fn to_primitive(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, /*3*/ T>>,
+        arg1: &'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, T>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "toPrimitive",
@@ -262,10 +265,10 @@ where
     pub fn from_primitive(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, /*3*/ T>>,
+        arg1: &'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc, T>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "fromPrimitive",
@@ -352,10 +355,10 @@ where
     }
 }
 /// An instantiatable struct that implements CustomItemTagContainer. Needed for returning it from Java.
-pub struct CustomItemTagContainer<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct CustomItemTagContainer<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> CustomItemTagContainer<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -375,7 +378,10 @@ impl<'mc> CustomItemTagContainer<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -469,10 +475,10 @@ impl<'mc> CustomItemTagContainer<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for CustomItemTagContainer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }

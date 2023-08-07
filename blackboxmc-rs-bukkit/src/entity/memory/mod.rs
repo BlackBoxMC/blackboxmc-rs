@@ -2,22 +2,24 @@
 #![feature(anonymous_lifetime_in_impl_trait)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub struct MemoryKey<'mc, T>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-)
+pub struct MemoryKey<'mc, T>
 where
-    T: JNIRaw<'mc>;
+    T: JNIRaw<'mc>,
+{
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+    inner: Vec<T>,
+}
 impl<'mc, T> blackboxmc_general::JNIRaw<'mc> for MemoryKey<'mc, T>
 where
     T: JNIRaw<'mc>,
 {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, T> MemoryKey<'mc, T>
@@ -39,20 +41,14 @@ where
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+                inner: Vec::new(),
+            })
         }
     }
-    pub fn values(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc, /*3*/ T, /*3*/ V>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(cls, "values", "()Ljava/util/Set;", &[])?;
-        let mut obj = res.l()?;
-        blackboxmc_java::JavaSet::from_raw(&jni, obj)
-    }
-    pub fn key(
-        &mut self,
-    ) -> Result<crate::NamespacedKey<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
+    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc, T>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getKey",
@@ -66,9 +62,9 @@ where
     }
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc, /*3*/ T>>,
-    ) -> Result<crate::entity::memory::MemoryKey<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        arg0: &'mc crate::NamespacedKey<'mc, T>,
+    ) -> Result<crate::entity::memory::MemoryKey<'mc, T>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.jni_object().clone()) };
         let cls = &jni.find_class("org/bukkit/entity/memory/MemoryKey")?;
         let res = jni.call_static_method(
             cls,

@@ -2,14 +2,14 @@
 #![feature(anonymous_lifetime_in_impl_trait)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-pub struct Item<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+pub struct Item<'mc, >  {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,}
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for Item<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
     
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, > Item<'mc, > {
@@ -28,8 +28,8 @@ if !valid {
     )
     .into())
 } else {
-    Ok(Self(env.clone(), obj
-))
+    Ok(Self{env: env.clone(), obj: obj
+})
 }
 }
 	pub fn new(jni: blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<&'mc String>,arg1: i32,arg2: impl Into<&'mc crate::bungee::api::chat::ItemTag<'mc, >>) 
@@ -151,14 +151,14 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-pub struct Entity<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+pub struct Entity<'mc, >  {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,}
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for Entity<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
     
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, > Entity<'mc, > {
@@ -177,8 +177,8 @@ if !valid {
     )
     .into())
 } else {
-    Ok(Self(env.clone(), obj
-))
+    Ok(Self{env: env.clone(), obj: obj
+})
 }
 }
 	pub fn new(jni: blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<&'mc String>,arg1: impl Into<&'mc String>,arg2: impl Into<&'mc crate::bungee::api::chat::BaseComponent<'mc, >>) 
@@ -300,14 +300,14 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-pub struct ItemSerializer<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+pub struct ItemSerializer<'mc, >  {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,}
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for ItemSerializer<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
     
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, > ItemSerializer<'mc, > {
@@ -326,8 +326,8 @@ if !valid {
     )
     .into())
 } else {
-    Ok(Self(env.clone(), obj
-))
+    Ok(Self{env: env.clone(), obj: obj
+})
 }
 }
 	pub fn new(jni: blackboxmc_general::SharedJNIEnv<'mc>) 
@@ -388,14 +388,14 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-pub struct TextSerializer<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+pub struct TextSerializer<'mc, >  {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,}
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for TextSerializer<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
     
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, > TextSerializer<'mc, > {
@@ -414,8 +414,8 @@ if !valid {
     )
     .into())
 } else {
-    Ok(Self(env.clone(), obj
-))
+    Ok(Self{env: env.clone(), obj: obj
+})
 }
 }
 	pub fn new(jni: blackboxmc_general::SharedJNIEnv<'mc>) 
@@ -476,14 +476,14 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-pub struct Content<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+pub struct Content<'mc, >  {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,}
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for Content<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
     
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, > Content<'mc, > {
@@ -502,8 +502,8 @@ if !valid {
     )
     .into())
 } else {
-    Ok(Self(env.clone(), obj
-))
+    Ok(Self{env: env.clone(), obj: obj
+})
 }
 }
 	pub fn new(jni: blackboxmc_general::SharedJNIEnv<'mc>) 
@@ -579,14 +579,14 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-pub struct Text<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+pub struct Text<'mc, >  {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,}
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for Text<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
     
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, > Text<'mc, > {
@@ -605,8 +605,8 @@ if !valid {
     )
     .into())
 } else {
-    Ok(Self(env.clone(), obj
-))
+    Ok(Self{env: env.clone(), obj: obj
+})
 }
 }
 	pub fn new_with_base_components(jni: blackboxmc_general::SharedJNIEnv<'mc>,arg0: std::option::Option<impl Into<&'mc String>>) 
@@ -690,14 +690,14 @@ Ok(())}
 self.jni_ref().translate_error(res)?;
 Ok(())}
 }
-pub struct EntitySerializer<'mc, >(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
+pub struct EntitySerializer<'mc, >  {pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) obj: jni::objects::JObject<'mc>,}
 impl<'mc, > blackboxmc_general::JNIRaw<'mc> for EntitySerializer<'mc, > {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
     
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, > EntitySerializer<'mc, > {
@@ -716,8 +716,8 @@ if !valid {
     )
     .into())
 } else {
-    Ok(Self(env.clone(), obj
-))
+    Ok(Self{env: env.clone(), obj: obj
+})
 }
 }
 	pub fn new(jni: blackboxmc_general::SharedJNIEnv<'mc>) 

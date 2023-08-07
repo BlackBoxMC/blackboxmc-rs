@@ -3,12 +3,14 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// An instantiatable struct that implements MetadataStore. Needed for returning it from Java.
-pub struct MetadataStore<'mc, T>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-)
+pub struct MetadataStore<'mc, T>
 where
-    T: JNIRaw<'mc>;
+    T: JNIRaw<'mc>,
+{
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+    inner: Vec<T>,
+}
 impl<'mc, T> MetadataStore<'mc, T>
 where
     T: JNIRaw<'mc>,
@@ -28,18 +30,22 @@ where
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+                inner: Vec::new(),
+            })
         }
     }
     pub fn set_metadata(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::metadata::MetadataValue<'mc, /*3*/ T>>,
+        arg1: &'mc String,
+        arg2: &'mc crate::metadata::MetadataValue<'mc, T>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -53,31 +59,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn get_metadata(
-        &mut self,
-        arg0: T,
-        arg1: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.jni_object();
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMetadata",
-            "(LT;Ljava/lang/String;)Ljava/util/List;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn has_metadata(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc String>,
+        arg1: &'mc String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -96,12 +81,12 @@ where
     pub fn remove_metadata(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::plugin::Plugin<'mc, /*3*/ T>>,
+        arg1: &'mc String,
+        arg2: &'mc crate::plugin::Plugin<'mc, T>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -117,9 +102,9 @@ where
     }
     pub fn invalidate_all(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc, /*3*/ T>>,
+        arg0: &'mc crate::plugin::Plugin<'mc, T>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "invalidateAll",
@@ -135,18 +120,18 @@ where
     T: JNIRaw<'mc>,
 {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements MetadataValue. Needed for returning it from Java.
-pub struct MetadataValue<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct MetadataValue<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> MetadataValue<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -163,7 +148,10 @@ impl<'mc> MetadataValue<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -257,18 +245,18 @@ impl<'mc> MetadataValue<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for MetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 /// An instantiatable struct that implements Metadatable. Needed for returning it from Java.
-pub struct Metadatable<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct Metadatable<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> Metadatable<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -285,7 +273,10 @@ impl<'mc> Metadatable<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn set_metadata(
@@ -306,22 +297,6 @@ impl<'mc> Metadatable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    pub fn get_metadata(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMetadata",
-            "(Ljava/lang/String;)Ljava/util/List;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn has_metadata(
         &mut self,
@@ -359,29 +334,31 @@ impl<'mc> Metadatable<'mc> {
 }
 impl<'mc> JNIRaw<'mc> for Metadatable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
-pub struct MetadataStoreBase<'mc, T>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-)
+pub struct MetadataStoreBase<'mc, T>
 where
-    T: JNIRaw<'mc>;
+    T: JNIRaw<'mc>,
+{
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+    inner: Vec<T>,
+}
 impl<'mc, T> blackboxmc_general::JNIRaw<'mc> for MetadataStoreBase<'mc, T>
 where
     T: JNIRaw<'mc>,
 {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc, T> MetadataStoreBase<'mc, T>
@@ -405,12 +382,16 @@ where
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+                inner: Vec::new(),
+            })
         }
     }
     pub fn new(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::metadata::MetadataStoreBase<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::metadata::MetadataStoreBase<'mc, T>, Box<dyn std::error::Error>> {
         let cls = &jni.find_class("org/bukkit/metadata/MetadataStoreBase")?;
         let res = jni.new_object(cls, "()V", &[])?;
         crate::metadata::MetadataStoreBase::from_raw(&jni, res)
@@ -418,12 +399,12 @@ where
     pub fn set_metadata(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::metadata::MetadataValue<'mc, /*3*/ T>>,
+        arg1: &'mc String,
+        arg2: &'mc crate::metadata::MetadataValue<'mc, T>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMetadata",
@@ -437,31 +418,10 @@ where
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn get_metadata(
-        &mut self,
-        arg0: T,
-        arg1: impl Into<&'mc String>,
-    ) -> Result<blackboxmc_java::JavaList<'mc, /*3*/ T>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.jni_object();
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMetadata",
-            "(LT;Ljava/lang/String;)Ljava/util/List;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     pub fn has_metadata(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc String>,
+        arg1: &'mc String,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
@@ -480,12 +440,12 @@ where
     pub fn remove_metadata(
         &mut self,
         arg0: T,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::plugin::Plugin<'mc, /*3*/ T>>,
+        arg1: &'mc String,
+        arg2: &'mc crate::plugin::Plugin<'mc, T>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0.jni_object();
         let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeMetadata",
@@ -501,9 +461,9 @@ where
     }
     pub fn invalidate_all(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc, /*3*/ T>>,
+        arg0: &'mc crate::plugin::Plugin<'mc, T>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "invalidateAll",
@@ -586,21 +546,21 @@ where
         Ok(())
     }
 }
-pub struct LazyMetadataValue<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-pub struct LazyMetadataValueCacheStrategy<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct LazyMetadataValue<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
+pub struct LazyMetadataValueCacheStrategy<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for LazyMetadataValueCacheStrategy<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
@@ -622,7 +582,10 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
@@ -667,20 +630,6 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn declaring_class(
         &mut self,
@@ -744,11 +693,11 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
 }
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for LazyMetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> LazyMetadataValue<'mc> {
@@ -769,7 +718,10 @@ impl<'mc> LazyMetadataValue<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -933,17 +885,17 @@ impl<'mc> LazyMetadataValue<'mc> {
         Ok(())
     }
 }
-pub struct FixedMetadataValue<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct FixedMetadataValue<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for FixedMetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> FixedMetadataValue<'mc> {
@@ -964,7 +916,10 @@ impl<'mc> FixedMetadataValue<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn new(
@@ -1146,17 +1101,17 @@ impl<'mc> FixedMetadataValue<'mc> {
         Ok(())
     }
 }
-pub struct MetadataValueAdapter<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
+pub struct MetadataValueAdapter<'mc> {
+    pub(crate) env: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) obj: jni::objects::JObject<'mc>,
+}
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for MetadataValueAdapter<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+        self.env.clone()
     }
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        unsafe { jni::objects::JObject::from_raw(self.obj.clone()) }
     }
 }
 impl<'mc> MetadataValueAdapter<'mc> {
@@ -1177,7 +1132,10 @@ impl<'mc> MetadataValueAdapter<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self {
+                env: env.clone(),
+                obj: obj,
+            })
         }
     }
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
