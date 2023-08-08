@@ -59,6 +59,17 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn get_type(
         &mut self,
     ) -> Result<crate::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
@@ -99,7 +110,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
             "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/potion/PotionEffectType;",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        let mut obj = res.l()?;
+        let obj = res.l()?;
         crate::potion::PotionEffectType::from_raw(&jni, obj)
     }
     pub fn create_effect(
@@ -136,7 +147,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
             "(I)Lorg/bukkit/potion/PotionEffectType;",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        let mut obj = res.l()?;
+        let obj = res.l()?;
         crate::potion::PotionEffectType::from_raw(&jni, obj)
     }
     pub fn stop_accepting_registrations(
@@ -145,6 +156,31 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         let cls = &jni.find_class("void")?;
         let res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
         Ok(())
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -173,6 +209,21 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    pub fn get_by_name(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<crate::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("org/bukkit/potion/PotionEffectType")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByName",
+            "(Ljava/lang/String;)Lorg/bukkit/potion/PotionEffectType;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let obj = res.l()?;
+        crate::potion::PotionEffectType::from_raw(&jni, obj)
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -191,6 +242,13 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -282,6 +340,20 @@ impl<'mc> PotionData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -332,6 +404,24 @@ impl<'mc> PotionData<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -408,6 +498,17 @@ impl<'mc> Potion<'mc> {
         )?;
         crate::potion::Potion::from_raw(&jni, res)
     }
+    pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(I)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
     pub fn set_type(
         &mut self,
         arg0: impl Into<&'mc crate::potion::PotionType<'mc>>,
@@ -422,17 +523,6 @@ impl<'mc> Potion<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(I)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
     pub fn level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -442,7 +532,7 @@ impl<'mc> Potion<'mc> {
     }
     pub fn effects(
         &mut self,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEffects",
@@ -450,9 +540,14 @@ impl<'mc> Potion<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let mut new_vec = Vec::new();
+        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.0, col.iterator()?)?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::potion::PotionEffect::from_raw(&self.0, obj)?);
+        }
+        Ok(new_vec)
     }
     pub fn to_item_stack(
         &mut self,
@@ -527,7 +622,7 @@ impl<'mc> Potion<'mc> {
         let cls = &jni.find_class("org/bukkit/potion/PotionBrewer")?;
         let res =
             jni.call_static_method(cls, "getBrewer", "()Lorg/bukkit/potion/PotionBrewer;", &[])?;
-        let mut obj = res.l()?;
+        let obj = res.l()?;
         crate::potion::PotionBrewer::from_raw(&jni, obj)
     }
     pub fn has_extended_duration(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -564,7 +659,7 @@ impl<'mc> Potion<'mc> {
             "(I)Lorg/bukkit/potion/Potion;",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        let mut obj = res.l()?;
+        let obj = res.l()?;
         crate::potion::Potion::from_raw(&jni, obj)
     }
     pub fn from_item_stack(
@@ -579,7 +674,7 @@ impl<'mc> Potion<'mc> {
             "(Lorg/bukkit/inventory/ItemStack;)Lorg/bukkit/potion/Potion;",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        let mut obj = res.l()?;
+        let obj = res.l()?;
         crate::potion::Potion::from_raw(&jni, obj)
     }
     pub fn set_potion_brewer(
@@ -603,6 +698,20 @@ impl<'mc> Potion<'mc> {
             .call_method(&self.jni_object(), "getNameId", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -669,6 +778,24 @@ impl<'mc> Potion<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -842,6 +969,31 @@ impl<'mc> PotionEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -902,6 +1054,13 @@ impl<'mc> PotionEffect<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -977,6 +1136,15 @@ impl<'mc> PotionEffectType<'mc> {
         )?;
         Ok(())
     }
+    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getColor", "()Lorg/bukkit/Color;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Color::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -989,17 +1157,8 @@ impl<'mc> PotionEffectType<'mc> {
             "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/potion/PotionEffectType;",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        let mut obj = res.l()?;
+        let obj = res.l()?;
         crate::potion::PotionEffectType::from_raw(&jni, obj)
-    }
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getColor", "()Lorg/bukkit/Color;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Color::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     pub fn create_effect(
         &mut self,
@@ -1050,7 +1209,7 @@ impl<'mc> PotionEffectType<'mc> {
             "(I)Lorg/bukkit/potion/PotionEffectType;",
             &[jni::objects::JValueGen::from(&val_1)],
         )?;
-        let mut obj = res.l()?;
+        let obj = res.l()?;
         crate::potion::PotionEffectType::from_raw(&jni, obj)
     }
     pub fn stop_accepting_registrations(
@@ -1059,6 +1218,42 @@ impl<'mc> PotionEffectType<'mc> {
         let cls = &jni.find_class("void")?;
         let res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
         Ok(())
+    }
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
@@ -1087,6 +1282,21 @@ impl<'mc> PotionEffectType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    pub fn get_by_name(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<crate::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("org/bukkit/potion/PotionEffectType")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByName",
+            "(Ljava/lang/String;)Lorg/bukkit/potion/PotionEffectType;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let obj = res.l()?;
+        crate::potion::PotionEffectType::from_raw(&jni, obj)
+    }
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1105,6 +1315,13 @@ impl<'mc> PotionEffectType<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1155,7 +1372,7 @@ impl<'mc> PotionBrewer<'mc> {
         arg0: impl Into<&'mc crate::potion::PotionType<'mc>>,
         arg1: bool,
         arg2: bool,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
@@ -1172,9 +1389,14 @@ impl<'mc> PotionBrewer<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let mut new_vec = Vec::new();
+        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
     }
     pub fn create_effect(
         &mut self,
@@ -1204,7 +1426,7 @@ impl<'mc> PotionBrewer<'mc> {
     pub fn get_effects_from_damage(
         &mut self,
         arg0: i32,
-    ) -> Result<blackboxmc_java::JavaCollection<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1213,9 +1435,14 @@ impl<'mc> PotionBrewer<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let mut new_vec = Vec::new();
+        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
+        }
+        Ok(new_vec)
     }
 }
 impl<'mc> JNIRaw<'mc> for PotionBrewer<'mc> {

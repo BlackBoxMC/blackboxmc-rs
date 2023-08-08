@@ -27,11 +27,14 @@ library_resolves = {
 parsed_classes = {}
 excluded_classes = [
     "org.bukkit.plugin.SimplePluginManager",    # uses stuff that isn't being generated due to that java bug and i don't want to write an entire class binding for something that's getting deprecated anyways.
-    "java.lang",                         # i would have to bind all of java.lang for this and i don't feel like it sorry
+    "java.lang.JavaThread", "java.lang.JavaIterable", "java.lang.JavaRunnable",
     
     "java.util.concurrent",                     # i want to lessen my workload and binding this is going to be pointless since your only option of multithreading is through BukkitRunnables.
     "java.util.stream",                         # unneeded when java's iterator is bound.
     "java.util.function",                       # useless unless i can do implement Into for the functions in question and that can't be done safely.
+
+    "net.md_5.bungee.chat.TranslationRegistry$TranslationProvider",
+    "org.bukkit.plugin.SimpleServicesManager",
 
     # dear sweet baby jesus i just want to be done with this and i will remove half of the java.util
     # package if it means fucking getting this done.
@@ -58,7 +61,7 @@ excluded_classes = [
                         "java.util.Spliterator$OfLong", "java.util.Spliterator$OfPrimitive", "java.lang.StackTraceElement", "java.lang.Throwable",
                         "java.util.logging.LoggingMXBean", "java.util.logging.FileHandler",
                         "java.util.logging.LogManager",
-
+                        
     # tempoerary
     "java.util.SortedMap", "java.util.SortedSet"
 ]
@@ -143,7 +146,7 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
             if (internal_do_into or is_string) and not returning:
                 thing += "impl Into<"
             thing += ty["type_name_resolved"]
-            if(internal):
+            if(internal and "'mc" not in ty["type_name_resolved"]):
                 thing += "<'mc>"
             if (internal_do_into or is_string) and not returning:
                 thing += ">"
@@ -155,12 +158,13 @@ def func_signature_format(ty, increment, returning, options_start_at=-1):
                 thing += ty["type_name_alone"]+"<"
                 j = []
                 for g in ty["generics"]:
+                    g = g["type_name_resolved"]
                     if len(g) >= 2:
                         if g.startswith("crate") or g.startswith("bukkit") or g.startswith("jni") or g.startswith("blackbox") or g == "String":
                             k = ""
                             if not returning and not g.startswith("jni"):
                                 k += "impl Into<"
-                            if not g.endswith("<'mc>") and g != "String":
+                            if "'mc" not in g and g != "String":
                                 k += g+"<'mc>"
                             else:
                                 k += g
@@ -218,7 +222,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
         return ["let "+var_prefix+"_"+str(n)+" = unsafe { jni::objects::JObject::from_raw("+arg+fcall+")};"]
     else:
-        match(type["type_name_alone"]):
+        match(type["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
                 v = java_type_from_rust(type["type_name_alone"])
                 class_name = v["class_name"]
@@ -254,77 +258,24 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
             case "jni::objects::JObject" | "jni::objects::JClass":
                 # nothing to do
                 return ["let "+var_prefix+"_"+str(n)+" = "+arg+";"]
-            case "std::collections::HashMap":
-                match type["type_name_original"]:
-                    case "java.util.Map":
-                        c = [
-                            "let raw_"+var_prefix+"_"+str(n)+" = "+prefix+".new_object(\"java/util/HashMap\", \"()V\", &[]).unwrap();",
-                            "for (k, v) in "+arg+"{"
-                        ]
-
-                        t1 = java_type_from_rust(type["generics"][0])["class_name"]
-                        t2 = java_type_from_rust(type["generics"][1])["class_name"]
-
-                        c.append("\n\t\t".join(code_format({
-                            "type_name_resolved": type["generics"][0],
-                            "type_name_lhand": "k",
-                            "is_array": type["is_array"],
-                            "is_interface": type["is_interface"],
-                            "type_name_original": t1,
-                            "type_name_alone": type["generics"][0],
-                            "generics": type["generics"],
-                            "package_name": type["package_name"],
-                            "options_start_at": options_start_at,
-                            "usage_unsafe": False,
-                        }, prefix, 0, "map_val", "k", options_start_at)))
-
-                        c.append("\n\t\t".join(code_format({
-                            "type_name_resolved": type["generics"][1],
-                            "type_name_lhand": "v",
-                            "is_array": type["is_array"],
-                            "is_interface": type["is_interface"],
-                            "type_name_original": t2,
-                            "type_name_alone": type["generics"][1],
-                            "generics": type["generics"],
-                            "package_name": type["package_name"],
-                            "options_start_at": options_start_at,
-                            "usage_unsafe": False,
-                        }, prefix, 1, "map_val", "v", options_start_at)))
-
-                        c.append(
-                            prefix+".call_method(&raw_"+
-                                var_prefix+"_"+str(n)+","+
-                                "\"put\","
-                                "\"(L"+t1+"L"+t2+")V\","+
-                                "&[jni::objects::JValueGen::from(&map_val_0), jni::objects::JValueGen::from(&map_val_1)]"
-                            ")?;"
-                        )
-
-                        c.append("};")
-
-                        c.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(raw_"+var_prefix+"_"+str(n)+");")
-                        return c
-
-                    case _:
-                        print("Unhandled map type:\t\t"+type["type_name_original"],"\t\t",type["type_name_original"])
-                return None
             case "Vec":
                 match type["type_name_original"]:
+                    # TODO: convert this to use the new java.util bindings instad.
                     case "java.util.List":
                         c = [
                             "let raw_"+var_prefix+"_"+str(n)+" = "+prefix+".new_object(\"java/util/ArrayList\", \"()V\", &[]).unwrap();",
                             "for v in "+arg+"{"
                         ]
 
-                        t1 = java_type_from_rust(type["generics"][0])["class_name"]
+                        t1 = java_type_from_rust(type["generics"][0]["type_name_resolved"])["class_name"]
 
                         co = code_format({
-                            "type_name_resolved": type["generics"][0],
+                            "type_name_resolved": type["generics"][0]["type_name_resolved"],
                             "type_name_lhand": "v",
                             "is_array": type["is_array"],
                             "is_interface": type["is_interface"],
                             "type_name_original": t1,
-                            "type_name_alone": type["generics"][0],
+                            "type_name_alone": type["generics"][0]["type_name_resolved"],
                             "generics": type["generics"],
                             "package_name": type["package_name"],
                             "options_start_at": options_start_at,
@@ -356,6 +307,18 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 print("Untranslated argument:\t\t"+type["type_name_alone"],"\t\t",type["type_name_original"])
                 return None
 
+def return_format_one_liner(val, var_name):
+    match val:
+        case "()": return "()"
+        case "u16": return var_name+".c().unwrap()"
+        case "i8": return var_name+".b().unwrap()"
+        case "i16": return var_name+".s().unwrap()"
+        case "bool": return var_name+".z().unwrap()"
+        case "i32": return var_name+".i().unwrap()"
+        case "i64": return var_name+".j().unwrap()"
+        case "f32": return var_name+".f().unwrap()"
+        case "f64": return var_name+".d().unwrap()"
+
 def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at, is_constructor=False):
     if return_group["is_array"]:
         return None
@@ -383,20 +346,27 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
         if return_group["type_name_resolved"] != "()":
             code.append("let res = ")
         code.append(prefix+".translate_error(res)?;")
+    
+    if static:
+        val_1 = "jni"
+        if is_constructor:
+            val_2 = "res"
+        else:
+            val_2 = "obj"
+    else:
+        if is_trait:
+            val_1 = "self.jni_ref()"
+        else:
+            val_1 = "self.0"
+        val_2 = "unsafe { jni::objects::JObject::from_raw(res.l()"+end_line+".clone()) }"
 
     match return_group["type_name_resolved"]:
-        case "()": code.append("Ok(())")
-        case "u16": code.append("Ok(res.c().unwrap())")
-        case "i8": code.append("Ok(res.b().unwrap())")
-        case "i16": code.append("Ok(res.s().unwrap())")
-        case "bool": code.append("Ok(res.z().unwrap())")
-        case "i32": code.append("Ok(res.i().unwrap())")
-        case "i64": code.append("Ok(res.j().unwrap())")
-        case "f32": code.append("Ok(res.f().unwrap())")
-        case "f64": code.append("Ok(res.d().unwrap())")
-        case "u128" | "std::net::IpAddr" | "std::fs::File" | "std::net::SocketAddr":
+        case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
+            code.append("Ok("+return_format_one_liner(return_group["type_name_resolved"],"res")+")")
+        case "u128":
             return None # not yet
-        case "String": code.append(
+        case "String": 
+            code.append(
                     "Ok("+prefix+
                         ".get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })"+end_line+
                         ".to_string_lossy()"+
@@ -423,6 +393,53 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         "            ?.i()"+end_line+" as u8;"+
                         "(r, g, b);"+
                         "Ok((r, g, b))")
+        case "Vec":
+            code.append("let mut new_vec = Vec::new();")
+            normally = ""
+            gen = return_group["generics"][0]["type_name_resolved"]
+            match return_group["type_name_original"]:
+                case "java.util.Collection":
+                    code.append("let mut col = blackboxmc_java::JavaCollection::from_raw(&"+
+                                                prefix+",res.l()"+end_line+")"+end_line+";"+
+                                "let mut iter = blackboxmc_java::JavaIterator::from_raw(&"+val_1+", col.iterator()"+end_line+")"+end_line+";"+
+                                "        while iter.has_next()"+end_line+" {"+
+                                "            let obj = iter.next()"+end_line+";")
+                    normally = gen+"::from_raw(&"+val_1+",obj,)"+end_line
+                case "java.util.List":
+                    code.append("let mut list = blackboxmc_java::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
+                                "let size = list.size()"+end_line+";"+
+                                "for i in 0..=size {"+
+                                "let obj = list.get(i)"+end_line+";")
+                    if return_group["generics"][0]["type_name_original"] in enums:
+                        code.append("let variant = "+val_1+".call_method(list.get(i)"+end_line+", \"toString\", \"()Ljava/lang/String;\", &[])"+end_line+";"+
+                                    "let variant_str = "+val_1+""+
+                                    "    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })"+end_line+
+                                    "    .to_string_lossy()"+
+                                    "    .to_string();")
+                        val_3 = gen+"::from_string(variant_str).unwrap(),"
+                    else:
+                        val_3 = ""
+                    normally = gen+"::from_raw(&"+val_1+",obj,"+val_3+")"+end_line
+                case _:
+                    print("Unhandled map type:\t\t"+return_group["type_name_original"])
+            match gen:
+                case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
+                    return None
+                    #code.append("new_vec.push("+return_format_one_liner(gen,"obj")+")")
+                case "jni::objects::JObject":
+                    code.append("new_vec.push(obj);")
+                case "jni::objects::JClass":
+                    code.append("new_vec.push(unsafe {"+
+                        "jni::objects::JClass::from_raw(*obj)"+
+                        "})")
+                case "String":
+                    code.append("new_vec.push("+prefix+
+                        ".get_string(unsafe { &jni::objects::JString::from_raw(*obj) })"+end_line+
+                        ".to_string_lossy()"+
+                        ".to_string());")    
+                case _:
+                    code.append("new_vec.push("+normally+");")
+            code.append("};Ok(new_vec)")
         case _:
             if return_group["type_name_resolved"] == "blackboxmc_java::JavaEnum":
                 return_group["type_name_resolved"] = "Self"
@@ -439,19 +456,9 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             #                "let mut vec = (0..num)"+
             #                "    .map(|i| {")
 
-            if static:
-                val_1 = "jni"
-                if is_constructor:
-                    val_2 = "res"
-                else:
-                    code.append("let mut obj = res.l()"+end_line+";")
-                    val_2 = "obj"
-            else:
-                if is_trait:
-                    val_1 = "self.jni_ref()"
-                else:
-                    val_1 = "self.0"
-                val_2 = "unsafe { jni::objects::JObject::from_raw(res.l()"+end_line+".clone()) }"
+            if static and not is_constructor:
+                code.append("let obj = res.l()"+end_line+";")
+
             if return_group["type_name_original"] in enums:
                 code.append("let raw_obj = "+val_2+";let variant = "+val_1+".call_method(&raw_obj, \"toString\", \"()Ljava/lang/String;\", &[])"+end_line+";"+
                             "let variant_str = "+val_1+""+
@@ -485,7 +492,33 @@ def java_call_signature_format(types, return_type, is_constructor=False):
     else:
         return "("+"".join(results)+")"+java_letter_from_rust(return_type)
 
-def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False):
+def correct_question_mark(argname, ty, method, i, returning, library, is_constructor):
+    gen = re.search("^(.*?)<(.*?)>$", ty)
+    if gen is not None:
+        name = gen.group(2)
+        if "?" in name:
+            name = name.replace("? extends","").replace("? super","").replace("<?>","").replace(" ","")
+            # we don't support further generics at this point.
+            gen2 = re.search("<(.*?)>", name)
+            if gen2 is not None:
+                return None
+            # if its still there at this point, move on.
+            if "?" in name:
+                return None
+        grp = java_type_to_rust(argname, name, method, i, returning, library, is_constructor=False, skip_vec=True)
+        if grp is None:
+            return None
+        return grp
+    else:
+        grp = java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False, skip_vec=True)
+        if grp is None:
+            return None
+        gen2 = re.search("<(.*?)>", grp["type_name_resolved"])
+        if gen2 is not None:
+            return None
+        return grp
+
+def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False, skip_vec=False):
     if method is not None and not is_constructor:
         if returning:
             parameter_type = method["method"]["genericReturnType"]
@@ -517,7 +550,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         is_interface = True
 
     type_name_original = ty
-    match ty:
+    match ty.replace("Java",""):
         case "void":
             type_name_resolved = "()"
         case "char" | "java.lang.Character":
@@ -542,43 +575,43 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
             type_name_resolved = "u128"
         case "java.lang.Class":
             type_name_resolved = "jni::objects::JClass"
-        case "java.io.File":
-            type_name_resolved = "std::fs::File"
-        case "java.io.Reader":
-            type_name_resolved = "&dyn std::io::Read"
-        case "java.io.Writer":
-            type_name_resolved = "&dyn std::io::Write"
         case "java.awt.Color":
             type_name_resolved = "(u8, u8, u8)"
-        case "java.net.InetAddress":
-            type_name_resolved = "std::net::IpAddr"
-        case "java.net.InetSocketAddress":
-            type_name_resolved = "std::net::SocketAddr"
-        case "java.lang.Object"  | "java.lang.reflect.Type" | "java.awt.Image" | "java.awt.image.BufferedImage":
-            type_name_resolved = "jni::objects::JObject"
-        case _:
-            crate_name = ".".join(
-                filter(lambda f: f.lower() == f, ty.split(".")))
+    if type_name_resolved == "jni::objects::JObject":
+        match ty:
+            case "java.lang.Object" | "java.lang.reflect.Type" | "java.awt.Image" | "java.awt.image.BufferedImage":
+                type_name_resolved = "jni::objects::JObject"
+            case "java.util.List" | "java.util.Collection":
+                if skip_vec:
+                    return None
+                type_name_resolved = "Vec"
+                grp = correct_question_mark(argname, parameter_type, method, i, returning, library, is_constructor)
+                if grp is None:
+                    return None
+                generics = [grp]
+            case _:
+                crate_name = ".".join(
+                    filter(lambda f: f.lower() == f, ty.split(".")))
 
-            cont = True
-            while crate_name not in library_resolves and crate_name != "":
-                parts = crate_name.split(".")
-                parts.pop()
-                crate_name = ".".join(parts)
+                cont = True
+                while crate_name not in library_resolves and crate_name != "":
+                    parts = crate_name.split(".")
+                    parts.pop()
+                    crate_name = ".".join(parts)
 
-            if crate_name == "":
-                usage_unsafe = True
-            else:
-                if crate_name == library or library is False:
-                    to_replace = "crate"
+                if crate_name == "":
+                    usage_unsafe = True
                 else:
-                    to_replace = library_name_format(library_resolves[crate_name])
-                    if to_replace == library_name_format(library_resolves["java.util"]):
-                        class_name = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
-                        ty = ty.replace(class_name, "Java"+class_name)
-                        
-                type_name_resolved = ty.replace(
-                    crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
+                    if crate_name == library or library is False:
+                        to_replace = "crate"
+                    else:
+                        to_replace = library_name_format(library_resolves[crate_name])
+                        if to_replace == library_name_format(library_resolves["java.util"]):
+                            class_name = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
+                            ty = ty.replace(class_name, "Java"+class_name)
+                            
+                    type_name_resolved = ty.replace(
+                        crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
 
     if type_alone == "":
         type_alone = type_name_resolved
@@ -607,6 +640,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
 
     if(in_excluded_classes(ty)):
         return None
+    
     return {
         "type_name_resolved": type_name_resolved,
         "type_name_lhand": type_name_lhand,
@@ -939,9 +973,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         if return_group["type_name_alone"] in omitted_classes:
             continue
 
-
         for generic in return_group["generics"]:
-            parts = generic.split("::")
+            parts = generic["type_name_resolved"].split("::")
             if parts[len(parts)-1].replace("_","$") in omitted_classes:
                 should_continue = False
                 break

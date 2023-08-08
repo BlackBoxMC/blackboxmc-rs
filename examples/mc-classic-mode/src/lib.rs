@@ -29,7 +29,11 @@ impl HungerThread {
         )
     }
     pub fn run(plug: &mut Plugin) -> Result<(), Box<dyn Error>> {
-        plug.server()?;
+        let mut server = plug.server()?;
+        let players = server.online_players()?;
+        for mut player in players {
+            println!("{}", player.name()?);
+        }
         println!("test");
         Ok(())
     }
