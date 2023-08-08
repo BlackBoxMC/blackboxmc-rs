@@ -2,6 +2,7 @@
 name = "blackboxmc_general"
 version = "0.1.0"
 edition = "2021"
+license = "../LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -9,6 +10,6 @@ edition = "2021"
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"
-blackboxmc_proc = {path="../blackboxmc-rs-proc"}
+blackboxmc_proc = {version = "0.1.0", path="../blackboxmc-rs-proc"}
 once_cell = "1.18.0"
 parking_lot = "0.12.1"
