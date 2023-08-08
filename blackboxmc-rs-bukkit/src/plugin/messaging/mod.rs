@@ -45,7 +45,8 @@ impl<'mc> PluginChannelDirection<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginChannelDirection")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/plugin/messaging/PluginChannelDirection")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginChannelDirection object, got {}",
@@ -66,7 +67,9 @@ impl<'mc> PluginChannelDirection<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements PluginMessageListener. Needed for returning it from Java.
+/// A listener for a specific Plugin Channel, which will receive notifications of messages sent from a client.
+///
+/// This is a representation of an abstract class.
 pub struct PluginMessageListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -82,7 +85,8 @@ impl<'mc> PluginMessageListener<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginMessageListener")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/plugin/messaging/PluginMessageListener")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginMessageListener object, got {}",
@@ -93,6 +97,7 @@ impl<'mc> PluginMessageListener<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// A method that will be thrown when a PluginMessageSource sends a plugin message on a registered channel.
     pub fn on_plugin_message_received(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -123,6 +128,7 @@ impl<'mc> JNIRaw<'mc> for PluginMessageListener<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Contains information about a <a title="interface in org.bukkit.plugin" href="../Plugin.html"><code>Plugin</code></a>s registration to a plugin channel.
 pub struct PluginMessageListenerRegistration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -147,7 +153,10 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginMessageListenerRegistration")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/plugin/messaging/PluginMessageListenerRegistration",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a PluginMessageListenerRegistration object, got {}",
@@ -178,6 +187,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
 "(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::plugin::messaging::PluginMessageListenerRegistration::from_raw(&jni, res)
     }
+    /// Checks if this registration is still valid.
     pub fn is_valid(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -185,6 +195,22 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the plugin channel that this registration is about.
+    pub fn channel(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getChannel",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Gets the registered listener described by this registration.
     pub fn listener(
         &mut self,
     ) -> Result<crate::plugin::messaging::PluginMessageListener<'mc>, Box<dyn std::error::Error>>
@@ -200,20 +226,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn channel(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getChannel",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+    /// Gets the plugin that this registration is for.
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -226,6 +239,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -240,6 +254,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -247,6 +262,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -266,6 +282,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -277,6 +294,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -284,6 +302,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -291,6 +310,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -299,7 +319,9 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements Messenger. Needed for returning it from Java.
+/// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a title="class in org.bukkit" href="../../NamespacedKey.html"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
+///
+/// This is a representation of an abstract class.
 pub struct Messenger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -312,7 +334,7 @@ impl<'mc> Messenger<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Messenger from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Messenger")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/messaging/Messenger")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Messenger object, got {}",
@@ -323,6 +345,9 @@ impl<'mc> Messenger<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Checks if the specified channel is a reserved name.
+    ///
+    /// All channels within the "minecraft" namespace except for "minecraft:brand" are reserved.
     pub fn is_reserved_channel(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -337,6 +362,7 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Registers the specific plugin to the requested outgoing plugin channel, allowing it to send messages through that channel to any clients.
     pub fn register_outgoing_plugin_channel(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -356,6 +382,8 @@ impl<'mc> Messenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Unregisters the specific plugin from the requested outgoing plugin channel, no longer allowing it to send messages through that channel to any clients.
+    /// Unregisters the specific plugin from all outgoing plugin channels, no longer allowing it to send any plugin messages.
     pub fn unregister_outgoing_plugin_channel_with_plugin(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
@@ -377,6 +405,7 @@ impl<'mc> Messenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Registers the specific plugin for listening on the requested incoming plugin channel, allowing it to act upon any plugin messages.
     pub fn register_incoming_plugin_channel(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -396,6 +425,9 @@ impl<'mc> Messenger<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    /// Unregisters the specific plugin's listener from listening on the requested incoming plugin channel, no longer allowing it to act upon any plugin messages.
+    /// Unregisters the specific plugin from listening on the requested incoming plugin channel, no longer allowing it to act upon any plugin messages.
+    /// Unregisters the specific plugin from listening on all plugin channels through all listeners.
     pub fn unregister_incoming_plugin_channel_with_plugin(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
@@ -414,6 +446,8 @@ impl<'mc> Messenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a set containing all the outgoing plugin channels.
+    /// Gets a set containing all the outgoing plugin channels that the specified plugin is registered to.
     pub fn outgoing_channels(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -428,6 +462,8 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a set containing all the incoming plugin channels.
+    /// Gets a set containing all the incoming plugin channels that the specified plugin is registered for.
     pub fn incoming_channels(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -442,6 +478,9 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has.
+    /// Gets a set containing all the incoming plugin channel registrations that are on the requested channel.
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has on the requested channel.
     pub fn get_incoming_channel_registrations_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
@@ -459,6 +498,9 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has.
+    /// Gets a set containing all the incoming plugin channel registrations that are on the requested channel.
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has on the requested channel.
     pub fn get_incoming_channel_registrations_with_plugin(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -481,6 +523,8 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if the specified plugin message listener registration is valid.
+    /// <p>A registration is considered valid if it has not be unregistered and that the plugin is still enabled.</p>
     pub fn is_registration_valid(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::messaging::PluginMessageListenerRegistration<'mc>>,
@@ -495,6 +539,7 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Checks if the specified plugin has registered to receive incoming messages through the requested channel.
     pub fn is_incoming_channel_registered(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -514,6 +559,7 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Checks if the specified plugin has registered to send outgoing messages through the requested channel.
     pub fn is_outgoing_channel_registered(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -533,6 +579,7 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Dispatches the specified incoming message to any registered listeners.
     pub fn dispatch_incoming_message(
         &mut self,
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
@@ -563,6 +610,7 @@ impl<'mc> JNIRaw<'mc> for Messenger<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Standard implementation to <a href="Messenger.html" title="interface in org.bukkit.plugin.messaging"><code>Messenger</code></a>
 pub struct StandardMessenger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -586,7 +634,8 @@ impl<'mc> StandardMessenger<'mc> {
                 eyre::eyre!("Tried to instantiate StandardMessenger from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "StandardMessenger")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/plugin/messaging/StandardMessenger")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StandardMessenger object, got {}",
@@ -604,24 +653,10 @@ impl<'mc> StandardMessenger<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::plugin::messaging::StandardMessenger::from_raw(&jni, res)
     }
-    #[deprecated]
-    pub fn validate_and_correct_channel(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "validateAndCorrectChannel",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#isReservedChannel(java.lang.String)">Messenger</a></code></span>
+    /// Checks if the specified channel is a reserved name.
+    ///
+    /// All channels within the "minecraft" namespace except for "minecraft:brand" are reserved.
     pub fn is_reserved_channel(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -636,6 +671,8 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#registerOutgoingPluginChannel(org.bukkit.plugin.Plugin,java.lang.String)">Messenger</a></code></span>
+    /// Registers the specific plugin to the requested outgoing plugin channel, allowing it to send messages through that channel to any clients.
     pub fn register_outgoing_plugin_channel(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -655,6 +692,10 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#unregisterOutgoingPluginChannel(org.bukkit.plugin.Plugin,java.lang.String)">Messenger</a></code></span>
+    /// Unregisters the specific plugin from the requested outgoing plugin channel, no longer allowing it to send messages through that channel to any clients.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#unregisterOutgoingPluginChannel(org.bukkit.plugin.Plugin)">Messenger</a></code></span>
+    /// Unregisters the specific plugin from all outgoing plugin channels, no longer allowing it to send any plugin messages.
     pub fn unregister_outgoing_plugin_channel_with_plugin(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
@@ -676,6 +717,8 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#registerIncomingPluginChannel(org.bukkit.plugin.Plugin,java.lang.String,org.bukkit.plugin.messaging.PluginMessageListener)">Messenger</a></code></span>
+    /// Registers the specific plugin for listening on the requested incoming plugin channel, allowing it to act upon any plugin messages.
     pub fn register_incoming_plugin_channel(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -695,6 +738,12 @@ impl<'mc> StandardMessenger<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#unregisterIncomingPluginChannel(org.bukkit.plugin.Plugin,java.lang.String,org.bukkit.plugin.messaging.PluginMessageListener)">Messenger</a></code></span>
+    /// Unregisters the specific plugin's listener from listening on the requested incoming plugin channel, no longer allowing it to act upon any plugin messages.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#unregisterIncomingPluginChannel(org.bukkit.plugin.Plugin,java.lang.String)">Messenger</a></code></span>
+    /// Unregisters the specific plugin from listening on the requested incoming plugin channel, no longer allowing it to act upon any plugin messages.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#unregisterIncomingPluginChannel(org.bukkit.plugin.Plugin)">Messenger</a></code></span>
+    /// Unregisters the specific plugin from listening on all plugin channels through all listeners.
     pub fn unregister_incoming_plugin_channel_with_plugin(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
@@ -713,6 +762,10 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getOutgoingChannels()">Messenger</a></code></span>
+    /// Gets a set containing all the outgoing plugin channels.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getOutgoingChannels(org.bukkit.plugin.Plugin)">Messenger</a></code></span>
+    /// Gets a set containing all the outgoing plugin channels that the specified plugin is registered to.
     pub fn get_outgoing_channels(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -729,6 +782,10 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannels()">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channels.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannels(org.bukkit.plugin.Plugin)">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channels that the specified plugin is registered for.
     pub fn get_incoming_channels(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -745,6 +802,12 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannelRegistrations(org.bukkit.plugin.Plugin)">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannelRegistrations(java.lang.String)">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channel registrations that are on the requested channel.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannelRegistrations(org.bukkit.plugin.Plugin,java.lang.String)">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has on the requested channel.
     pub fn get_incoming_channel_registrations_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
@@ -762,6 +825,12 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannelRegistrations(org.bukkit.plugin.Plugin)">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannelRegistrations(java.lang.String)">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channel registrations that are on the requested channel.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#getIncomingChannelRegistrations(org.bukkit.plugin.Plugin,java.lang.String)">Messenger</a></code></span>
+    /// Gets a set containing all the incoming plugin channel registrations that the specified plugin has on the requested channel.
     pub fn get_incoming_channel_registrations_with_plugin(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -784,6 +853,9 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#isRegistrationValid(org.bukkit.plugin.messaging.PluginMessageListenerRegistration)">Messenger</a></code></span>
+    /// Checks if the specified plugin message listener registration is valid.
+    /// <p>A registration is considered valid if it has not be unregistered and that the plugin is still enabled.</p>
     pub fn is_registration_valid(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::messaging::PluginMessageListenerRegistration<'mc>>,
@@ -798,6 +870,8 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#isIncomingChannelRegistered(org.bukkit.plugin.Plugin,java.lang.String)">Messenger</a></code></span>
+    /// Checks if the specified plugin has registered to receive incoming messages through the requested channel.
     pub fn is_incoming_channel_registered(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -817,6 +891,8 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#isOutgoingChannelRegistered(org.bukkit.plugin.Plugin,java.lang.String)">Messenger</a></code></span>
+    /// Checks if the specified plugin has registered to send outgoing messages through the requested channel.
     pub fn is_outgoing_channel_registered(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -836,6 +912,8 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Messenger.html#dispatchIncomingMessage(org.bukkit.entity.Player,java.lang.String,byte%5B%5D)">Messenger</a></code></span>
+    /// Dispatches the specified incoming message to any registered listeners.
     pub fn dispatch_incoming_message(
         &mut self,
         arg0: impl Into<&'mc crate::entity::Player<'mc>>,
@@ -857,6 +935,38 @@ impl<'mc> StandardMessenger<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// not an API method
+    /// </div>
+    /// not an API method
+    ///
+    /// Validates and corrects a Plugin Channel name. Method is not reentrant / idempotent.
+    pub fn validate_and_correct_channel(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "validateAndCorrectChannel",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// not an API method
+    /// </div>
+    /// not an API method
+    ///
+    /// Validates a Plugin Channel name.
     pub fn validate_channel(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -871,6 +981,7 @@ impl<'mc> StandardMessenger<'mc> {
         )?;
         Ok(())
     }
+    /// Validates the input of a Plugin Message, ensuring the arguments are all valid.
     pub fn validate_plugin_message(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::plugin::messaging::Messenger<'mc>>,
@@ -886,6 +997,7 @@ impl<'mc> StandardMessenger<'mc> {
 "(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;B)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -905,6 +1017,7 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -919,6 +1032,7 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -930,6 +1044,7 @@ impl<'mc> StandardMessenger<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -937,6 +1052,7 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -944,6 +1060,7 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -951,6 +1068,7 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -964,7 +1082,9 @@ impl<'mc> Into<crate::plugin::messaging::Messenger<'mc>> for StandardMessenger<'
         crate::plugin::messaging::Messenger::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements PluginMessageRecipient. Needed for returning it from Java.
+/// Represents a possible recipient for a Plugin Message.
+///
+/// This is a representation of an abstract class.
 pub struct PluginMessageRecipient<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -980,7 +1100,8 @@ impl<'mc> PluginMessageRecipient<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginMessageRecipient")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/plugin/messaging/PluginMessageRecipient")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginMessageRecipient object, got {}",
@@ -991,6 +1112,8 @@ impl<'mc> PluginMessageRecipient<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sends this recipient a Plugin Message on the specified outgoing channel.
+    /// <p>The message may not be larger than <a href="Messenger.html#MAX_MESSAGE_SIZE"><code>Messenger.MAX_MESSAGE_SIZE</code></a> bytes, and the plugin must be registered to send messages on the specified channel.</p>
     pub fn send_plugin_message(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -1011,6 +1134,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a set containing all the Plugin Channels that this client is listening on.
     pub fn listening_plugin_channels(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {

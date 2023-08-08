@@ -4,20 +4,17 @@ use blackboxmc_bukkit::{
     command::{Command, CommandSender},
     event::server::PluginEnableEvent,
     generator::{ChunkGenerator, ChunkGeneratorChunkData, WorldInfo},
-    plugin::{self, Plugin},
+    plugin::Plugin,
     scheduler::BukkitRunnable,
 };
-use blackboxmc_general::{
-    macros::{extends_blackbox, memory::MemoryMap},
-    JNIRaw, SharedJNIEnv,
-};
+use blackboxmc_general::SharedJNIEnv;
 use jni::{objects::JObject, sys::jint, JNIEnv};
 
 pub struct HungerThread {}
 
 impl HungerThread {
     pub fn new<'mc>(
-        mut env: &'mc SharedJNIEnv<'mc>,
+        env: &'mc SharedJNIEnv<'mc>,
         plugin: &'mc Plugin<'mc>,
     ) -> Result<BukkitRunnable<'mc>, Box<dyn Error>> {
         BukkitRunnable::from_extendable(
@@ -34,7 +31,6 @@ impl HungerThread {
         for mut player in players {
             println!("{}", player.name()?);
         }
-        println!("test");
         Ok(())
     }
 }

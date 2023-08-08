@@ -1,7 +1,9 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// An instantiatable struct that implements Server. Needed for returning it from Java.
+/// Represents a server implementation.
+///
+/// This is a representation of an abstract class.
 pub struct Server<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14,7 +16,7 @@ impl<'mc> Server<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Server from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Server")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Server")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Server object, got {}",
@@ -25,20 +27,16 @@ impl<'mc> Server<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn version(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getVersion",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+    /// Gets a tag which has already been defined within the server. Plugins are suggested to use the concrete tags in <a href="Tag.html" title="interface in org.bukkit"><code>Tag</code></a> rather than this method which makes no guarantees about which tags are available, and may also be less performant due to lack of caching.
+    ///
+    /// Tags will be searched for in an implementation specific manner, but a path consisting of namespace/tags/registry/key is expected.
+    ///
+    /// Server implementations are allowed to handle only the registries indicated in <a href="Tag.html" title="interface in org.bukkit"><code>Tag</code></a>.
+    /// Gets a all tags which have been defined within the server.
+    ///
+    /// Server implementations are allowed to handle only the registries indicated in <a href="Tag.html" title="interface in org.bukkit"><code>Tag</code></a>.
+    ///
+    /// No guarantees are made about the mutability of the returned iterator.
     pub fn get_tag(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -63,19 +61,24 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn world_container(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getWorldContainer",
-            "()Ljava/io/File;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+    /// Reloads the whitelist from disk.
+    /// Reloads the server, refreshing settings and plugin information.
+    /// Reload only the Minecraft data for the server. This includes custom advancements and loot tables.
+    pub fn reload(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "reload", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Gets the map from the given item ID.
     pub fn get_map(
         &mut self,
         arg0: i32,
@@ -92,6 +95,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Create a new map with an automatically assigned ID.
     pub fn create_map(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -108,31 +112,35 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn reload(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "reload", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
-    pub fn get_offline_player_with_uuid(
+    /// Gets the folder that contains all of the various <a href="World.html" title="interface in org.bukkit"><code>World</code></a>s.
+    pub fn world_container(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;)Lorg/bukkit/OfflinePlayer;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            "getWorldContainer",
+            "()Ljava/io/File;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l().unwrap())
     }
+    /// Gets the version string of this server implementation.
+    pub fn version(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getVersion",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Gets the specified <a title="interface in org.bukkit.loot" href="loot/LootTable.html"><code>LootTable</code></a>.
     pub fn get_loot_table(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -149,6 +157,45 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Persistent storage of users should be by UUID as names are no longer unique past a single session.
+    /// </div>
+    /// Persistent storage of users should be by UUID as names are no longer unique past a single session.
+    ///
+    /// Gets the player by the given name, regardless if they are offline or online.
+    /// <p>This method may involve a blocking web request to get the UUID for the given name.</p>
+    /// <p>This will return an object even if the player does not exist. To this method, all players will exist.</p>
+    /// Gets the player by the given UUID, regardless if they are offline or online.
+    /// <p>This will return an object even if the player does not exist. To this method, all players will exist.</p>
+    /// Gets every player that has ever played on this server.
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<u128>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let upper = (arg0.unwrap() >> 64) as u64 as i64;
+        let lower = arg0.unwrap() as u64 as i64;
+        let val_1 = jni::objects::JValueGen::Object(
+            self.jni_ref()
+                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
+                .unwrap(),
+        );
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/util/UUID;)Lorg/bukkit/OfflinePlayer;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get world type (level-type setting) for default world.
+    /// Gets a list of all worlds on this server.
+    /// Gets the world with the given name.
+    /// Gets the world from the given Unique ID.
+    /// Gets the folder that contains all of the various <a href="World.html" title="interface in org.bukkit"><code>World</code></a>s.
     pub fn get_world_with_string(
         &mut self,
         arg0: std::option::Option<u128>,
@@ -171,6 +218,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn spigot(&mut self) -> Result<crate::ServerSpigot<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -183,6 +231,8 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get a list of all recipes for a given item. The stack size is ignored in comparisons. If the durability is -1, it will match any data value.
+    /// Get the <a title="interface in org.bukkit.inventory" href="inventory/Recipe.html"><code>Recipe</code></a> for the given key.
     pub fn get_recipe(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -199,6 +249,16 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets an unmodifiable iterator through all persistent bossbars.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a title="interface in org.bukkit.entity" href="entity/Boss.html"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
+    /// Gets the <a href="boss/KeyedBossBar.html" title="interface in org.bukkit.boss"><code>KeyedBossBar</code></a> specified by this key.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a href="entity/Boss.html" title="interface in org.bukkit.entity"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
     pub fn get_boss_bar(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -215,6 +275,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Create a ChunkData for use in a generator. See <a href="generator/ChunkGenerator.html#generateChunkData(org.bukkit.World,java.util.Random,int,int,org.bukkit.generator.ChunkGenerator.BiomeGrid)"><code>ChunkGenerator.generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)</code></a>
     pub fn create_chunk_data(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -231,6 +292,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the plugin manager for interfacing with plugins.
     pub fn plugin_manager(
         &mut self,
     ) -> Result<crate::plugin::PluginManager<'mc>, Box<dyn std::error::Error>> {
@@ -245,6 +307,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the instance of the item factory (for <a title="interface in org.bukkit.inventory.meta" href="inventory/meta/ItemMeta.html"><code>ItemMeta</code></a>).
     pub fn item_factory(
         &mut self,
     ) -> Result<crate::inventory::ItemFactory<'mc>, Box<dyn std::error::Error>> {
@@ -259,6 +322,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the Bukkit version that this server is running.
     pub fn bukkit_version(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -273,6 +337,10 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets a view of all currently logged in players. This <a class="external-link" title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#unmodifiableCollection-java.util.Collection-">view</a> is a reused object, making some operations like <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#size--" title="class or interface in java.util"><code>Collection.size()</code></a> zero-allocation.
+    /// <p>The collection is a view backed by the internal representation, such that, changes to the internal state of the server will be reflected immediately. However, the reuse of the returned collection (identity) is not strictly guaranteed for future or all implementations. Casting the collection, or relying on interface implementations (like <a title="class or interface in java.io" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html"><code>Serializable</code></a> or <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util"><code>List</code></a>), is deprecated.</p>
+    /// <p>Iteration behavior is undefined outside of self-contained main-thread uses. Normal and immediate iterator use without consequences that affect the collection are fully supported. The effects following (non-exhaustive) <a href="entity/Entity.html#teleport(org.bukkit.Location)"><code>teleportation</code></a>, <a href="entity/Damageable.html#setHealth(double)"><code>death</code></a>, and <a href="entity/Player.html#kickPlayer(java.lang.String)"><code>kicking</code></a> are undefined. Any use of this collection from asynchronous threads is unsafe.</p>
+    /// <p>For safe consequential iteration or mimicking the old array behavior, using <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#toArray-T:A-" title="class or interface in java.util" class="external-link"><code>Collection.toArray(Object[])</code></a> is recommended. For making snapshots, <a title="class or interface in com.google.common.collect" class="external-link" href="https://guava.dev/releases/31.1-jre/api/docs/com/google/common/collect/ImmutableList.html#copyOf(java.util.Collection)"><code>ImmutableList.copyOf(Collection)</code></a> is recommended.</p>
     pub fn online_players(
         &mut self,
     ) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -292,6 +360,7 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the maximum amount of players which can login to this server.
     pub fn max_players(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -299,6 +368,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Set the maximum amount of players allowed to be logged in at once.
     pub fn set_max_players(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -310,6 +380,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the view distance from this server.
     pub fn view_distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -317,6 +388,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the simulation distance from this server.
     pub fn simulation_distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -324,6 +396,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the IP that this server is bound to, or empty string if not specified.
     pub fn ip(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -335,6 +408,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Get world type (level-type setting) for default world.
     pub fn world_type(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -349,6 +423,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Get generate-structures setting.
     pub fn generate_structures(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -356,6 +431,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get max world size.
     pub fn max_world_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -363,6 +439,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets whether this server allows the End or not.
     pub fn allow_end(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -370,6 +447,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether this server allows the Nether or not.
     pub fn allow_nether(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -377,6 +455,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets a list of packs to be enabled.
     pub fn initial_enabled_packs(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -399,6 +478,7 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets a list of packs that will not be enabled automatically.
     pub fn initial_disabled_packs(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -421,6 +501,7 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the DataPack Manager.
     pub fn data_pack_manager(
         &mut self,
     ) -> Result<crate::packs::DataPackManager<'mc>, Box<dyn std::error::Error>> {
@@ -435,6 +516,9 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the server resource pack uri, or empty string if not specified.
+    /// Gets the SHA-1 digest of the server resource pack, or empty string if not specified.
+    /// Gets the custom prompt message to be shown when the server resource pack is required, or empty string if not specified.
     pub fn resource_pack(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -449,6 +533,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the SHA-1 digest of the server resource pack, or empty string if not specified.
     pub fn resource_pack_hash(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -463,6 +548,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the custom prompt message to be shown when the server resource pack is required, or empty string if not specified.
     pub fn resource_pack_prompt(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -477,6 +563,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets whether the server resource pack is enforced.
     pub fn is_resource_pack_required(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -484,6 +571,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether this server has a whitelist or not.
     pub fn has_whitelist(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -491,6 +579,8 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets if the server is whitelisted.
+    /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -503,6 +593,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets whether the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn is_whitelist_enforced(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -510,6 +601,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist_enforced(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -522,6 +614,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a list of whitelisted players.
     pub fn whitelisted_players(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -536,6 +629,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Reloads the whitelist from disk.
     pub fn reload_whitelist(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -543,6 +637,8 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Broadcast a message to all players.
+    /// <p>This is the same as calling <a href="#broadcast(java.lang.String,java.lang.String)"><code>broadcast(java.lang.String, java.lang.String)</code></a> to <a href="#BROADCAST_CHANNEL_USERS"><code>BROADCAST_CHANNEL_USERS</code></a></p>
     pub fn broadcast_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -557,6 +653,9 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the name of the update folder. The update folder is used to safely update plugins at the right moment on a plugin load.
+    /// <p>The update folder name is relative to the plugins folder.</p>
+    /// Gets the update folder. The update folder is used to safely update plugins at the right moment on a plugin load.
     pub fn update_folder(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -571,6 +670,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the update folder. The update folder is used to safely update plugins at the right moment on a plugin load.
     pub fn update_folder_file(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -583,6 +683,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// Gets the value of the connection throttle setting.
     pub fn connection_throttle(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -591,6 +692,21 @@ impl<'mc> Server<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets default ticks per animal spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn monsters every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn monsters every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, animal spawning will be disabled. We recommend using spawn-animals to control this instead.</p>
+    /// <p>Minecraft default: 400.</p>
     pub fn ticks_per_animal_spawns(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -599,6 +715,21 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per monster spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn monsters every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn monsters every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, monsters spawning will be disabled. We recommend using spawn-monsters to control this instead.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_monster_spawns(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -607,6 +738,21 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water mob spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_spawns(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -615,6 +761,21 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water ambient mob spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water ambient mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water ambient mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_ambient_spawns(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -626,6 +787,21 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water underground creature spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water underground creature every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water underground creature every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water underground creature spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_underground_creature_spawns(
         &mut self,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -639,6 +815,21 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per ambient mob spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn ambient mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn ambient mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_ambient_spawns(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -646,6 +837,17 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the default ticks per <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.
+    ///
+    /// <b>Note: </b> the <a href="entity/SpawnCategory.html#MISC"><code>SpawnCategory.MISC</code></a> are not consider.</p>
     pub fn get_ticks_per_spawns(
         &mut self,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -660,6 +862,10 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets a player object by the given username.
+    /// <p>This method may not return objects for offline players.</p>
+    /// Gets the player with the exact given name, case insensitive.
+    /// Gets the player with the given UUID.
     pub fn get_player_with_string(
         &mut self,
         arg0: std::option::Option<u128>,
@@ -682,6 +888,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the player with the exact given name, case insensitive.
     pub fn get_player_exact(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -698,6 +905,8 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Attempts to match any players with the given name, and returns a list of all possibly matches.
+    /// <p>This list is not sorted in any particular order. If an exact match is found, the returned list will only contain a single result.</p>
     pub fn match_player(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -719,6 +928,7 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the scheduler for managing scheduled events.
     pub fn scheduler(
         &mut self,
     ) -> Result<crate::scheduler::BukkitScheduler<'mc>, Box<dyn std::error::Error>> {
@@ -733,6 +943,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a services manager.
     pub fn services_manager(
         &mut self,
     ) -> Result<crate::plugin::ServicesManager<'mc>, Box<dyn std::error::Error>> {
@@ -747,6 +958,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a list of all worlds on this server.
     pub fn worlds(&mut self) -> Result<Vec<crate::World<'mc>>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -761,6 +973,10 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
+    /// Creates or loads a world with the given name using the specified options.
+    /// <p>If the world is already loaded, it will just return the equivalent of getWorld(creator.name()).</p>
+    /// Create a new virtual <a title="interface in org.bukkit" href="WorldBorder.html"><code>WorldBorder</code></a>.
+    /// <p>Note that world borders created by the server will not respect any world scaling effects (i.e. coordinates are not divided by 8 in the nether).</p>
     pub fn create_world(
         &mut self,
         arg0: impl Into<&'mc crate::WorldCreator<'mc>>,
@@ -777,6 +993,8 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Unloads a world with the given name.
+    /// Unloads the given world.
     pub fn unload_world_with_string(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -797,6 +1015,8 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Create a new virtual <a title="interface in org.bukkit" href="WorldBorder.html"><code>WorldBorder</code></a>.
+    /// <p>Note that world borders created by the server will not respect any world scaling effects (i.e. coordinates are not divided by 8 in the nether).</p>
     pub fn create_world_border(
         &mut self,
     ) -> Result<crate::WorldBorder<'mc>, Box<dyn std::error::Error>> {
@@ -811,6 +1031,12 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Create a new explorer map targeting the closest nearby structure of a given <a href="StructureType.html" title="class in org.bukkit"><code>StructureType</code></a>.
+    ///
+    /// This method uses implementation default values for radius and findUnexplored (usually 100, true).
+    /// Create a new explorer map targeting the closest nearby structure of a given <a href="StructureType.html" title="class in org.bukkit"><code>StructureType</code></a>.
+    ///
+    /// This method uses implementation default values for radius and findUnexplored (usually 100, true).
     pub fn create_explorer_map_with_world(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -832,6 +1058,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Reload only the Minecraft data for the server. This includes custom advancements and loot tables.
     pub fn reload_data(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -839,6 +1066,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a <a title="class in org.bukkit.command" href="command/PluginCommand.html"><code>PluginCommand</code></a> with the given name or alias.
     pub fn get_plugin_command(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -855,6 +1083,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Writes loaded players to disk.
     pub fn save_players(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -862,6 +1091,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Dispatches a command on this server, and executes it if found.
     pub fn dispatch_command(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -881,6 +1111,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Adds a recipe to the crafting manager.
     pub fn add_recipe(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::Recipe<'mc>>,
@@ -895,6 +1126,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get a list of all recipes for a given item. The stack size is ignored in comparisons. If the durability is -1, it will match any data value.
     pub fn get_recipes_for(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -916,6 +1148,13 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the <a href="inventory/Recipe.html" title="interface in org.bukkit.inventory"><code>Recipe</code></a> for the list of ItemStacks provided.
+    /// <p>The list is formatted as a crafting matrix where the index follow the pattern below:</p>
+    /// <pre> [ 0 1 2 ]
+    /// [ 3 4 5 ]
+    /// [ 6 7 8 ]
+    /// </pre>
+    /// <p>NOTE: This method will not modify the provided ItemStack array, for that, use <a href="#craftItem(org.bukkit.inventory.ItemStack%5B%5D,org.bukkit.World,org.bukkit.entity.Player)"><code>craftItem(ItemStack[], World, Player)</code></a>.</p>
     pub fn get_crafting_recipe(
         &mut self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -933,6 +1172,14 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the crafted item using the list of <a href="inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a> provided.
+    /// <p>The list is formatted as a crafting matrix where the index follow the pattern below:</p>
+    /// <pre> [ 0 1 2 ]
+    /// [ 3 4 5 ]
+    /// [ 6 7 8 ]
+    /// </pre>
+    /// <p>The <a href="World.html" title="interface in org.bukkit"><code>World</code></a> and <a href="entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a> arguments are required to fulfill the Bukkit Crafting events.</p>
+    /// <p>Calls <a href="event/inventory/PrepareItemCraftEvent.html" title="class in org.bukkit.event.inventory"><code>PrepareItemCraftEvent</code></a> to imitate the <a title="interface in org.bukkit.entity" href="entity/Player.html"><code>Player</code></a> initiating the crafting event.</p>
     pub fn craft_item(
         &mut self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -947,6 +1194,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get an iterator through the list of crafting recipes.
     pub fn recipe_iterator(
         &mut self,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -961,6 +1209,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Clears the list of crafting recipes.
     pub fn clear_recipes(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -968,6 +1217,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Resets the list of crafting recipes to the default.
     pub fn reset_recipes(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -975,6 +1225,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Remove a recipe from the server. <b>Note that removing a recipe may cause permanent loss of data associated with that recipe (eg whether it has been discovered by players).</b>
     pub fn remove_recipe(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -989,6 +1240,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets a list of command aliases defined in the server properties.
     pub fn command_aliases(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -1003,6 +1255,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the radius, in blocks, around each worlds spawn point to protect.
     pub fn spawn_radius(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1010,6 +1263,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the radius, in blocks, around each worlds spawn point to protect.
     pub fn set_spawn_radius(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1022,6 +1276,13 @@ impl<'mc> Server<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// chat previews have been removed
+    /// </div>
+    /// chat previews have been removed
+    ///
+    /// Gets whether the server should send a preview of the player's chat message to the client when the player types a message
     pub fn should_send_chat_previews(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1029,6 +1290,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the server only allow players with Mojang-signed public key to join
     pub fn is_enforcing_secure_profiles(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1036,6 +1298,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the Server hide online players in server status.
     pub fn hide_online_players(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1043,6 +1306,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the Server is in online mode or not.
     pub fn online_mode(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1050,6 +1314,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether this server allows flying or not.
     pub fn allow_flight(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1057,6 +1322,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the server is in hardcore mode or not.
     pub fn is_hardcore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1064,6 +1330,9 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Creates a new <a title="interface in org.bukkit.profile" href="profile/PlayerProfile.html"><code>PlayerProfile</code></a>.
+    /// Creates a new <a href="profile/PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
+    /// Creates a new <a href="profile/PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
     pub fn create_player_profile_with_uuid(
         &mut self,
         arg0: u128,
@@ -1092,6 +1361,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a set containing all current IPs that are banned.
     pub fn ipbans(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1101,6 +1371,14 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#banIP(java.net.InetAddress)"><code>banIP(InetAddress)</code></a>
+    /// </div>
+    /// see <a href="#banIP(java.net.InetAddress)"><code>banIP(InetAddress)</code></a>
+    ///
+    /// Bans the specified address from the server.
+    /// Bans the specified address from the server.
     pub unsafe fn ban_ip_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1115,6 +1393,14 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#unbanIP(java.net.InetAddress)"><code>unbanIP(InetAddress)</code></a>
+    /// </div>
+    /// see <a href="#unbanIP(java.net.InetAddress)"><code>unbanIP(InetAddress)</code></a>
+    ///
+    /// Unbans the specified address from the server.
+    /// Unbans the specified address from the server.
     pub unsafe fn unban_ip_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1129,6 +1415,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a set containing all banned players.
     pub fn banned_players(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1143,6 +1430,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a ban list for the supplied type.
     pub fn get_ban_list(
         &mut self,
         arg0: impl Into<&'mc crate::BanListType<'mc>>,
@@ -1159,6 +1447,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a set containing all player operators.
     pub fn operators(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1173,6 +1462,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the default <a title="enum in org.bukkit" href="GameMode.html"><code>GameMode</code></a> for new players.
     pub fn default_game_mode(
         &mut self,
     ) -> Result<crate::GameMode<'mc>, Box<dyn std::error::Error>> {
@@ -1198,6 +1488,7 @@ impl<'mc> Server<'mc> {
             crate::GameMode::from_string(variant_str).unwrap(),
         )
     }
+    /// Sets the default <a href="GameMode.html" title="enum in org.bukkit"><code>GameMode</code></a> for new players.
     pub fn set_default_game_mode(
         &mut self,
         arg0: impl Into<&'mc crate::GameMode<'mc>>,
@@ -1212,6 +1503,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a <a href="command/ConsoleCommandSender.html" title="interface in org.bukkit.command"><code>ConsoleCommandSender</code></a> that may be used as an input source for this server.
     pub fn console_sender(
         &mut self,
     ) -> Result<crate::command::ConsoleCommandSender<'mc>, Box<dyn std::error::Error>> {
@@ -1226,6 +1518,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the <a href="plugin/messaging/Messenger.html" title="interface in org.bukkit.plugin.messaging"><code>Messenger</code></a> responsible for this server.
     pub fn messenger(
         &mut self,
     ) -> Result<crate::plugin::messaging::Messenger<'mc>, Box<dyn std::error::Error>> {
@@ -1240,6 +1533,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the <a href="help/HelpMap.html" title="interface in org.bukkit.help"><code>HelpMap</code></a> providing help topics for this server.
     pub fn help_map(&mut self) -> Result<crate::help::HelpMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1252,6 +1546,20 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates an empty inventory with the specified type. If the type is <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a>, the new inventory has a size of 27; otherwise the new inventory has the normal size for its type.
+    ///
+    /// <a href="event/inventory/InventoryType.html#WORKBENCH"><code>InventoryType.WORKBENCH</code></a> will not process crafting recipes if created with this method. Use <a href="entity/HumanEntity.html#openWorkbench(org.bukkit.Location,boolean)"><code>HumanEntity.openWorkbench(Location, boolean)</code></a> instead.
+    ///
+    /// <a href="event/inventory/InventoryType.html#ENCHANTING"><code>InventoryType.ENCHANTING</code></a> will not process <a title="class in org.bukkit.inventory" href="inventory/ItemStack.html"><code>ItemStack</code></a>s for possible enchanting results. Use <a href="entity/HumanEntity.html#openEnchanting(org.bukkit.Location,boolean)"><code>HumanEntity.openEnchanting(Location, boolean)</code></a> instead.
+    /// Creates an empty inventory with the specified type and title. If the type is <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a>, the new inventory has a size of 27; otherwise the new inventory has the normal size for its type.
+    ///
+    /// It should be noted that some inventory types do not support titles and may not render with said titles on the Minecraft client.
+    ///
+    /// <a href="event/inventory/InventoryType.html#WORKBENCH"><code>InventoryType.WORKBENCH</code></a> will not process crafting recipes if created with this method. Use <a href="entity/HumanEntity.html#openWorkbench(org.bukkit.Location,boolean)"><code>HumanEntity.openWorkbench(Location, boolean)</code></a> instead.
+    ///
+    /// <a href="event/inventory/InventoryType.html#ENCHANTING"><code>InventoryType.ENCHANTING</code></a> will not process <a title="class in org.bukkit.inventory" href="inventory/ItemStack.html"><code>ItemStack</code></a>s for possible enchanting results. Use <a href="entity/HumanEntity.html#openEnchanting(org.bukkit.Location,boolean)"><code>HumanEntity.openEnchanting(Location, boolean)</code></a> instead.
+    /// Creates an empty inventory of type <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a> with the specified size.
+    /// Creates an empty inventory of type <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a> with the specified size and title.
     pub fn create_inventory_with_inventory_holder(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::InventoryHolder<'mc>>,
@@ -1268,6 +1576,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates an empty merchant.
     pub fn create_merchant(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1284,6 +1593,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the amount of consecutive neighbor updates before skipping additional ones.
     pub fn max_chained_neighbor_updates(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1295,6 +1605,13 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of monsters that can spawn in a chunk.
     pub fn monster_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1303,6 +1620,13 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of animals that can spawn in a chunk.
     pub fn animal_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1311,6 +1635,13 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of water animals that can spawn in a chunk.
     pub fn water_animal_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1319,6 +1650,13 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of water ambient mobs that can spawn in a chunk.
     pub fn water_ambient_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1327,6 +1665,13 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Get user-specified limit for number of water creature underground that can spawn in a chunk.
     pub fn water_underground_creature_spawn_limit(
         &mut self,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1340,6 +1685,13 @@ impl<'mc> Server<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of ambient mobs that can spawn in a chunk.
     pub fn ambient_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1347,6 +1699,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets user-specified limit for number of <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mobs that can spawn in a chunk. <b>Note: the <a href="entity/SpawnCategory.html#MISC"><code>SpawnCategory.MISC</code></a> are not consider.</b>
     pub fn get_spawn_limit(
         &mut self,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -1361,6 +1714,8 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Checks the current thread against the expected primary thread for the server.
+    /// <p><b>Note:</b> this method should not be used to indicate the current synchronized state of the runtime. A current thread matching the main thread indicates that it is synchronized, but a mismatch <b>does not preclude</b> the same assumption.</p>
     pub fn is_primary_thread(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1368,6 +1723,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the message that is displayed on the server list.
     pub fn motd(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1379,6 +1735,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Set the message that is displayed on the server list.
     pub fn set_motd(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1393,6 +1750,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the default message that is displayed when the server is stopped.
     pub fn shutdown_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1407,6 +1765,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the current warning state for the server.
     pub fn warning_state(
         &mut self,
     ) -> Result<crate::WarningWarningState<'mc>, Box<dyn std::error::Error>> {
@@ -1421,6 +1780,8 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the instance of the scoreboard manager.
+    /// <p>This will only exist after the first world has loaded.</p>
     pub fn scoreboard_manager(
         &mut self,
     ) -> Result<crate::scoreboard::ScoreboardManager<'mc>, Box<dyn std::error::Error>> {
@@ -1435,6 +1796,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get (or create) a new <a href="scoreboard/Criteria.html" title="interface in org.bukkit.scoreboard"><code>Criteria</code></a> by its name.
     pub fn get_scoreboard_criteria(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1451,6 +1813,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets an instance of the server's default server-icon.
     pub fn server_icon(
         &mut self,
     ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
@@ -1465,6 +1828,10 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Loads an image from a file, and returns a cached image for the specific server-icon.
+    /// <p>Size and type are implementation defined. An incompatible file is guaranteed to throw an implementation-defined <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html" class="external-link"><code>Exception</code></a>.</p>
+    /// Creates a cached server-icon for the specific image.
+    /// <p>Size and type are implementation defined. An incompatible file is guaranteed to throw an implementation-defined <a title="class or interface in java.lang" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html"><code>Exception</code></a>.</p>
     pub unsafe fn load_server_icon_with_buffered_image(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1481,6 +1848,8 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the idle kick timeout. Any players idle for the specified amount of time will be automatically kicked.
+    /// <p>A value of 0 will disable the idle kick timeout.</p>
     pub fn set_idle_timeout(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1492,6 +1861,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the idle kick timeout.
     pub fn idle_timeout(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1499,6 +1869,10 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Creates a boss bar instance to display to players. The progress defaults to 1.0
+    /// Creates a boss bar instance to display to players. The progress defaults to 1.0.
+    ///
+    /// This instance is added to the persistent storage of the server and will be editable by commands and restored after restart.
     pub fn create_boss_bar_with_string(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -1518,6 +1892,11 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets an unmodifiable iterator through all persistent bossbars.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a title="interface in org.bukkit.entity" href="entity/Boss.html"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
     pub fn boss_bars(
         &mut self,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -1532,6 +1911,11 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Removes a <a href="boss/KeyedBossBar.html" title="interface in org.bukkit.boss"><code>KeyedBossBar</code></a> specified by this key.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a title="interface in org.bukkit.entity" href="entity/Boss.html"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
     pub fn remove_boss_bar(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -1546,6 +1930,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets an entity on the server by its UUID
     pub fn get_entity(
         &mut self,
         arg0: u128,
@@ -1568,6 +1953,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the advancement specified by this key.
     pub fn get_advancement(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -1584,6 +1970,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get an iterator through all advancements. Advancements cannot be removed from this iterator,
     pub fn advancement_iterator(
         &mut self,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -1598,6 +1985,12 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates a new <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> instance for the specified Material, with all properties initialized to unspecified defaults.
+    /// Creates a new <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a> instance for the specified Material, with all properties initialized to unspecified defaults.
+    /// Creates a new <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> instance with material and properties parsed from provided data.
+    /// Creates a new <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> instance for the specified Material, with all properties initialized to unspecified defaults, except for those provided in data.
+    ///
+    /// If <code>material</code> is specified, then the data string must not also contain the material.
     pub fn create_block_data_with_material(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -1620,6 +2013,13 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Selects entities using the given Vanilla selector.
+    ///
+    /// No guarantees are made about the selector format, other than they match the Vanilla format for the active Minecraft version.
+    ///
+    /// Usually a selector will start with '@', unless selecting a Player in which case it may simply be the Player's name or UUID.
+    ///
+    /// Note that in Vanilla, elevated permissions are usually required to use '@' selectors, but this method should not check such permissions from the sender.
     pub fn select_entities(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1646,6 +2046,7 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the structure manager for loading and saving structures.
     pub fn structure_manager(
         &mut self,
     ) -> Result<crate::structure::StructureManager<'mc>, Box<dyn std::error::Error>> {
@@ -1660,6 +2061,11 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the registry for the given class.
+    ///
+    /// If no registry is present for the given class null will be returned.
+    ///
+    /// Depending on the implementation not every registry present in <a href="Registry.html" title="interface in org.bukkit"><code>Registry</code></a> will be returned by this method.
     pub fn get_registry(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -1676,6 +2082,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the name of this server implementation.
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1687,6 +2094,7 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Shutdowns the server, stopping everything.
     pub fn shutdown(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1695,6 +2103,7 @@ impl<'mc> Server<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_unsafe(&mut self) -> Result<crate::UnsafeValues<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1707,6 +2116,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the primary logger associated with this server instance.
     pub fn logger(
         &mut self,
     ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
@@ -1721,6 +2131,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the game port that the server runs on.
     pub fn port(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1728,6 +2139,9 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Broadcast a message to all players.
+    /// <p>This is the same as calling <a href="#broadcast(java.lang.String,java.lang.String)"><code>broadcast(java.lang.String, java.lang.String)</code></a> to <a href="#BROADCAST_CHANNEL_USERS"><code>BROADCAST_CHANNEL_USERS</code></a></p>
+    /// Broadcasts the specified message to every user with the given permission name.
     pub fn broadcast(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1747,6 +2161,7 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn send_plugin_message(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -1767,6 +2182,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn listening_plugin_channels(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1796,6 +2212,7 @@ impl<'mc> Into<crate::plugin::messaging::PluginMessageRecipient<'mc>> for Server
         crate::plugin::messaging::PluginMessageRecipient::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct ServerSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1817,7 +2234,7 @@ impl<'mc> ServerSpigot<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ServerSpigot from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "ServerSpigot")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ServerSpigot")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ServerSpigot object, got {}",
@@ -1835,6 +2252,7 @@ impl<'mc> ServerSpigot<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::ServerSpigot::from_raw(&jni, res)
     }
+
     pub fn config(
         &mut self,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
@@ -1850,6 +2268,7 @@ impl<'mc> ServerSpigot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Restart the server. If the server administrator has not configured restarting, the server will stop.
     pub fn restart(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1857,6 +2276,8 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sends the component to the player
+    /// Sends an array of components as a single message to the player
     pub fn broadcast_with_base_components(
         &mut self,
         arg0: std::option::Option<
@@ -1874,6 +2295,7 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1893,6 +2315,7 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1907,6 +2330,7 @@ impl<'mc> ServerSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1918,6 +2342,7 @@ impl<'mc> ServerSpigot<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1925,6 +2350,7 @@ impl<'mc> ServerSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1932,6 +2358,7 @@ impl<'mc> ServerSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1939,6 +2366,7 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1992,7 +2420,7 @@ impl<'mc> Difficulty<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Difficulty from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Difficulty")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Difficulty")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Difficulty object, got {}",
@@ -2017,7 +2445,9 @@ impl<'mc> Difficulty<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements FeatureFlag. Needed for returning it from Java.
+/// This represents a Feature Flag for a World.
+///
+/// This is a representation of an abstract class.
 pub struct FeatureFlag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2030,7 +2460,7 @@ impl<'mc> FeatureFlag<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate FeatureFlag from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "FeatureFlag")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/FeatureFlag")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FeatureFlag object, got {}",
@@ -2041,6 +2471,7 @@ impl<'mc> FeatureFlag<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2117,7 +2548,7 @@ impl<'mc> TreeSpecies<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TreeSpecies from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "TreeSpecies")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/TreeSpecies")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TreeSpecies object, got {}",
@@ -2146,7 +2577,9 @@ impl<'mc> TreeSpecies<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements Raid. Needed for returning it from Java.
+/// Represents a raid event.
+///
+/// This is a representation of an abstract class.
 pub struct Raid<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2159,7 +2592,7 @@ impl<'mc> Raid<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Raid from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Raid")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Raid")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Raid object, got {}",
@@ -2170,6 +2603,7 @@ impl<'mc> Raid<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get whether this raid started.
     pub fn is_started(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2177,6 +2611,7 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the amount of ticks this raid has existed.
     pub fn active_ticks(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2184,6 +2619,7 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Gets the Bad Omen level of this raid.
     pub fn bad_omen_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2191,6 +2627,9 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the Bad Omen level.
+    ///
+    /// If the level is higher than 1, there will be an additional wave that as strong as the final wave.
     pub fn set_bad_omen_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2202,6 +2641,9 @@ impl<'mc> Raid<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the current status of the raid.
+    ///
+    /// Do not use this method to check if the raid has been started, call <a href="#isStarted()"><code>isStarted()</code></a> instead.
     pub fn status(&mut self) -> Result<crate::RaidRaidStatus<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2214,6 +2656,7 @@ impl<'mc> Raid<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the number of raider groups which have spawned.
     pub fn spawned_groups(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2221,6 +2664,9 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the number of raider groups which would spawn.
+    ///
+    /// This also includes the group which spawns in the additional wave (if present).
     pub fn total_groups(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2228,6 +2674,7 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the number of waves in this raid (exclude the additional wave).
     pub fn total_waves(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2235,6 +2682,7 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the sum of all raider's health.
     pub fn total_health(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2242,6 +2690,7 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Get the UUID of all heroes in this raid.
     pub fn heroes(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2251,6 +2700,7 @@ impl<'mc> Raid<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets all remaining <a href="entity/Raider.html" title="interface in org.bukkit.entity"><code>Raider</code></a> in the present wave.
     pub fn raiders(
         &mut self,
     ) -> Result<Vec<crate::entity::Raider<'mc>>, Box<dyn std::error::Error>> {
@@ -2267,6 +2717,7 @@ impl<'mc> Raid<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the center location where the raid occurs.
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2289,7 +2740,10 @@ impl<'mc> JNIRaw<'mc> for Raid<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements UnsafeValues. Needed for returning it from Java.
+/// This interface provides value conversions that may be specific to a runtime, or have arbitrary meaning (read: magic values).
+/// <p>Their existence and behavior is not guaranteed across future versions. They may be poorly named, throw exceptions, have misleading parameters, or any other bad programming practice.</p>
+///
+/// This is a representation of an abstract class.
 pub struct UnsafeValues<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2302,7 +2756,7 @@ impl<'mc> UnsafeValues<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate UnsafeValues from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "UnsafeValues")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/UnsafeValues")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a UnsafeValues object, got {}",
@@ -2313,6 +2767,7 @@ impl<'mc> UnsafeValues<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_material(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2345,6 +2800,8 @@ impl<'mc> UnsafeValues<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_translation_key_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::entity::EntityType<'mc>>>,
@@ -2364,6 +2821,7 @@ impl<'mc> UnsafeValues<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn to_legacy(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -2391,6 +2849,10 @@ impl<'mc> UnsafeValues<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn from_legacy_with_material(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::material::MaterialData<'mc>>>,
@@ -2419,6 +2881,10 @@ impl<'mc> UnsafeValues<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn from_legacy_with_material_data(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -2440,6 +2906,7 @@ impl<'mc> UnsafeValues<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn data_version(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2447,6 +2914,7 @@ impl<'mc> UnsafeValues<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn check_supported(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::PluginDescriptionFile<'mc>>,
@@ -2461,6 +2929,7 @@ impl<'mc> UnsafeValues<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn modify_item_stack(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -2482,6 +2951,14 @@ impl<'mc> UnsafeValues<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Load an advancement represented by the specified string into the server. The advancement format is governed by Minecraft and has no specified layout.
+    ///
+    /// It is currently a JSON object, as described by the Minecraft Wiki: http://minecraft.gamepedia.com/Advancements
+    ///
+    /// Loaded advancements will be stored and persisted across server restarts and reloads.
+    ///
+    /// Callers should be prepared for <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html" title="class or interface in java.lang"><code>Exception</code></a> to be thrown.
     pub fn load_advancement(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -2503,6 +2980,10 @@ impl<'mc> UnsafeValues<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Delete an advancement which was loaded and saved by <a href="#loadAdvancement(org.bukkit.NamespacedKey,java.lang.String)"><code>loadAdvancement(org.bukkit.NamespacedKey, java.lang.String)</code></a>.
+    ///
+    /// This method will only remove advancement from persistent storage. It should be accompanied by a call to <a href="Server.html#reloadData()"><code>Server.reloadData()</code></a> in order to fully remove it from the running instance.
     pub fn remove_advancement(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -2517,6 +2998,7 @@ impl<'mc> UnsafeValues<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_default_attribute_modifiers(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -2528,6 +3010,7 @@ impl<'mc> UnsafeValues<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_creative_category(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -2555,6 +3038,7 @@ impl<'mc> UnsafeValues<'mc> {
             crate::inventory::CreativeCategory::from_string(variant_str).unwrap(),
         )
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_block_translation_key(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -2573,6 +3057,7 @@ impl<'mc> UnsafeValues<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_item_translation_key(
         &mut self,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -2591,6 +3076,7 @@ impl<'mc> UnsafeValues<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_feature_flag(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -2617,7 +3103,9 @@ impl<'mc> JNIRaw<'mc> for UnsafeValues<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements World. Needed for returning it from Java.
+/// Represents a world, which may contain entities, chunks and blocks
+///
+/// This is a representation of an abstract class.
 pub struct World<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2630,7 +3118,7 @@ impl<'mc> World<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate World from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "World")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/World")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a World object, got {}",
@@ -2641,6 +3129,8 @@ impl<'mc> World<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the relative in-game time of this world.
+    /// <p>The relative time is analogous to hours * 1000</p>
     pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2648,6 +3138,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Sets the relative in-game time on the server.
+    /// <p>The relative time is analogous to hours * 1000</p>
+    /// <p>Note that setting the relative time below the current relative time will actually move the clock forward a day. If you require to rewind time, please see <a href="#setFullTime(long)"><code>setFullTime(long)</code></a></p>
     pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2660,6 +3153,22 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the world's ticks per water underground creature spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn water underground creature.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water underground creature in this world on every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water underground creature in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water underground creature spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_underground_creature_spawns(
         &mut self,
         arg0: i32,
@@ -2674,6 +3183,14 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns a list of entities within a bounding box centered around a Location.
+    /// <p>This may not consider entities in currently unloaded chunks. Some implementations may impose artificial restrictions on the size of the search bounding box.</p>
+    /// Returns a list of entities within a bounding box centered around a Location.
+    /// <p>This may not consider entities in currently unloaded chunks. Some implementations may impose artificial restrictions on the size of the search bounding box.</p>
+    /// Returns a list of entities within the given bounding box.
+    /// <p>This may not consider entities in currently unloaded chunks. Some implementations may impose artificial restrictions on the size of the search bounding box.</p>
+    /// Returns a list of entities within the given bounding box.
+    /// <p>This may not consider entities in currently unloaded chunks. Some implementations may impose artificial restrictions on the size of the search bounding box.</p>
     pub fn get_nearby_entities_with_bounding_box(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -2707,6 +3224,41 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// Performs a ray trace that checks for block collisions using the blocks' precise collision shapes.
+    /// <p>This takes collisions with passable blocks into account, but ignores fluids.</p>
+    /// <p>This may cause loading of chunks! Some implementations may impose artificial restrictions on the maximum distance.</p>
+    /// Performs a ray trace that checks for block collisions using the blocks' precise collision shapes.
+    /// <p>This takes collisions with passable blocks into account.</p>
+    /// <p>This may cause loading of chunks! Some implementations may impose artificial restrictions on the maximum distance.</p>
+    /// Performs a ray trace that checks for block collisions using the blocks' precise collision shapes.
+    /// <p>If collisions with passable blocks are ignored, fluid collisions are ignored as well regardless of the fluid collision mode.</p>
+    /// <p>Portal blocks are only considered passable if the ray starts within them. Apart from that collisions with portal blocks will be considered even if collisions with passable blocks are otherwise ignored.</p>
+    /// <p>This may cause loading of chunks! Some implementations may impose artificial restrictions on the maximum distance.</p>
+    pub fn ray_trace_blocks_with_location(
+        &mut self,
+        arg0: impl Into<&'mc crate::Location<'mc>>,
+        arg1: impl Into<&'mc crate::util::Vector<'mc>>,
+        arg2: std::option::Option<f64>,
+        arg3: std::option::Option<impl Into<&'mc crate::FluidCollisionMode<'mc>>>,
+        arg4: std::option::Option<bool>,
+    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_4 =
+            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        // 2
+        let val_5 = jni::objects::JValueGen::Bool(arg4.unwrap().into());
+        let res = self.jni_ref().call_method(&self.jni_object(),"rayTraceBlocks","(Lorg/bukkit/Location;Lorg/bukkit/util/Vector;DLorg/bukkit/FluidCollisionMode;Z)Lorg/bukkit/util/RayTraceResult;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Plays an effect to all players within a default radius around a given location.
+    /// Plays an effect to all players within a given radius around a location.
+    /// Plays an effect to all players within a default radius around a given location.
+    /// Plays an effect to all players within a given radius around a location.
     pub fn play_effect_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -2732,6 +3284,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn spigot(&mut self) -> Result<crate::WorldSpigot<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2744,16 +3297,20 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn get_chunk_at_with_location(
+    /// Gets the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the given coordinates
+    /// Gets the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the given coordinates
+    /// Gets the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>
+    /// Gets the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> that contains the given <a title="interface in org.bukkit.block" href="block/Block.html"><code>Block</code></a>
+    pub fn get_chunk_at_with_block(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::block::Block<'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
     ) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getChunkAt",
-            "(Lorg/bukkit/block/Block;)Lorg/bukkit/Chunk;",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Chunk;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -2761,6 +3318,10 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the given coordinates
+    /// Gets the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the given coordinates
+    /// Gets the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>
+    /// Gets the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> that contains the given <a title="interface in org.bukkit.block" href="block/Block.html"><code>Block</code></a>
     pub fn get_chunk_at_with_int(
         &mut self,
         arg0: i32,
@@ -2786,6 +3347,8 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the <a href="block/Block.html" title="interface in org.bukkit.block"><code>Block</code></a> at the given coordinates
+    /// Gets the <a title="interface in org.bukkit.block" href="block/Block.html"><code>Block</code></a> at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>
     pub fn get_block_at_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -2810,28 +3373,15 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn ray_trace_blocks_with_location(
-        &mut self,
-        arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: impl Into<&'mc crate::util::Vector<'mc>>,
-        arg2: std::option::Option<f64>,
-        arg3: std::option::Option<impl Into<&'mc crate::FluidCollisionMode<'mc>>>,
-        arg4: std::option::Option<bool>,
-    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
-        // 2
-        let val_5 = jni::objects::JValueGen::Bool(arg4.unwrap().into());
-        let res = self.jni_ref().call_method(&self.jni_object(),"rayTraceBlocks","(Lorg/bukkit/Location;Lorg/bukkit/util/Vector;DLorg/bukkit/FluidCollisionMode;Z)Lorg/bukkit/util/RayTraceResult;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::RayTraceResult::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     #[deprecated]
+    /// Gets the biome provider for this world
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Gets the biome for the given block coordinates.
     pub fn get_biome_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -2864,6 +3414,14 @@ impl<'mc> World<'mc> {
             crate::block::Biome::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the biome provider for this world
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Gets the biome for the given block coordinates.
     pub fn get_biome_with_int(
         &mut self,
         arg0: i32,
@@ -2900,6 +3458,13 @@ impl<'mc> World<'mc> {
         )
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Sets the biome for the given block coordinates
     pub fn set_biome_with_location(
         &mut self,
         arg0: i32,
@@ -2923,6 +3488,13 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Sets the biome for the given block coordinates
     pub fn set_biome_with_int(
         &mut self,
         arg0: i32,
@@ -2949,6 +3521,11 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get a list of all entities in this World
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Get a collection of all entities in this World matching the given class/interface
+    /// Get a collection of all entities in this World matching the given class/interface
+    /// Get a collection of all entities in this World matching any of the given classes/interfaces
     pub fn entities(
         &mut self,
     ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
@@ -2968,6 +3545,7 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get a list of all living entities in this World
     pub fn living_entities(
         &mut self,
     ) -> Result<Vec<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
@@ -2987,6 +3565,10 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Get a collection of all entities in this World matching the given class/interface
+    /// Get a collection of all entities in this World matching the given class/interface
+    /// Get a collection of all entities in this World matching any of the given classes/interfaces
     pub fn get_entities_by_class_with_classs(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -3008,6 +3590,7 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get a collection of all entities in this World matching any of the given classes/interfaces
     pub fn get_entities_by_classes(
         &mut self,
         arg0: Vec<jni::objects::JClass<'mc>>,
@@ -3028,6 +3611,8 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// Adds a plugin ticket for the specified chunk, loading the chunk if it is not already loaded.
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
     pub fn add_plugin_chunk_ticket(
         &mut self,
         arg0: i32,
@@ -3050,6 +3635,10 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Removes the specified plugin's ticket for the specified chunk
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
+    /// Removes all plugin tickets for the specified plugin
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
     pub fn remove_plugin_chunk_ticket(
         &mut self,
         arg0: i32,
@@ -3072,32 +3661,25 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn get_plugin_chunk_tickets(
+    /// Retrieves a collection specifying which plugins have tickets for the specified chunk. This collection is not updated when plugin tickets are added or removed to the chunk.
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
+    /// Returns a map of which plugins have tickets for what chunks. The returned map is not updated when plugin tickets are added or removed to chunks. If a plugin has no tickets, it will be absent from the map.
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
+    pub fn plugin_chunk_tickets(
         &mut self,
-        arg0: i32,
-        arg1: i32,
-    ) -> Result<Vec<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPluginChunkTickets",
-            "(II)Ljava/util/Collection;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
+            "()Ljava/util/Map;",
+            &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(crate::plugin::Plugin::from_raw(&self.jni_ref(), obj)?);
-        }
-        Ok(new_vec)
+        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
+    /// Returns the view distance used for this world.
     pub fn view_distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3105,6 +3687,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Returns the simulation distance used for this world.
     pub fn simulation_distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3113,6 +3696,13 @@ impl<'mc> World<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// world type is only used to select the default word generation settings and is not stored in Vanilla worlds, making it impossible for this method to always return the correct value.
+    /// </div>
+    /// world type is only used to select the default word generation settings and is not stored in Vanilla worlds, making it impossible for this method to always return the correct value.
+    ///
+    /// Gets the type of this world.
     pub fn world_type(&mut self) -> Result<crate::WorldType<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3137,6 +3727,22 @@ impl<'mc> World<'mc> {
         )
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the world's ticks per animal spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn animals.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn animals in this world every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn animals in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, animal spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p>
+    /// <p>Minecraft default: 400.</p>
     pub fn ticks_per_animal_spawns(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3145,6 +3751,22 @@ impl<'mc> World<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the world's ticks per monster spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn monsters.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn monsters in this world every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn monsters in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, monsters spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_monster_spawns(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3153,6 +3775,22 @@ impl<'mc> World<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the world's ticks per water mob spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn water mobs.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water mobs in this world every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water mobs in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water mobs spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_spawns(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3161,6 +3799,21 @@ impl<'mc> World<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water ambient mob spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water ambient mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water ambient mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_ambient_spawns(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3172,6 +3825,21 @@ impl<'mc> World<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water underground creature spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water underground creature every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water underground creature every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water underground creature spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_underground_creature_spawns(
         &mut self,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -3185,6 +3853,22 @@ impl<'mc> World<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the world's ticks per ambient mob spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn ambient mobs.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn ambient mobs in this world every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn ambient mobs in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_ambient_spawns(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3192,6 +3876,16 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Gets the world's ticks per <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mob spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mobs in this world every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn get_ticks_per_spawns(
         &mut self,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -3206,6 +3900,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Gets whether the world is hardcore or not. In a hardcore world the difficulty is locked to hard.
     pub fn is_hardcore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3214,6 +3909,13 @@ impl<'mc> World<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets limit for number of monsters that can spawn in a chunk in this world
     pub fn monster_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3222,6 +3924,13 @@ impl<'mc> World<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets the limit for number of animals that can spawn in a chunk in this world
     pub fn animal_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3230,6 +3939,13 @@ impl<'mc> World<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets the limit for number of water animals that can spawn in a chunk in this world
     pub fn water_animal_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3238,6 +3954,13 @@ impl<'mc> World<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of water ambient mobs that can spawn in a chunk.
     pub fn water_ambient_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3246,6 +3969,13 @@ impl<'mc> World<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets the limit for number of water underground creature that can spawn in a chunk in this world
     pub fn water_underground_creature_spawn_limit(
         &mut self,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3259,6 +3989,13 @@ impl<'mc> World<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets the limit for number of ambient mobs that can spawn in a chunk in this world
     pub fn ambient_spawn_limit(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3266,6 +4003,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the limit for number of <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> entities that can spawn in a chunk in this world
     pub fn get_spawn_limit(
         &mut self,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -3280,6 +4018,18 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Gets the temperature for the given block coordinates.
+    /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
+    /// <p>This method will return the raw temperature without adjusting for block height effects.</p>
+    /// Gets the temperature for the given block coordinates.
+    /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
+    /// <p>This method will return the raw temperature without adjusting for block height effects.</p>
     pub fn get_temperature_with_int(
         &mut self,
         arg0: i32,
@@ -3302,6 +4052,16 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Gets the humidity for the given block coordinates.
+    /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
+    /// Gets the humidity for the given block coordinates.
+    /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
     pub fn get_humidity_with_int(
         &mut self,
         arg0: i32,
@@ -3324,6 +4084,10 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Drops an item at the specified <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>
+    /// Drops an item at the specified <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> Note that functions will run before the entity is spawned
+    /// Drops an item at the specified <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> with a random offset
+    /// Drops an item at the specified <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> with a random offset Note that functions will run before the entity is spawned
     pub fn drop_item_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -3341,6 +4105,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get a list of all players in this World
     pub fn players(
         &mut self,
     ) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -3357,6 +4122,8 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// Drops an item at the specified <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> with a random offset
+    /// Drops an item at the specified <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> with a random offset Note that functions will run before the entity is spawned
     pub fn drop_item_naturally_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -3374,6 +4141,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the world border for this world.
     pub fn world_border(&mut self) -> Result<crate::WorldBorder<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3386,6 +4154,20 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
     pub fn spawn_particle_with_particle(
         &mut self,
         arg0: impl Into<&'mc crate::Particle<'mc>>,
@@ -3433,7 +4215,23 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn play_sound_with_entity(
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null.</p>
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null. No sound will be heard by the players if their clients do not have the respective sound for the value passed.</p>
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null.</p>
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null. No sound will be heard by the players if their clients do not have the respective sound for the value passed.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    pub fn play_sound_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::entity::Entity<'mc>>,
         arg1: impl Into<&'mc crate::Sound<'mc>>,
@@ -3461,23 +4259,39 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn play_sound_with_location(
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null.</p>
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null. No sound will be heard by the players if their clients do not have the respective sound for the value passed.</p>
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null.</p>
+    /// Play a Sound at the provided Location in the World.
+    /// <p>This function will fail silently if Location or Sound are null. No sound will be heard by the players if their clients do not have the respective sound for the value passed.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    /// Play a Sound at the location of the provided entity in the World.
+    /// <p>This function will fail silently if Entity or Sound are null.</p>
+    pub fn play_sound_with_entity(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
-        arg1: impl Into<&'mc String>,
+        arg1: impl Into<&'mc crate::Sound<'mc>>,
         arg2: impl Into<&'mc crate::SoundCategory<'mc>>,
         arg3: f32,
         arg4: std::option::Option<f32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let val_4 = jni::objects::JValueGen::Float(arg3.into());
         let val_5 = jni::objects::JValueGen::Float(arg4.unwrap().into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "playSound",
-            "(Lorg/bukkit/Location;Ljava/lang/String;Lorg/bukkit/SoundCategory;FF)V",
+            "(Lorg/bukkit/Location;Lorg/bukkit/Sound;Lorg/bukkit/SoundCategory;FF)V",
             &[
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
@@ -3489,26 +4303,31 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
-    pub fn get_game_rule_value_with_game_rule(
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// use <a href="#getGameRuleValue(org.bukkit.GameRule)"><code>getGameRuleValue(GameRule)</code></a> instead
+    /// </div>
+    /// use <a href="#getGameRuleValue(org.bukkit.GameRule)"><code>getGameRuleValue(GameRule)</code></a> instead
+    ///
+    /// Gets the current state of the specified rule
+    /// <p>Will return null if rule passed is null</p>
+    /// Get the current value for a given <a title="class in org.bukkit" href="GameRule.html"><code>GameRule</code></a>.
+    pub fn get_game_rule_value_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
+        arg0: std::option::Option<impl Into<&'mc crate::GameRule<'mc>>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getGameRuleValue",
-            "(Ljava/lang/String;)Ljava/lang/String;",
+            "(Lorg/bukkit/GameRule;)Ljava/lang/Object;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        Ok(res.l().unwrap())
     }
+    /// Gets the chunk generator for this world
     pub fn generator(
         &mut self,
     ) -> Result<crate::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
@@ -3523,6 +4342,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the biome provider for this world
     pub fn biome_provider(
         &mut self,
     ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
@@ -3537,6 +4357,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets whether or not structures are being generated.
     pub fn can_generate_structures(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3544,6 +4365,10 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the highest non-empty (impassable) block at the given coordinates.
+    /// Gets the highest non-empty (impassable) block at the given coordinates.
+    /// Gets the highest block corresponding to the <a href="HeightMap.html" title="enum in org.bukkit"><code>HeightMap</code></a> at the given coordinates.
+    /// Gets the highest block corresponding to the <a title="enum in org.bukkit" href="HeightMap.html"><code>HeightMap</code></a> at the given coordinates.
     pub fn get_highest_block_at_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -3565,6 +4390,10 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the highest non-empty (impassable) block at the given coordinates.
+    /// Gets the highest non-empty (impassable) block at the given coordinates.
+    /// Gets the highest block corresponding to the <a href="HeightMap.html" title="enum in org.bukkit"><code>HeightMap</code></a> at the given coordinates.
+    /// Gets the highest block corresponding to the <a title="enum in org.bukkit" href="HeightMap.html"><code>HeightMap</code></a> at the given coordinates.
     pub fn get_highest_block_at_with_int(
         &mut self,
         arg0: i32,
@@ -3590,6 +4419,8 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if the specified <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> is loaded
+    /// Checks if the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates is loaded
     pub fn is_chunk_loaded_with_chunk(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -3609,6 +4440,14 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Loads the specified <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a>.
+    /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
+    /// Loads the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates.
+    /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
+    /// <p>If the chunk does not exist, it will be generated.</p>
+    /// <p>This method is analogous to <a href="#loadChunk(int,int,boolean)"><code>loadChunk(int, int, boolean)</code></a> where generate is true.</p>
+    /// Loads the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates.
+    /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
     pub fn load_chunk_with_chunk(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -3628,6 +4467,14 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Loads the specified <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a>.
+    /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
+    /// Loads the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates.
+    /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
+    /// <p>If the chunk does not exist, it will be generated.</p>
+    /// <p>This method is analogous to <a href="#loadChunk(int,int,boolean)"><code>loadChunk(int, int, boolean)</code></a> where generate is true.</p>
+    /// Loads the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates.
+    /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
     pub fn load_chunk_with_int(
         &mut self,
         arg0: i32,
@@ -3651,6 +4498,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is generated
     pub fn is_chunk_generated(
         &mut self,
         arg0: i32,
@@ -3671,6 +4519,13 @@ impl<'mc> World<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use.
+    /// </div>
+    /// This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use.
+    ///
+    /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is loaded and in use by one or more players
     pub fn is_chunk_in_use(
         &mut self,
         arg0: i32,
@@ -3690,6 +4545,12 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Safely unloads and saves the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates
+    /// <p>This method is analogous to <a href="#unloadChunk(int,int,boolean)"><code>unloadChunk(int, int, boolean)</code></a> where save is true.</p>
+    /// Safely unloads and saves the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates
+    /// <p>This method is analogous to <a href="#unloadChunk(int,int,boolean)"><code>unloadChunk(int, int, boolean)</code></a> where save is true.</p>
+    /// Safely unloads and optionally saves the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates.
+    /// Safely queues the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates for unloading.
     pub fn unload_chunk_with_chunk(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -3709,6 +4570,12 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Safely unloads and saves the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates
+    /// <p>This method is analogous to <a href="#unloadChunk(int,int,boolean)"><code>unloadChunk(int, int, boolean)</code></a> where save is true.</p>
+    /// Safely unloads and saves the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates
+    /// <p>This method is analogous to <a href="#unloadChunk(int,int,boolean)"><code>unloadChunk(int, int, boolean)</code></a> where save is true.</p>
+    /// Safely unloads and optionally saves the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates.
+    /// Safely queues the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates for unloading.
     pub fn unload_chunk_with_int(
         &mut self,
         arg0: i32,
@@ -3732,6 +4599,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Safely queues the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates for unloading.
     pub fn unload_chunk_request(
         &mut self,
         arg0: i32,
@@ -3752,6 +4620,13 @@ impl<'mc> World<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results.
+    /// </div>
+    /// regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results.
+    ///
+    /// Regenerates the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates
     pub fn regenerate_chunk(
         &mut self,
         arg0: i32,
@@ -3772,6 +4647,13 @@ impl<'mc> World<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// This method is not guaranteed to work suitably across all client implementations.
+    /// </div>
+    /// This method is not guaranteed to work suitably across all client implementations.
+    ///
+    /// Resends the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> to all clients
     pub fn refresh_chunk(
         &mut self,
         arg0: i32,
@@ -3791,6 +4673,8 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the chunk at the specified chunk coordinates is force loaded.
+    /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn is_chunk_force_loaded(
         &mut self,
         arg0: i32,
@@ -3810,6 +4694,8 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets whether the chunk at the specified chunk coordinates is force loaded.
+    /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn set_chunk_force_loaded(
         &mut self,
         arg0: i32,
@@ -3833,6 +4719,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns all force loaded chunks in this world.
+    /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn force_loaded_chunks(
         &mut self,
     ) -> Result<Vec<crate::Chunk<'mc>>, Box<dyn std::error::Error>> {
@@ -3852,6 +4740,8 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// Removes all plugin tickets for the specified plugin
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
     pub fn remove_plugin_chunk_tickets(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -3866,6 +4756,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Creates an <a href="entity/Arrow.html" title="interface in org.bukkit.entity"><code>Arrow</code></a> entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>
+    /// Creates an arrow entity of the given class at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>
     pub fn spawn_arrow_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -3885,6 +4777,8 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Strikes lightning at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>
+    /// Strikes lightning at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> without doing damage
     pub fn strike_lightning(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -3901,6 +4795,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Strikes lightning at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> without doing damage
     pub fn strike_lightning_effect(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -3917,6 +4812,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the default spawn <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> of this world
     pub fn spawn_location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3929,6 +4825,11 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the spawn location of the world.
+    ///
+    /// The location provided must be equal to this world.
+    /// Sets the spawn location of the world
+    /// Sets the spawn location of the world
     pub fn set_spawn_location_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -3951,6 +4852,11 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the spawn location of the world.
+    ///
+    /// The location provided must be equal to this world.
+    /// Sets the spawn location of the world
+    /// Sets the spawn location of the world
     pub fn set_spawn_location_with_int(
         &mut self,
         arg0: i32,
@@ -3976,6 +4882,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the full in-game time on this world
     pub fn full_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3983,6 +4890,8 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Sets the in-game time on the server
+    /// <p>Note that this sets the full time of the world, which may cause adverse effects such as breaking redstone clocks and any scheduled events</p>
     pub fn set_full_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3994,6 +4903,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the full in-game time on this world since the world generation
     pub fn game_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4001,6 +4911,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Returns whether the world has an ongoing storm.
     pub fn has_storm(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4008,6 +4919,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Set whether there is a storm. A duration will be set for the new current conditions. This will implicitly call <a href="#setClearWeatherDuration(int)"><code>setClearWeatherDuration(int)</code></a> with 0 ticks to reset the world's clear weather.
     pub fn set_storm(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4020,6 +4932,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the remaining time in ticks of the current conditions.
     pub fn weather_duration(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4027,6 +4940,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Set the remaining time in ticks of the current conditions.
     pub fn set_weather_duration(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4038,6 +4952,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns whether there is thunder.
     pub fn is_thundering(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4045,6 +4960,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Set whether it is thundering. This will implicitly call <a href="#setClearWeatherDuration(int)"><code>setClearWeatherDuration(int)</code></a> with 0 ticks to reset the world's clear weather.
     pub fn set_thundering(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4057,6 +4973,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the thundering duration.
     pub fn thunder_duration(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4064,6 +4981,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Set the thundering duration.
     pub fn set_thunder_duration(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4075,6 +4993,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns whether the world has clear weather. This will be true such that <a href="#isThundering()"><code>isThundering()</code></a> and <a href="#hasStorm()"><code>hasStorm()</code></a> are both false.
     pub fn is_clear_weather(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4082,6 +5001,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Set the clear weather duration. The clear weather ticks determine whether or not the world will be allowed to rain or storm. If clear weather ticks are &gt; 0, the world will not naturally do either until the duration has elapsed. This method is equivalent to calling <code>/weather clear</code> with a set amount of ticks.
     pub fn set_clear_weather_duration(
         &mut self,
         arg0: i32,
@@ -4096,6 +5016,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the clear weather duration.
     pub fn clear_weather_duration(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4103,6 +5024,14 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Creates explosion at given coordinates with given power
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
+    /// Creates explosion at given coordinates with given power
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
     pub fn create_explosion_with_location(
         &mut self,
         arg0: f64,
@@ -4136,6 +5065,14 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Creates explosion at given coordinates with given power
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
+    /// Creates explosion at given coordinates with given power
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
+    /// Creates explosion at given coordinates with given power and optionally setting blocks on fire or breaking blocks.
     pub fn create_explosion_with_double(
         &mut self,
         arg0: f64,
@@ -4173,6 +5110,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the current PVP setting for this world.
     pub fn pvp(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4180,6 +5118,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the PVP setting for this world.
     pub fn set_pvp(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4192,6 +5131,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a list of all applied <a href="generator/BlockPopulator.html" title="class in org.bukkit.generator"><code>BlockPopulator</code></a>s for this World
     pub fn populators(
         &mut self,
     ) -> Result<Vec<crate::generator::BlockPopulator<'mc>>, Box<dyn std::error::Error>> {
@@ -4215,6 +5155,17 @@ impl<'mc> World<'mc> {
         Ok(new_vec)
     }
     #[deprecated]
+    /// Spawn a <a title="interface in org.bukkit.entity" href="entity/FallingBlock.html"><code>FallingBlock</code></a> entity at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> of the specified <a href="material/MaterialData.html" title="class in org.bukkit.material"><code>MaterialData</code></a>. The MaterialData dictates what is falling. When the FallingBlock hits the ground, it will place that block.
+    /// <p>The Material must be a block type, check with <a href="Material.html#isBlock()"><code>data.getItemType().isBlock()</code></a>. The Material may not be air.</p>
+    /// Spawn a <a href="entity/FallingBlock.html" title="interface in org.bukkit.entity"><code>FallingBlock</code></a> entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> of the specified <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a>. The BlockData dictates what is falling. When the FallingBlock hits the ground, it will place that block.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Spawn a <a title="interface in org.bukkit.entity" href="entity/FallingBlock.html"><code>FallingBlock</code></a> entity at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> of the specified <a href="Material.html" title="enum in org.bukkit"><code>Material</code></a>. The material dictates what is falling. When the FallingBlock hits the ground, it will place that block.
+    /// <p>The Material must be a block type, check with <a href="Material.html#isBlock()"><code>material.isBlock()</code></a>. The Material may not be air.</p>
     pub fn spawn_falling_block_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -4239,6 +5190,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get empty chunk snapshot (equivalent to all air blocks), optionally including valid biome data. Used for representing an ungenerated chunk, or for fetching only biome data without loading a chunk.
     pub fn get_empty_chunk_snapshot(
         &mut self,
         arg0: i32,
@@ -4268,6 +5220,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the spawn flags for this.
     pub fn set_spawn_flags(
         &mut self,
         arg0: bool,
@@ -4289,6 +5242,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets whether animals can spawn in this world.
     pub fn allow_animals(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4296,6 +5250,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether monsters can spawn in this world.
     pub fn allow_monsters(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4303,6 +5258,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the maximum height to which chorus fruits and nether portals can bring players within this dimension. This excludes portals that were already built above the limit as they still connect normally. May not be greater than <a href="generator/WorldInfo.html#getMaxHeight()"><code>WorldInfo.getMaxHeight()</code></a>.
     pub fn logical_height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4310,6 +5266,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets if this world is natural. When false, compasses spin randomly, and using a bed to set the respawn point or sleep, is disabled. When true, nether portals can spawn zombified piglins.
     pub fn is_natural(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4317,6 +5274,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets if beds work in this world. A non-working bed will blow up when trying to sleep. <a href="#isNatural()"><code>isNatural()</code></a> defines if a bed can be used to set spawn point.
     pub fn is_bed_works(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4324,6 +5282,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets if this world has skylight access.
     pub fn has_sky_light(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4331,6 +5290,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets if this world has a ceiling.
     pub fn has_ceiling(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4338,6 +5298,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets if this world allow to piglins to survive without shaking and transforming to zombified piglins.
     pub fn is_piglin_safe(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4345,6 +5306,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets if this world allows players to charge and use respawn anchors.
     pub fn is_respawn_anchor_works(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4352,6 +5314,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets if players with the bad omen effect in this world will trigger a raid.
     pub fn has_raids(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4359,6 +5322,13 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets if various water/lava mechanics will be triggered in this world, eg:
+    ///
+    /// <ul>
+    /// <li>Water is evaporated</li>
+    /// <li>Sponges dry</li>
+    /// <li>Lava spreads faster and further</li>
+    /// </ul>
     pub fn is_ultra_warm(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4366,6 +5336,8 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the sea level for this world.
+    /// <p>This is often half of <a href="generator/WorldInfo.html#getMaxHeight()"><code>WorldInfo.getMaxHeight()</code></a></p>
     pub fn sea_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4373,6 +5345,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets whether the world's spawn area should be kept loaded into memory or not.
     pub fn keep_spawn_in_memory(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4380,6 +5353,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets whether the world's spawn area should be kept loaded into memory or not.
     pub fn set_keep_spawn_in_memory(
         &mut self,
         arg0: bool,
@@ -4395,6 +5369,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets whether or not the world will automatically save
     pub fn is_auto_save(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4402,6 +5377,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets whether or not the world will automatically save
     pub fn set_auto_save(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4414,6 +5390,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the Difficulty of the world.
     pub fn set_difficulty(
         &mut self,
         arg0: impl Into<&'mc crate::Difficulty<'mc>>,
@@ -4428,6 +5405,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the Difficulty of the world.
     pub fn difficulty(&mut self) -> Result<crate::Difficulty<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4451,6 +5429,7 @@ impl<'mc> World<'mc> {
             crate::Difficulty::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the folder of this world on disk.
     pub fn world_folder(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4463,6 +5442,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// Sets whether the world is hardcore or not. In a hardcore world the difficulty is locked to hard.
     pub fn set_hardcore(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4476,6 +5456,22 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the world's ticks per animal spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn animals.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn animals in this world every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn animals in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, animal spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p>
+    /// <p>Minecraft default: 400.</p>
     pub fn set_ticks_per_animal_spawns(
         &mut self,
         arg0: i32,
@@ -4491,6 +5487,22 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the world's ticks per monster spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn monsters.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn monsters in this world on every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn monsters in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, monsters spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_monster_spawns(
         &mut self,
         arg0: i32,
@@ -4506,6 +5518,22 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the world's ticks per water mob spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn water mobs.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water mobs in this world on every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water mobs in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water mobs spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_spawns(
         &mut self,
         arg0: i32,
@@ -4521,6 +5549,22 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the world's ticks per water ambient mob spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn water ambient mobs.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water ambient mobs in this world on every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water ambient mobs in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water ambient mobs spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_ambient_spawns(
         &mut self,
         arg0: i32,
@@ -4536,6 +5580,22 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the world's ticks per ambient mob spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn ambient mobs.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn ambient mobs in this world on every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn ambient mobs in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_ambient_spawns(
         &mut self,
         arg0: i32,
@@ -4550,6 +5610,16 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the world's ticks per <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mob spawns value
+    /// <p>This value determines how many ticks there are between attempts to spawn <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs.</p>
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs in this world on every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mobs in this world every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs spawning will be disabled for this world.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_spawns(
         &mut self,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -4570,6 +5640,14 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the limit for number of monsters that can spawn in a chunk in this world
+    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_monster_spawn_limit(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4582,6 +5660,14 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Sets the limit for number of animals that can spawn in a chunk in this world
+    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_animal_spawn_limit(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4594,6 +5680,14 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the limit for number of water animals that can spawn in a chunk in this world
+    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_animal_spawn_limit(
         &mut self,
         arg0: i32,
@@ -4609,6 +5703,14 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the limit for number of water underground creature that can spawn in a chunk in this world
+    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_underground_creature_spawn_limit(
         &mut self,
         arg0: i32,
@@ -4624,6 +5726,14 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the limit for number of water ambient mobs that can spawn in a chunk in this world
+    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_ambient_spawn_limit(
         &mut self,
         arg0: i32,
@@ -4639,6 +5749,14 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
+    ///
+    /// Sets the limit for number of ambient mobs that can spawn in a chunk in this world
+    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_ambient_spawn_limit(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4650,6 +5768,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the limit for number of <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> entities that can spawn in a chunk in this world
+    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_spawn_limit(
         &mut self,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -4670,6 +5790,15 @@ impl<'mc> World<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// use <a href="#setGameRule(org.bukkit.GameRule,T)"><code>setGameRule(GameRule, Object)</code></a> instead.
+    /// </div>
+    /// use <a href="#setGameRule(org.bukkit.GameRule,T)"><code>setGameRule(GameRule, Object)</code></a> instead.
+    ///
+    /// Set the specified gamerule to specified value.
+    /// <p>The rule may attempt to validate the value passed, will return true if value was set.</p>
+    /// <p>If rule is null, the function will return false.</p>
     pub fn set_game_rule_value(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -4689,6 +5818,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Checks if string is a valid game rule
     pub fn is_game_rule(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -4703,6 +5833,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get the default value for a given <a href="GameRule.html" title="class in org.bukkit"><code>GameRule</code></a>. This value is not guaranteed to match the current value.
     pub fn get_game_rule_default(
         &mut self,
         arg0: impl Into<&'mc crate::GameRule<'mc>>,
@@ -4717,6 +5848,16 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// use <a href="#setGameRule(org.bukkit.GameRule,T)"><code>setGameRule(GameRule, Object)</code></a> instead.
+    /// </div>
+    /// use <a href="#setGameRule(org.bukkit.GameRule,T)"><code>setGameRule(GameRule, Object)</code></a> instead.
+    ///
+    /// Set the specified gamerule to specified value.
+    /// <p>The rule may attempt to validate the value passed, will return true if value was set.</p>
+    /// <p>If rule is null, the function will return false.</p>
+    /// Set the given <a href="GameRule.html" title="class in org.bukkit"><code>GameRule</code></a>'s new value.
     pub fn set_game_rule(
         &mut self,
         arg0: impl Into<&'mc crate::GameRule<'mc>>,
@@ -4737,6 +5878,23 @@ impl<'mc> World<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Use <a href="#locateNearestStructure(org.bukkit.Location,org.bukkit.generator.structure.Structure,int,boolean)"><code>locateNearestStructure(Location, Structure, int, boolean)</code></a> or <a href="#locateNearestStructure(org.bukkit.Location,org.bukkit.generator.structure.StructureType,int,boolean)"><code>locateNearestStructure(Location, StructureType, int, boolean)</code></a> instead.
+    /// </div>
+    /// Use <a href="#locateNearestStructure(org.bukkit.Location,org.bukkit.generator.structure.Structure,int,boolean)"><code>locateNearestStructure(Location, Structure, int, boolean)</code></a> or <a href="#locateNearestStructure(org.bukkit.Location,org.bukkit.generator.structure.StructureType,int,boolean)"><code>locateNearestStructure(Location, StructureType, int, boolean)</code></a> instead.
+    ///
+    /// Find the closest nearby structure of a given <a title="class in org.bukkit.generator.structure" href="generator/structure/StructureType.html"><code>StructureType</code></a>. Finding unexplored structures can, and will, block if the world is looking in chunks that gave not generated yet. This can lead to the world temporarily freezing while locating an unexplored structure.
+    /// <p>The <code>radius</code> is not a rigid square radius. Each structure may alter how many chunks to check for each iteration. Do not assume that only a radius x radius chunk area will be checked. For example, <a href="generator/structure/StructureType.html#WOODLAND_MANSION"><code>StructureType.WOODLAND_MANSION</code></a> can potentially check up to 20,000 blocks away (or more) regardless of the radius used.</p>
+    /// <p>This will <i>not</i> load or generate chunks. This can also lead to instances where the server can hang if you are only looking for unexplored structures. This is because it will keep looking further and further out in order to find the structure.</p>
+    /// Find the closest nearby structure of a given <a href="generator/structure/StructureType.html" title="class in org.bukkit.generator.structure"><code>StructureType</code></a>. Finding unexplored structures can, and will, block if the world is looking in chunks that gave not generated yet. This can lead to the world temporarily freezing while locating an unexplored structure.
+    /// <p>The <code>radius</code> is not a rigid square radius. Each structure may alter how many chunks to check for each iteration. Do not assume that only a radius x radius chunk area will be checked. For example, <a href="generator/structure/StructureType.html#WOODLAND_MANSION"><code>StructureType.WOODLAND_MANSION</code></a> can potentially check up to 20,000 blocks away (or more) regardless of the radius used.</p>
+    /// <p>This will <i>not</i> load or generate chunks. This can also lead to instances where the server can hang if you are only looking for unexplored structures. This is because it will keep looking further and further out in order to find the structure.</p>
+    /// <p>The difference between searching for a <a href="generator/structure/StructureType.html" title="class in org.bukkit.generator.structure"><code>StructureType</code></a> and a <a title="class in org.bukkit.generator.structure" href="generator/structure/Structure.html"><code>Structure</code></a> is, that a <a href="generator/structure/StructureType.html" title="class in org.bukkit.generator.structure"><code>StructureType</code></a> can refer to multiple <a href="generator/structure/Structure.html" title="class in org.bukkit.generator.structure"><code>Structures</code></a> while searching for a <a title="class in org.bukkit.generator.structure" href="generator/structure/Structure.html"><code>Structure</code></a> while only search for the given <a href="generator/structure/Structure.html" title="class in org.bukkit.generator.structure"><code>Structure</code></a>.</p>
+    /// Find the closest nearby structure of a given <a title="class in org.bukkit.generator.structure" href="generator/structure/Structure.html"><code>Structure</code></a>. Finding unexplored structures can, and will, block if the world is looking in chunks that gave not generated yet. This can lead to the world temporarily freezing while locating an unexplored structure.
+    /// <p>The <code>radius</code> is not a rigid square radius. Each structure may alter how many chunks to check for each iteration. Do not assume that only a radius x radius chunk area will be checked. For example, <a href="generator/structure/Structure.html#MANSION"><code>Structure.MANSION</code></a> can potentially check up to 20,000 blocks away (or more) regardless of the radius used.</p>
+    /// <p>This will <i>not</i> load or generate chunks. This can also lead to instances where the server can hang if you are only looking for unexplored structures. This is because it will keep looking further and further out in order to find the structure.</p>
+    /// <p>The difference between searching for a <a href="generator/structure/StructureType.html" title="class in org.bukkit.generator.structure"><code>StructureType</code></a> and a <a title="class in org.bukkit.generator.structure" href="generator/structure/Structure.html"><code>Structure</code></a> is, that a <a title="class in org.bukkit.generator.structure" href="generator/structure/StructureType.html"><code>StructureType</code></a> can refer to multiple <a title="class in org.bukkit.generator.structure" href="generator/structure/Structure.html"><code>Structures</code></a> while searching for a <a href="generator/structure/Structure.html" title="class in org.bukkit.generator.structure"><code>Structure</code></a> while only search for the given <a title="class in org.bukkit.generator.structure" href="generator/structure/Structure.html"><code>Structure</code></a>.</p>
     pub fn locate_nearest_structure_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -4765,6 +5923,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Finds the nearest raid close to the given location.
     pub fn locate_nearest_raid(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -4786,6 +5945,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets all raids that are going on over this world.
     pub fn raids(&mut self) -> Result<Vec<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4800,6 +5960,8 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the <a title="interface in org.bukkit.boss" href="boss/DragonBattle.html"><code>DragonBattle</code></a> associated with this world. If this world's environment is not <a href="World.Environment.html#THE_END"><code>World.Environment.THE_END</code></a>, null will be returned.
+    /// <p>If an end world, a dragon battle instance will be returned regardless of whether or not a dragon is present in the world or a fight sequence has been activated. The dragon battle instance acts as a state holder.</p>
     pub fn ender_dragon_battle(
         &mut self,
     ) -> Result<crate::boss::DragonBattle<'mc>, Box<dyn std::error::Error>> {
@@ -4814,6 +5976,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get all <a href="FeatureFlag.html" title="interface in org.bukkit"><code>FeatureFlag</code></a> enabled in this world.
     pub fn feature_flags(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -4828,6 +5991,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Saves world to disk
     pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4835,6 +5999,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_type_with_location(
         &mut self,
         arg0: i32,
@@ -4861,6 +6026,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_block_data_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -4885,6 +6051,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_block_data_with_location(
         &mut self,
         arg0: i32,
@@ -4911,6 +6078,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_highest_block_yat_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -4930,6 +6098,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn get_highest_block_yat_with_int(
         &mut self,
         arg0: i32,
@@ -4953,6 +6122,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn get_block_state_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -4977,6 +6147,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn spawn_entity_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -5003,6 +6174,33 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates an <a href="entity/Arrow.html" title="interface in org.bukkit.entity"><code>Arrow</code></a> entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>
+    /// Creates an arrow entity of the given class at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>
+    /// Spawn a <a href="entity/FallingBlock.html" title="interface in org.bukkit.entity"><code>FallingBlock</code></a> entity at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> of the specified <a href="material/MaterialData.html" title="class in org.bukkit.material"><code>MaterialData</code></a>. The MaterialData dictates what is falling. When the FallingBlock hits the ground, it will place that block.
+    /// <p>The Material must be a block type, check with <a href="Material.html#isBlock()"><code>data.getItemType().isBlock()</code></a>. The Material may not be air.</p>
+    /// Spawn a <a title="interface in org.bukkit.entity" href="entity/FallingBlock.html"><code>FallingBlock</code></a> entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> of the specified <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a>. The BlockData dictates what is falling. When the FallingBlock hits the ground, it will place that block.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Spawn a <a href="entity/FallingBlock.html" title="interface in org.bukkit.entity"><code>FallingBlock</code></a> entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> of the specified <a href="Material.html" title="enum in org.bukkit"><code>Material</code></a>. The material dictates what is falling. When the FallingBlock hits the ground, it will place that block.
+    /// <p>The Material must be a block type, check with <a href="Material.html#isBlock()"><code>material.isBlock()</code></a>. The Material may not be air.</p>
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
+    /// Spawns the particle (the number of times specified by count) at the target location. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.
     pub fn spawn_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -5022,6 +6220,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_type_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -5057,6 +6256,7 @@ impl<'mc> World<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn seed(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5064,6 +6264,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub fn environment(
         &mut self,
     ) -> Result<crate::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
@@ -5078,6 +6279,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn min_height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5085,6 +6287,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn max_height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5092,6 +6295,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5103,6 +6307,7 @@ impl<'mc> World<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn send_plugin_message(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -5123,6 +6328,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn listening_plugin_channels(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -5137,6 +6343,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -5156,6 +6363,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -5180,6 +6388,7 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn has_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -5194,6 +6403,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn remove_metadata(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -5213,6 +6423,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn persistent_data_container(
         &mut self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
@@ -5227,6 +6438,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5324,7 +6536,7 @@ impl<'mc> FluidCollisionMode<'mc> {
                 eyre::eyre!("Tried to instantiate FluidCollisionMode from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FluidCollisionMode")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/FluidCollisionMode")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FluidCollisionMode object, got {}",
@@ -5347,7 +6559,9 @@ impl<'mc> FluidCollisionMode<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements Nameable. Needed for returning it from Java.
+/// Represents a block, entity, or other object that may receive a custom name.
+///
+/// This is a representation of an abstract class.
 pub struct Nameable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5360,7 +6574,7 @@ impl<'mc> Nameable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Nameable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Nameable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Nameable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Nameable object, got {}",
@@ -5371,6 +6585,8 @@ impl<'mc> Nameable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the custom name on a mob or block. If there is no name this method will return null.
+    /// <p>This value has no effect on players, they will always use their real name.</p>
     pub fn custom_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5385,6 +6601,9 @@ impl<'mc> Nameable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Sets a custom name on a mob or block. This name will be used in death messages and can be sent to the client as a nameplate over the mob.
+    /// <p>Setting the name to null or an empty string will clear it.</p>
+    /// <p>This value has no effect on players, they will always use their real name.</p>
     pub fn set_custom_name(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -5662,7 +6881,7 @@ impl<'mc> ParticleDustOptions<'mc> {
                 eyre::eyre!("Tried to instantiate ParticleDustOptions from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ParticleDustOptions")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ParticleDustOptions")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ParticleDustOptions object, got {}",
@@ -5804,7 +7023,7 @@ impl<'mc> ParticleDustTransition<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ParticleDustTransition")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ParticleDustTransition")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ParticleDustTransition object, got {}",
@@ -5951,7 +7170,7 @@ impl<'mc> Particle<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Particle from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Particle")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Particle")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Particle object, got {}",
@@ -6294,7 +7513,7 @@ impl<'mc> EntityEffect<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EntityEffect from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityEffect")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/EntityEffect")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityEffect object, got {}",
@@ -6440,7 +7659,7 @@ impl<'mc> GrassSpecies<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate GrassSpecies from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "GrassSpecies")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/GrassSpecies")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a GrassSpecies object, got {}",
@@ -6463,7 +7682,10 @@ impl<'mc> GrassSpecies<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements Utility. Needed for returning it from Java.
+/// This annotation indicates a method (and sometimes constructor) will chain its internal operations.
+/// <p>This is solely meant for identifying methods that don't need to be overridden / handled manually.</p>
+///
+/// This is a representation of an abstract class.
 pub struct Utility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6476,7 +7698,7 @@ impl<'mc> Utility<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Utility from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Utility")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Utility")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Utility object, got {}",
@@ -6487,6 +7709,7 @@ impl<'mc> Utility<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6501,6 +7724,7 @@ impl<'mc> Utility<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6512,6 +7736,7 @@ impl<'mc> Utility<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6519,6 +7744,7 @@ impl<'mc> Utility<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn annotation_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -6586,7 +7812,7 @@ impl<'mc> WorldType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WorldType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "WorldType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/WorldType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WorldType object, got {}",
@@ -6611,6 +7837,7 @@ impl<'mc> WorldType<'mc> {
         }
     }
 }
+/// Represents a generic Mojang game event.
 pub struct GameEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6632,7 +7859,7 @@ impl<'mc> GameEvent<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate GameEvent from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "GameEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/GameEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a GameEvent object, got {}",
@@ -6643,6 +7870,7 @@ impl<'mc> GameEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns a <a href="GameEvent.html" title="class in org.bukkit"><code>GameEvent</code></a> by a <a href="NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>.
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -6658,6 +7886,7 @@ impl<'mc> GameEvent<'mc> {
         let obj = res.l()?;
         crate::GameEvent::from_raw(&jni, obj)
     }
+    /// Returns the set of all GameEvents.
     pub fn values(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::GameEvent<'mc>>, Box<dyn std::error::Error>> {
@@ -6672,6 +7901,8 @@ impl<'mc> GameEvent<'mc> {
         }
         Ok(new_vec)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Keyed.html#getKey()">Keyed</a></code></span>
+    /// Return the namespaced identifier for this object.
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6684,6 +7915,7 @@ impl<'mc> GameEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -6703,6 +7935,7 @@ impl<'mc> GameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6717,6 +7950,7 @@ impl<'mc> GameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6728,6 +7962,7 @@ impl<'mc> GameEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6735,6 +7970,7 @@ impl<'mc> GameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6742,6 +7978,7 @@ impl<'mc> GameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6749,6 +7986,7 @@ impl<'mc> GameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6762,7 +8000,9 @@ impl<'mc> Into<crate::Keyed<'mc>> for GameEvent<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements OfflinePlayer. Needed for returning it from Java.
+/// Represents a reference to a player identity and the data belonging to a player that is stored on the disk and can, thus, be retrieved without the player needing to be online.
+///
+/// This is a representation of an abstract class.
 pub struct OfflinePlayer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6775,7 +8015,7 @@ impl<'mc> OfflinePlayer<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate OfflinePlayer from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "OfflinePlayer")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/OfflinePlayer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a OfflinePlayer object, got {}",
@@ -6786,6 +8026,7 @@ impl<'mc> OfflinePlayer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Checks if this player has had their profile banned.
     pub fn is_banned(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6793,6 +8034,10 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets a copy of the player's profile.
+    /// <p>If the player is online, the returned profile will be complete. Otherwise, only the unique id is guaranteed to be present. You can use <a href="profile/PlayerProfile.html#update()"><code>PlayerProfile.update()</code></a> to complete the returned profile.</p>
+    /// Gets a <a title="interface in org.bukkit.entity" href="entity/Player.html"><code>Player</code></a> object that this represents, if there is one
+    /// <p>If the player is online, this will return that player. Otherwise, it will return null.</p>
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6805,6 +8050,7 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the player's last death location.
     pub fn last_death_location(
         &mut self,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -6819,6 +8065,7 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the Location where the player will spawn at their bed, null if they have not slept in one or their current bed spawn is invalid.
     pub fn bed_spawn_location(
         &mut self,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -6833,6 +8080,7 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if this player is currently online
     pub fn is_online(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6840,6 +8088,8 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets a copy of the player's profile.
+    /// <p>If the player is online, the returned profile will be complete. Otherwise, only the unique id is guaranteed to be present. You can use <a href="profile/PlayerProfile.html#update()"><code>PlayerProfile.update()</code></a> to complete the returned profile.</p>
     pub fn player_profile(
         &mut self,
     ) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
@@ -6854,6 +8104,9 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Adds this user to the <a href="ban/ProfileBanList.html" title="interface in org.bukkit.ban"><code>ProfileBanList</code></a>. If a previous ban exists, this will update the entry.
+    /// Adds this user to the <a title="interface in org.bukkit.ban" href="ban/ProfileBanList.html"><code>ProfileBanList</code></a>. If a previous ban exists, this will update the entry.
+    /// Adds this user to the <a title="interface in org.bukkit.ban" href="ban/ProfileBanList.html"><code>ProfileBanList</code></a>. If a previous ban exists, this will update the entry.
     pub unsafe fn ban_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -6879,6 +8132,7 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if this player is whitelisted or not
     pub fn is_whitelisted(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6886,6 +8140,7 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets if this player is whitelisted or not
     pub fn set_whitelisted(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -6898,6 +8153,8 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the first date and time that this player was witnessed on this server.
+    /// <p>If the player has never played before, this will return 0. Otherwise, it will be the amount of milliseconds since midnight, January 1, 1970 UTC.</p>
     pub fn first_played(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6905,6 +8162,8 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Gets the last date and time that this player was witnessed on this server.
+    /// <p>If the player has never played before, this will return 0. Otherwise, it will be the amount of milliseconds since midnight, January 1, 1970 UTC.</p>
     pub fn last_played(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6912,6 +8171,7 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Checks if this player has played on this server before.
     pub fn has_played_before(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6919,6 +8179,15 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Increments the given statistic for this player.
+    /// <p>This is equivalent to the following code: <code>incrementStatistic(Statistic, 1)</code></p>
+    /// Increments the given statistic for this player.
+    /// Increments the given statistic for this player for the given material.
+    /// <p>This is equivalent to the following code: <code>incrementStatistic(Statistic, Material, 1)</code></p>
+    /// Increments the given statistic for this player for the given material.
+    /// Increments the given statistic for this player for the given entity.
+    /// <p>This is equivalent to the following code: <code>incrementStatistic(Statistic, EntityType, 1)</code></p>
+    /// Increments the given statistic for this player for the given entity.
     pub fn increment_statistic_with_statistic(
         &mut self,
         arg0: impl Into<&'mc crate::Statistic<'mc>>,
@@ -6941,6 +8210,15 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Decrements the given statistic for this player.
+    /// <p>This is equivalent to the following code: <code>decrementStatistic(Statistic, 1)</code></p>
+    /// Decrements the given statistic for this player.
+    /// Decrements the given statistic for this player for the given material.
+    /// <p>This is equivalent to the following code: <code>decrementStatistic(Statistic, Material, 1)</code></p>
+    /// Decrements the given statistic for this player for the given material.
+    /// Decrements the given statistic for this player for the given entity.
+    /// <p>This is equivalent to the following code: <code>decrementStatistic(Statistic, EntityType, 1)</code></p>
+    /// Decrements the given statistic for this player for the given entity.
     pub fn decrement_statistic_with_statistic(
         &mut self,
         arg0: impl Into<&'mc crate::Statistic<'mc>>,
@@ -6963,6 +8241,9 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the given statistic for this player.
+    /// Sets the given statistic for this player for the given material.
+    /// Sets the given statistic for this player for the given entity.
     pub fn set_statistic_with_statistic(
         &mut self,
         arg0: impl Into<&'mc crate::Statistic<'mc>>,
@@ -6985,6 +8266,9 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the value of the given statistic for this player.
+    /// Gets the value of the given statistic for this player.
+    /// Gets the value of the given statistic for this player.
     pub fn get_statistic_with_statistic(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Statistic<'mc>>>,
@@ -7006,6 +8290,8 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Returns the name of this player
+    /// <p>Names are no longer unique past a single game session. For persistent storage it is recommended that you use <a href="#getUniqueId()"><code>getUniqueId()</code></a> instead.</p>
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7017,6 +8303,7 @@ impl<'mc> OfflinePlayer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7024,6 +8311,7 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -7036,6 +8324,7 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -7078,6 +8367,7 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         .unwrap()
     }
 }
+
 pub struct WorldSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7099,7 +8389,7 @@ impl<'mc> WorldSpigot<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WorldSpigot from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "WorldSpigot")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/WorldSpigot")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WorldSpigot object, got {}",
@@ -7117,6 +8407,8 @@ impl<'mc> WorldSpigot<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::WorldSpigot::from_raw(&jni, res)
     }
+    /// Strikes lightning at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> and possibly without sound
+    /// Strikes lightning at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> without doing damage and possibly without sound
     pub fn strike_lightning(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -7139,6 +8431,7 @@ impl<'mc> WorldSpigot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Strikes lightning at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a> without doing damage and possibly without sound
     pub fn strike_lightning_effect(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -7161,6 +8454,7 @@ impl<'mc> WorldSpigot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7180,6 +8474,7 @@ impl<'mc> WorldSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7194,6 +8489,7 @@ impl<'mc> WorldSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7205,6 +8501,7 @@ impl<'mc> WorldSpigot<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7212,6 +8509,7 @@ impl<'mc> WorldSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7219,6 +8517,7 @@ impl<'mc> WorldSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7226,6 +8525,7 @@ impl<'mc> WorldSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7234,6 +8534,7 @@ impl<'mc> WorldSpigot<'mc> {
         Ok(())
     }
 }
+/// This represents the states that server verbose for warnings may be.
 pub struct WarningWarningState<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7257,7 +8558,7 @@ impl<'mc> WarningWarningState<'mc> {
                 eyre::eyre!("Tried to instantiate WarningWarningState from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "WarningWarningState")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/WarningWarningState")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WarningWarningState object, got {}",
@@ -7268,6 +8569,7 @@ impl<'mc> WarningWarningState<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// This method checks the provided warning should be printed for this state
     pub fn print_for(
         &mut self,
         arg0: impl Into<&'mc crate::Warning<'mc>>,
@@ -7282,6 +8584,9 @@ impl<'mc> WarningWarningState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Returns an array containing the constants of this enum type, in the order they are declared.
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+    /// This method returns the corresponding warning state for the given string value.
     pub fn value(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -7297,6 +8602,7 @@ impl<'mc> WarningWarningState<'mc> {
         let obj = res.l()?;
         crate::WarningWarningState::from_raw(&jni, obj)
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -7317,6 +8623,7 @@ impl<'mc> WarningWarningState<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7328,6 +8635,7 @@ impl<'mc> WarningWarningState<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7342,6 +8650,7 @@ impl<'mc> WarningWarningState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7353,6 +8662,7 @@ impl<'mc> WarningWarningState<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7360,6 +8670,7 @@ impl<'mc> WarningWarningState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -7374,6 +8685,7 @@ impl<'mc> WarningWarningState<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -7386,6 +8698,7 @@ impl<'mc> WarningWarningState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7393,6 +8706,7 @@ impl<'mc> WarningWarningState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7412,6 +8726,7 @@ impl<'mc> WarningWarningState<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7419,6 +8734,7 @@ impl<'mc> WarningWarningState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7426,6 +8742,7 @@ impl<'mc> WarningWarningState<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7491,7 +8808,7 @@ impl<'mc> SoundCategory<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SoundCategory from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "SoundCategory")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/SoundCategory")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SoundCategory object, got {}",
@@ -7577,7 +8894,7 @@ impl<'mc> HeightMap<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate HeightMap from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "HeightMap")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/HeightMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a HeightMap object, got {}",
@@ -7606,6 +8923,7 @@ impl<'mc> HeightMap<'mc> {
         }
     }
 }
+/// A container for a color palette. This class is immutable; the set methods return a new color. The color names listed as fields are HTML4 standards, but subject to change.
 pub struct Color<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7627,7 +8945,7 @@ impl<'mc> Color<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Color from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Color")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Color")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Color object, got {}",
@@ -7638,6 +8956,9 @@ impl<'mc> Color<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="configuration/serialization/ConfigurationSerializable.html#serialize()">ConfigurationSerializable</a></code></span>
+    /// Creates a Map representation of this class.
+    /// <p>This class must provide a method to restore this class, as defined in the <a title="interface in org.bukkit.configuration.serialization" href="configuration/serialization/ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> interface javadocs.</p>
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -7649,6 +8970,7 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
@@ -7664,6 +8986,8 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
+    /// Creates a new Color object from a red, green, and blue
+    /// Creates a new color object from an integer that contains the red, green, and blue bytes in the lowest order 24 bits.
     pub fn from_rgb_with_int(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -7687,6 +9011,8 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
+    /// Creates a new Color object from an alpha, red, green, and blue
+    /// Creates a new color object from an integer that contains the alpha, red, green, and blue bytes.
     pub fn from_argb_with_int(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -7713,6 +9039,8 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
+    /// Creates a new Color object from a blue, green, and red
+    /// Creates a new color object from an integer that contains the blue, green, and red bytes in the lowest order 24 bits.
     pub fn from_bgr_with_int(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -7736,6 +9064,7 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
+    /// Gets the alpha component
     pub fn alpha(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7743,6 +9072,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Creates a new Color object with specified component
     pub fn set_alpha(
         &mut self,
         arg0: i32,
@@ -7759,6 +9089,7 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the red component
     pub fn red(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7766,6 +9097,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the green component
     pub fn green(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7773,6 +9105,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the blue component
     pub fn blue(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7780,6 +9113,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Creates a new Color object with specified component
     pub fn set_red(&mut self, arg0: i32) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7793,6 +9127,7 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates a new Color object with specified component
     pub fn set_green(
         &mut self,
         arg0: i32,
@@ -7809,6 +9144,7 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates a new Color object with specified component
     pub fn set_blue(&mut self, arg0: i32) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7822,6 +9158,7 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the color as an RGB integer.
     pub fn as_rgb(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7829,6 +9166,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the color as an ARGB integer.
     pub fn as_argb(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7836,6 +9174,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the color as an BGR integer.
     pub fn as_bgr(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7843,6 +9182,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Creates a new color with its RGB components changed as if it was dyed with the colors passed in, replicating vanilla workbench dyeing
     pub fn mix_dyes(
         &mut self,
         arg0: Vec<impl Into<crate::DyeColor<'mc>>>,
@@ -7858,6 +9198,7 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates a new color with its RGB components changed as if it was dyed with the colors passed in, replicating vanilla workbench dyeing. <b>Note that this method does not currently take into account alpha components.</b>
     pub fn mix_colors(
         &mut self,
         arg0: Vec<impl Into<crate::Color<'mc>>>,
@@ -7873,6 +9214,7 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7887,6 +9229,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7898,6 +9241,7 @@ impl<'mc> Color<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7905,6 +9249,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7924,6 +9269,7 @@ impl<'mc> Color<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7931,6 +9277,7 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7938,6 +9285,7 @@ impl<'mc> Color<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8000,7 +9348,7 @@ impl<'mc> Fluid<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Fluid from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Fluid")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Fluid")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Fluid object, got {}",
@@ -8078,7 +9426,7 @@ impl<'mc> CropState<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CropState from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "CropState")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/CropState")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CropState object, got {}",
@@ -8158,7 +9506,7 @@ impl<'mc> NetherWartsState<'mc> {
                 eyre::eyre!("Tried to instantiate NetherWartsState from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "NetherWartsState")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/NetherWartsState")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a NetherWartsState object, got {}",
@@ -11446,7 +12794,7 @@ impl<'mc> Sound<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Sound from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Sound")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Sound")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Sound object, got {}",
@@ -14609,7 +15957,9 @@ impl<'mc> Sound<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements Chunk. Needed for returning it from Java.
+/// Represents a chunk of blocks. If the chunk is not yet fully generated and data is requested from the chunk, then the chunk will only be generated as far as it needs to provide the requested data.
+///
+/// This is a representation of an abstract class.
 pub struct Chunk<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14622,7 +15972,7 @@ impl<'mc> Chunk<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Chunk from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Chunk")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Chunk")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Chunk object, got {}",
@@ -14633,6 +15983,7 @@ impl<'mc> Chunk<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Checks if the chunk is loaded.
     pub fn is_loaded(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14640,6 +15991,8 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Unloads and optionally saves the Chunk
+    /// Unloads and optionally saves the Chunk
     pub fn unload(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -14655,6 +16008,17 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the world containing this chunk
+    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::World::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets a block from this chunk
     pub fn get_block(
         &mut self,
         arg0: i32,
@@ -14679,6 +16043,7 @@ impl<'mc> Chunk<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the X-coordinate of this chunk
     pub fn x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14686,6 +16051,7 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the Z-coordinate of this chunk
     pub fn z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14693,15 +16059,8 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::World::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+    /// Capture thread-safe read-only snapshot of chunk data
+    /// Capture thread-safe read-only snapshot of chunk data
     pub fn get_chunk_snapshot(
         &mut self,
         arg0: bool,
@@ -14729,6 +16088,7 @@ impl<'mc> Chunk<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if entities in this chunk are loaded.
     pub fn is_entities_loaded(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14736,6 +16096,7 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Checks if the chunk is fully generated.
     pub fn is_generated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14743,6 +16104,7 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Checks if this chunk can spawn slimes without being a swamp biome.
     pub fn is_slime_chunk(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14750,6 +16112,8 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the chunk at the specified chunk coordinates is force loaded.
+    /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn is_force_loaded(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14757,6 +16121,8 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets whether the chunk at the specified chunk coordinates is force loaded.
+    /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn set_force_loaded(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -14769,6 +16135,8 @@ impl<'mc> Chunk<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Adds a plugin ticket for this chunk, loading this chunk if it is not already loaded.
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
     pub fn add_plugin_chunk_ticket(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -14783,6 +16151,8 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Removes the specified plugin's ticket for this chunk
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
     pub fn remove_plugin_chunk_ticket(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -14797,6 +16167,8 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Retrieves a collection specifying which plugins have tickets for this chunk. This collection is not updated when plugin tickets are added or removed to this chunk.
+    /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
     pub fn plugin_chunk_tickets(
         &mut self,
     ) -> Result<Vec<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
@@ -14816,6 +16188,7 @@ impl<'mc> Chunk<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the amount of time in ticks that this chunk has been inhabited. Note that the time is incremented once per tick per player within mob spawning distance of this chunk.
     pub fn inhabited_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14823,6 +16196,7 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Sets the amount of time in ticks that this chunk has been inhabited.
     pub fn set_inhabited_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14834,6 +16208,7 @@ impl<'mc> Chunk<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the load level of this chunk, which determines what game logic is processed.
     pub fn load_level(&mut self) -> Result<crate::ChunkLoadLevel<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14846,6 +16221,8 @@ impl<'mc> Chunk<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Loads the chunk.
+    /// Loads the chunk.
     pub fn load(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -14861,6 +16238,8 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Tests if this chunk contains the specified block.
+    /// Tests if this chunk contains the specified biome.
     pub fn contains_with_biome(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::block::data::BlockData<'mc>>>,
@@ -14876,6 +16255,7 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn persistent_data_container(
         &mut self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
@@ -14974,7 +16354,7 @@ impl<'mc> DyeColor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DyeColor from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "DyeColor")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/DyeColor")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DyeColor object, got {}",
@@ -15023,6 +16403,7 @@ impl<'mc> DyeColor<'mc> {
         }
     }
 }
+
 pub struct VibrationDestinationBlockDestination<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15047,7 +16428,8 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "VibrationDestinationBlockDestination")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/VibrationDestinationBlockDestination")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a VibrationDestinationBlockDestination object, got {}",
@@ -15072,6 +16454,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         )?;
         crate::VibrationDestinationBlockDestination::from_raw(&jni, res)
     }
+
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15084,6 +16467,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15096,6 +16480,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -15115,6 +16500,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -15129,6 +16515,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15140,6 +16527,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15147,6 +16535,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15154,6 +16543,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15161,6 +16551,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15214,7 +16605,7 @@ impl<'mc> GameMode<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate GameMode from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "GameMode")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/GameMode")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a GameMode object, got {}",
@@ -15239,7 +16630,9 @@ impl<'mc> GameMode<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements VibrationDestination. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct VibrationDestination<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15254,7 +16647,7 @@ impl<'mc> VibrationDestination<'mc> {
                 eyre::eyre!("Tried to instantiate VibrationDestination from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "VibrationDestination")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/VibrationDestination")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a VibrationDestination object, got {}",
@@ -15275,6 +16668,7 @@ impl<'mc> JNIRaw<'mc> for VibrationDestination<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// A note class to store a specific note.
 pub struct Note<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15300,7 +16694,7 @@ impl<'mc> NoteTone<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate NoteTone from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "NoteTone")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/NoteTone")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a NoteTone object, got {}",
@@ -15513,7 +16907,7 @@ impl<'mc> Note<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Note from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Note")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Note")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Note object, got {}",
@@ -15547,6 +16941,7 @@ impl<'mc> Note<'mc> {
         )?;
         crate::Note::from_raw(&jni, res)
     }
+    /// Returns if this note is sharped.
     pub fn is_sharped(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15554,6 +16949,7 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn sharped(&mut self) -> Result<crate::Note<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15563,6 +16959,7 @@ impl<'mc> Note<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates a new note for a flat tone, such as A-flat.
     pub fn flat(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -15583,6 +16980,7 @@ impl<'mc> Note<'mc> {
         let obj = res.l()?;
         crate::Note::from_raw(&jni, obj)
     }
+    /// Creates a new note for a sharp tone, such as A-sharp.
     pub fn sharp(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -15603,6 +17001,7 @@ impl<'mc> Note<'mc> {
         let obj = res.l()?;
         crate::Note::from_raw(&jni, obj)
     }
+    /// Creates a new note for a natural tone, such as A-natural.
     pub fn natural(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -15623,6 +17022,7 @@ impl<'mc> Note<'mc> {
         let obj = res.l()?;
         crate::Note::from_raw(&jni, obj)
     }
+
     pub fn flattened(&mut self) -> Result<crate::Note<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15632,6 +17032,7 @@ impl<'mc> Note<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the octave of this note.
     pub fn octave(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15639,6 +17040,7 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Returns the tone of this note.
     pub fn tone(&mut self) -> Result<crate::NoteTone<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15651,6 +17053,7 @@ impl<'mc> Note<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -15665,6 +17068,7 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15676,6 +17080,7 @@ impl<'mc> Note<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15684,6 +17089,13 @@ impl<'mc> Note<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Returns the internal id of this note.
     pub fn id(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15691,6 +17103,7 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -15710,6 +17123,7 @@ impl<'mc> Note<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15717,6 +17131,7 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15724,6 +17139,7 @@ impl<'mc> Note<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15931,7 +17347,7 @@ impl<'mc> EffectType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EffectType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "EffectType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/EffectType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EffectType object, got {}",
@@ -16088,7 +17504,7 @@ impl<'mc> Effect<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Effect from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Effect")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Effect")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Effect object, got {}",
@@ -16247,7 +17663,43 @@ impl<'mc> Effect<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements BanEntry. Needed for returning it from Java.
+/// A single entry from a ban list. This may represent either a player ban or an IP ban.
+/// <p>Ban entries include the following properties:</p>
+/// <table border="1">
+/// <caption>
+/// Property information
+/// </caption>
+/// <tbody>
+/// <tr>
+/// <th>Property</th>
+/// <th>Description</th>
+/// </tr>
+/// <tr>
+/// <td>Target Profile / IP Address</td>
+/// <td>The target profile or IP address</td>
+/// </tr>
+/// <tr>
+/// <td>Creation Date</td>
+/// <td>The creation date of the ban</td>
+/// </tr>
+/// <tr>
+/// <td>Source</td>
+/// <td>The source of the ban, such as a player, console, plugin, etc</td>
+/// </tr>
+/// <tr>
+/// <td>Expiration Date</td>
+/// <td>The expiration date of the ban</td>
+/// </tr>
+/// <tr>
+/// <td>Reason</td>
+/// <td>The reason for the ban</td>
+/// </tr>
+/// </tbody>
+/// </table>
+/// <p>Unsaved information is not automatically written to the implementation's ban list, instead, the <a href="#save()"><code>save()</code></a> method must be called to write the changes to the ban list. If this ban entry has expired (such as from an unban) and is no longer found in the list, the <a href="#save()"><code>save()</code></a> call will re-add it to the list, therefore banning the victim specified.</p>
+/// <p>Likewise, changes to the associated <a title="interface in org.bukkit" href="BanList.html"><code>BanList</code></a> or other entries may or may not be reflected in this entry.</p>
+///
+/// This is a representation of an abstract class.
 pub struct BanEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16260,7 +17712,7 @@ impl<'mc> BanEntry<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BanEntry from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "BanEntry")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/BanEntry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BanEntry object, got {}",
@@ -16271,6 +17723,7 @@ impl<'mc> BanEntry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the reason for this ban.
     pub fn reason(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16285,6 +17738,7 @@ impl<'mc> BanEntry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the date this ban expires on, or null for no defined end date.
     pub fn expiration(
         &mut self,
     ) -> Result<blackboxmc_java::JavaDate<'mc>, Box<dyn std::error::Error>> {
@@ -16299,6 +17753,8 @@ impl<'mc> BanEntry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the source of this ban.
+    /// <p>Note: A source is considered any String, although this is generally a player name.</p>
     pub fn source(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16313,6 +17769,7 @@ impl<'mc> BanEntry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the target involved.
     pub fn ban_target(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16323,6 +17780,7 @@ impl<'mc> BanEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// Gets the date this ban entry was created.
     pub fn created(
         &mut self,
     ) -> Result<blackboxmc_java::JavaDate<'mc>, Box<dyn std::error::Error>> {
@@ -16334,6 +17792,7 @@ impl<'mc> BanEntry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the date this ban entry was created.
     pub fn set_created(
         &mut self,
         arg0: impl Into<&'mc blackboxmc_java::JavaDate<'mc>>,
@@ -16348,6 +17807,8 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the source of this ban.
+    /// <p>Note: A source is considered any String, although this is generally a player name.</p>
     pub fn set_source(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -16362,6 +17823,7 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the date this ban expires on. Null values are considered "infinite" bans.
     pub fn set_expiration(
         &mut self,
         arg0: impl Into<&'mc blackboxmc_java::JavaDate<'mc>>,
@@ -16376,6 +17838,7 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the reason for this ban. Reasons must not be null.
     pub fn set_reason(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -16390,6 +17853,7 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Removes this ban entry from the appropriate ban list.
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16397,6 +17861,8 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Saves the ban entry, overwriting any previous data in the ban list.
+    /// <p>Saving the ban entry of an unbanned player will cause the player to be banned once again.</p>
     pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16405,6 +17871,13 @@ impl<'mc> BanEntry<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// See <a href="#getBanTarget()"><code>getBanTarget()</code></a>
+    /// </div>
+    /// See <a href="#getBanTarget()"><code>getBanTarget()</code></a>
+    ///
+    /// Gets the target involved. This may be in the form of an IP or a player name.
     pub fn target(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16429,6 +17902,7 @@ impl<'mc> JNIRaw<'mc> for BanEntry<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents the Bukkit core, for version and Server singleton handling
 pub struct Bukkit<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16450,7 +17924,7 @@ impl<'mc> Bukkit<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Bukkit from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Bukkit")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Bukkit")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Bukkit object, got {}",
@@ -16461,16 +17935,16 @@ impl<'mc> Bukkit<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn version(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(cls, "getVersion", "()Ljava/lang/String;", &[])?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+    /// Gets a tag which has already been defined within the server. Plugins are suggested to use the concrete tags in <a title="interface in org.bukkit" href="Tag.html"><code>Tag</code></a> rather than this method which makes no guarantees about which tags are available, and may also be less performant due to lack of caching.
+    ///
+    /// Tags will be searched for in an implementation specific manner, but a path consisting of namespace/tags/registry/key is expected.
+    ///
+    /// Server implementations are allowed to handle only the registries indicated in <a href="Tag.html" title="interface in org.bukkit"><code>Tag</code></a>.
+    /// Gets a all tags which have been defined within the server.
+    ///
+    /// Server implementations are allowed to handle only the registries indicated in <a title="interface in org.bukkit" href="Tag.html"><code>Tag</code></a>.
+    ///
+    /// No guarantees are made about the mutability of the returned iterator.
     pub fn get_tag(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -16494,14 +17968,24 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::Tag::from_raw(&jni, obj)
     }
-    pub fn world_container(
+    /// Reloads the whitelist from disk.
+    /// Reloads the server, refreshing settings and plugin information.
+    /// Reload only the Minecraft data for the server. This includes custom advancements and loot tables.
+    pub fn reload(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/io/File")?;
-        let res = jni.call_static_method(cls, "getWorldContainer", "()Ljava/io/File;", &[])?;
-        Ok(res.l().unwrap())
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("void")?;
+        let res = jni.call_static_method(cls, "reload", "()V", &[])?;
+        Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Gets the map from the given item ID.
     pub fn get_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -16517,6 +18001,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::map::MapView::from_raw(&jni, obj)
     }
+    /// Create a new map with an automatically assigned ID.
     pub fn create_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -16532,13 +18017,53 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::map::MapView::from_raw(&jni, obj)
     }
-    pub fn reload(
+    /// Gets the folder that contains all of the various <a href="World.html" title="interface in org.bukkit"><code>World</code></a>s.
+    pub fn world_container(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("void")?;
-        let res = jni.call_static_method(cls, "reload", "()V", &[])?;
-        Ok(())
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/io/File")?;
+        let res = jni.call_static_method(cls, "getWorldContainer", "()Ljava/io/File;", &[])?;
+        Ok(res.l().unwrap())
     }
+    /// Gets the version string of this server implementation.
+    pub fn version(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(cls, "getVersion", "()Ljava/lang/String;", &[])?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Gets the specified <a href="loot/LootTable.html" title="interface in org.bukkit.loot"><code>LootTable</code></a>.
+    pub fn get_loot_table(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
+    ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/loot/LootTable")?;
+        let res = jni.call_static_method(
+            cls,
+            "getLootTable",
+            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/loot/LootTable;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let obj = res.l()?;
+        crate::loot::LootTable::from_raw(&jni, obj)
+    }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Persistent storage of users should be by UUID as names are no longer unique past a single session.
+    /// </div>
+    /// Persistent storage of users should be by UUID as names are no longer unique past a single session.
+    ///
+    /// Gets the player by the given name, regardless if they are offline or online.
+    /// <p>This method may involve a blocking web request to get the UUID for the given name.</p>
+    /// <p>This will return an object even if the player does not exist. To this method, all players will exist.</p>
+    /// Gets the player by the given UUID, regardless if they are offline or online.
+    /// <p>This will return an object even if the player does not exist. To this method, all players will exist.</p>
+    /// Gets every player that has ever played on this server.
     pub fn get_offline_player_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<u128>,
@@ -16559,21 +18084,11 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::OfflinePlayer::from_raw(&jni, obj)
     }
-    pub fn get_loot_table(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-    ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/loot/LootTable")?;
-        let res = jni.call_static_method(
-            cls,
-            "getLootTable",
-            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/loot/LootTable;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let obj = res.l()?;
-        crate::loot::LootTable::from_raw(&jni, obj)
-    }
+    /// Get world type (level-type setting) for default world.
+    /// Gets a list of all worlds on this server.
+    /// Gets the world with the given name.
+    /// Gets the world from the given Unique ID.
+    /// Gets the folder that contains all of the various <a href="World.html" title="interface in org.bukkit"><code>World</code></a>s.
     pub fn get_world_with_uuid(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -16589,6 +18104,8 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::World::from_raw(&jni, obj)
     }
+    /// Gets the current <a href="Server.html" title="interface in org.bukkit"><code>Server</code></a> singleton
+    /// Gets an instance of the server's default server-icon.
     pub fn server(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
@@ -16597,6 +18114,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::Server::from_raw(&jni, obj)
     }
+
     pub fn spigot(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::ServerSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -16605,6 +18123,8 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::ServerSpigot::from_raw(&jni, obj)
     }
+    /// Get a list of all recipes for a given item. The stack size is ignored in comparisons. If the durability is -1, it will match any data value.
+    /// Get the <a title="interface in org.bukkit.inventory" href="inventory/Recipe.html"><code>Recipe</code></a> for the given key.
     pub fn get_recipe(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -16620,6 +18140,16 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Recipe::from_raw(&jni, obj)
     }
+    /// Gets an unmodifiable iterator through all persistent bossbars.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a href="entity/Boss.html" title="interface in org.bukkit.entity"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
+    /// Gets the <a title="interface in org.bukkit.boss" href="boss/KeyedBossBar.html"><code>KeyedBossBar</code></a> specified by this key.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a href="entity/Boss.html" title="interface in org.bukkit.entity"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
     pub fn get_boss_bar(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -16635,6 +18165,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::boss::KeyedBossBar::from_raw(&jni, obj)
     }
+    /// Create a ChunkData for use in a generator. See <a href="generator/ChunkGenerator.html#generateChunkData(org.bukkit.World,java.util.Random,int,int,org.bukkit.generator.ChunkGenerator.BiomeGrid)"><code>ChunkGenerator.generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)</code></a>
     pub fn create_chunk_data(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -16650,6 +18181,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::generator::ChunkGeneratorChunkData::from_raw(&jni, obj)
     }
+    /// Gets the plugin manager for interfacing with plugins.
     pub fn plugin_manager(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::plugin::PluginManager<'mc>, Box<dyn std::error::Error>> {
@@ -16663,6 +18195,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::plugin::PluginManager::from_raw(&jni, obj)
     }
+    /// Gets the instance of the item factory (for <a title="interface in org.bukkit.inventory.meta" href="inventory/meta/ItemMeta.html"><code>ItemMeta</code></a>).
     pub fn item_factory(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::inventory::ItemFactory<'mc>, Box<dyn std::error::Error>> {
@@ -16676,6 +18209,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::ItemFactory::from_raw(&jni, obj)
     }
+    /// Gets the Bukkit version that this server is running.
     pub fn bukkit_version(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -16686,6 +18220,10 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets a view of all currently logged in players. This <a title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#unmodifiableCollection-java.util.Collection-" class="external-link">view</a> is a reused object, making some operations like <a title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#size--" class="external-link"><code>Collection.size()</code></a> zero-allocation.
+    /// <p>The collection is a view backed by the internal representation, such that, changes to the internal state of the server will be reflected immediately. However, the reuse of the returned collection (identity) is not strictly guaranteed for future or all implementations. Casting the collection, or relying on interface implementations (like <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a> or <a title="class or interface in java.util" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html"><code>List</code></a>), is deprecated.</p>
+    /// <p>Iteration behavior is undefined outside of self-contained main-thread uses. Normal and immediate iterator use without consequences that affect the collection are fully supported. The effects following (non-exhaustive) <a href="entity/Entity.html#teleport(org.bukkit.Location)"><code>teleportation</code></a>, <a href="entity/Damageable.html#setHealth(double)"><code>death</code></a>, and <a href="entity/Player.html#kickPlayer(java.lang.String)"><code>kicking</code></a> are undefined. Any use of this collection from asynchronous threads is unsafe.</p>
+    /// <p>For safe consequential iteration or mimicking the old array behavior, using <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#toArray-T:A-" title="class or interface in java.util"><code>Collection.toArray(Object[])</code></a> is recommended. For making snapshots, <a href="https://guava.dev/releases/31.1-jre/api/docs/com/google/common/collect/ImmutableList.html#copyOf(java.util.Collection)" class="external-link" title="class or interface in com.google.common.collect"><code>ImmutableList.copyOf(Collection)</code></a> is recommended.</p>
     pub fn online_players(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -16701,6 +18239,7 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the maximum amount of players which can login to this server.
     pub fn max_players(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16708,6 +18247,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getMaxPlayers", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Set the maximum amount of players allowed to be logged in at once.
     pub fn set_max_players(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -16722,6 +18262,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Get the view distance from this server.
     pub fn view_distance(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16729,6 +18270,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getViewDistance", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Get the simulation distance from this server.
     pub fn simulation_distance(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16736,6 +18278,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getSimulationDistance", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Get the IP that this server is bound to, or empty string if not specified.
     pub fn ip(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -16746,6 +18289,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Get world type (level-type setting) for default world.
     pub fn world_type(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -16756,6 +18300,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Get generate-structures setting.
     pub fn generate_structures(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16763,6 +18308,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getGenerateStructures", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Get max world size.
     pub fn max_world_size(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16770,6 +18316,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getMaxWorldSize", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Gets whether this server allows the End or not.
     pub fn allow_end(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16777,6 +18324,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getAllowEnd", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether this server allows the Nether or not.
     pub fn allow_nether(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16784,6 +18332,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getAllowNether", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+
     pub fn initial_enabled_packs(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
@@ -16803,6 +18352,7 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn initial_disabled_packs(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
@@ -16822,6 +18372,7 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the DataPack Manager.
     pub fn data_pack_manager(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::packs::DataPackManager<'mc>, Box<dyn std::error::Error>> {
@@ -16835,6 +18386,9 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::packs::DataPackManager::from_raw(&jni, obj)
     }
+    /// Gets the server resource pack uri, or empty string if not specified.
+    /// Gets the SHA-1 digest of the server resource pack, or empty string if not specified.
+    /// Gets the custom prompt message to be shown when the server resource pack is required, or empty string if not specified.
     pub fn resource_pack(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -16845,6 +18399,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the SHA-1 digest of the server resource pack, or empty string if not specified.
     pub fn resource_pack_hash(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -16856,6 +18411,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the custom prompt message to be shown when the server resource pack is required, or empty string if not specified.
     pub fn resource_pack_prompt(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -16867,6 +18423,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets whether the server resource pack is enforced.
     pub fn is_resource_pack_required(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16874,6 +18431,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "isResourcePackRequired", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether this server has a whitelist or not.
     pub fn has_whitelist(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16881,6 +18439,8 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "hasWhitelist", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Sets if the server is whitelisted.
+    /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
@@ -16896,6 +18456,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Gets whether the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn is_whitelist_enforced(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16903,6 +18464,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "isWhitelistEnforced", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist_enforced(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
@@ -16918,6 +18480,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Gets a list of whitelisted players.
     pub fn whitelisted_players(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -16926,6 +18489,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
+    /// Reloads the whitelist from disk.
     pub fn reload_whitelist(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -16933,6 +18497,8 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "reloadWhitelist", "()V", &[])?;
         Ok(())
     }
+    /// Broadcast a message to all players.
+    /// <p>This is the same as calling <a href="#broadcast(java.lang.String,java.lang.String)"><code>broadcast(java.lang.String, java.lang.String)</code></a> to <a href="Server.html#BROADCAST_CHANNEL_USERS"><code>Server.BROADCAST_CHANNEL_USERS</code></a></p>
     pub fn broadcast_message(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -16947,6 +18513,9 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+    /// Gets the name of the update folder. The update folder is used to safely update plugins at the right moment on a plugin load.
+    /// <p>The update folder name is relative to the plugins folder.</p>
+    /// Gets the update folder. The update folder is used to safely update plugins at the right moment on a plugin load.
     pub fn update_folder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -16957,6 +18526,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the update folder. The update folder is used to safely update plugins at the right moment on a plugin load.
     pub fn update_folder_file(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -16964,6 +18534,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getUpdateFolderFile", "()Ljava/io/File;", &[])?;
         Ok(res.l().unwrap())
     }
+    /// Gets the value of the connection throttle setting.
     pub fn connection_throttle(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -16972,6 +18543,21 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets default ticks per animal spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn monsters every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn monsters every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, animal spawning will be disabled. We recommend using spawn-animals to control this instead.</p>
+    /// <p>Minecraft default: 400.</p>
     pub fn ticks_per_animal_spawns(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16980,6 +18566,21 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per monster spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn monsters every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn monsters every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, monsters spawning will be disabled. We recommend using spawn-monsters to control this instead.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_monster_spawns(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16988,6 +18589,21 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water mob spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_spawns(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16996,6 +18612,21 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water ambient mob spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water ambient mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water ambient mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_ambient_spawns(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17004,6 +18635,21 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per water underground creature spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn water underground creature every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn water underground creature every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, water underground creature spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_water_underground_creature_spawns(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17013,6 +18659,21 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getTicksPerSpawns(org.bukkit.entity.SpawnCategory)"><code>getTicksPerSpawns(SpawnCategory)</code></a>
+    ///
+    /// Gets the default ticks per ambient mob spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn ambient mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn ambient mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.</p>
     pub fn ticks_per_ambient_spawns(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17020,6 +18681,17 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getTicksPerAmbientSpawns", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Gets the default ticks per <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> spawns value.
+    /// <p><b>Example Usage:</b></p>
+    /// <ul>
+    /// <li>A value of 1 will mean the server will attempt to spawn <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mobs every tick.</li>
+    /// <li>A value of 400 will mean the server will attempt to spawn <a title="enum in org.bukkit.entity" href="entity/SpawnCategory.html"><code>SpawnCategory</code></a> mobs every 400th tick.</li>
+    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
+    /// </ul>
+    /// <p><b>Note:</b> If set to 0, <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mobs spawning will be disabled.</p>
+    /// <p>Minecraft default: 1.
+    ///
+    /// <b>Note: </b> the <a href="entity/SpawnCategory.html#MISC"><code>SpawnCategory.MISC</code></a> are not consider.</p>
     pub fn get_ticks_per_spawns(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -17034,6 +18706,10 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+    /// Gets a player object by the given username.
+    /// <p>This method may not return objects for offline players.</p>
+    /// Gets the player with the exact given name, case insensitive.
+    /// Gets the player with the given UUID.
     pub fn get_player_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<u128>,
@@ -17054,6 +18730,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::entity::Player::from_raw(&jni, obj)
     }
+    /// Gets the player with the exact given name, case insensitive.
     pub fn get_player_exact(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -17069,6 +18746,8 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::entity::Player::from_raw(&jni, obj)
     }
+    /// Attempts to match any players with the given name, and returns a list of all possibly matches.
+    /// <p>This list is not sorted in any particular order. If an exact match is found, the returned list will only contain a single result.</p>
     pub fn match_player(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -17090,6 +18769,7 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the scheduler for managing scheduled events.
     pub fn scheduler(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::scheduler::BukkitScheduler<'mc>, Box<dyn std::error::Error>> {
@@ -17103,6 +18783,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::scheduler::BukkitScheduler::from_raw(&jni, obj)
     }
+    /// Gets a services manager.
     pub fn services_manager(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::plugin::ServicesManager<'mc>, Box<dyn std::error::Error>> {
@@ -17116,6 +18797,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::plugin::ServicesManager::from_raw(&jni, obj)
     }
+    /// Gets a list of all worlds on this server.
     pub fn worlds(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::World<'mc>>, Box<dyn std::error::Error>> {
@@ -17130,6 +18812,9 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
+    /// Creates or loads a world with the given name using the specified options.
+    /// <p>If the world is already loaded, it will just return the equivalent of getWorld(creator.name()).</p>
+    /// Create a new virtual <a title="interface in org.bukkit" href="WorldBorder.html"><code>WorldBorder</code></a>.
     pub fn create_world(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::WorldCreator<'mc>>,
@@ -17145,6 +18830,8 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::World::from_raw(&jni, obj)
     }
+    /// Unloads a world with the given name.
+    /// Unloads the given world.
     pub fn unload_world_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -17165,6 +18852,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    /// Create a new virtual <a href="WorldBorder.html" title="interface in org.bukkit"><code>WorldBorder</code></a>.
     pub fn create_world_border(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::WorldBorder<'mc>, Box<dyn std::error::Error>> {
@@ -17174,6 +18862,12 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::WorldBorder::from_raw(&jni, obj)
     }
+    /// Create a new explorer map targeting the closest nearby structure of a given <a title="class in org.bukkit" href="StructureType.html"><code>StructureType</code></a>.
+    ///
+    /// This method uses implementation default values for radius and findUnexplored (usually 100, true).
+    /// Create a new explorer map targeting the closest nearby structure of a given <a title="class in org.bukkit" href="StructureType.html"><code>StructureType</code></a>.
+    ///
+    /// This method uses implementation default values for radius and findUnexplored (usually 100, true).
     pub fn create_explorer_map_with_world(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -17195,6 +18889,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::ItemStack::from_raw(&jni, obj)
     }
+    /// Reload only the Minecraft data for the server. This includes custom advancements and loot tables.
     pub fn reload_data(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17202,6 +18897,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "reloadData", "()V", &[])?;
         Ok(())
     }
+    /// Gets a <a href="command/PluginCommand.html" title="class in org.bukkit.command"><code>PluginCommand</code></a> with the given name or alias.
     pub fn get_plugin_command(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -17217,6 +18913,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::command::PluginCommand::from_raw(&jni, obj)
     }
+    /// Writes loaded players to disk.
     pub fn save_players(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17224,6 +18921,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "savePlayers", "()V", &[])?;
         Ok(())
     }
+    /// Dispatches a command on this server, and executes it if found.
     pub fn dispatch_command(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -17243,6 +18941,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    /// Adds a recipe to the crafting manager.
     pub fn add_recipe(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::inventory::Recipe<'mc>>,
@@ -17257,6 +18956,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    /// Get a list of all recipes for a given item. The stack size is ignored in comparisons. If the durability is -1, it will match any data value.
     pub fn get_recipes_for(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -17278,6 +18978,13 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the <a href="inventory/Recipe.html" title="interface in org.bukkit.inventory"><code>Recipe</code></a> for the list of ItemStacks provided.
+    /// <p>The list is formatted as a crafting matrix where the index follow the pattern below:</p>
+    /// <pre> [ 0 1 2 ]
+    /// [ 3 4 5 ]
+    /// [ 6 7 8 ]
+    /// </pre>
+    /// <p>NOTE: This method will not modify the provided ItemStack array, for that, use <a href="#craftItem(org.bukkit.inventory.ItemStack%5B%5D,org.bukkit.World,org.bukkit.entity.Player)"><code>craftItem(ItemStack[], World, Player)</code></a>.</p>
     pub fn get_crafting_recipe(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -17294,6 +19001,14 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Recipe::from_raw(&jni, obj)
     }
+    /// Get the crafted item using the list of <a title="class in org.bukkit.inventory" href="inventory/ItemStack.html"><code>ItemStack</code></a> provided.
+    /// <p>The list is formatted as a crafting matrix where the index follow the pattern below:</p>
+    /// <pre> [ 0 1 2 ]
+    /// [ 3 4 5 ]
+    /// [ 6 7 8 ]
+    /// </pre>
+    /// <p>The <a title="interface in org.bukkit" href="World.html"><code>World</code></a> and <a title="interface in org.bukkit.entity" href="entity/Player.html"><code>Player</code></a> arguments are required to fulfill the Bukkit Crafting events.</p>
+    /// <p>Calls <a title="class in org.bukkit.event.inventory" href="event/inventory/PrepareItemCraftEvent.html"><code>PrepareItemCraftEvent</code></a> to imitate the <a href="entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a> initiating the crafting event.</p>
     pub fn craft_item(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -17308,6 +19023,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::ItemStack::from_raw(&jni, obj)
     }
+    /// Get an iterator through the list of crafting recipes.
     pub fn recipe_iterator(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -17316,6 +19032,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaIterator::from_raw(&jni, obj)
     }
+    /// Clears the list of crafting recipes.
     pub fn clear_recipes(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17323,6 +19040,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "clearRecipes", "()V", &[])?;
         Ok(())
     }
+    /// Resets the list of crafting recipes to the default.
     pub fn reset_recipes(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17330,6 +19048,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "resetRecipes", "()V", &[])?;
         Ok(())
     }
+    /// Remove a recipe from the server. <b>Note that removing a recipe may cause permanent loss of data associated with that recipe (eg whether it has been discovered by players).</b>
     pub fn remove_recipe(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -17344,6 +19063,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    /// Gets a list of command aliases defined in the server properties.
     pub fn command_aliases(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -17352,6 +19072,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaMap::from_raw(&jni, obj)
     }
+    /// Gets the radius, in blocks, around each worlds spawn point to protect.
     pub fn spawn_radius(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17359,6 +19080,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getSpawnRadius", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Sets the radius, in blocks, around each worlds spawn point to protect.
     pub fn set_spawn_radius(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -17374,6 +19096,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// chat previews have been removed
+    /// </div>
+    /// chat previews have been removed
+    ///
+    /// Gets whether the server should send a preview of the player's chat message to the client when the player sends a message
     pub fn should_send_chat_previews(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17381,6 +19110,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "shouldSendChatPreviews", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the server only allow players with Mojang-signed public key to join
     pub fn is_enforcing_secure_profiles(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17388,6 +19118,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "isEnforcingSecureProfiles", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the Server hide online players in server status.
     pub fn hide_online_players(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17395,6 +19126,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getHideOnlinePlayers", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the Server is in online mode or not.
     pub fn online_mode(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17402,6 +19134,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getOnlineMode", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether this server allows flying or not.
     pub fn allow_flight(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17409,6 +19142,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getAllowFlight", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether the server is in hardcore mode or not.
     pub fn is_hardcore(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17416,6 +19150,9 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "isHardcore", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Creates a new <a href="profile/PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
+    /// Creates a new <a href="profile/PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
+    /// Creates a new <a title="interface in org.bukkit.profile" href="profile/PlayerProfile.html"><code>PlayerProfile</code></a>.
     pub fn create_player_profile_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<u128>,
@@ -17436,6 +19173,9 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::profile::PlayerProfile::from_raw(&jni, obj)
     }
+    /// Creates a new <a title="interface in org.bukkit.profile" href="profile/PlayerProfile.html"><code>PlayerProfile</code></a>.
+    /// Creates a new <a title="interface in org.bukkit.profile" href="profile/PlayerProfile.html"><code>PlayerProfile</code></a>.
+    /// Creates a new <a href="profile/PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
     pub fn create_player_profile_with_uuid(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u128,
@@ -17461,6 +19201,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::profile::PlayerProfile::from_raw(&jni, obj)
     }
+    /// Gets a set containing all current IPs that are banned.
     pub fn ipbans(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -17470,6 +19211,14 @@ impl<'mc> Bukkit<'mc> {
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#banIP(java.net.InetAddress)"><code>banIP(InetAddress)</code></a>
+    /// </div>
+    /// see <a href="#banIP(java.net.InetAddress)"><code>banIP(InetAddress)</code></a>
+    ///
+    /// Bans the specified address from the server.
+    /// Bans the specified address from the server.
     pub fn ban_ip_with_inet_address(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -17485,6 +19234,14 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#unbanIP(java.net.InetAddress)"><code>unbanIP(InetAddress)</code></a>
+    /// </div>
+    /// see <a href="#unbanIP(java.net.InetAddress)"><code>unbanIP(InetAddress)</code></a>
+    ///
+    /// Unbans the specified address from the server.
+    /// Unbans the specified address from the server.
     pub fn unban_ip_with_inet_address(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -17499,6 +19256,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Gets a set containing all banned players.
     pub fn banned_players(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -17507,6 +19265,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
+    /// Gets a ban list for the supplied type.
     pub fn get_ban_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::BanListType<'mc>>,
@@ -17522,6 +19281,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::BanList::from_raw(&jni, obj)
     }
+    /// Gets a set containing all player operators.
     pub fn operators(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -17530,6 +19290,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
+    /// Gets the default <a title="enum in org.bukkit" href="GameMode.html"><code>GameMode</code></a> for new players.
     pub fn default_game_mode(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::GameMode<'mc>, Box<dyn std::error::Error>> {
@@ -17549,6 +19310,7 @@ impl<'mc> Bukkit<'mc> {
             crate::GameMode::from_string(variant_str).unwrap(),
         )
     }
+    /// Sets the default <a href="GameMode.html" title="enum in org.bukkit"><code>GameMode</code></a> for new players.
     pub fn set_default_game_mode(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::GameMode<'mc>>,
@@ -17563,6 +19325,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Gets a <a title="interface in org.bukkit.command" href="command/ConsoleCommandSender.html"><code>ConsoleCommandSender</code></a> that may be used as an input source for this server.
     pub fn console_sender(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::command::ConsoleCommandSender<'mc>, Box<dyn std::error::Error>> {
@@ -17576,6 +19339,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::command::ConsoleCommandSender::from_raw(&jni, obj)
     }
+    /// Gets the <a title="interface in org.bukkit.plugin.messaging" href="plugin/messaging/Messenger.html"><code>Messenger</code></a> responsible for this server.
     pub fn messenger(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::plugin::messaging::Messenger<'mc>, Box<dyn std::error::Error>> {
@@ -17589,6 +19353,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::plugin::messaging::Messenger::from_raw(&jni, obj)
     }
+    /// Gets the <a href="help/HelpMap.html" title="interface in org.bukkit.help"><code>HelpMap</code></a> providing help topics for this server.
     pub fn help_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::help::HelpMap<'mc>, Box<dyn std::error::Error>> {
@@ -17597,6 +19362,20 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::help::HelpMap::from_raw(&jni, obj)
     }
+    /// Creates an empty inventory with the specified type. If the type is <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a>, the new inventory has a size of 27; otherwise the new inventory has the normal size for its type.
+    ///
+    /// <a href="event/inventory/InventoryType.html#WORKBENCH"><code>InventoryType.WORKBENCH</code></a> will not process crafting recipes if created with this method. Use <a href="entity/HumanEntity.html#openWorkbench(org.bukkit.Location,boolean)"><code>HumanEntity.openWorkbench(Location, boolean)</code></a> instead.
+    ///
+    /// <a href="event/inventory/InventoryType.html#ENCHANTING"><code>InventoryType.ENCHANTING</code></a> will not process <a href="inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a>s for possible enchanting results. Use <a href="entity/HumanEntity.html#openEnchanting(org.bukkit.Location,boolean)"><code>HumanEntity.openEnchanting(Location, boolean)</code></a> instead.
+    /// Creates an empty inventory with the specified type and title. If the type is <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a>, the new inventory has a size of 27; otherwise the new inventory has the normal size for its type.
+    ///
+    /// It should be noted that some inventory types do not support titles and may not render with said titles on the Minecraft client.
+    ///
+    /// <a href="event/inventory/InventoryType.html#WORKBENCH"><code>InventoryType.WORKBENCH</code></a> will not process crafting recipes if created with this method. Use <a href="entity/HumanEntity.html#openWorkbench(org.bukkit.Location,boolean)"><code>HumanEntity.openWorkbench(Location, boolean)</code></a> instead.
+    ///
+    /// <a href="event/inventory/InventoryType.html#ENCHANTING"><code>InventoryType.ENCHANTING</code></a> will not process <a href="inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a>s for possible enchanting results. Use <a href="entity/HumanEntity.html#openEnchanting(org.bukkit.Location,boolean)"><code>HumanEntity.openEnchanting(Location, boolean)</code></a> instead.
+    /// Creates an empty inventory of type <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a> with the specified size.
+    /// Creates an empty inventory of type <a href="event/inventory/InventoryType.html#CHEST"><code>InventoryType.CHEST</code></a> with the specified size and title.
     pub fn create_inventory_with_inventory_holder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::inventory::InventoryHolder<'mc>>,
@@ -17612,6 +19391,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Inventory::from_raw(&jni, obj)
     }
+    /// Creates an empty merchant.
     pub fn create_merchant(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -17627,6 +19407,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Merchant::from_raw(&jni, obj)
     }
+    /// Gets the amount of consecutive neighbor updates before skipping additional ones.
     pub fn max_chained_neighbor_updates(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17635,6 +19416,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of monsters that can spawn in a chunk.
     pub fn monster_spawn_limit(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17643,6 +19431,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of animals that can spawn in a chunk.
     pub fn animal_spawn_limit(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17651,6 +19446,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of water animals that can spawn in a chunk.
     pub fn water_animal_spawn_limit(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17659,6 +19461,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of water ambient mobs that can spawn in a chunk.
     pub fn water_ambient_spawn_limit(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17667,6 +19476,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Get user-specified limit for number of water creature underground that can spawn in a chunk.
     pub fn water_underground_creature_spawn_limit(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17676,6 +19492,13 @@ impl<'mc> Bukkit<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    /// </div>
+    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
+    ///
+    /// Gets user-specified limit for number of ambient mobs that can spawn in a chunk.
     pub fn ambient_spawn_limit(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17683,6 +19506,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getAmbientSpawnLimit", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Gets user-specified limit for number of <a href="entity/SpawnCategory.html" title="enum in org.bukkit.entity"><code>SpawnCategory</code></a> mobs that can spawn in a chunk. <b>Note: the <a href="entity/SpawnCategory.html#MISC"><code>SpawnCategory.MISC</code></a> are not consider.</b>
     pub fn get_spawn_limit(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::entity::SpawnCategory<'mc>>,
@@ -17697,6 +19521,8 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+    /// Checks the current thread against the expected primary thread for the server.
+    /// <p><b>Note:</b> this method should not be used to indicate the current synchronized state of the runtime. A current thread matching the main thread indicates that it is synchronized, but a mismatch <b>does not preclude</b> the same assumption.</p>
     pub fn is_primary_thread(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17704,6 +19530,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "isPrimaryThread", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+    /// Gets the message that is displayed on the server list.
     pub fn motd(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -17714,6 +19541,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Set the message that is displayed on the server list.
     pub fn set_motd(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -17728,6 +19556,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Gets the default message that is displayed when the server is stopped.
     pub fn shutdown_message(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -17738,6 +19567,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the current warning state for the server.
     pub fn warning_state(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::WarningWarningState<'mc>, Box<dyn std::error::Error>> {
@@ -17751,6 +19581,8 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::WarningWarningState::from_raw(&jni, obj)
     }
+    /// Gets the instance of the scoreboard manager.
+    /// <p>This will only exist after the first world has loaded.</p>
     pub fn scoreboard_manager(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::scoreboard::ScoreboardManager<'mc>, Box<dyn std::error::Error>> {
@@ -17764,6 +19596,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::scoreboard::ScoreboardManager::from_raw(&jni, obj)
     }
+    /// Get (or create) a new <a href="scoreboard/Criteria.html" title="interface in org.bukkit.scoreboard"><code>Criteria</code></a> by its name.
     pub fn get_scoreboard_criteria(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -17779,6 +19612,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::scoreboard::Criteria::from_raw(&jni, obj)
     }
+    /// Gets an instance of the server's default server-icon.
     pub fn server_icon(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
@@ -17792,6 +19626,10 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::util::CachedServerIcon::from_raw(&jni, obj)
     }
+    /// Loads an image from a file, and returns a cached image for the specific server-icon.
+    /// <p>Size and type are implementation defined. An incompatible file is guaranteed to throw an implementation-defined <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html" title="class or interface in java.lang"><code>Exception</code></a>.</p>
+    /// Creates a cached server-icon for the specific image.
+    /// <p>Size and type are implementation defined. An incompatible file is guaranteed to throw an implementation-defined <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html" class="external-link" title="class or interface in java.lang"><code>Exception</code></a>.</p>
     pub fn load_server_icon_with_file(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -17807,6 +19645,8 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::util::CachedServerIcon::from_raw(&jni, obj)
     }
+    /// Set the idle kick timeout. Any players idle for the specified amount of time will be automatically kicked.
+    /// <p>A value of 0 will disable the idle kick timeout.</p>
     pub fn set_idle_timeout(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -17821,6 +19661,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Gets the idle kick timeout.
     pub fn idle_timeout(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17828,6 +19669,10 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getIdleTimeout", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Creates a boss bar instance to display to players. The progress defaults to 1.0
+    /// Creates a boss bar instance to display to players. The progress defaults to 1.0.
+    ///
+    /// This instance is added to the persistent storage of the server and will be editable by commands and restored after restart.
     pub fn create_boss_bar_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -17847,6 +19692,11 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::boss::KeyedBossBar::from_raw(&jni, obj)
     }
+    /// Gets an unmodifiable iterator through all persistent bossbars.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a title="interface in org.bukkit.entity" href="entity/Boss.html"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
     pub fn boss_bars(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -17855,6 +19705,11 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaIterator::from_raw(&jni, obj)
     }
+    /// Removes a <a href="boss/KeyedBossBar.html" title="interface in org.bukkit.boss"><code>KeyedBossBar</code></a> specified by this key.
+    /// <ul>
+    /// <li><b>not</b> bound to a <a href="entity/Boss.html" title="interface in org.bukkit.entity"><code>Boss</code></a></li>
+    /// <li><b>not</b> created using <a href="#createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag...)"><code>createBossBar(String, BarColor, BarStyle, BarFlag...)</code></a></li>
+    /// </ul> e.g. bossbars created using the bossbar command
     pub fn remove_boss_bar(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -17869,6 +19724,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.z().unwrap())
     }
+    /// Gets an entity on the server by its UUID
     pub fn get_entity(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u128,
@@ -17889,6 +19745,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::entity::Entity::from_raw(&jni, obj)
     }
+    /// Get the advancement specified by this key.
     pub fn get_advancement(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -17904,6 +19761,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::advancement::Advancement::from_raw(&jni, obj)
     }
+    /// Get an iterator through all advancements. Advancements cannot be removed from this iterator,
     pub fn advancement_iterator(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -17913,6 +19771,10 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaIterator::from_raw(&jni, obj)
     }
+    /// Creates a new <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> instance for the specified Material, with all properties initialized to unspecified defaults.
+    /// Creates a new <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a> instance for the specified Material, with all properties initialized to unspecified defaults.
+    /// Creates a new <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> instance with material and properties parsed from provided data.
+    /// Creates a new <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> instance for the specified Material, with all properties initialized to unspecified defaults, except for those provided in data.
     pub fn create_block_data_with_material(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::Material<'mc>>,
@@ -17933,6 +19795,13 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::block::data::BlockData::from_raw(&jni, obj)
     }
+    /// Selects entities using the given Vanilla selector.
+    ///
+    /// No guarantees are made about the selector format, other than they match the Vanilla format for the active Minecraft version.
+    ///
+    /// Usually a selector will start with '@', unless selecting a Player in which case it may simply be the Player's name or UUID.
+    ///
+    /// Note that in Vanilla, elevated permissions are usually required to use '@' selectors, but this method should not check such permissions from the sender.
     pub fn select_entities(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -17959,6 +19828,7 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the structure manager for loading and saving structures.
     pub fn structure_manager(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::structure::StructureManager<'mc>, Box<dyn std::error::Error>> {
@@ -17972,6 +19842,11 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::structure::StructureManager::from_raw(&jni, obj)
     }
+    /// Returns the registry for the given class.
+    ///
+    /// If no registry is present for the given class null will be returned.
+    ///
+    /// Depending on the implementation not every registry present in <a href="Registry.html" title="interface in org.bukkit"><code>Registry</code></a> will be returned by this method.
     pub fn get_registry(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -17987,6 +19862,8 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::Registry::from_raw(&jni, obj)
     }
+    /// Attempts to set the <a href="Server.html" title="interface in org.bukkit"><code>Server</code></a> singleton.
+    /// <p>This cannot be done if the Server is already set.</p>
     pub fn set_server(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::Server<'mc>>,
@@ -18001,6 +19878,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(())
     }
+    /// Gets the name of this server implementation.
     pub fn name(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -18011,6 +19889,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Shutdowns the server, stopping everything.
     pub fn shutdown(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18019,6 +19898,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn get_unsafe(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::UnsafeValues<'mc>, Box<dyn std::error::Error>> {
@@ -18027,6 +19907,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::UnsafeValues::from_raw(&jni, obj)
     }
+    /// Returns the primary logger associated with this server instance.
     pub fn logger(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
@@ -18035,6 +19916,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::logging::JavaLogger::from_raw(&jni, obj)
     }
+    /// Get the game port that the server runs on.
     pub fn port(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18042,6 +19924,9 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getPort", "()I", &[])?;
         Ok(res.i().unwrap())
     }
+    /// Broadcast a message to all players.
+    /// <p>This is the same as calling <a href="#broadcast(java.lang.String,java.lang.String)"><code>broadcast(java.lang.String, java.lang.String)</code></a> to <a href="Server.html#BROADCAST_CHANNEL_USERS"><code>Server.BROADCAST_CHANNEL_USERS</code></a></p>
+    /// Broadcasts the specified message to every user with the given permission name.
     pub fn broadcast(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -18061,6 +19946,7 @@ impl<'mc> Bukkit<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -18080,6 +19966,7 @@ impl<'mc> Bukkit<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18094,6 +19981,7 @@ impl<'mc> Bukkit<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18105,6 +19993,7 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18112,6 +20001,7 @@ impl<'mc> Bukkit<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18119,6 +20009,7 @@ impl<'mc> Bukkit<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18126,6 +20017,7 @@ impl<'mc> Bukkit<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18134,6 +20026,7 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
 }
+/// All supported color values for chat
 pub struct ChatColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18155,7 +20048,7 @@ impl<'mc> ChatColor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ChatColor from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "ChatColor")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ChatColor")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ChatColor object, got {}",
@@ -18166,6 +20059,65 @@ impl<'mc> ChatColor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the color represented by the specified color code
+    /// Gets the color represented by the specified color code
+    pub fn get_by_char_with_string(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<u16>,
+    ) -> Result<crate::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
+        let cls = &jni.find_class("org/bukkit/ChatColor")?;
+        let res = jni.call_static_method(
+            cls,
+            "getByChar",
+            "(C)Lorg/bukkit/ChatColor;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let obj = res.l()?;
+        crate::ChatColor::from_raw(&jni, obj)
+    }
+    /// Gets the ChatColors used at the end of the given input string.
+    pub fn get_last_colors(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "getLastColors",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Checks if this code is a color code as opposed to a format code.
+    pub fn is_color(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isColor", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
+    pub fn as_bungee(
+        &mut self,
+    ) -> Result<blackboxmc_bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "asBungee",
+            "()Lnet/md_5/bungee/api/ChatColor;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_bungee::bungee::api::ChatColor::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Strips the given message of all color codes
     pub fn strip_color(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -18183,6 +20135,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Translates a string using an alternate color code character into a string that uses the internal ChatColor.COLOR_CODE color code character. The alternate color code character will only be replaced if it is immediately followed by 0-9, A-F, a-f, K-O, k-o, R or r.
     pub fn translate_alternate_color_codes(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
@@ -18205,45 +20158,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    pub fn get_by_char_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<u16>,
-    ) -> Result<crate::ChatColor<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
-        let cls = &jni.find_class("org/bukkit/ChatColor")?;
-        let res = jni.call_static_method(
-            cls,
-            "getByChar",
-            "(C)Lorg/bukkit/ChatColor;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let obj = res.l()?;
-        crate::ChatColor::from_raw(&jni, obj)
-    }
-    pub fn get_last_colors(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "getLastColors",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn is_color(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isColor", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Checks if this code is a format code as opposed to a color code.
     pub fn is_format(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18251,20 +20166,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn as_bungee(
-        &mut self,
-    ) -> Result<blackboxmc_bungee::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "asBungee",
-            "()Lnet/md_5/bungee/api/ChatColor;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_bungee::bungee::api::ChatColor::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18276,6 +20178,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the char value associated with this color
     pub fn char(&mut self) -> Result<u16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18283,6 +20186,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.c().unwrap())
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -18303,6 +20207,7 @@ impl<'mc> ChatColor<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18314,6 +20219,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18328,6 +20234,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18335,6 +20242,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -18349,6 +20257,7 @@ impl<'mc> ChatColor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -18361,6 +20270,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18368,6 +20278,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -18387,6 +20298,7 @@ impl<'mc> ChatColor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18394,6 +20306,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18401,6 +20314,7 @@ impl<'mc> ChatColor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18409,7 +20323,9 @@ impl<'mc> ChatColor<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements BanList. Needed for returning it from Java.
+/// A ban list, containing bans of some <a href="BanList.Type.html" title="enum in org.bukkit"><code>BanList.Type</code></a>.
+///
+/// This is a representation of an abstract class.
 pub struct BanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18422,7 +20338,7 @@ impl<'mc> BanList<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BanList from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "BanList")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/BanList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BanList object, got {}",
@@ -18433,6 +20349,16 @@ impl<'mc> BanList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#addBan(T,java.lang.String,java.util.Date,java.lang.String)"><code>addBan(Object, String, Date, String)</code></a>
+    /// </div>
+    /// see <a href="#addBan(T,java.lang.String,java.util.Date,java.lang.String)"><code>addBan(Object, String, Date, String)</code></a>
+    ///
+    /// Adds a ban to this list. If a previous ban exists, this will update the previous entry.
+    /// Adds a ban to this list. If a previous ban exists, this will update the previous entry.
+    /// Adds a ban to this list. If a previous ban exists, this will update the previous entry.
+    /// Adds a ban to this list. If a previous ban exists, this will update the previous entry.
     pub fn add_ban_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18451,6 +20377,14 @@ impl<'mc> BanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#getBanEntry(T)"><code>getBanEntry(Object)</code></a>
+    /// </div>
+    /// see <a href="#getBanEntry(T)"><code>getBanEntry(Object)</code></a>
+    ///
+    /// Gets a <a title="interface in org.bukkit" href="BanEntry.html"><code>BanEntry</code></a> by target.
+    /// Gets a <a href="BanEntry.html" title="interface in org.bukkit"><code>BanEntry</code></a> by target.
     pub fn get_ban_entry_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -18468,6 +20402,13 @@ impl<'mc> BanList<'mc> {
         })
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// This return a generic class, prefer use <a href="#getEntries()"><code>getEntries()</code></a>
+    /// </div>
+    /// This return a generic class, prefer use <a href="#getEntries()"><code>getEntries()</code></a>
+    ///
+    /// Gets a set containing every <a href="BanEntry.html" title="interface in org.bukkit"><code>BanEntry</code></a> in this list.
     pub fn ban_entries(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -18482,6 +20423,14 @@ impl<'mc> BanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets if a <a href="BanEntry.html" title="interface in org.bukkit"><code>BanEntry</code></a> exists for the target, indicating an active ban status.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#isBanned(T)"><code>isBanned(Object)</code></a>
+    /// </div>
+    /// see <a href="#isBanned(T)"><code>isBanned(Object)</code></a>
+    ///
+    /// Gets if a <a title="interface in org.bukkit" href="BanEntry.html"><code>BanEntry</code></a> exists for the target, indicating an active ban status.
     pub fn is_banned_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -18497,6 +20446,14 @@ impl<'mc> BanList<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// Removes the specified target from this list, therefore indicating a "not banned" status.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// see <a href="#pardon(T)"><code>pardon(Object)</code></a>
+    /// </div>
+    /// see <a href="#pardon(T)"><code>pardon(Object)</code></a>
+    ///
+    /// Removes the specified target from this list, therefore indicating a "not banned" status.
     pub fn pardon_with_object(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -18512,6 +20469,7 @@ impl<'mc> BanList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets a set containing every <a href="BanEntry.html" title="interface in org.bukkit"><code>BanEntry</code></a> in this list.
     pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18574,7 +20532,7 @@ impl<'mc> PortalType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PortalType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "PortalType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/PortalType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PortalType object, got {}",
@@ -18597,6 +20555,7 @@ impl<'mc> PortalType<'mc> {
         }
     }
 }
+/// Represents a ban-type that a <a href="BanList.html" title="interface in org.bukkit"><code>BanList</code></a> may track.
 pub struct BanListType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18618,7 +20577,7 @@ impl<'mc> BanListType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BanListType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "BanListType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/BanListType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BanListType object, got {}",
@@ -18629,6 +20588,7 @@ impl<'mc> BanListType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -18649,6 +20609,7 @@ impl<'mc> BanListType<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18660,6 +20621,7 @@ impl<'mc> BanListType<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18674,6 +20636,7 @@ impl<'mc> BanListType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18685,6 +20648,7 @@ impl<'mc> BanListType<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18692,6 +20656,7 @@ impl<'mc> BanListType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -18706,6 +20671,7 @@ impl<'mc> BanListType<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -18718,6 +20684,7 @@ impl<'mc> BanListType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18725,6 +20692,7 @@ impl<'mc> BanListType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -18744,6 +20712,7 @@ impl<'mc> BanListType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18751,6 +20720,7 @@ impl<'mc> BanListType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18758,6 +20728,7 @@ impl<'mc> BanListType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18766,7 +20737,10 @@ impl<'mc> BanListType<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements Warning. Needed for returning it from Java.
+/// This designates the warning state for a specific item.
+/// <p>When the server settings dictate 'default' warnings, warnings are printed if the <a href="#value()"><code>value()</code></a> is true.</p>
+///
+/// This is a representation of an abstract class.
 pub struct Warning<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18779,7 +20753,7 @@ impl<'mc> Warning<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Warning from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Warning")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Warning")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Warning object, got {}",
@@ -18790,6 +20764,7 @@ impl<'mc> Warning<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// This can provide detailed information on why the event is deprecated.
     pub fn reason(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18801,6 +20776,7 @@ impl<'mc> Warning<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// This sets if the deprecation warnings when registering events gets printed when the setting is in the default state.
     pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18808,6 +20784,7 @@ impl<'mc> Warning<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18822,6 +20799,7 @@ impl<'mc> Warning<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18833,6 +20811,7 @@ impl<'mc> Warning<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18840,6 +20819,7 @@ impl<'mc> Warning<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn annotation_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -18862,6 +20842,7 @@ impl<'mc> JNIRaw<'mc> for Warning<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents various types of options that may be used to create a world.
 pub struct WorldCreator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18883,7 +20864,7 @@ impl<'mc> WorldCreator<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WorldCreator from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "WorldCreator")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/WorldCreator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WorldCreator object, got {}",
@@ -18907,6 +20888,8 @@ impl<'mc> WorldCreator<'mc> {
         )?;
         crate::WorldCreator::from_raw(&jni, res)
     }
+    /// Gets the environment that will be used to create or load the world
+    /// Sets the environment that will be used to create or load the world
     pub fn environment(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::WorldEnvironment<'mc>>>,
@@ -18924,6 +20907,8 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates a world with the specified options.
+    /// <p>If the world already exists, it will be loaded from disk and some options may be ignored.</p>
     pub fn create_world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18936,6 +20921,16 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> will be used. If no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// Sets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> will be used. If no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// Sets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> will be used. If no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// <p>If the biome provider cannot be found for the given name and no <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> is specific, the natural environment biome provider will be used instead and a warning will be printed to the specified output</p>
+    /// Sets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> will be used. If no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// <p>If the biome provider cannot be found for the given name and no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific, the natural environment biome provider will be used instead and a warning will be printed to the specified output</p>
     pub fn biome_provider(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::generator::BiomeProvider<'mc>>>,
@@ -18953,6 +20948,16 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> will be used. If no <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// Sets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> will be used. If no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// Sets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> will be used. If no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// <p>If the biome provider cannot be found for the given name and no <a title="class in org.bukkit.generator" href="generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> is specific, the natural environment biome provider will be used instead and a warning will be printed to the specified output</p>
+    /// Sets the biome provider that will be used to create or load the world.
+    /// <p>This may be null, in which case the biome provider from the <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> will be used. If no <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> is specific the "natural" biome provider for this environment will be used.</p>
+    /// <p>If the biome provider cannot be found for the given name and no <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> is specific, the natural environment biome provider will be used instead and a warning will be printed to the specified output</p>
     pub fn biome_provider_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -18975,6 +20980,8 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets whether or not worlds created or loaded with this creator will have structures.
+    /// Gets whether or not structures will be generated in the world.
     pub fn generate_structures(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -18992,6 +20999,9 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the generator settings of the world that will be created or loaded.
+    /// <p>Currently only <a href="WorldType.html#FLAT"><code>WorldType.FLAT</code></a> uses these settings, and expects them to be in JSON format with a valid biome (1.18.2 and above) defined. An example valid configuration is as follows: <code>{"layers": [{"block": "stone", "height": 1}, {"block": "grass_block", "height": 1}], "biome":"plains"}</code></p>
+    /// Gets the generator settings of the world that will be created or loaded.
     pub fn generator_settings(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -19009,6 +21019,8 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets whether the world will be hardcore or not. In a hardcore world the difficulty will be locked to hard.
+    /// Gets whether the world will be hardcore or not. In a hardcore world the difficulty will be locked to hard.
     pub fn hardcore(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -19026,6 +21038,9 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Attempts to get the <a href="generator/ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> with the given name.
+    /// <p>If the generator is not found, null will be returned and a message will be printed to the specified <a title="interface in org.bukkit.command" href="command/CommandSender.html"><code>CommandSender</code></a> explaining why.</p>
+    /// <p>The name must be in the "plugin:id" notation, or optionally just "plugin", where "plugin" is the safe-name of a plugin and "id" is an optional unique identifier for the generator you wish to request from the plugin.</p>
     pub fn get_generator_for_name(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -19041,6 +21056,9 @@ impl<'mc> WorldCreator<'mc> {
         let obj = res.l()?;
         crate::generator::ChunkGenerator::from_raw(&jni, obj)
     }
+    /// Attempts to get the <a href="generator/BiomeProvider.html" title="class in org.bukkit.generator"><code>BiomeProvider</code></a> with the given name.
+    /// <p>If the biome provider is not found, null will be returned and a message will be printed to the specified <a title="interface in org.bukkit.command" href="command/CommandSender.html"><code>CommandSender</code></a> explaining why.</p>
+    /// <p>The name must be in the "plugin:id" notation, or optionally just "plugin", where "plugin" is the safe-name of a plugin and "id" is an optional unique identifier for the biome provider you wish to request from the plugin.</p>
     pub fn get_biome_provider_for_name(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -19056,6 +21074,8 @@ impl<'mc> WorldCreator<'mc> {
         let obj = res.l()?;
         crate::generator::BiomeProvider::from_raw(&jni, obj)
     }
+    /// Gets the name of the world that is to be loaded or created.
+    /// Creates a new <a href="WorldCreator.html" title="class in org.bukkit"><code>WorldCreator</code></a> for the given world name
     pub fn name(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -19071,6 +21091,8 @@ impl<'mc> WorldCreator<'mc> {
         let obj = res.l()?;
         crate::WorldCreator::from_raw(&jni, obj)
     }
+    /// Gets the type of the world that will be created or loaded
+    /// Sets the type of the world that will be created or loaded
     pub fn get_type(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::WorldType<'mc>>>,
@@ -19088,6 +21110,8 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Copies the options from the specified world
+    /// Copies the options from the specified <a href="WorldCreator.html" title="class in org.bukkit"><code>WorldCreator</code></a>
     pub fn copy_with_world_creator(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::World<'mc>>>,
@@ -19105,6 +21129,19 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// Sets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// Sets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// <p>If the generator cannot be found for the given name, the natural environment generator will be used instead and a warning will be printed to the console.</p>
+    /// Sets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// <p>If the generator cannot be found for the given name, the natural environment generator will be used instead and a warning will be printed to the specified output</p>
+    /// Sets the generator settings of the world that will be created or loaded.
+    /// <p>Currently only <a href="WorldType.html#FLAT"><code>WorldType.FLAT</code></a> uses these settings, and expects them to be in JSON format with a valid biome (1.18.2 and above) defined. An example valid configuration is as follows: <code>{"layers": [{"block": "stone", "height": 1}, {"block": "grass_block", "height": 1}], "biome":"plains"}</code></p>
+    /// Gets the generator settings of the world that will be created or loaded.
     pub fn generator(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::generator::ChunkGenerator<'mc>>>,
@@ -19122,6 +21159,19 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// Sets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// Sets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// <p>If the generator cannot be found for the given name, the natural environment generator will be used instead and a warning will be printed to the console.</p>
+    /// Sets the generator that will be used to create or load the world.
+    /// <p>This may be null, in which case the "natural" generator for this environment will be used.</p>
+    /// <p>If the generator cannot be found for the given name, the natural environment generator will be used instead and a warning will be printed to the specified output</p>
+    /// Sets the generator settings of the world that will be created or loaded.
+    /// <p>Currently only <a href="WorldType.html#FLAT"><code>WorldType.FLAT</code></a> uses these settings, and expects them to be in JSON format with a valid biome (1.18.2 and above) defined. An example valid configuration is as follows: <code>{"layers": [{"block": "stone", "height": 1}, {"block": "grass_block", "height": 1}], "biome":"plains"}</code></p>
+    /// Gets the generator settings of the world that will be created or loaded.
     pub fn generator_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -19144,6 +21194,8 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the seed that will be used to create this world
+    /// Sets the seed that will be used to create this world
     pub fn seed(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -19160,6 +21212,7 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -19179,6 +21232,7 @@ impl<'mc> WorldCreator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -19193,6 +21247,7 @@ impl<'mc> WorldCreator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19204,6 +21259,7 @@ impl<'mc> WorldCreator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19211,6 +21267,7 @@ impl<'mc> WorldCreator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19218,6 +21275,7 @@ impl<'mc> WorldCreator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19225,6 +21283,7 @@ impl<'mc> WorldCreator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19330,7 +21389,7 @@ impl<'mc> Art<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Art from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Art")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Art")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Art object, got {}",
@@ -19407,7 +21466,9 @@ impl<'mc> Art<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements SoundGroup. Needed for returning it from Java.
+/// Represents a group of sounds for blocks that are played when various actions happen (ie stepping, breaking, hitting, etc).
+///
+/// This is a representation of an abstract class.
 pub struct SoundGroup<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19420,7 +21481,7 @@ impl<'mc> SoundGroup<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SoundGroup from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "SoundGroup")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/SoundGroup")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SoundGroup object, got {}",
@@ -19431,6 +21492,7 @@ impl<'mc> SoundGroup<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the pitch these sounds are played at. Note that this pitch does not always represent the actual pitch received by the client.
     pub fn pitch(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19438,6 +21500,7 @@ impl<'mc> SoundGroup<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Get the volume these sounds are played at. Note that this volume does not always represent the actual volume received by the client.
     pub fn volume(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19445,6 +21508,7 @@ impl<'mc> SoundGroup<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Gets the corresponding breaking sound for this group.
     pub fn break_sound(&mut self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19468,6 +21532,7 @@ impl<'mc> SoundGroup<'mc> {
             crate::Sound::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the corresponding step sound for this group.
     pub fn step_sound(&mut self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19491,6 +21556,7 @@ impl<'mc> SoundGroup<'mc> {
             crate::Sound::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the corresponding place sound for this group.
     pub fn place_sound(&mut self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19514,6 +21580,7 @@ impl<'mc> SoundGroup<'mc> {
             crate::Sound::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the corresponding hit sound for this group.
     pub fn hit_sound(&mut self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19537,6 +21604,7 @@ impl<'mc> SoundGroup<'mc> {
             crate::Sound::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the corresponding fall sound for this group.
     pub fn fall_sound(&mut self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19570,6 +21638,9 @@ impl<'mc> JNIRaw<'mc> for SoundGroup<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// GameRules dictate certain behavior within Minecraft itself
+///
+/// For more information please visit the <a href="https://minecraft.gamepedia.com/Commands/gamerule">Minecraft Wiki</a>
 pub struct GameRule<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19591,7 +21662,7 @@ impl<'mc> GameRule<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate GameRule from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "GameRule")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/GameRule")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a GameRule object, got {}",
@@ -19602,6 +21673,7 @@ impl<'mc> GameRule<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get the name of this GameRule.
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19613,6 +21685,7 @@ impl<'mc> GameRule<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -19627,6 +21700,7 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19638,6 +21712,7 @@ impl<'mc> GameRule<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Get the type of this rule.
     pub fn get_type(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19645,6 +21720,7 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    /// Get a <a title="class in org.bukkit" href="GameRule.html"><code>GameRule</code></a> by its name.
     pub fn get_by_name(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -19660,6 +21736,7 @@ impl<'mc> GameRule<'mc> {
         let obj = res.l()?;
         crate::GameRule::from_raw(&jni, obj)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -19679,6 +21756,7 @@ impl<'mc> GameRule<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19686,6 +21764,7 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19693,6 +21772,7 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19700,6 +21780,7 @@ impl<'mc> GameRule<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19708,7 +21789,10 @@ impl<'mc> GameRule<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements ChunkSnapshot. Needed for returning it from Java.
+/// Represents a static, thread-safe snapshot of chunk of blocks.
+/// <p>Purpose is to allow clean, efficient copy of a chunk data to be made, and then handed off for processing in another thread (e.g. map rendering)</p>
+///
+/// This is a representation of an abstract class.
 pub struct ChunkSnapshot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19721,7 +21805,7 @@ impl<'mc> ChunkSnapshot<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ChunkSnapshot from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "ChunkSnapshot")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ChunkSnapshot")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ChunkSnapshot object, got {}",
@@ -19732,7 +21816,22 @@ impl<'mc> ChunkSnapshot<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get world full time when chunk snapshot was captured
+    pub fn capture_full_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getCaptureFullTime", "()J", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j().unwrap())
+    }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get block data for block at corresponding coordinate in the chunk
     pub fn get_data(
         &mut self,
         arg0: i32,
@@ -19755,13 +21854,7 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub fn capture_full_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getCaptureFullTime", "()J", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
-    }
+    /// Get block data for block at corresponding coordinate in the chunk
     pub fn get_block_data(
         &mut self,
         arg0: i32,
@@ -19786,6 +21879,7 @@ impl<'mc> ChunkSnapshot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the X-coordinate of this chunk
     pub fn x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19793,6 +21887,7 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the Z-coordinate of this chunk
     pub fn z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19800,6 +21895,7 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the highest non-air coordinate at the given coordinates
     pub fn get_highest_block_yat(
         &mut self,
         arg0: i32,
@@ -19819,6 +21915,14 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Get biome at given coordinates
+    /// Get biome at given coordinates
     pub fn get_biome_with_int(
         &mut self,
         arg0: i32,
@@ -19854,6 +21958,7 @@ impl<'mc> ChunkSnapshot<'mc> {
             crate::block::Biome::from_string(variant_str).unwrap(),
         )
     }
+    /// Get light level emitted by block at corresponding coordinate in the chunk
     pub fn get_block_emitted_light(
         &mut self,
         arg0: i32,
@@ -19876,6 +21981,7 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get block type for block at corresponding coordinate in the chunk
     pub fn get_block_type(
         &mut self,
         arg0: i32,
@@ -19911,6 +22017,7 @@ impl<'mc> ChunkSnapshot<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+    /// Get sky light level for block at corresponding coordinate in the chunk
     pub fn get_block_sky_light(
         &mut self,
         arg0: i32,
@@ -19933,6 +22040,7 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets name of the world containing this chunk
     pub fn world_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19947,6 +22055,14 @@ impl<'mc> ChunkSnapshot<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// biomes are now 3-dimensional
+    /// </div>
+    /// biomes are now 3-dimensional
+    ///
+    /// Get raw biome temperature at given coordinates
+    /// Get raw biome temperature at given coordinates
     pub fn get_raw_biome_temperature_with_int(
         &mut self,
         arg0: i32,
@@ -19969,6 +22085,7 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Test if section is empty
     pub fn is_section_empty(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -19980,6 +22097,8 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Tests if this snapshot contains the specified block.
+    /// Tests if this chunk contains the specified biome.
     pub fn contains_with_biome(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::block::data::BlockData<'mc>>>,
@@ -20005,6 +22124,7 @@ impl<'mc> JNIRaw<'mc> for ChunkSnapshot<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+
 pub struct MusicInstrument<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20028,7 +22148,7 @@ impl<'mc> MusicInstrument<'mc> {
                 eyre::eyre!("Tried to instantiate MusicInstrument from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "MusicInstrument")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/MusicInstrument")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MusicInstrument object, got {}",
@@ -20039,6 +22159,7 @@ impl<'mc> MusicInstrument<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns a <a href="MusicInstrument.html" title="class in org.bukkit"><code>MusicInstrument</code></a> by a <a href="NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>.
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -20054,6 +22175,7 @@ impl<'mc> MusicInstrument<'mc> {
         let obj = res.l()?;
         crate::MusicInstrument::from_raw(&jni, obj)
     }
+    /// Returns all known MusicInstruments.
     pub fn values(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::MusicInstrument<'mc>>, Box<dyn std::error::Error>> {
@@ -20068,6 +22190,8 @@ impl<'mc> MusicInstrument<'mc> {
         }
         Ok(new_vec)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Keyed.html#getKey()">Keyed</a></code></span>
+    /// Return the namespaced identifier for this object.
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20080,6 +22204,7 @@ impl<'mc> MusicInstrument<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -20099,6 +22224,7 @@ impl<'mc> MusicInstrument<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -20113,6 +22239,7 @@ impl<'mc> MusicInstrument<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20124,6 +22251,7 @@ impl<'mc> MusicInstrument<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20131,6 +22259,7 @@ impl<'mc> MusicInstrument<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20138,6 +22267,7 @@ impl<'mc> MusicInstrument<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20145,6 +22275,7 @@ impl<'mc> MusicInstrument<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20158,7 +22289,9 @@ impl<'mc> Into<crate::Keyed<'mc>> for MusicInstrument<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Translatable. Needed for returning it from Java.
+/// Represents an object with a text representation that can be translated by the Minecraft client.
+///
+/// This is a representation of an abstract class.
 pub struct Translatable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20171,7 +22304,7 @@ impl<'mc> Translatable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Translatable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Translatable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Translatable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Translatable object, got {}",
@@ -20182,6 +22315,7 @@ impl<'mc> Translatable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get the translation key, suitable for use in a translation component.
     pub fn translation_key(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20206,6 +22340,7 @@ impl<'mc> JNIRaw<'mc> for Translatable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents a single firework effect.
 pub struct FireworkEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20234,7 +22369,7 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "FireworkEffectBuilder")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/FireworkEffectBuilder")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FireworkEffectBuilder object, got {}",
@@ -20244,6 +22379,23 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+    pub fn trail(
+        &mut self,
+        arg0: bool,
+    ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
+        // -2
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "trail",
+            "(Z)Lorg/bukkit/FireworkEffect$Builder;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::FireworkEffectBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     pub fn build(&mut self) -> Result<crate::FireworkEffect<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -20265,23 +22417,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             "withTrail",
             "()Lorg/bukkit/FireworkEffect$Builder;",
             &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::FireworkEffectBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn trail(
-        &mut self,
-        arg0: bool,
-    ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "trail",
-            "(Z)Lorg/bukkit/FireworkEffect$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::FireworkEffectBuilder::from_raw(&self.jni_ref(), unsafe {
@@ -20495,7 +22630,7 @@ impl<'mc> FireworkEffectType<'mc> {
                 eyre::eyre!("Tried to instantiate FireworkEffectType from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FireworkEffectType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/FireworkEffectType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FireworkEffectType object, got {}",
@@ -20662,7 +22797,7 @@ impl<'mc> FireworkEffect<'mc> {
                 eyre::eyre!("Tried to instantiate FireworkEffect from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FireworkEffect")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/FireworkEffect")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FireworkEffect object, got {}",
@@ -20673,6 +22808,9 @@ impl<'mc> FireworkEffect<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="configuration/serialization/ConfigurationSerializable.html#serialize()">ConfigurationSerializable</a></code></span>
+    /// Creates a Map representation of this class.
+    /// <p>This class must provide a method to restore this class, as defined in the <a href="configuration/serialization/ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> interface javadocs.</p>
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -20684,6 +22822,7 @@ impl<'mc> FireworkEffect<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
@@ -20703,6 +22842,7 @@ impl<'mc> FireworkEffect<'mc> {
         let obj = res.l()?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
     }
+    /// Get whether the firework effect flickers.
     pub fn has_flicker(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20710,6 +22850,7 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get whether the firework effect has a trail.
     pub fn has_trail(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20717,6 +22858,7 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get the primary colors of the firework effect.
     pub fn colors(&mut self) -> Result<Vec<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20731,6 +22873,7 @@ impl<'mc> FireworkEffect<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the fade colors of the firework effect.
     pub fn fade_colors(&mut self) -> Result<Vec<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20748,6 +22891,7 @@ impl<'mc> FireworkEffect<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -20762,6 +22906,7 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20773,6 +22918,7 @@ impl<'mc> FireworkEffect<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20780,6 +22926,7 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Construct a firework effect.
     pub fn builder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
@@ -20789,6 +22936,7 @@ impl<'mc> FireworkEffect<'mc> {
         let obj = res.l()?;
         crate::FireworkEffectBuilder::from_raw(&jni, obj)
     }
+    /// Get the type of the firework effect.
     pub fn get_type(
         &mut self,
     ) -> Result<crate::FireworkEffectType<'mc>, Box<dyn std::error::Error>> {
@@ -20803,6 +22951,7 @@ impl<'mc> FireworkEffect<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -20822,6 +22971,7 @@ impl<'mc> FireworkEffect<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20829,6 +22979,7 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20836,6 +22987,7 @@ impl<'mc> FireworkEffect<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20855,7 +23007,10 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         .unwrap()
     }
 }
-/// An instantiatable struct that implements MinecraftExperimental. Needed for returning it from Java.
+/// Indicates that the annotated element (class, method, field, etc.) is part of a <a href="https://minecraft.fandom.com/wiki/Experimental_Gameplay">minecraft experimental feature</a> and is subject to changes by Mojang.
+/// <p><b>Note:</b> Elements marked with this annotation require the use of a datapack or otherwise non-standard feature to be enabled on the server.</p>
+///
+/// This is a representation of an abstract class.
 pub struct MinecraftExperimental<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20871,7 +23026,7 @@ impl<'mc> MinecraftExperimental<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "MinecraftExperimental")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/MinecraftExperimental")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MinecraftExperimental object, got {}",
@@ -20882,6 +23037,7 @@ impl<'mc> MinecraftExperimental<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -20896,6 +23052,7 @@ impl<'mc> MinecraftExperimental<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20907,6 +23064,7 @@ impl<'mc> MinecraftExperimental<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20914,6 +23072,7 @@ impl<'mc> MinecraftExperimental<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn annotation_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -20936,7 +23095,9 @@ impl<'mc> JNIRaw<'mc> for MinecraftExperimental<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements Keyed. Needed for returning it from Java.
+/// Represents an object which has a <a href="NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a> attached to it.
+///
+/// This is a representation of an abstract class.
 pub struct Keyed<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20949,7 +23110,7 @@ impl<'mc> Keyed<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Keyed from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Keyed")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Keyed")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Keyed object, got {}",
@@ -20960,6 +23121,7 @@ impl<'mc> Keyed<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Return the namespaced identifier for this object.
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21199,7 +23361,7 @@ impl<'mc> StatisticType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate StatisticType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "StatisticType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/StatisticType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StatisticType object, got {}",
@@ -21356,7 +23518,7 @@ impl<'mc> Statistic<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Statistic from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Statistic")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Statistic")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Statistic object, got {}",
@@ -21541,6 +23703,8 @@ impl<'mc> Statistic<'mc> {
         }
     }
 }
+/// Represents a String based key which consists of two components - a namespace and a key. Namespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.
+/// <p>Keys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.</p>
 pub struct NamespacedKey<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21562,7 +23726,7 @@ impl<'mc> NamespacedKey<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate NamespacedKey from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "NamespacedKey")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/NamespacedKey")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a NamespacedKey object, got {}",
@@ -21591,6 +23755,17 @@ impl<'mc> NamespacedKey<'mc> {
         )?;
         crate::NamespacedKey::from_raw(&jni, res)
     }
+    /// Get a NamespacedKey from the supplied string with a default namespace if a namespace is not defined. This is a utility method meant to fetch a NamespacedKey from user input. Please note that casing does matter and any instance of uppercase characters will be considered invalid. The input contract is as follows:
+    /// <pre> fromString("foo", plugin) -&gt; "plugin:foo"
+    /// fromString("foo:bar", plugin) -&gt; "foo:bar"
+    /// fromString(":foo", null) -&gt; "minecraft:foo"
+    /// fromString("foo", null) -&gt; "minecraft:foo"
+    /// fromString("Foo", plugin) -&gt; null
+    /// fromString(":Foo", plugin) -&gt; null
+    /// fromString("foo:bar:bazz", plugin) -&gt; null
+    /// fromString("", plugin) -&gt; null
+    /// </pre>
+    /// Get a NamespacedKey from the supplied string. The default namespace will be Minecraft's (i.e. <a href="#minecraft(java.lang.String)"><code>minecraft(String)</code></a>).
     pub fn from_string_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -21612,6 +23787,7 @@ impl<'mc> NamespacedKey<'mc> {
         let obj = res.l()?;
         crate::NamespacedKey::from_raw(&jni, obj)
     }
+    /// Get a key in the Minecraft namespace.
     pub fn minecraft(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -21627,6 +23803,7 @@ impl<'mc> NamespacedKey<'mc> {
         let obj = res.l()?;
         crate::NamespacedKey::from_raw(&jni, obj)
     }
+
     pub fn namespace(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21642,6 +23819,13 @@ impl<'mc> NamespacedKey<'mc> {
             .to_string())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// should never be used by plugins, for internal use only!!
+    /// </div>
+    /// should never be used by plugins, for internal use only!!
+    ///
+    /// Return a new random key in the <a href="#BUKKIT"><code>BUKKIT</code></a> namespace.
     pub fn random_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
@@ -21650,6 +23834,7 @@ impl<'mc> NamespacedKey<'mc> {
         let obj = res.l()?;
         crate::NamespacedKey::from_raw(&jni, obj)
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -21664,6 +23849,7 @@ impl<'mc> NamespacedKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -21675,6 +23861,7 @@ impl<'mc> NamespacedKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21682,6 +23869,7 @@ impl<'mc> NamespacedKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn key(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -21693,6 +23881,7 @@ impl<'mc> NamespacedKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -21712,6 +23901,7 @@ impl<'mc> NamespacedKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -21719,6 +23909,7 @@ impl<'mc> NamespacedKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21726,6 +23917,7 @@ impl<'mc> NamespacedKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21734,7 +23926,9 @@ impl<'mc> NamespacedKey<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements RegionAccessor. Needed for returning it from Java.
+/// A RegionAccessor gives access to getting, modifying and spawning <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a>, <a title="interface in org.bukkit.block" href="block/BlockState.html"><code>BlockState</code></a> and <a href="entity/Entity.html" title="interface in org.bukkit.entity"><code>Entity</code></a>, as well as generating some basic structures.
+///
+/// This is a representation of an abstract class.
 pub struct RegionAccessor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21749,7 +23943,7 @@ impl<'mc> RegionAccessor<'mc> {
                 eyre::eyre!("Tried to instantiate RegionAccessor from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "RegionAccessor")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/RegionAccessor")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RegionAccessor object, got {}",
@@ -21760,6 +23954,8 @@ impl<'mc> RegionAccessor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sets the <a title="enum in org.bukkit" href="Material.html"><code>Material</code></a> at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>.
+    /// Sets the <a title="enum in org.bukkit" href="Material.html"><code>Material</code></a> at the given coordinates.
     pub fn set_type_with_location(
         &mut self,
         arg0: i32,
@@ -21786,6 +23982,8 @@ impl<'mc> RegionAccessor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>.
+    /// Gets the <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a> at the given coordinates.
     pub fn get_block_data_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -21810,6 +24008,8 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>.
+    /// Sets the <a href="block/data/BlockData.html" title="interface in org.bukkit.block.data"><code>BlockData</code></a> at the given coordinates.
     pub fn set_block_data_with_location(
         &mut self,
         arg0: i32,
@@ -21836,6 +24036,10 @@ impl<'mc> RegionAccessor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the highest non-empty (impassable) coordinate at the given coordinates.
+    /// Gets the highest non-empty (impassable) coordinate at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>.
+    /// Gets the highest coordinate corresponding to the <a title="enum in org.bukkit" href="HeightMap.html"><code>HeightMap</code></a> at the given coordinates.
+    /// Gets the highest coordinate corresponding to the <a href="HeightMap.html" title="enum in org.bukkit"><code>HeightMap</code></a> at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>.
     pub fn get_highest_block_yat_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -21855,6 +24059,10 @@ impl<'mc> RegionAccessor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the highest non-empty (impassable) coordinate at the given coordinates.
+    /// Gets the highest non-empty (impassable) coordinate at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>.
+    /// Gets the highest coordinate corresponding to the <a title="enum in org.bukkit" href="HeightMap.html"><code>HeightMap</code></a> at the given coordinates.
+    /// Gets the highest coordinate corresponding to the <a href="HeightMap.html" title="enum in org.bukkit"><code>HeightMap</code></a> at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>.
     pub fn get_highest_block_yat_with_int(
         &mut self,
         arg0: i32,
@@ -21878,6 +24086,8 @@ impl<'mc> RegionAccessor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a> at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>.
+    /// Gets the <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a> at the given coordinates.
     pub fn get_biome_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -21913,6 +24123,8 @@ impl<'mc> RegionAccessor<'mc> {
             crate::block::Biome::from_string(variant_str).unwrap(),
         )
     }
+    /// Sets the <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a> at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>.
+    /// Sets the <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a> for the given block coordinates
     pub fn set_biome_with_location(
         &mut self,
         arg0: i32,
@@ -21939,6 +24151,8 @@ impl<'mc> RegionAccessor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the <a title="interface in org.bukkit.block" href="block/BlockState.html"><code>BlockState</code></a> at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>.
+    /// Gets the <a href="block/BlockState.html" title="interface in org.bukkit.block"><code>BlockState</code></a> at the given coordinates.
     pub fn get_block_state_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -21963,6 +24177,8 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Creates a entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>
+    /// Creates a new entity at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>.
     pub fn spawn_entity_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -21989,6 +24205,9 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get a list of all entities in this RegionAccessor
+    /// Get a collection of all entities in this RegionAccessor matching the given class/interface
+    /// Get a collection of all entities in this RegionAccessor matching any of the given classes/interfaces
     pub fn entities(
         &mut self,
     ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
@@ -22008,6 +24227,7 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get a list of all living entities in this RegionAccessor
     pub fn living_entities(
         &mut self,
     ) -> Result<Vec<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
@@ -22027,6 +24247,8 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get a collection of all entities in this RegionAccessor matching the given class/interface
+    /// Get a collection of all entities in this RegionAccessor matching any of the given classes/interfaces
     pub fn get_entities_by_class(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -22048,6 +24270,7 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get a collection of all entities in this RegionAccessor matching any of the given classes/interfaces
     pub fn get_entities_by_classes(
         &mut self,
         arg0: Vec<jni::objects::JClass<'mc>>,
@@ -22068,6 +24291,15 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
+    /// Creates a entity at the given <a title="class in org.bukkit" href="Location.html"><code>Location</code></a>
+    /// Creates a new entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>.
+    /// Spawn an entity of a specific class at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>
+    /// Spawn an entity of a specific class at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>, with the supplied function run before the entity is added to the world.
+    ///
+    /// Note that when the function is run, the entity will not be actually in the world. Any operation involving such as teleporting the entity is undefined until after this function returns.
+    /// Creates a new entity at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a> with the supplied function run before the entity is added to the world.
+    ///
+    /// Note that when the function is run, the entity will not be actually in the world. Any operation involving such as teleporting the entity is undefined until after this function returns. The passed function however is run after the potential entity's spawn randomization and hence already allows access to the values of the mob, whether or not those were randomized, such as attributes or the entity equipment.
     pub fn spawn_with_location(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -22087,6 +24319,8 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the type of the block at the given <a href="Location.html" title="class in org.bukkit"><code>Location</code></a>.
+    /// Gets the type of the block at the given coordinates.
     pub fn get_type_with_location(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -22173,7 +24407,7 @@ impl<'mc> WeatherType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WeatherType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "WeatherType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/WeatherType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WeatherType object, got {}",
@@ -22194,7 +24428,9 @@ impl<'mc> WeatherType<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements WorldBorder. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct WorldBorder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22207,7 +24443,7 @@ impl<'mc> WorldBorder<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate WorldBorder from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "WorldBorder")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/WorldBorder")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WorldBorder object, got {}",
@@ -22218,6 +24454,8 @@ impl<'mc> WorldBorder<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sets the new border center.
+    /// Sets the new border center.
     pub fn set_center_with_location(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -22237,6 +24475,7 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the <a href="World.html" title="interface in org.bukkit"><code>World</code></a> in which the border resides.
     pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22246,6 +24485,7 @@ impl<'mc> WorldBorder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the current border center.
     pub fn center(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -22258,6 +24498,7 @@ impl<'mc> WorldBorder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the absolute value of the maximum x/z center coordinate of a WorldBorder.
     pub fn max_center_coordinate(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22265,6 +24506,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the current border damage buffer.
     pub fn damage_buffer(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22272,6 +24514,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Sets the amount of blocks a player may safely be outside the border before taking damage.
     pub fn set_damage_buffer(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -22283,6 +24526,7 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the current border damage amount.
     pub fn damage_amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22290,6 +24534,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Sets the amount of damage a player takes when outside the border plus the border buffer.
     pub fn set_damage_amount(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -22301,6 +24546,7 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the current border warning time in seconds.
     pub fn warning_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22308,6 +24554,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the warning time that causes the screen to be tinted red when a contracting border will reach the player within the specified time.
     pub fn set_warning_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -22319,6 +24566,7 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the current border warning distance.
     pub fn warning_distance(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22326,6 +24574,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the warning distance that causes the screen to be tinted red when the player is within the specified number of blocks from the border.
     pub fn set_warning_distance(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -22337,6 +24586,7 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Check if the specified location is inside this border.
     pub fn is_inside(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -22351,6 +24601,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the maximum possible size of a WorldBorder.
     pub fn max_size(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22358,6 +24609,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the current side length of the border.
     pub fn size(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22365,6 +24617,7 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Resets the border to default values.
     pub fn reset(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22382,6 +24635,7 @@ impl<'mc> JNIRaw<'mc> for WorldBorder<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// An enum to specify the load level of a chunk.
 pub struct ChunkLoadLevel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22405,7 +24659,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
                 eyre::eyre!("Tried to instantiate ChunkLoadLevel from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ChunkLoadLevel")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ChunkLoadLevel")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ChunkLoadLevel object, got {}",
@@ -22416,6 +24670,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -22436,6 +24691,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22447,6 +24703,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -22461,6 +24718,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22472,6 +24730,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22479,6 +24738,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -22493,6 +24753,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -22505,6 +24766,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22512,6 +24774,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -22531,6 +24794,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22538,6 +24802,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22545,6 +24810,7 @@ impl<'mc> ChunkLoadLevel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22596,7 +24862,7 @@ impl<'mc> SandstoneType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SandstoneType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "SandstoneType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/SandstoneType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SandstoneType object, got {}",
@@ -22662,7 +24928,7 @@ impl<'mc> Axis<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Axis from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Axis")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Axis")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Axis object, got {}",
@@ -22768,7 +25034,7 @@ impl<'mc> TreeType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TreeType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "TreeType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/TreeType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TreeType object, got {}",
@@ -22831,6 +25097,7 @@ impl<'mc> TreeType<'mc> {
         }
     }
 }
+/// Represents a vibration from a Skulk sensor.
 pub struct Vibration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22852,7 +25119,7 @@ impl<'mc> Vibration<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Vibration from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Vibration")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Vibration")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Vibration object, got {}",
@@ -22884,6 +25151,7 @@ impl<'mc> Vibration<'mc> {
         )?;
         crate::Vibration::from_raw(&jni, res)
     }
+    /// Get the origin of the vibration.
     pub fn origin(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -22896,6 +25164,7 @@ impl<'mc> Vibration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the vibration destination.
     pub fn destination(
         &mut self,
     ) -> Result<crate::VibrationDestination<'mc>, Box<dyn std::error::Error>> {
@@ -22910,6 +25179,7 @@ impl<'mc> Vibration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the vibration arrival time in ticks.
     pub fn arrival_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22917,6 +25187,7 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -22936,6 +25207,7 @@ impl<'mc> Vibration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -22950,6 +25222,7 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22961,6 +25234,7 @@ impl<'mc> Vibration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22968,6 +25242,7 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -22975,6 +25250,7 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22982,6 +25258,7 @@ impl<'mc> Vibration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -22990,6 +25267,7 @@ impl<'mc> Vibration<'mc> {
         Ok(())
     }
 }
+
 pub struct RegistrySimpleRegistry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -23014,7 +25292,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "RegistrySimpleRegistry")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/RegistrySimpleRegistry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RegistrySimpleRegistry object, got {}",
@@ -23025,6 +25303,8 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Registry.html#get(org.bukkit.NamespacedKey)">Registry</a></code></span>
+    /// Get the object by its key.
     pub fn get_with_namespaced_key(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::NamespacedKey<'mc>>>,
@@ -23042,6 +25322,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn iterator(
         &mut self,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -23056,6 +25337,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -23075,6 +25357,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -23089,6 +25372,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -23100,6 +25384,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -23107,6 +25392,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -23114,6 +25400,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -23121,6 +25408,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -23128,6 +25416,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_match(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -27473,7 +29762,7 @@ impl<'mc> Material<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Material from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Material")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Material")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Material object, got {}",
@@ -31307,7 +33596,9 @@ impl<'mc> Material<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements Registry. Needed for returning it from Java.
+/// Represents a registry of Bukkit objects that may be retrieved by <a title="class in org.bukkit" href="NamespacedKey.html"><code>NamespacedKey</code></a>.
+///
+/// This is a representation of an abstract class.
 pub struct Registry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31320,7 +33611,7 @@ impl<'mc> Registry<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Registry from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Registry")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Registry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Registry object, got {}",
@@ -31331,6 +33622,7 @@ impl<'mc> Registry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get the object by its key.
     pub fn get(
         &mut self,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -31347,6 +33639,8 @@ impl<'mc> Registry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Attempts to match the registered object with the given key.
+    /// <p>This will attempt to find a reasonable match based on the provided input and may do so through unspecified means.</p>
     pub fn get_match(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -31363,6 +33657,7 @@ impl<'mc> Registry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn iterator(
         &mut self,
     ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
@@ -31440,7 +33735,7 @@ impl<'mc> Rotation<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Rotation from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Rotation")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Rotation")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Rotation object, got {}",
@@ -31473,6 +33768,7 @@ impl<'mc> Rotation<'mc> {
         }
     }
 }
+
 pub struct VibrationDestinationEntityDestination<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31497,7 +33793,8 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "VibrationDestinationEntityDestination")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/VibrationDestinationEntityDestination")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a VibrationDestinationEntityDestination object, got {}",
@@ -31521,6 +33818,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         )?;
         crate::VibrationDestinationEntityDestination::from_raw(&jni, res)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -31533,6 +33831,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -31552,6 +33851,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -31566,6 +33866,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -31577,6 +33878,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31584,6 +33886,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -31591,6 +33894,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31598,6 +33902,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31606,7 +33911,9 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements UndefinedNullability. Needed for returning it from Java.
+/// Annotation for types, whose nullability is not well defined, so <a class="external-link" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/NotNull.html" title="class or interface in org.jetbrains.annotations"><code>NotNull</code></a> nor <a title="class or interface in org.jetbrains.annotations" class="external-link" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/Nullable.html"><code>Nullable</code></a> is applicable. For example when interface defines a method, whose nullability depends on the implementation.
+///
+/// This is a representation of an abstract class.
 pub struct UndefinedNullability<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31621,7 +33928,7 @@ impl<'mc> UndefinedNullability<'mc> {
                 eyre::eyre!("Tried to instantiate UndefinedNullability from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "UndefinedNullability")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/UndefinedNullability")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a UndefinedNullability object, got {}",
@@ -31632,6 +33939,8 @@ impl<'mc> UndefinedNullability<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Human readable description of the circumstances, in which the type is nullable.
     pub fn value(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -31643,6 +33952,7 @@ impl<'mc> UndefinedNullability<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -31657,6 +33967,7 @@ impl<'mc> UndefinedNullability<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -31668,6 +33979,7 @@ impl<'mc> UndefinedNullability<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31675,6 +33987,7 @@ impl<'mc> UndefinedNullability<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn annotation_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -31738,7 +34051,7 @@ impl<'mc> CoalType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CoalType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "CoalType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/CoalType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CoalType object, got {}",
@@ -31759,6 +34072,7 @@ impl<'mc> CoalType<'mc> {
         }
     }
 }
+/// Represents various map environment types that a world may be
 pub struct WorldEnvironment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31782,7 +34096,7 @@ impl<'mc> WorldEnvironment<'mc> {
                 eyre::eyre!("Tried to instantiate WorldEnvironment from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "WorldEnvironment")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/WorldEnvironment")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a WorldEnvironment object, got {}",
@@ -31794,6 +34108,13 @@ impl<'mc> WorldEnvironment<'mc> {
         }
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get an environment by ID
     pub fn get_environment(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -31809,6 +34130,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let obj = res.l()?;
         crate::WorldEnvironment::from_raw(&jni, obj)
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -31830,6 +34152,13 @@ impl<'mc> WorldEnvironment<'mc> {
         Self::from_raw(&jni, obj)
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Gets the dimension ID of this environment
     pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31837,6 +34166,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -31848,6 +34178,7 @@ impl<'mc> WorldEnvironment<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -31862,6 +34193,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -31873,6 +34205,7 @@ impl<'mc> WorldEnvironment<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31880,6 +34213,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -31894,6 +34228,7 @@ impl<'mc> WorldEnvironment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -31906,6 +34241,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31913,6 +34249,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -31932,6 +34269,7 @@ impl<'mc> WorldEnvironment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -31939,6 +34277,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31946,6 +34285,7 @@ impl<'mc> WorldEnvironment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -31954,7 +34294,9 @@ impl<'mc> WorldEnvironment<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements BlockChangeDelegate. Needed for returning it from Java.
+/// A delegate for handling block changes. This serves as a direct interface between generation algorithms in the server implementation and utilizing code.
+///
+/// This is a representation of an abstract class.
 pub struct BlockChangeDelegate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -31969,7 +34311,7 @@ impl<'mc> BlockChangeDelegate<'mc> {
                 eyre::eyre!("Tried to instantiate BlockChangeDelegate from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "BlockChangeDelegate")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/BlockChangeDelegate")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BlockChangeDelegate object, got {}",
@@ -31980,6 +34322,15 @@ impl<'mc> BlockChangeDelegate<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the height of the world.
+    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    /// Get the block data at the location.
     pub fn get_block_data(
         &mut self,
         arg0: i32,
@@ -32004,6 +34355,7 @@ impl<'mc> BlockChangeDelegate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set a block data at the specified coordinates.
     pub fn set_block_data(
         &mut self,
         arg0: i32,
@@ -32029,13 +34381,7 @@ impl<'mc> BlockChangeDelegate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getHeight", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+    /// Checks if the specified block is empty (air) or not.
     pub fn is_empty(
         &mut self,
         arg0: i32,
@@ -32068,6 +34414,9 @@ impl<'mc> JNIRaw<'mc> for BlockChangeDelegate<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// This class handles the creation and storage of all structure types for Bukkit. Structure Types are the different kinds of structures that can be generated during world/chunk generation. These include Villages, Mineshafts, Mansions, etc.
+///
+/// The registration of new <a href="StructureType.html" title="class in org.bukkit"><code>StructureType</code></a>s is case-sensitive.
 pub struct StructureType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32089,7 +34438,7 @@ impl<'mc> StructureType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate StructureType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "StructureType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/StructureType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StructureType object, got {}",
@@ -32100,6 +34449,8 @@ impl<'mc> StructureType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Get the <a href="map/MapCursor.Type.html" title="enum in org.bukkit.map"><code>MapCursor.Type</code></a> that this structure can use on maps. If this is null, this structure will not appear on explorer maps.
     pub fn map_icon(
         &mut self,
     ) -> Result<crate::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
@@ -32114,6 +34465,8 @@ impl<'mc> StructureType<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Get all registered <a title="class in org.bukkit" href="StructureType.html"><code>StructureType</code></a>s.
     pub fn structure_types(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -32122,6 +34475,8 @@ impl<'mc> StructureType<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaMap::from_raw(&jni, obj)
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Get the name of this structure. This is case-sensitive when used in commands.
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32133,6 +34488,7 @@ impl<'mc> StructureType<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -32147,6 +34503,7 @@ impl<'mc> StructureType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32158,6 +34515,7 @@ impl<'mc> StructureType<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32165,6 +34523,9 @@ impl<'mc> StructureType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Keyed.html#getKey()">Keyed</a></code></span>
+    /// Return the namespaced identifier for this object.
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -32177,6 +34538,7 @@ impl<'mc> StructureType<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -32196,6 +34558,7 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32203,6 +34566,7 @@ impl<'mc> StructureType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32210,6 +34574,7 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32223,6 +34588,7 @@ impl<'mc> Into<crate::Keyed<'mc>> for StructureType<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Represents the status of a <a title="interface in org.bukkit" href="Raid.html"><code>Raid</code></a>.
 pub struct RaidRaidStatus<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32246,7 +34612,7 @@ impl<'mc> RaidRaidStatus<'mc> {
                 eyre::eyre!("Tried to instantiate RaidRaidStatus from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "RaidRaidStatus")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/RaidRaidStatus")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RaidRaidStatus object, got {}",
@@ -32257,6 +34623,7 @@ impl<'mc> RaidRaidStatus<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -32277,6 +34644,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32288,6 +34656,7 @@ impl<'mc> RaidRaidStatus<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -32302,6 +34671,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32313,6 +34683,7 @@ impl<'mc> RaidRaidStatus<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32320,6 +34691,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -32334,6 +34706,7 @@ impl<'mc> RaidRaidStatus<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -32346,6 +34719,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32353,6 +34727,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -32372,6 +34747,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32379,6 +34755,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32386,6 +34763,7 @@ impl<'mc> RaidRaidStatus<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32477,7 +34855,7 @@ impl<'mc> Instrument<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Instrument from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Instrument")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Instrument")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Instrument object, got {}",
@@ -32540,7 +34918,9 @@ impl<'mc> Instrument<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements Tag. Needed for returning it from Java.
+/// Represents a tag that may be defined by the server or a resource pack to group like things together. Note that whilst all tags defined within this interface must be present in implementations, their existence is not guaranteed across future versions.
+///
+/// This is a representation of an abstract class.
 pub struct Tag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32553,7 +34933,7 @@ impl<'mc> Tag<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Tag from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Tag")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Tag")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Tag object, got {}",
@@ -32564,6 +34944,7 @@ impl<'mc> Tag<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets an immutable set of all tagged items.
     pub fn values(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32573,6 +34954,7 @@ impl<'mc> Tag<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns whether or not this tag has an entry for the specified item.
     pub fn is_tagged(
         &mut self,
         arg0: impl Into<&'mc crate::Keyed<'mc>>,
@@ -32587,6 +34969,7 @@ impl<'mc> Tag<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -32665,7 +35048,7 @@ impl<'mc> SkullType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SkullType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "SkullType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/SkullType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SkullType object, got {}",
@@ -32696,6 +35079,9 @@ impl<'mc> SkullType<'mc> {
         }
     }
 }
+/// Represents a 3-dimensional position in a world.
+///
+/// No constraints are placed on any angular values other than that they be specified in degrees. This means that negative angles or angles of greater magnitude than 360 are valid, but may be normalized to any other equivalent representation by the implementation.
 pub struct Location<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -32717,7 +35103,7 @@ impl<'mc> Location<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Location from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Location")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/Location")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Location object, got {}",
@@ -32758,16 +35144,19 @@ impl<'mc> Location<'mc> {
         )?;
         crate::Location::from_raw(&jni, res)
     }
-    pub fn subtract_with_location(
+    /// Subtracts the location by another.
+    /// Subtracts the location by a vector.
+    /// Subtracts the location by another. Not world-aware and orientation independent.
+    pub fn subtract_with_vector(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let val_1 =
             unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subtract",
-            "(Lorg/bukkit/util/Vector;)Lorg/bukkit/Location;",
+            "(Lorg/bukkit/Location;)Lorg/bukkit/Location;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -32775,6 +35164,9 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Subtracts the location by another.
+    /// Subtracts the location by a vector.
+    /// Subtracts the location by another. Not world-aware and orientation independent.
     pub fn subtract_with_double(
         &mut self,
         arg0: f64,
@@ -32799,6 +35191,7 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Performs scalar multiplication, multiplying all components with a scalar. Not world-aware.
     pub fn multiply(
         &mut self,
         arg0: f64,
@@ -32815,6 +35208,101 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Constructs a new <a href="util/Vector.html" title="class in org.bukkit.util"><code>Vector</code></a> based on this Location
+    pub fn to_vector(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toVector",
+            "()Lorg/bukkit/util/Vector;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Check if each component of this Location is finite.
+    pub fn check_finite(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "checkFinite", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="configuration/serialization/ConfigurationSerializable.html#serialize()">ConfigurationSerializable</a></code></span>
+    /// Creates a Map representation of this class.
+    /// <p>This class must provide a method to restore this class, as defined in the <a href="configuration/serialization/ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> interface javadocs.</p>
+    pub fn serialize(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Required method for deserialization
+    pub fn deserialize(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let cls = &jni.find_class("org/bukkit/Location")?;
+        let res = jni.call_static_method(
+            cls,
+            "deserialize",
+            "(Ljava/util/Map;)Lorg/bukkit/Location;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        let obj = res.l()?;
+        crate::Location::from_raw(&jni, obj)
+    }
+    /// Normalizes the given yaw angle to a value between <code>+/-180</code> degrees.
+    pub fn normalize_yaw(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: f32,
+    ) -> Result<f32, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        let cls = &jni.find_class("float")?;
+        let res = jni.call_static_method(
+            cls,
+            "normalizeYaw",
+            "(F)F",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(res.f().unwrap())
+    }
+    /// Normalizes the given pitch angle to a value between <code>+/-90</code> degrees.
+    pub fn normalize_pitch(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: f32,
+    ) -> Result<f32, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        let cls = &jni.find_class("float")?;
+        let res = jni.call_static_method(
+            cls,
+            "normalizePitch",
+            "(F)F",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(res.f().unwrap())
+    }
+    /// Gets the world that this location resides in
+    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::World::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the block at the represented location
+    /// Gets the floored value of the X component, indicating the block that this location is contained with.
+    /// Gets the floored value of the Y component, indicating the block that this location is contained with.
+    /// Gets the floored value of the Z component, indicating the block that this location is contained with.
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -32827,6 +35315,7 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the x-coordinate of this location
     pub fn x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32834,6 +35323,14 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the y-coordinate of this location
+    /// Gets the yaw of this location, measured in degrees.
+    /// <ul>
+    /// <li>A yaw of 0 or 360 represents the positive z direction.</li>
+    /// <li>A yaw of 180 represents the negative z direction.</li>
+    /// <li>A yaw of 90 represents the negative x direction.</li>
+    /// <li>A yaw of 270 represents the positive x direction.</li>
+    /// </ul> Increasing yaw values are the equivalent of turning to your right-facing, increasing the scale of the next respective axis, and decreasing the scale of the previous axis.
     pub fn y(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32841,6 +35338,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the z-coordinate of this location
     pub fn z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32848,6 +35346,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the chunk at the represented location
     pub fn chunk(&mut self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -32857,15 +35356,7 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::World::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+    /// Sets the world that this location resides in
     pub fn set_world(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -32880,6 +35371,7 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if world in this location is present and loaded.
     pub fn is_world_loaded(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32887,6 +35379,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the x-coordinate of this location
     pub fn set_x(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -32898,6 +35391,7 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the floored value of the X component, indicating the block that this location is contained with.
     pub fn block_x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32905,6 +35399,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Safely converts a double (location coordinate) to an int (block coordinate)
     pub fn loc_to_block(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -32919,6 +35414,14 @@ impl<'mc> Location<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+    /// Sets the y-coordinate of this location
+    /// Sets the yaw of this location, measured in degrees.
+    /// <ul>
+    /// <li>A yaw of 0 or 360 represents the positive z direction.</li>
+    /// <li>A yaw of 180 represents the negative z direction.</li>
+    /// <li>A yaw of 90 represents the negative x direction.</li>
+    /// <li>A yaw of 270 represents the positive x direction.</li>
+    /// </ul> Increasing yaw values are the equivalent of turning to your right-facing, increasing the scale of the next respective axis, and decreasing the scale of the previous axis.
     pub fn set_y(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -32930,6 +35433,7 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the floored value of the Y component, indicating the block that this location is contained with.
     pub fn block_y(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32937,6 +35441,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the z-coordinate of this location
     pub fn set_z(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -32948,6 +35453,7 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the floored value of the Z component, indicating the block that this location is contained with.
     pub fn block_z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32955,6 +35461,13 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the yaw of this location, measured in degrees.
+    /// <ul>
+    /// <li>A yaw of 0 or 360 represents the positive z direction.</li>
+    /// <li>A yaw of 180 represents the negative z direction.</li>
+    /// <li>A yaw of 90 represents the negative x direction.</li>
+    /// <li>A yaw of 270 represents the positive x direction.</li>
+    /// </ul> Increasing yaw values are the equivalent of turning to your right-facing, increasing the scale of the next respective axis, and decreasing the scale of the previous axis.
     pub fn set_yaw(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -32966,6 +35479,13 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the yaw of this location, measured in degrees.
+    /// <ul>
+    /// <li>A yaw of 0 or 360 represents the positive z direction.</li>
+    /// <li>A yaw of 180 represents the negative z direction.</li>
+    /// <li>A yaw of 90 represents the negative x direction.</li>
+    /// <li>A yaw of 270 represents the positive x direction.</li>
+    /// </ul> Increasing yaw values are the equivalent of turning to your right-facing, increasing the scale of the next respective axis, and decreasing the scale of the previous axis.
     pub fn yaw(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32973,6 +35493,12 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Sets the pitch of this location, measured in degrees.
+    /// <ul>
+    /// <li>A pitch of 0 represents level forward facing.</li>
+    /// <li>A pitch of 90 represents downward facing, or negative y direction.</li>
+    /// <li>A pitch of -90 represents upward facing, or positive y direction.</li>
+    /// </ul> Increasing pitch values the equivalent of looking down.
     pub fn set_pitch(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -32984,6 +35510,12 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the pitch of this location, measured in degrees.
+    /// <ul>
+    /// <li>A pitch of 0 represents level forward facing.</li>
+    /// <li>A pitch of 90 represents downward facing, or negative y direction.</li>
+    /// <li>A pitch of -90 represents upward facing, or positive y direction.</li>
+    /// </ul> Increasing pitch values the equivalent of looking down.
     pub fn pitch(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32991,6 +35523,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Gets a unit-vector pointing in the direction that this Location is facing.
     pub fn direction(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -33003,6 +35536,7 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the <a href="#getYaw()"><code>yaw</code></a> and <a href="#getPitch()"><code>pitch</code></a> to point in the direction of the vector.
     pub fn set_direction(
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
@@ -33019,6 +35553,7 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the magnitude of the location squared. Not world-aware and orientation independent.
     pub fn length_squared(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -33026,6 +35561,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Get the squared distance between this location and another.
     pub fn distance_squared(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -33040,79 +35576,9 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn to_vector(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toVector",
-            "()Lorg/bukkit/util/Vector;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::Vector::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn check_finite(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "checkFinite", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn deserialize(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
-    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/Location")?;
-        let res = jni.call_static_method(
-            cls,
-            "deserialize",
-            "(Ljava/util/Map;)Lorg/bukkit/Location;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let obj = res.l()?;
-        crate::Location::from_raw(&jni, obj)
-    }
-    pub fn normalize_yaw(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f32,
-    ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
-        let cls = &jni.find_class("float")?;
-        let res = jni.call_static_method(
-            cls,
-            "normalizeYaw",
-            "(F)F",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.f().unwrap())
-    }
-    pub fn normalize_pitch(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f32,
-    ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.into());
-        let cls = &jni.find_class("float")?;
-        let res = jni.call_static_method(
-            cls,
-            "normalizePitch",
-            "(F)F",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.f().unwrap())
-    }
+    /// Adds the location by another.
+    /// Adds the location by a vector.
+    /// Adds the location by another. Not world-aware.
     pub fn add_with_vector(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -33130,6 +35596,9 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Adds the location by another.
+    /// Adds the location by a vector.
+    /// Adds the location by another. Not world-aware.
     pub fn add_with_double(
         &mut self,
         arg0: f64,
@@ -33154,6 +35623,7 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -33168,6 +35638,8 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the magnitude of the location, defined as sqrt(x^2+y^2+z^2). The value of this method is not cached and uses a costly square-root function, so do not repeatedly call this method to get the location's magnitude. NaN will be returned if the inner result of the sqrt() function overflows, which will be caused if the length is too long. Not world-aware and orientation independent.
+    /// Gets the magnitude of the location squared. Not world-aware and orientation independent.
     pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -33175,6 +35647,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -33186,6 +35659,7 @@ impl<'mc> Location<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -33193,6 +35667,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -33200,6 +35675,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// Zero this location's components. Not world-aware.
     pub fn zero(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -33209,6 +35685,8 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the distance between this location and another. The value of this method is not cached and uses a costly square-root function, so do not repeatedly call this method to get the location's magnitude. NaN will be returned if the inner result of the sqrt() function overflows, which will be caused if the distance is too long.
+    /// Get the squared distance between this location and another.
     pub fn distance(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -33223,6 +35701,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -33242,6 +35721,7 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -33249,6 +35729,7 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -33256,6 +35737,7 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

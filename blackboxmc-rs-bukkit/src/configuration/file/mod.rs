@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// This is a base class for all File based implementations of <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>
 pub struct FileConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24,7 +25,8 @@ impl<'mc> FileConfiguration<'mc> {
                 eyre::eyre!("Tried to instantiate FileConfiguration from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FileConfiguration")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/configuration/file/FileConfiguration")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FileConfiguration object, got {}",
@@ -50,6 +52,7 @@ impl<'mc> FileConfiguration<'mc> {
         )?;
         crate::configuration::file::FileConfiguration::from_raw(&jni, res)
     }
+    /// Saves this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> to a string, and returns it.
     pub fn save_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -64,6 +67,9 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Loads this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
+    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
     pub fn load_from_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -78,6 +84,17 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified location.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
+    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified reader.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given stream.</p>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified location.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
+    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
+    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
     pub unsafe fn load_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -92,6 +109,17 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Loads this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> from the specified location.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
+    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified reader.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given stream.</p>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified location.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
+    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
+    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
     pub unsafe fn load_with_file(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -106,6 +134,13 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to the specified location.
+    /// <p>If the file does not exist, it will be created. If already exists, it will be overwritten. If it cannot be overwritten or created, an exception will be thrown.</p>
+    /// <p>This method will save using the system default encoding, or possibly using UTF8.</p>
+    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to the specified location.
+    /// <p>If the file does not exist, it will be created. If already exists, it will be overwritten. If it cannot be overwritten or created, an exception will be thrown.</p>
+    /// <p>This method will save using the system default encoding, or possibly using UTF8.</p>
+    /// Saves this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> to a string, and returns it.
     pub fn save_with_file(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -121,6 +156,9 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Configuration.html#options()">Configuration</a></code></span>
+    /// Gets the <a title="class in org.bukkit.configuration" href="../ConfigurationOptions.html"><code>ConfigurationOptions</code></a> for this <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>.
+    /// <p>All setters through this method are chainable.</p>
     pub fn options(
         &mut self,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -136,6 +174,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn add_default(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -155,6 +194,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn defaults(
         &mut self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
@@ -169,6 +209,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn add_defaults_with_configuration(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc>>>,
@@ -184,6 +225,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_defaults(
         &mut self,
         arg0: impl Into<&'mc crate::configuration::Configuration<'mc>>,
@@ -198,6 +240,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn parent(
         &mut self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -212,6 +255,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_string_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -237,6 +281,7 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn get_keys(
         &mut self,
         arg0: bool,
@@ -254,6 +299,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_offline_player_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -277,6 +323,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_color_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -300,6 +347,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_item_stack_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -323,6 +371,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_values(
         &mut self,
         arg0: bool,
@@ -340,6 +389,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn create_path_with_configuration_section(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::configuration::ConfigurationSection<'mc>>,
@@ -358,6 +408,7 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn default_section(
         &mut self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -372,6 +423,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -386,6 +438,7 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_configuration_section(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -400,6 +453,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_configuration_section(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -416,6 +470,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn create_section_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -439,6 +494,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -453,6 +509,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_int(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -467,6 +524,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_boolean(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -481,6 +539,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_double(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -495,6 +554,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_long(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -509,6 +569,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_list(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -523,6 +584,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_string_list(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -549,6 +611,7 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn get_serializable_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -571,6 +634,7 @@ impl<'mc> FileConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+
     pub fn get_vector_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -594,6 +658,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_vector(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -608,6 +673,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_offline_player(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -622,6 +688,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_item_stack(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -636,6 +703,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_color(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -650,6 +718,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_location(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -664,6 +733,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -690,6 +760,7 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn get_inline_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -716,6 +787,7 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -749,6 +821,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_inline_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -782,6 +855,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -793,6 +867,7 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn get_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -813,6 +888,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -824,6 +900,7 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn get_boolean_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -845,6 +922,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_int_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -865,6 +943,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn get_long_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -885,6 +964,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub fn get_double_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -905,6 +985,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn contains_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -926,6 +1007,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_location_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -949,6 +1031,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -968,6 +1051,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_set(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -982,6 +1066,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn root(
         &mut self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
@@ -996,6 +1081,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_object_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1018,6 +1104,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1037,6 +1124,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1051,6 +1139,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1058,6 +1147,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1065,6 +1155,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1072,6 +1163,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1085,6 +1177,7 @@ impl<'mc> Into<crate::configuration::MemoryConfiguration<'mc>> for FileConfigura
         crate::configuration::MemoryConfiguration::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Various settings for controlling the input and output of a <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a>
 pub struct FileConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1109,7 +1202,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "FileConfigurationOptions")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/configuration/file/FileConfigurationOptions",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FileConfigurationOptions object, got {}",
@@ -1121,6 +1217,18 @@ impl<'mc> FileConfigurationOptions<'mc> {
         }
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// use getHeader() instead.
+    /// </div>
+    /// use getHeader() instead.
+    ///
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// use setHeader() instead
+    /// </div>
+    /// use setHeader() instead
+    ///
     pub fn header(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1139,6 +1247,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
+    /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
+    /// <p>This value does not affect how the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
     pub fn path_separator(
         &mut self,
         arg0: std::option::Option<u16>,
@@ -1156,6 +1267,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
+    /// Sets if the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> should copy values from its default <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
+    /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -1174,6 +1288,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets whether or not comments should be loaded and saved.
+    /// <p>Defaults to true.</p>
+    /// Sets whether or not comments should be loaded and saved.
+    /// <p>Defaults to true.</p>
     pub fn parse_comments(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -1192,6 +1310,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the header that will be applied to the top of the saved output.
+    /// <p>This header will be commented out and applied directly at the top of the generated output of the <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a>. It is not required to include a newline at the end of the header as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
+    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
     pub fn set_header(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -1223,6 +1344,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the footer that will be applied to the bottom of the saved output.
+    /// <p>This footer will be commented out and applied directly at the bottom of the generated output of the <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>. It is not required to include a newline at the beginning of the footer as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
+    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
     pub fn footer(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1242,6 +1366,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
         }
         Ok(new_vec)
     }
+    /// Sets the footer that will be applied to the bottom of the saved output.
+    /// <p>This footer will be commented out and applied directly at the bottom of the generated output of the <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>. It is not required to include a newline at the beginning of the footer as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
+    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
     pub fn set_footer(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -1274,6 +1401,18 @@ impl<'mc> FileConfigurationOptions<'mc> {
         })
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Call <a href="#parseComments()"><code>parseComments()</code></a> instead.
+    /// </div>
+    /// Call <a href="#parseComments()"><code>parseComments()</code></a> instead.
+    ///
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Call <a href="#parseComments(boolean)"><code>parseComments(boolean)</code></a> instead.
+    /// </div>
+    /// Call <a href="#parseComments(boolean)"><code>parseComments(boolean)</code></a> instead.
+    ///
     pub fn copy_header(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -1292,6 +1431,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#configuration()">ConfigurationOptions</a></code></span>
+    /// Returns the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> that this object is responsible for.
     pub fn configuration(
         &mut self,
     ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
@@ -1306,6 +1447,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1325,6 +1467,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1339,6 +1482,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1350,6 +1494,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1357,6 +1502,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1364,6 +1510,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1371,6 +1518,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1386,6 +1534,7 @@ impl<'mc> Into<crate::configuration::MemoryConfigurationOptions<'mc>>
         crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Various settings for controlling the input and output of a <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>
 pub struct YamlConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1410,7 +1559,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "YamlConfigurationOptions")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/configuration/file/YamlConfigurationOptions",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a YamlConfigurationOptions object, got {}",
@@ -1421,6 +1573,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets how long a line can be, before it gets split.
+    /// Sets how long a line can be, before it gets split.
     pub fn width(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -1438,6 +1592,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn header(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1456,6 +1611,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
+    /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
+    /// <p>This value does not affect how the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
     pub fn path_separator(
         &mut self,
         arg0: std::option::Option<u16>,
@@ -1473,6 +1631,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
+    /// Sets if the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
+    /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -1491,6 +1652,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfigurationOptions.html#parseComments(boolean)">FileConfigurationOptions</a></code></span>
+    /// Sets whether or not comments should be loaded and saved.
+    /// <p>Defaults to true.</p>
     pub fn parse_comments(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -1509,6 +1673,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfigurationOptions.html#setHeader(java.util.List)">FileConfigurationOptions</a></code></span>
+    /// Sets the header that will be applied to the top of the saved output.
+    /// <p>This header will be commented out and applied directly at the top of the generated output of the <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>. It is not required to include a newline at the end of the header as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
+    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
     pub fn set_header_with_list(
         &mut self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
@@ -1540,6 +1708,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn copy_header(
         &mut self,
         arg0: std::option::Option<bool>,
@@ -1558,6 +1727,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets how much spaces should be used to indent each line.
+    /// <p>The minimum value this may be is 2, and the maximum is 9.</p>
+    /// Sets how much spaces should be used to indent each line.
+    /// <p>The minimum value this may be is 2, and the maximum is 9.</p>
     pub fn indent(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -1575,6 +1748,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#configuration()">ConfigurationOptions</a></code></span>
+    /// Returns the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> that this object is responsible for.
     pub fn configuration(
         &mut self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
@@ -1589,6 +1764,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn footer(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1608,6 +1784,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1627,6 +1804,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1641,6 +1819,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1652,6 +1831,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1659,6 +1839,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1666,6 +1847,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1673,6 +1855,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1689,6 +1872,7 @@ impl<'mc> Into<crate::configuration::file::FileConfigurationOptions<'mc>>
             .unwrap()
     }
 }
+/// An implementation of <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> which saves all files in Yaml. Note that this implementation is not synchronized.
 pub struct YamlConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1712,7 +1896,8 @@ impl<'mc> YamlConfiguration<'mc> {
                 eyre::eyre!("Tried to instantiate YamlConfiguration from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "YamlConfiguration")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/configuration/file/YamlConfiguration")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a YamlConfiguration object, got {}",
@@ -1731,6 +1916,11 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::configuration::file::YamlConfiguration::from_raw(&jni, res)
     }
+    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given file.
+    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
+    /// <p>The encoding used may follow the system dependent default.</p>
+    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given reader.
+    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
     pub unsafe fn load_configuration_with_file(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1747,6 +1937,8 @@ impl<'mc> YamlConfiguration<'mc> {
         let obj = res.l()?;
         crate::configuration::file::YamlConfiguration::from_raw(&jni, obj)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#saveToString()">FileConfiguration</a></code></span>
+    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to a string, and returns it.
     pub fn save_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1761,6 +1953,10 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#loadFromString(java.lang.String)">FileConfiguration</a></code></span>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
+    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
     pub fn load_from_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1775,6 +1971,9 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Configuration.html#options()">Configuration</a></code></span>
+    /// Gets the <a href="../ConfigurationOptions.html" title="class in org.bukkit.configuration"><code>ConfigurationOptions</code></a> for this <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a>.
+    /// <p>All setters through this method are chainable.</p>
     pub fn options(
         &mut self,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1790,6 +1989,15 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#loadFromString(java.lang.String)">FileConfiguration</a></code></span>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
+    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
+    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given file.
+    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
+    /// <p>The encoding used may follow the system dependent default.</p>
+    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given reader.
+    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
     pub unsafe fn load_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1804,6 +2012,15 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#loadFromString(java.lang.String)">FileConfiguration</a></code></span>
+    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
+    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
+    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
+    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given file.
+    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
+    /// <p>The encoding used may follow the system dependent default.</p>
+    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given reader.
+    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
     pub unsafe fn load_with_file(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1818,6 +2035,8 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#saveToString()">FileConfiguration</a></code></span>
+    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to a string, and returns it.
     pub fn save_with_file(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1833,6 +2052,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn add_default(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1852,6 +2072,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn defaults(
         &mut self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
@@ -1866,6 +2087,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn add_defaults_with_configuration(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc>>>,
@@ -1881,6 +2103,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_defaults(
         &mut self,
         arg0: impl Into<&'mc crate::configuration::Configuration<'mc>>,
@@ -1895,6 +2118,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn parent(
         &mut self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -1909,6 +2133,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_string_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1934,6 +2159,7 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn get_keys(
         &mut self,
         arg0: bool,
@@ -1951,6 +2177,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_offline_player_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1974,6 +2201,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_color_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1997,6 +2225,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_item_stack_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2020,6 +2249,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_values(
         &mut self,
         arg0: bool,
@@ -2037,6 +2267,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn create_path_with_configuration_section(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::configuration::ConfigurationSection<'mc>>,
@@ -2055,6 +2286,7 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn default_section(
         &mut self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -2069,6 +2301,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2083,6 +2316,7 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_configuration_section(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2097,6 +2331,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_configuration_section(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2113,6 +2348,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn create_section_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2136,6 +2372,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2150,6 +2387,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_int(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2164,6 +2402,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_boolean(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2178,6 +2417,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_double(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2192,6 +2432,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_long(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2206,6 +2447,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_list(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2220,6 +2462,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_string_list(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2246,6 +2489,7 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn get_serializable_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2268,6 +2512,7 @@ impl<'mc> YamlConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+
     pub fn get_vector_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2291,6 +2536,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_vector(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2305,6 +2551,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_offline_player(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2319,6 +2566,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_item_stack(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2333,6 +2581,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_color(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2347,6 +2596,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_location(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2361,6 +2611,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2387,6 +2638,7 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn get_inline_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2413,6 +2665,7 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2446,6 +2699,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_inline_comments(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2479,6 +2733,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2490,6 +2745,7 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn get_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2510,6 +2766,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2521,6 +2778,7 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn get_boolean_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2542,6 +2800,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_int_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2562,6 +2821,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn get_long_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2582,6 +2842,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub fn get_double_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2602,6 +2863,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn contains_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2623,6 +2885,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get_location_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2646,6 +2909,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2665,6 +2929,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_set(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2679,6 +2944,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn root(
         &mut self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
@@ -2693,6 +2959,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_object_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2715,6 +2982,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2734,6 +3002,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2748,6 +3017,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2755,6 +3025,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2762,6 +3033,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2769,6 +3041,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

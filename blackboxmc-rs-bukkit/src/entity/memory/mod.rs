@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// Represents a key used for accessing memory values of a <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>LivingEntity</code></a>.
 pub struct MemoryKey<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22,7 +23,7 @@ impl<'mc> MemoryKey<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MemoryKey from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MemoryKey")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/entity/memory/MemoryKey")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MemoryKey object, got {}",
@@ -33,6 +34,7 @@ impl<'mc> MemoryKey<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns a <a href="MemoryKey.html" title="class in org.bukkit.entity.memory"><code>MemoryKey</code></a> by a <a href="../../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>.
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -48,6 +50,7 @@ impl<'mc> MemoryKey<'mc> {
         let obj = res.l()?;
         crate::entity::memory::MemoryKey::from_raw(&jni, obj)
     }
+    /// Gets the class of values associated with this memory.
     pub fn memory_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -60,6 +63,7 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    /// Returns the set of all MemoryKeys.
     pub fn values(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -68,6 +72,8 @@ impl<'mc> MemoryKey<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../Keyed.html#getKey()">Keyed</a></code></span>
+    /// Return the namespaced identifier for this object.
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -80,6 +86,7 @@ impl<'mc> MemoryKey<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -99,6 +106,7 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -113,6 +121,7 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -124,6 +133,7 @@ impl<'mc> MemoryKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -131,6 +141,7 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -138,6 +149,7 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -145,6 +157,7 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

@@ -875,36 +875,21 @@ impl<'mc> SharedJNIEnv<'mc> {
     pub fn validate_name<O>(
         &self,
         obj: O,
-        expected_name: &str,
+        expected_class: &str,
     ) -> Result<(bool, String), Box<dyn std::error::Error>>
     where
         O: AsRef<jni::objects::JObject<'mc>>,
     {
-        let cls = self.get_object_class(&obj)?;
-        let name_raw = self.call_method(&cls, "getName", "()Ljava/lang/String;", &[]);
-        let name_raw = self.translate_error(name_raw)?;
-        let oh = name_raw.l()?.into();
-        let what = self.get_string(&oh)?;
-        let name = what.to_string_lossy().to_string();
-        if !name.ends_with(expected_name) {
-            // What about the super class?
-            let super_class = self.call_method(&cls, "getSuperclass", "()Ljava/lang/Class;", &[]);
-            let super_class = self.translate_error(super_class)?.l().unwrap();
-            if super_class.is_null() {
-                return Ok((false, name));
-            }
-            let name_raw = self.call_method(super_class, "getName", "()Ljava/lang/String;", &[]);
+        let cls1 = self.find_class(expected_class)?;
+        if !self.is_instance_of(&obj, &cls1)? {
+            let name_raw = self.call_method(&cls1, "getName", "()Ljava/lang/String;", &[]);
             let name_raw = self.translate_error(name_raw)?;
             let oh = name_raw.l()?.into();
             let what = self.get_string(&oh)?;
-            let name = what.to_string_lossy().to_string();
-            if !name.ends_with(expected_name) {
-                Ok((false, name))
-            } else {
-                Ok((true, name))
-            }
+            let name_1 = what.to_string_lossy().to_string();
+            Ok((false, name_1))
         } else {
-            Ok((true, name))
+            Ok((true, String::new()))
         }
     }
 }

@@ -713,7 +713,7 @@ def java_letter_from_rust(type):
         case _:
             return "L"+type.replace(".","/").replace("Java","")+";"
 
-def gen_from_raw_func(name, is_enum, mod_path):
+def gen_from_raw_func(name, is_enum, mod_path, full_name):
     impl_signature = []
     impl_signature.append("pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>")
     if is_enum:
@@ -725,7 +725,7 @@ def gen_from_raw_func(name, is_enum, mod_path):
                 "        \"Tried to instantiate "+name+" from null object.\")\n"+
                 "    .into());\n"+
                 "}\n"+
-                "let (valid, name) = env.validate_name(&obj, \""+name+"\")?;\n"+
+                "let (valid, name) = env.validate_name(&obj, \""+full_name.replace(".","/")+"\")?;\n"+
                 "if !valid {\n"+
                 "    Err(eyre::eyre!(\n"+
                 "        \"Invalid argument passed. Expected a "+name+" object, got {}\",\n"+
@@ -1025,6 +1025,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         unsafe_str = ""
         if usage_unsafe:
             unsafe_str = "unsafe "
+        if "comment" in method["method"]:
+            impl_signature.append(format_comment(method["method"]["comment"]))
         impl_signature.append(
             "\tpub "+unsafe_str+"fn "+name+generic_letters_str+"("+func_signature_resolved+") "
         )
@@ -1041,6 +1043,19 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
+def format_comment(comment):
+    final_comment = ""
+    parts = comment.replace("<br>"," \n \n").split("\n")
+    for comm in parts:
+        while "  " in comm or "\n" in comm or "\r" in comm:
+            comm = comm.replace("  ","").replace("\n","").replace("\r","")
+        if comm != "":            
+            if comm[0] == " ":
+                comm = comm[1:]
+            final_comment +=  "/// "+comm+"\n"
+    if final_comment.endswith("\n"):
+        final_comment = final_comment[0:len(final_comment)-1]
+    return final_comment
 
 def parse_classes(library, val, classes):
     if "modifiers" in val:
@@ -1074,6 +1089,8 @@ def parse_classes(library, val, classes):
     if (name == ""):
         return
 
+    if "comment" in val:
+        file_cache[mod_path].append(format_comment(val["comment"]))
 
     if val["isEnum"]:  # enum generation
         file_cache[mod_path].append(
@@ -1137,7 +1154,7 @@ def parse_classes(library, val, classes):
 
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
-        gen_from_raw_func(name, True, mod_path)
+        gen_from_raw_func(name, True, mod_path, full_name)
 
         if "methods" in val:
             parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False)
@@ -1146,7 +1163,7 @@ def parse_classes(library, val, classes):
 
     elif val["isInterface"]: # interface generation
         file_cache[mod_path].append(
-            "/// An instantiatable struct that implements "+name+". Needed for returning it from Java."
+            "///\n/// This is a representation of an abstract class."
         )
         file_cache[mod_path].append(
             "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
@@ -1154,7 +1171,7 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append(
             "impl<'mc> "+name+"<'mc> {")
         
-        gen_from_raw_func(name, False, mod_path)
+        gen_from_raw_func(name, False, mod_path, full_name)
 
         if "methods" in val:
             parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False)
@@ -1193,7 +1210,7 @@ def parse_classes(library, val, classes):
 
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
-        gen_from_raw_func(name, False, mod_path)
+        gen_from_raw_func(name, False, mod_path, full_name)
 
         if "constructors" in val:
             parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True)

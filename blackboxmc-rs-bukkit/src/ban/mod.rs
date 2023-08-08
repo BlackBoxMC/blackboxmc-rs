@@ -1,7 +1,9 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// An instantiatable struct that implements ProfileBanList. Needed for returning it from Java.
+/// A <a href="../BanList.html" title="interface in org.bukkit"><code>BanList</code></a> targeting player profile bans.
+///
+/// This is a representation of an abstract class.
 pub struct ProfileBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16,7 +18,7 @@ impl<'mc> ProfileBanList<'mc> {
                 eyre::eyre!("Tried to instantiate ProfileBanList from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ProfileBanList")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ban/ProfileBanList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ProfileBanList object, got {}",
@@ -27,6 +29,7 @@ impl<'mc> ProfileBanList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Adds a ban to this list. If a previous ban exists, this will update the previous entry.
     pub fn add_ban_with_player_profile(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -45,6 +48,7 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Adds a ban to this list. If a previous ban exists, this will update the previous entry.
     pub unsafe fn add_ban_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -63,6 +67,7 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_ban_entry_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -80,6 +85,7 @@ impl<'mc> ProfileBanList<'mc> {
         })
     }
     #[deprecated]
+
     pub fn ban_entries(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -94,6 +100,7 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_banned_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -109,6 +116,7 @@ impl<'mc> ProfileBanList<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+
     pub fn pardon_with_object(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -124,6 +132,7 @@ impl<'mc> ProfileBanList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -148,7 +157,9 @@ impl<'mc> Into<crate::BanList<'mc>> for ProfileBanList<'mc> {
         crate::BanList::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements IpBanList. Needed for returning it from Java.
+/// A <a title="interface in org.bukkit" href="../BanList.html"><code>BanList</code></a> targeting IP bans.
+///
+/// This is a representation of an abstract class.
 pub struct IpBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -161,7 +172,7 @@ impl<'mc> IpBanList<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate IpBanList from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "IpBanList")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/ban/IpBanList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a IpBanList object, got {}",
@@ -172,6 +183,7 @@ impl<'mc> IpBanList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn add_ban_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -190,6 +202,7 @@ impl<'mc> IpBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn get_ban_entry_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -207,6 +220,7 @@ impl<'mc> IpBanList<'mc> {
         })
     }
     #[deprecated]
+
     pub fn ban_entries(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -221,6 +235,7 @@ impl<'mc> IpBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_banned_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -236,6 +251,7 @@ impl<'mc> IpBanList<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+
     pub fn pardon_with_object(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -251,6 +267,7 @@ impl<'mc> IpBanList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()

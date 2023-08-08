@@ -46,7 +46,8 @@ impl<'mc> CookingBookCategory<'mc> {
                 eyre::eyre!("Tried to instantiate CookingBookCategory from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "CookingBookCategory")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/inventory/recipe/CookingBookCategory")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CookingBookCategory object, got {}",
@@ -116,7 +117,8 @@ impl<'mc> CraftingBookCategory<'mc> {
                 eyre::eyre!("Tried to instantiate CraftingBookCategory from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "CraftingBookCategory")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/inventory/recipe/CraftingBookCategory")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CraftingBookCategory object, got {}",

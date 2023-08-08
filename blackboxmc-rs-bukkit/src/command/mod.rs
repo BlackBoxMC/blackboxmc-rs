@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+
 pub struct CommandSenderSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24,7 +25,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
                 eyre::eyre!("Tried to instantiate CommandSenderSpigot from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "CommandSenderSpigot")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/CommandSenderSpigot")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CommandSenderSpigot object, got {}",
@@ -42,6 +43,10 @@ impl<'mc> CommandSenderSpigot<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::command::CommandSenderSpigot::from_raw(&jni, res)
     }
+    /// Sends this sender a chat component.
+    /// Sends an array of components as a single message to the sender.
+    /// Sends this sender a chat component.
+    /// Sends an array of components as a single message to the sender.
     pub fn send_message_with_base_component(
         &mut self,
         arg0: std::option::Option<
@@ -57,6 +62,10 @@ impl<'mc> CommandSenderSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sends this sender a chat component.
+    /// Sends an array of components as a single message to the sender.
+    /// Sends this sender a chat component.
+    /// Sends an array of components as a single message to the sender.
     pub fn send_message_with_uuid(
         &mut self,
         arg0: u128,
@@ -80,6 +89,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -99,6 +109,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -113,6 +124,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -124,6 +136,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -131,6 +144,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -138,6 +152,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -145,6 +160,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -153,7 +169,9 @@ impl<'mc> CommandSenderSpigot<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements RemoteConsoleCommandSender. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct RemoteConsoleCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -169,7 +187,8 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "RemoteConsoleCommandSender")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/command/RemoteConsoleCommandSender")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RemoteConsoleCommandSender object, got {}",
@@ -180,6 +199,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -192,6 +212,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn spigot(
         &mut self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -206,6 +227,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn send_message_with_string(
         &mut self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
@@ -219,6 +241,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn send_message_with_uuid(
         &mut self,
         arg0: u128,
@@ -245,6 +268,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -256,6 +280,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
@@ -271,6 +296,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn has_permission_with_permission(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -286,6 +312,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -304,6 +331,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<&'mc crate::permissions::PermissionAttachment<'mc>>,
@@ -318,6 +346,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn recalculate_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -325,6 +354,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn effective_permissions(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -339,6 +369,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -346,6 +377,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -373,6 +405,7 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for RemoteConsoleCommandSende
         crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct SimpleCommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -396,7 +429,7 @@ impl<'mc> SimpleCommandMap<'mc> {
                 eyre::eyre!("Tried to instantiate SimpleCommandMap from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "SimpleCommandMap")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/SimpleCommandMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SimpleCommandMap object, got {}",
@@ -420,6 +453,12 @@ impl<'mc> SimpleCommandMap<'mc> {
         )?;
         crate::command::SimpleCommandMap::from_raw(&jni, res)
     }
+    /// Registers all the commands belonging to a certain plugin.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
     pub fn register_all(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -453,6 +492,8 @@ impl<'mc> SimpleCommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommandMap.html#clearCommands()">CommandMap</a></code></span>
+    /// Clears all registered commands.
     pub fn clear_commands(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -460,6 +501,8 @@ impl<'mc> SimpleCommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommandMap.html#getCommand(java.lang.String)">CommandMap</a></code></span>
+    /// Gets the command registered to the specified name
     pub fn get_command(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -476,6 +519,10 @@ impl<'mc> SimpleCommandMap<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommandMap.html#tabComplete(org.bukkit.command.CommandSender,java.lang.String)">CommandMap</a></code></span>
+    /// Looks for the requested command and executes an appropriate tab-completer if found. This method will also tab-complete partial commands.
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommandMap.html#tabComplete(org.bukkit.command.CommandSender,java.lang.String,org.bukkit.Location)">CommandMap</a></code></span>
+    /// Looks for the requested command and executes an appropriate tab-completer if found. This method will also tab-complete partial commands.
     pub fn tab_complete_with_command_sender(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -503,6 +550,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn commands(
         &mut self,
     ) -> Result<Vec<crate::command::Command<'mc>>, Box<dyn std::error::Error>> {
@@ -522,6 +570,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_fallback_commands(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -529,6 +578,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn register_server_aliases(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -536,6 +586,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Looks for the requested command and executes it if found.
     pub fn dispatch(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -555,6 +606,24 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Registers all the commands belonging to a certain plugin.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
+    /// Registers a command. Returns true on success; false if name is already taken and fallback had to be used.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
+    /// Registers a command. Returns true on success; false if name is already taken and fallback had to be used.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
     pub fn register_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -579,6 +648,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -598,6 +668,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -612,6 +683,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -623,6 +695,7 @@ impl<'mc> SimpleCommandMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -630,6 +703,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -637,6 +711,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -644,6 +719,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -657,6 +733,7 @@ impl<'mc> Into<crate::command::CommandMap<'mc>> for SimpleCommandMap<'mc> {
         crate::command::CommandMap::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct FormattedCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -681,7 +758,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "FormattedCommandAlias")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/FormattedCommandAlias")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FormattedCommandAlias object, got {}",
@@ -706,6 +783,8 @@ impl<'mc> FormattedCommandAlias<'mc> {
         )?;
         crate::command::FormattedCommandAlias::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Command.html#execute(org.bukkit.command.CommandSender,java.lang.String,java.lang.String%5B%5D)">Command</a></code></span>
+    /// Executes the command, returning its success
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -726,20 +805,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermission",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+
     pub fn unregister(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -754,6 +820,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_permission(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -768,6 +835,22 @@ impl<'mc> FormattedCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPermission",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -782,6 +865,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn tab_complete_with_command_sender(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -809,6 +893,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_description(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -825,6 +910,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_usage(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -841,6 +927,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_aliases(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -871,6 +958,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -887,6 +975,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn aliases(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -906,6 +995,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_label(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -920,6 +1010,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -931,6 +1022,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn test_permission_silent(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -945,6 +1037,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn test_permission(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -959,6 +1052,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -973,6 +1067,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -984,6 +1079,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn broadcast_command_message_with_command_sender(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1007,6 +1103,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         )?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1018,6 +1115,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1029,6 +1127,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1036,6 +1135,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn register(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -1050,6 +1150,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_name(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1064,6 +1165,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1083,6 +1185,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1097,6 +1200,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1104,6 +1208,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1111,6 +1216,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1118,6 +1224,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1131,7 +1238,9 @@ impl<'mc> Into<crate::command::Command<'mc>> for FormattedCommandAlias<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements TabCompleter. Needed for returning it from Java.
+/// Represents a class which can suggest tab completions for commands.
+///
+/// This is a representation of an abstract class.
 pub struct TabCompleter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1154,7 +1263,7 @@ impl<'mc> TabCompleter<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TabCompleter from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "TabCompleter")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/TabCompleter")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TabCompleter object, got {}",
@@ -1165,6 +1274,7 @@ impl<'mc> TabCompleter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Requests a list of possible completions for a command argument.
     pub fn on_tab_complete(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1201,7 +1311,9 @@ impl<'mc> JNIRaw<'mc> for TabCompleter<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements CommandExecutor. Needed for returning it from Java.
+/// Represents a class which contains a single method for executing commands
+///
+/// This is a representation of an abstract class.
 pub struct CommandExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1226,7 +1338,7 @@ impl<'mc> CommandExecutor<'mc> {
                 eyre::eyre!("Tried to instantiate CommandExecutor from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "CommandExecutor")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/CommandExecutor")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CommandExecutor object, got {}",
@@ -1237,6 +1349,9 @@ impl<'mc> CommandExecutor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Executes the given command, returning its success.
+    ///
+    /// If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be sent to the player.
     pub fn on_command(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1261,7 +1376,9 @@ impl<'mc> JNIRaw<'mc> for CommandExecutor<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements ConsoleCommandSender. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct ConsoleCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1276,7 +1393,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
                 eyre::eyre!("Tried to instantiate ConsoleCommandSender from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ConsoleCommandSender")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/ConsoleCommandSender")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConsoleCommandSender object, got {}",
@@ -1287,6 +1404,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1299,6 +1417,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn spigot(
         &mut self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -1313,6 +1432,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn send_message_with_string(
         &mut self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
@@ -1326,6 +1446,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn send_message_with_uuid(
         &mut self,
         arg0: u128,
@@ -1352,6 +1473,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1363,6 +1485,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
@@ -1378,6 +1501,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn has_permission_with_permission(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -1393,6 +1517,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -1411,6 +1536,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<&'mc crate::permissions::PermissionAttachment<'mc>>,
@@ -1425,6 +1551,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn recalculate_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1432,6 +1559,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn effective_permissions(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1446,6 +1574,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1453,6 +1582,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1465,6 +1595,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn accept_conversation_input(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1479,6 +1610,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn begin_conversation(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Conversation<'mc>>,
@@ -1493,6 +1625,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn abandon_conversation_with_conversation(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::conversations::Conversation<'mc>>>,
@@ -1508,6 +1641,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_conversing(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1515,6 +1649,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn send_raw_message_with_string(
         &mut self,
         arg0: std::option::Option<u128>,
@@ -1561,7 +1696,9 @@ impl<'mc> Into<crate::conversations::Conversable<'mc>> for ConsoleCommandSender<
         crate::conversations::Conversable::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements PluginIdentifiableCommand. Needed for returning it from Java.
+/// This interface is used by the help system to group commands into sub-indexes based on the <a href="../plugin/Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a> they are a part of. Custom command implementations will need to implement this interface to have a sub-index automatically generated on the plugin's behalf.
+///
+/// This is a representation of an abstract class.
 pub struct PluginIdentifiableCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1577,7 +1714,8 @@ impl<'mc> PluginIdentifiableCommand<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginIdentifiableCommand")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/command/PluginIdentifiableCommand")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginIdentifiableCommand object, got {}",
@@ -1588,6 +1726,7 @@ impl<'mc> PluginIdentifiableCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the owner of this PluginIdentifiableCommand.
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1610,6 +1749,7 @@ impl<'mc> JNIRaw<'mc> for PluginIdentifiableCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents a Command, which executes various tasks upon user input
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1631,7 +1771,7 @@ impl<'mc> Command<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Command from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Command")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/Command")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Command object, got {}",
@@ -1642,20 +1782,7 @@ impl<'mc> Command<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermission",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+    /// Unregisters this command from the passed CommandMap applying any outstanding changes
     pub fn unregister(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -1670,6 +1797,8 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the permission required by users to be able to perform this command
+    /// Sets the message sent when a permission check fails
     pub fn set_permission(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1684,6 +1813,23 @@ impl<'mc> Command<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the permission required by users to be able to perform this command
+    /// Returns a message to be displayed on a failed permission check for this command
+    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPermission",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    /// Gets a brief description of this command
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1698,6 +1844,8 @@ impl<'mc> Command<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Executed on tab completion for this command, returning a list of options the player can tab through.
+    /// Executed on tab completion for this command, returning a list of options the player can tab through.
     pub fn tab_complete_with_command_sender(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1725,6 +1873,7 @@ impl<'mc> Command<'mc> {
         }
         Ok(new_vec)
     }
+    /// Sets a brief description of this command. Defining a description in the <a href="../plugin/PluginDescriptionFile.html#getCommands()"><code>PluginDescriptionFile.getCommands()</code></a> (under the `<code>description</code>' node) is equivalent to this method.
     pub fn set_description(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1741,6 +1890,7 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the example usage of this command
     pub fn set_usage(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1757,6 +1907,7 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the list of aliases to request on registration for this command. This is not effective outside of defining aliases in the <a href="../plugin/PluginDescriptionFile.html#getCommands()"><code>PluginDescriptionFile.getCommands()</code></a> (under the `<code>aliases</code>' node) is equivalent to this method.
     pub fn set_aliases(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -1787,6 +1938,7 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the message sent when a permission check fails
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1803,6 +1955,7 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns a list of active aliases of this command
     pub fn aliases(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1822,6 +1975,8 @@ impl<'mc> Command<'mc> {
         }
         Ok(new_vec)
     }
+    /// Sets the label of this command.
+    /// <p>May only be used before registering the command. Will return true if the new name is set, and false if the command has already been registered.</p>
     pub fn set_label(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1836,6 +1991,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Returns the label for this command
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1847,6 +2003,8 @@ impl<'mc> Command<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Tests the given <a href="CommandSender.html" title="interface in org.bukkit.command"><code>CommandSender</code></a> to see if they can perform this command.
+    /// <p>No error is sent to the sender.</p>
     pub fn test_permission_silent(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1861,6 +2019,10 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Tests the given <a href="CommandSender.html" title="interface in org.bukkit.command"><code>CommandSender</code></a> to see if they can perform this command.
+    /// <p>If they do not have permission, they will be informed that they cannot do this.</p>
+    /// Tests the given <a href="CommandSender.html" title="interface in org.bukkit.command"><code>CommandSender</code></a> to see if they can perform this command.
+    /// <p>No error is sent to the sender.</p>
     pub fn test_permission(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1875,6 +2037,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Returns a message to be displayed on a failed permission check for this command
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1889,6 +2052,7 @@ impl<'mc> Command<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets an example usage of this command
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1900,6 +2064,7 @@ impl<'mc> Command<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn broadcast_command_message_with_command_sender(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1923,6 +2088,7 @@ impl<'mc> Command<'mc> {
         )?;
         Ok(())
     }
+    /// Returns the name of this command
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1934,6 +2100,7 @@ impl<'mc> Command<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1945,6 +2112,7 @@ impl<'mc> Command<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Returns the current registered state of this command
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1952,6 +2120,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Registers this command to a CommandMap. Once called it only allows changes the registered CommandMap
     pub fn register(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -1966,6 +2135,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Executes the command, returning its success
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -1986,6 +2156,8 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the name of this command.
+    /// <p>May only be used before registering the command. Will return true if the new name is set, and false if the command has already been registered.</p>
     pub fn set_name(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2000,6 +2172,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2019,6 +2192,7 @@ impl<'mc> Command<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2033,6 +2207,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2040,6 +2215,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2047,6 +2223,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2054,6 +2231,7 @@ impl<'mc> Command<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2062,6 +2240,7 @@ impl<'mc> Command<'mc> {
         Ok(())
     }
 }
+/// Represents a command that delegates to one or more other commands
 pub struct MultipleCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2085,7 +2264,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
                 eyre::eyre!("Tried to instantiate MultipleCommandAlias from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "MultipleCommandAlias")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/MultipleCommandAlias")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MultipleCommandAlias object, got {}",
@@ -2110,6 +2289,8 @@ impl<'mc> MultipleCommandAlias<'mc> {
         )?;
         crate::command::MultipleCommandAlias::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Command.html#execute(org.bukkit.command.CommandSender,java.lang.String,java.lang.String%5B%5D)">Command</a></code></span>
+    /// Executes the command, returning its success
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -2130,20 +2311,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermission",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+
     pub fn unregister(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -2158,6 +2326,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_permission(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2172,6 +2341,22 @@ impl<'mc> MultipleCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPermission",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2186,6 +2371,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn tab_complete_with_command_sender(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -2213,6 +2399,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_description(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2229,6 +2416,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_usage(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2245,6 +2433,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_aliases(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -2275,6 +2464,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2291,6 +2481,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn aliases(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2310,6 +2501,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_label(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2324,6 +2516,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2335,6 +2528,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn test_permission_silent(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -2349,6 +2543,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn test_permission(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -2363,6 +2558,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2377,6 +2573,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2388,6 +2585,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn broadcast_command_message_with_command_sender(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -2411,6 +2609,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         )?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2422,6 +2621,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2433,6 +2633,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2440,6 +2641,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn register(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -2454,6 +2656,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_name(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2468,6 +2671,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2487,6 +2691,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2501,6 +2706,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2508,6 +2714,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2515,6 +2722,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2522,6 +2730,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2535,6 +2744,7 @@ impl<'mc> Into<crate::command::Command<'mc>> for MultipleCommandAlias<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct PluginCommandYamlParser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2559,7 +2769,8 @@ impl<'mc> PluginCommandYamlParser<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginCommandYamlParser")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/command/PluginCommandYamlParser")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginCommandYamlParser object, got {}",
@@ -2577,6 +2788,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::command::PluginCommandYamlParser::from_raw(&jni, res)
     }
+
     pub fn parse(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -2598,6 +2810,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2617,6 +2830,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2631,6 +2845,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2642,6 +2857,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2649,6 +2865,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2656,6 +2873,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2663,6 +2881,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2671,7 +2890,9 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements ProxiedCommandSender. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct ProxiedCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2686,7 +2907,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
                 eyre::eyre!("Tried to instantiate ProxiedCommandSender from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ProxiedCommandSender")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/ProxiedCommandSender")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ProxiedCommandSender object, got {}",
@@ -2697,6 +2918,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the CommandSender which triggered this proxied command
     pub fn caller(
         &mut self,
     ) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
@@ -2711,6 +2933,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the CommandSender which is being used to call the command
     pub fn callee(
         &mut self,
     ) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
@@ -2725,6 +2948,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2737,6 +2961,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn spigot(
         &mut self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -2751,6 +2976,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn send_message_with_string(
         &mut self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
@@ -2764,6 +2990,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn send_message_with_uuid(
         &mut self,
         arg0: u128,
@@ -2790,6 +3017,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2801,6 +3029,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
@@ -2816,6 +3045,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn has_permission_with_permission(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -2831,6 +3061,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -2849,6 +3080,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<&'mc crate::permissions::PermissionAttachment<'mc>>,
@@ -2863,6 +3095,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn recalculate_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2870,6 +3103,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn effective_permissions(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -2884,6 +3118,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2891,6 +3126,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2918,7 +3154,9 @@ impl<'mc> Into<crate::command::CommandSender<'mc>> for ProxiedCommandSender<'mc>
         crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements TabExecutor. Needed for returning it from Java.
+/// This class is provided as a convenience to implement both TabCompleter and CommandExecutor.
+///
+/// This is a representation of an abstract class.
 pub struct TabExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2941,7 +3179,7 @@ impl<'mc> TabExecutor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TabExecutor from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "TabExecutor")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/TabExecutor")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TabExecutor object, got {}",
@@ -2952,6 +3190,7 @@ impl<'mc> TabExecutor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn on_tab_complete(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -2978,6 +3217,7 @@ impl<'mc> TabExecutor<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn on_command(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3012,7 +3252,9 @@ impl<'mc> Into<crate::command::CommandExecutor<'mc>> for TabExecutor<'mc> {
         crate::command::CommandExecutor::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements CommandSender. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct CommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3025,7 +3267,7 @@ impl<'mc> CommandSender<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CommandSender from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "CommandSender")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/CommandSender")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CommandSender object, got {}",
@@ -3036,6 +3278,7 @@ impl<'mc> CommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the server instance that this command is running on
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3048,6 +3291,7 @@ impl<'mc> CommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn spigot(
         &mut self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -3062,6 +3306,10 @@ impl<'mc> CommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sends this sender a message
+    /// Sends this sender multiple messages
+    /// Sends this sender a message
+    /// Sends this sender multiple messages
     pub fn send_message_with_string(
         &mut self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
@@ -3075,6 +3323,10 @@ impl<'mc> CommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sends this sender a message
+    /// Sends this sender multiple messages
+    /// Sends this sender a message
+    /// Sends this sender multiple messages
     pub fn send_message_with_uuid(
         &mut self,
         arg0: u128,
@@ -3101,6 +3353,7 @@ impl<'mc> CommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the name of this command sender
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3112,6 +3365,7 @@ impl<'mc> CommandSender<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
@@ -3127,6 +3381,7 @@ impl<'mc> CommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn has_permission_with_permission(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -3142,6 +3397,7 @@ impl<'mc> CommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -3160,6 +3416,7 @@ impl<'mc> CommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<&'mc crate::permissions::PermissionAttachment<'mc>>,
@@ -3174,6 +3431,7 @@ impl<'mc> CommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn recalculate_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3181,6 +3439,7 @@ impl<'mc> CommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn effective_permissions(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -3195,6 +3454,7 @@ impl<'mc> CommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3202,6 +3462,7 @@ impl<'mc> CommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3229,7 +3490,9 @@ impl<'mc> Into<crate::permissions::Permissible<'mc>> for CommandSender<'mc> {
         crate::permissions::Permissible::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements CommandMap. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct CommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3242,7 +3505,7 @@ impl<'mc> CommandMap<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CommandMap from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "CommandMap")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/CommandMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CommandMap object, got {}",
@@ -3253,6 +3516,12 @@ impl<'mc> CommandMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Registers all the commands belonging to a certain plugin.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
     pub fn register_all(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3286,6 +3555,7 @@ impl<'mc> CommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Clears all registered commands.
     pub fn clear_commands(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3293,6 +3563,7 @@ impl<'mc> CommandMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the command registered to the specified name
     pub fn get_command(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3309,6 +3580,8 @@ impl<'mc> CommandMap<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Looks for the requested command and executes an appropriate tab-completer if found. This method will also tab-complete partial commands.
+    /// Looks for the requested command and executes an appropriate tab-completer if found. This method will also tab-complete partial commands.
     pub fn tab_complete_with_command_sender(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3336,6 +3609,7 @@ impl<'mc> CommandMap<'mc> {
         }
         Ok(new_vec)
     }
+    /// Looks for the requested command and executes it if found.
     pub fn dispatch(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3355,6 +3629,24 @@ impl<'mc> CommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Registers all the commands belonging to a certain plugin.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
+    /// Registers a command. Returns true on success; false if name is already taken and fallback had to be used.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
+    /// Registers a command. Returns true on success; false if name is already taken and fallback had to be used.
+    /// <p>Caller can use:-</p>
+    /// <ul>
+    /// <li>command.getName() to determine the label registered for this command</li>
+    /// <li>command.getAliases() to determine the aliases which where registered</li>
+    /// </ul>
     pub fn register_with_string(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3389,6 +3681,7 @@ impl<'mc> JNIRaw<'mc> for CommandMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents a <a href="Command.html" title="class in org.bukkit.command"><code>Command</code></a> belonging to a plugin
 pub struct PluginCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3410,7 +3703,7 @@ impl<'mc> PluginCommand<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PluginCommand from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginCommand")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/PluginCommand")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginCommand object, got {}",
@@ -3421,6 +3714,10 @@ impl<'mc> PluginCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Executed on tab completion for this command, returning a list of options the player can tab through.
+    /// <p>Delegates to the tab completer if present.</p>
+    /// <p>If it is not present or returns null, will delegate to the current command executor if it implements <a href="TabCompleter.html" title="interface in org.bukkit.command"><code>TabCompleter</code></a>. If a non-null list has not been found, will default to standard player name completion in <a href="Command.html#tabComplete(org.bukkit.command.CommandSender,java.lang.String,java.lang.String%5B%5D)"><code>Command.tabComplete(CommandSender, String, String[])</code></a>.</p>
+    /// <p>This method does not consider permissions.</p>
     pub fn tab_complete_with_command_sender(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3448,6 +3745,7 @@ impl<'mc> PluginCommand<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the owner of this PluginCommand
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3460,6 +3758,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the <a href="CommandExecutor.html" title="interface in org.bukkit.command"><code>CommandExecutor</code></a> associated with this command
     pub fn executor(
         &mut self,
     ) -> Result<crate::command::CommandExecutor<'mc>, Box<dyn std::error::Error>> {
@@ -3474,6 +3773,8 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the <a href="TabCompleter.html" title="interface in org.bukkit.command"><code>TabCompleter</code></a> to run when tab-completing this command.
+    /// <p>If no TabCompleter is specified, and the command's executor implements TabCompleter, then the executor will be used for tab completion.</p>
     pub fn set_tab_completer(
         &mut self,
         arg0: impl Into<&'mc crate::command::TabCompleter<'mc>>,
@@ -3488,6 +3789,7 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the <a title="interface in org.bukkit.command" href="TabCompleter.html"><code>TabCompleter</code></a> associated with this command.
     pub fn tab_completer(
         &mut self,
     ) -> Result<crate::command::TabCompleter<'mc>, Box<dyn std::error::Error>> {
@@ -3502,6 +3804,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the <a title="interface in org.bukkit.command" href="CommandExecutor.html"><code>CommandExecutor</code></a> to run when parsing this command
     pub fn set_executor(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandExecutor<'mc>>,
@@ -3516,6 +3819,7 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3527,6 +3831,7 @@ impl<'mc> PluginCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Executes the command, returning its success
     pub fn execute(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3547,20 +3852,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
-    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermission",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+
     pub fn unregister(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -3575,6 +3867,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_permission(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3589,6 +3882,22 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPermission",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3603,6 +3912,7 @@ impl<'mc> PluginCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn set_description(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3619,6 +3929,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_usage(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3635,6 +3946,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_aliases(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -3665,6 +3977,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_permission_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3681,6 +3994,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn aliases(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3700,6 +4014,7 @@ impl<'mc> PluginCommand<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn set_label(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3714,6 +4029,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn label(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3725,6 +4041,7 @@ impl<'mc> PluginCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn test_permission_silent(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3739,6 +4056,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn test_permission(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3753,6 +4071,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn permission_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3767,6 +4086,7 @@ impl<'mc> PluginCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn usage(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3778,6 +4098,7 @@ impl<'mc> PluginCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn broadcast_command_message_with_command_sender(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
@@ -3801,6 +4122,7 @@ impl<'mc> PluginCommand<'mc> {
         )?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3812,6 +4134,7 @@ impl<'mc> PluginCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_registered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3819,6 +4142,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn register(
         &mut self,
         arg0: impl Into<&'mc crate::command::CommandMap<'mc>>,
@@ -3833,6 +4157,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_name(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -3847,6 +4172,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3866,6 +4192,7 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3880,6 +4207,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3887,6 +4215,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3894,6 +4223,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3901,6 +4231,7 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3919,7 +4250,9 @@ impl<'mc> Into<crate::command::Command<'mc>> for PluginCommand<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements BlockCommandSender. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct BlockCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3934,7 +4267,7 @@ impl<'mc> BlockCommandSender<'mc> {
                 eyre::eyre!("Tried to instantiate BlockCommandSender from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "BlockCommandSender")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/command/BlockCommandSender")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BlockCommandSender object, got {}",
@@ -3945,6 +4278,7 @@ impl<'mc> BlockCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the block this command sender belongs to
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3957,6 +4291,7 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3969,6 +4304,7 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn spigot(
         &mut self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -3983,6 +4319,7 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn send_message_with_string(
         &mut self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
@@ -3996,6 +4333,7 @@ impl<'mc> BlockCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn send_message_with_uuid(
         &mut self,
         arg0: u128,
@@ -4022,6 +4360,7 @@ impl<'mc> BlockCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4033,6 +4372,7 @@ impl<'mc> BlockCommandSender<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_permission_set_with_string(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::permissions::Permission<'mc>>>,
@@ -4048,6 +4388,7 @@ impl<'mc> BlockCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn has_permission_with_permission(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -4063,6 +4404,7 @@ impl<'mc> BlockCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn add_attachment_with_plugin(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -4081,6 +4423,7 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn remove_attachment(
         &mut self,
         arg0: impl Into<&'mc crate::permissions::PermissionAttachment<'mc>>,
@@ -4095,6 +4438,7 @@ impl<'mc> BlockCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn recalculate_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4102,6 +4446,7 @@ impl<'mc> BlockCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn effective_permissions(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -4116,6 +4461,7 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4123,6 +4469,7 @@ impl<'mc> BlockCommandSender<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());

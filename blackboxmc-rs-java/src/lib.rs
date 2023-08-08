@@ -1,6 +1,15 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// Resizable-array implementation of the <tt>List</tt> interface. Implements all optional list operations, and permits all elements, including <tt>null</tt>. In addition to implementing the <tt>List</tt> interface, this class provides methods to manipulate the size of the array that is used internally to store the list. (This class is roughly equivalent to <tt>Vector</tt>, except that it is unsynchronized.)
+/// <p>The <tt>size</tt>, <tt>isEmpty</tt>, <tt>get</tt>, <tt>set</tt>, <tt>iterator</tt>, and <tt>listIterator</tt> operations run in constant time. The <tt>add</tt> operation runs in <i>amortized constant time</i>, that is, adding n elements requires O(n) time. All of the other operations run in linear time (roughly speaking). The constant factor is low compared to that for the <tt>LinkedList</tt> implementation.</p>
+/// <p>Each <tt>ArrayList</tt> instance has a <i>capacity</i>. The capacity is the size of the array used to store the elements in the list. It is always at least as large as the list size. As elements are added to an ArrayList, its capacity grows automatically. The details of the growth policy are not specified beyond the fact that adding an element has constant amortized time cost.</p>
+/// <p>An application can increase the capacity of an <tt>ArrayList</tt> instance before adding a large number of elements using the <tt>ensureCapacity</tt> operation. This may reduce the amount of incremental reallocation.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access an <tt>ArrayList</tt> instance concurrently, and at least one of the threads modifies the list structurally, it <i>must</i> be synchronized externally. (A structural modification is any operation that adds or deletes one or more elements, or explicitly resizes the backing array; merely setting the value of an element is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the list. If no such object exists, the list should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedList-java.util.List-"><code>Collections.synchronizedList</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the list:</p>
+/// <pre> List list = Collections.synchronizedList(new ArrayList(...));</pre>
+/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/ArrayList.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/ArrayList.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the list is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaArrayList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22,7 +31,7 @@ impl<'mc> JavaArrayList<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaArrayList from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaArrayList")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/ArrayList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaArrayList object, got {}",
@@ -42,6 +51,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
         Ok(res)
     }
+
     pub unsafe fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -61,6 +71,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -75,6 +86,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn get(
         &mut self,
         arg0: i32,
@@ -89,6 +101,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -103,6 +116,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -110,6 +124,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -117,6 +132,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -131,6 +147,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -138,6 +155,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -152,6 +170,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -159,6 +178,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -173,6 +193,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -180,6 +201,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn sub_list(
         &mut self,
         arg0: i32,
@@ -199,6 +221,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -209,6 +232,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -223,6 +247,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -235,6 +260,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -254,6 +280,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn set(
         &mut self,
         arg0: i32,
@@ -273,6 +300,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -287,6 +315,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn ensure_capacity(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -298,6 +327,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn trim_to_size(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -305,6 +335,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -319,6 +350,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -333,6 +365,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -347,6 +380,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -361,6 +395,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -375,6 +410,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -386,6 +422,7 @@ impl<'mc> JavaArrayList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -400,6 +437,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -419,6 +457,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -426,6 +465,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -433,6 +473,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -440,6 +481,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -450,6 +492,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -468,6 +511,12 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaArrayList<'mc> {
         self.1
     }
 }
+/// This class provides a skeletal implementation of the <tt>Map</tt> interface, to minimize the effort required to implement this interface.
+/// <p>To implement an unmodifiable map, the programmer needs only to extend this class and provide an implementation for the <tt>entrySet</tt> method, which returns a set-view of the map's mappings. Typically, the returned set will, in turn, be implemented atop <tt>AbstractSet</tt>. This set should not support the <tt>add</tt> or <tt>remove</tt> methods, and its iterator should not support the <tt>remove</tt> method.</p>
+/// <p>To implement a modifiable map, the programmer must additionally override this class's <tt>put</tt> method (which otherwise throws an <tt>UnsupportedOperationException</tt>), and the iterator returned by <tt>entrySet().iterator()</tt> must additionally implement its <tt>remove</tt> method.</p>
+/// <p>The programmer should generally provide a void (no argument) and map constructor, as per the recommendation in the <tt>Map</tt> interface specification.</p>
+/// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the map being implemented admits a more efficient implementation.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaAbstractMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -491,7 +540,7 @@ impl<'mc> JavaAbstractMap<'mc> {
                 eyre::eyre!("Tried to instantiate JavaAbstractMap from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractMap")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractMap object, got {}",
@@ -502,6 +551,7 @@ impl<'mc> JavaAbstractMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -521,6 +571,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -535,6 +586,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -554,6 +606,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -568,6 +621,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -579,6 +633,7 @@ impl<'mc> JavaAbstractMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -589,6 +644,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -596,6 +652,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -603,6 +660,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -610,6 +668,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -617,6 +676,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -624,6 +684,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -638,6 +699,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -652,6 +714,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -659,6 +722,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -673,6 +737,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -692,6 +757,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -699,6 +765,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -706,6 +773,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -713,6 +781,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -735,6 +804,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -749,6 +819,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -762,6 +833,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -781,6 +853,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -800,6 +873,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -814,6 +888,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -833,6 +908,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -852,6 +928,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -877,6 +954,14 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMap<'mc> {
         self.1
     }
 }
+/// A <a href="../../java/util/NavigableSet.html" title="interface in java.util"><code>NavigableSet</code></a> implementation based on a <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. The elements are ordered using their <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a>, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> provided at set creation time, depending on which constructor is used.
+/// <p>This implementation provides guaranteed log(n) time cost for the basic operations (<code>add</code>, <code>remove</code> and <code>contains</code>).</p>
+/// <p>Note that the ordering maintained by a set (whether or not an explicit comparator is provided) must be <i>consistent with equals</i> if it is to correctly implement the <code>Set</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <i>consistent with equals</i>.) This is so because the <code>Set</code> interface is defined in terms of the <code>equals</code> operation, but a <code>TreeSet</code> instance performs all element comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two elements that are deemed equal by this method are, from the standpoint of the set, equal. The behavior of a set <i>is</i> well-defined even if its ordering is inconsistent with equals; it just fails to obey the general contract of the <code>Set</code> interface.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a tree set concurrently, and at least one of the threads modifies the set, it <i>must</i> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSortedSet-java.util.SortedSet-"><code>Collections.synchronizedSortedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
+/// <pre> SortedSet s = Collections.synchronizedSortedSet(new TreeSet(...));</pre>
+/// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaTreeSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -898,7 +983,7 @@ impl<'mc> JavaTreeSet<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaTreeSet from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaTreeSet")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/TreeSet")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaTreeSet object, got {}",
@@ -935,6 +1020,7 @@ impl<'mc> JavaTreeSet<'mc> {
         )?;
         Ok(res)
     }
+
     pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -945,6 +1031,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -952,6 +1039,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn descending_iterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -964,6 +1052,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn sub_set_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -991,6 +1080,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn head_set_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1011,6 +1101,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn tail_set_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1031,6 +1122,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn descending_set(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1043,6 +1135,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn ceiling(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1057,6 +1150,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn higher(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1071,6 +1165,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1085,6 +1180,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1099,6 +1195,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1106,6 +1203,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn floor(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1120,6 +1218,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1127,6 +1226,7 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1134,6 +1234,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1141,6 +1242,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1151,6 +1253,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1165,6 +1268,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1172,6 +1276,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1184,6 +1289,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1198,6 +1304,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1205,6 +1312,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn lower(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1219,6 +1327,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn comparator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1229,6 +1338,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1243,6 +1353,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1250,6 +1361,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1264,6 +1376,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1275,6 +1388,7 @@ impl<'mc> JavaTreeSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1289,6 +1403,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1303,6 +1418,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1322,6 +1438,7 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1329,6 +1446,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1336,6 +1454,7 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1343,6 +1462,7 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1353,6 +1473,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1367,6 +1488,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1379,6 +1501,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1399,6 +1522,11 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeSet<'mc> {
         self.1
     }
 }
+/// The <code>Vector</code> class implements a growable array of objects. Like an array, it contains components that can be accessed using an integer index. However, the size of a <code>Vector</code> can grow or shrink as needed to accommodate adding and removing items after the <code>Vector</code> has been created.
+/// <p>Each vector tries to optimize storage management by maintaining a <code>capacity</code> and a <code>capacityIncrement</code>. The <code>capacity</code> is always at least as large as the vector size; it is usually larger because as components are added to the vector, the vector's storage increases in chunks the size of <code>capacityIncrement</code>. An application can increase the capacity of a vector before inserting a large number of components; this reduces the amount of incremental reallocation.</p>
+/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/Vector.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/Vector.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the vector is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The <a href="../../java/util/Enumeration.html" title="interface in java.util"><code>Enumerations</code></a> returned by the <a href="../../java/util/Vector.html#elements--"><code>elements</code></a> method are <em>not</em> fail-fast.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Vector</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/ArrayList.html"><code>ArrayList</code></a> in place of <code>Vector</code>.</p>
 pub struct JavaVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1420,7 +1548,7 @@ impl<'mc> JavaVector<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaVector from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaVector")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Vector")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaVector object, got {}",
@@ -1462,6 +1590,7 @@ impl<'mc> JavaVector<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn copy_into(
         &mut self,
         arg0: Vec<jni::objects::JObject<'mc>>,
@@ -1475,6 +1604,19 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
+    pub fn set_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSize",
+            "(I)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn remove_element_at(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1486,6 +1628,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1500,6 +1643,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn insert_element_at(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1519,6 +1663,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn remove_all_elements(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1526,6 +1671,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn first_element(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1538,6 +1684,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn last_element(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1550,6 +1697,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn set_element_at(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1569,6 +1717,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn add_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1583,17 +1732,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn set_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setSize",
-            "(I)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+
     pub unsafe fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -1613,6 +1752,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_with_int(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1627,6 +1767,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get(
         &mut self,
         arg0: i32,
@@ -1641,6 +1782,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1655,6 +1797,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1666,6 +1809,7 @@ impl<'mc> JavaVector<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1673,6 +1817,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1680,6 +1825,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn index_of_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1699,6 +1845,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1706,6 +1853,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn last_index_of_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1725,6 +1873,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1732,6 +1881,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1746,6 +1896,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1753,6 +1904,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn sub_list(
         &mut self,
         arg0: i32,
@@ -1772,6 +1924,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1782,6 +1935,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1796,6 +1950,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn elements(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1806,6 +1961,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1818,6 +1974,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -1837,6 +1994,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn set(
         &mut self,
         arg0: i32,
@@ -1856,6 +2014,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1870,6 +2029,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn capacity(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1877,6 +2037,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn ensure_capacity(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1888,6 +2049,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn trim_to_size(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1895,6 +2057,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn element_at(
         &mut self,
         arg0: i32,
@@ -1909,6 +2072,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1923,6 +2087,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1937,6 +2102,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1951,6 +2117,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1965,6 +2132,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -1979,6 +2147,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1993,6 +2162,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2012,6 +2182,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2019,6 +2190,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2026,6 +2198,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2033,6 +2206,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2043,6 +2217,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2061,7 +2236,18 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaVector<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaRandomAccess. Needed for returning it from Java.
+/// Marker interface used by <tt>List</tt> implementations to indicate that they support fast (generally constant time) random access. The primary purpose of this interface is to allow generic algorithms to alter their behavior to provide good performance when applied to either random or sequential access lists.
+/// <p>The best algorithms for manipulating random access lists (such as <tt>ArrayList</tt>) can produce quadratic behavior when applied to sequential access lists (such as <tt>LinkedList</tt>). Generic list algorithms are encouraged to check whether the given list is an <tt>instanceof</tt> this interface before applying an algorithm that would provide poor performance if it were applied to a sequential access list, and to alter their behavior if necessary to guarantee acceptable performance.</p>
+/// <p>It is recognized that the distinction between random and sequential access is often fuzzy. For example, some <tt>List</tt> implementations provide asymptotically linear access times if they get huge, but constant access times in practice. Such a <tt>List</tt> implementation should generally implement this interface. As a rule of thumb, a <tt>List</tt> implementation should implement this interface if, for typical instances of the class, this loop:</p>
+/// <pre> for (int i=0, n=list.size(); i &lt; n; i++)
+/// list.get(i);
+/// </pre> runs faster than this loop:
+/// <pre> for (Iterator i=list.iterator(); i.hasNext(); )
+/// i.next();
+/// </pre>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaRandomAccess<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2076,7 +2262,7 @@ impl<'mc> JavaRandomAccess<'mc> {
                 eyre::eyre!("Tried to instantiate JavaRandomAccess from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandomAccess")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/RandomAccess")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaRandomAccess object, got {}",
@@ -2097,6 +2283,7 @@ impl<'mc> JNIRaw<'mc> for JavaRandomAccess<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// An Entry maintaining an immutable key and value. This class does not support method <tt>setValue</tt>. This class may be convenient in methods that return thread-safe snapshots of key-value mappings.
 pub struct JavaAbstractMapSimpleImmutableEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2121,7 +2308,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractMapSimpleImmutableEntry")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractMapSimpleImmutableEntry")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a JavaAbstractMapSimpleImmutableEntry object, got {}",
@@ -2150,6 +2337,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2164,6 +2352,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2175,6 +2364,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2182,6 +2372,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2189,6 +2380,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2196,6 +2388,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn set_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2210,6 +2403,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2229,6 +2423,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2236,6 +2431,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2243,6 +2439,7 @@ impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2256,7 +2453,18 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMapSimpleImmutableEnt
         self.1
     }
 }
-/// An instantiatable struct that implements JavaMap. Needed for returning it from Java.
+/// An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value.
+/// <p>This interface takes the place of the <tt>Dictionary</tt> class, which was a totally abstract class rather than an interface.</p>
+/// <p>The <tt>Map</tt> interface provides three <i>collection views</i>, which allow a map's contents to be viewed as a set of keys, collection of values, or set of key-value mappings. The <i>order</i> of a map is defined as the order in which the iterators on the map's collection views return their elements. Some map implementations, like the <tt>TreeMap</tt> class, make specific guarantees as to their order; others, like the <tt>HashMap</tt> class, do not.</p>
+/// <p>Note: great care must be exercised if mutable objects are used as map keys. The behavior of a map is not specified if the value of an object is changed in a manner that affects <tt>equals</tt> comparisons while the object is a key in the map. A special case of this prohibition is that it is not permissible for a map to contain itself as a key. While it is permissible for a map to contain itself as a value, extreme caution is advised: the <tt>equals</tt> and <tt>hashCode</tt> methods are no longer well defined on such a map.</p>
+/// <p>All general-purpose map implementation classes should provide two "standard" constructors: a void (no arguments) constructor which creates an empty map, and a constructor with a single argument of type <tt>Map</tt>, which creates a new map with the same key-value mappings as its argument. In effect, the latter constructor allows the user to copy any map, producing an equivalent map of the desired class. There is no way to enforce this recommendation (as interfaces cannot contain constructors) but all of the general-purpose map implementations in the JDK comply.</p>
+/// <p>The "destructive" methods contained in this interface, that is, the methods that modify the map on which they operate, are specified to throw <tt>UnsupportedOperationException</tt> if this map does not support the operation. If this is the case, these methods may, but are not required to, throw an <tt>UnsupportedOperationException</tt> if the invocation would have no effect on the map. For example, invoking the <a href="../../java/util/Map.html#putAll-java.util.Map-"><code>putAll(Map)</code></a> method on an unmodifiable map may, but is not required to, throw the exception if the map whose mappings are to be "superimposed" is empty.</p>
+/// <p>Some map implementations have restrictions on the keys and values they may contain. For example, some implementations prohibit null keys and values, and some have restrictions on the types of their keys. Attempting to insert an ineligible key or value throws an unchecked exception, typically <tt>NullPointerException</tt> or <tt>ClassCastException</tt>. Attempting to query the presence of an ineligible key or value may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible key or value whose completion would not result in the insertion of an ineligible element into the map may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface.</p>
+/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Map.html#containsKey-java.lang.Object-"><code>containsKey(Object key)</code></a> method says: "returns <tt>true</tt> if and only if this map contains a mapping for a key <tt>k</tt> such that <tt>(key==null ? k==null : key.equals(k))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Map.containsKey</tt> with a non-null argument <tt>key</tt> will cause <tt>key.equals(k)</tt> to be invoked for any key <tt>k</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two keys. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a href="../../java/lang/Object.html" title="class in java.lang"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
+/// <p>Some map operations which perform recursive traversal of the map may fail with an exception for self-referential instances where the map directly or indirectly contains itself. This includes the <code>clone()</code>, <code>equals()</code>, <code>hashCode()</code> and <code>toString()</code> methods. Implementations may optionally handle the self-referential scenario, however most current implementations do not do so.</p>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2269,7 +2477,7 @@ impl<'mc> JavaMap<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaMap from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaMap")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Map")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaMap object, got {}",
@@ -2280,6 +2488,7 @@ impl<'mc> JavaMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2299,6 +2508,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2313,6 +2523,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2332,6 +2543,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2346,6 +2558,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2356,6 +2569,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2363,6 +2577,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn copy_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -2377,6 +2592,7 @@ impl<'mc> JavaMap<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2384,6 +2600,7 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2391,6 +2608,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2413,6 +2631,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2427,6 +2646,7 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2434,6 +2654,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2482,6 +2703,7 @@ impl<'mc> JavaMap<'mc> {
 "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10),jni::objects::JValueGen::from(&val_11),jni::objects::JValueGen::from(&val_12),jni::objects::JValueGen::from(&val_13),jni::objects::JValueGen::from(&val_14),jni::objects::JValueGen::from(&val_15),jni::objects::JValueGen::from(&val_16),jni::objects::JValueGen::from(&val_17),jni::objects::JValueGen::from(&val_18),jni::objects::JValueGen::from(&val_19),jni::objects::JValueGen::from(&val_20)])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2495,6 +2717,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2502,6 +2725,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2516,6 +2740,7 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2535,6 +2760,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2554,6 +2780,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn entry(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -2573,6 +2800,7 @@ impl<'mc> JavaMap<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2587,6 +2815,7 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2601,6 +2830,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2620,6 +2850,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2627,6 +2858,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2641,6 +2873,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2660,6 +2893,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2679,6 +2913,7 @@ impl<'mc> JavaMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of_entries(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<jni::objects::JObject<'mc>>,
@@ -2702,6 +2937,16 @@ impl<'mc> JNIRaw<'mc> for JavaMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Hash table based implementation of the <tt>Map</tt> interface, with <em>weak keys</em>. An entry in a <tt>WeakHashMap</tt> will automatically be removed when its key is no longer in ordinary use. More precisely, the presence of a mapping for a given key will not prevent the key from being discarded by the garbage collector, that is, made finalizable, finalized, and then reclaimed. When a key has been discarded its entry is effectively removed from the map, so this class behaves somewhat differently from other <tt>Map</tt> implementations.
+/// <p>Both null values and the null key are supported. This class has performance characteristics similar to those of the <tt>HashMap</tt> class, and has the same efficiency parameters of <em>initial capacity</em> and <em>load factor</em>.</p>
+/// <p>Like most collection classes, this class is not synchronized. A synchronized <tt>WeakHashMap</tt> may be constructed using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method.</p>
+/// <p>This class is intended primarily for use with key objects whose <tt>equals</tt> methods test for object identity using the <tt>==</tt> operator. Once such a key is discarded it can never be recreated, so it is impossible to do a lookup of that key in a <tt>WeakHashMap</tt> at some later time and be surprised that its entry has been removed. This class will work perfectly well with key objects whose <tt>equals</tt> methods are not based upon object identity, such as <tt>String</tt> instances. With such recreatable key objects, however, the automatic removal of <tt>WeakHashMap</tt> entries whose keys have been discarded may prove to be confusing.</p>
+/// <p>The behavior of the <tt>WeakHashMap</tt> class depends in part upon the actions of the garbage collector, so several familiar (though not required) <tt>Map</tt> invariants do not hold for this class. Because the garbage collector may discard keys at any time, a <tt>WeakHashMap</tt> may behave as though an unknown thread is silently removing entries. In particular, even if you synchronize on a <tt>WeakHashMap</tt> instance and invoke none of its mutator methods, it is possible for the <tt>size</tt> method to return smaller values over time, for the <tt>isEmpty</tt> method to return <tt>false</tt> and then <tt>true</tt>, for the <tt>containsKey</tt> method to return <tt>true</tt> and later <tt>false</tt> for a given key, for the <tt>get</tt> method to return a value for a given key but later return <tt>null</tt>, for the <tt>put</tt> method to return <tt>null</tt> and the <tt>remove</tt> method to return <tt>false</tt> for a key that previously appeared to be in the map, and for successive examinations of the key set, the value collection, and the entry set to yield successively smaller numbers of elements.</p>
+/// <p>Each key object in a <tt>WeakHashMap</tt> is stored indirectly as the referent of a weak reference. Therefore a key will automatically be removed only after the weak references to it, both inside and outside of the map, have been cleared by the garbage collector.</p>
+/// <p><strong>Implementation note:</strong> The value objects in a <tt>WeakHashMap</tt> are held by ordinary strong references. Thus care should be taken to ensure that value objects do not strongly refer to their own keys, either directly or indirectly, since that will prevent the keys from being discarded. Note that a value object may refer indirectly to its key via the <tt>WeakHashMap</tt> itself; that is, a value object may strongly refer to some other key object whose associated value object, in turn, strongly refers to the key of the first value object. If the values in the map do not rely on the map holding strong references to them, one way to deal with this is to wrap values themselves within <tt>WeakReferences</tt> before inserting, as in: <tt>m.put(key, new WeakReference(value))</tt>, and then unwrapping upon each <tt>get</tt>.</p>
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaWeakHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2725,7 +2970,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
                 eyre::eyre!("Tried to instantiate JavaWeakHashMap from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaWeakHashMap")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/WeakHashMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaWeakHashMap object, got {}",
@@ -2763,6 +3008,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2782,6 +3028,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2796,6 +3043,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2815,6 +3063,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2825,6 +3074,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2832,6 +3082,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2839,6 +3090,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2853,6 +3105,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2860,6 +3113,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2867,6 +3121,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2881,6 +3136,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2895,6 +3151,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2909,6 +3166,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2916,6 +3174,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2930,6 +3189,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2944,6 +3204,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2955,6 +3216,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2962,6 +3224,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2981,6 +3244,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2988,6 +3252,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2995,6 +3260,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3002,6 +3268,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3024,6 +3291,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3037,6 +3305,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3056,6 +3325,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3075,6 +3345,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3094,6 +3365,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3113,6 +3385,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3138,7 +3411,14 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaWeakHashMap<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaSet. Needed for returning it from Java.
+/// A collection that contains no duplicate elements. More formally, sets contain no pair of elements <code>e1</code> and <code>e2</code> such that <code>e1.equals(e2)</code>, and at most one null element. As implied by its name, this interface models the mathematical <i>set</i> abstraction.
+/// <p>The <tt>Set</tt> interface places additional stipulations, beyond those inherited from the <tt>Collection</tt> interface, on the contracts of all constructors and on the contracts of the <tt>add</tt>, <tt>equals</tt> and <tt>hashCode</tt> methods. Declarations for other inherited methods are also included here for convenience. (The specifications accompanying these declarations have been tailored to the <tt>Set</tt> interface, but they do not contain any additional stipulations.)</p>
+/// <p>The additional stipulation on constructors is, not surprisingly, that all constructors must create a set that contains no duplicate elements (as defined above).</p>
+/// <p>Note: Great care must be exercised if mutable objects are used as set elements. The behavior of a set is not specified if the value of an object is changed in a manner that affects <tt>equals</tt> comparisons while the object is an element in the set. A special case of this prohibition is that it is not permissible for a set to contain itself as an element.</p>
+/// <p>Some set implementations have restrictions on the elements that they may contain. For example, some implementations prohibit null elements, and some have restrictions on the types of their elements. Attempting to add an ineligible element throws an unchecked exception, typically <tt>NullPointerException</tt> or <tt>ClassCastException</tt>. Attempting to query the presence of an ineligible element may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible element whose completion would not result in the insertion of an ineligible element into the set may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface.</p>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3151,7 +3431,7 @@ impl<'mc> JavaSet<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaSet from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaSet")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Set")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaSet object, got {}",
@@ -3162,6 +3442,7 @@ impl<'mc> JavaSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3176,6 +3457,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3190,6 +3472,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3204,6 +3487,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3211,6 +3495,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn copy_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -3225,6 +3510,7 @@ impl<'mc> JavaSet<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3232,6 +3518,7 @@ impl<'mc> JavaSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3239,6 +3526,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3246,6 +3534,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3256,6 +3545,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
@@ -3264,6 +3554,7 @@ impl<'mc> JavaSet<'mc> {
         let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/Set;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of_with_object(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -3292,6 +3583,7 @@ impl<'mc> JavaSet<'mc> {
 "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10)])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3306,6 +3598,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3318,6 +3611,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3332,6 +3626,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3346,6 +3641,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3360,6 +3656,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3374,6 +3671,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3384,6 +3682,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3398,6 +3697,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3410,6 +3710,7 @@ impl<'mc> JavaSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3439,6 +3740,16 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaSet<'mc> {
         self.1
     }
 }
+/// This class consists exclusively of static methods for obtaining encoders and decoders for the Base64 encoding scheme. The implementation of this class supports the following types of Base64 as specified in <a href="http://www.ietf.org/rfc/rfc4648.txt">RFC 4648</a> and <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.
+/// <ul>
+/// <li><a name="basic"><b>Basic</b></a>
+/// <p>Uses "The Base64 Alphabet" as specified in Table 1 of RFC 4648 and RFC 2045 for encoding and decoding operation. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p></li>
+/// <li><a name="url"><b>URL and Filename safe</b></a>
+/// <p>Uses the "URL and Filename safe Base64 Alphabet" as specified in Table 2 of RFC 4648 for encoding and decoding. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p></li>
+/// <li><a name="mime"><b>MIME</b></a>
+/// <p>Uses the "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded output must be represented in lines of no more than 76 characters each and uses a carriage return <code>'\r'</code> followed immediately by a linefeed <code>'\n'</code> as the line separator. No line separator is added to the end of the encoded output. All line separators or other characters not found in the base64 alphabet table are ignored in decoding operation.</p></li>
+/// </ul>
+/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
 pub struct JavaBase64<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3460,7 +3771,7 @@ impl<'mc> JavaBase64<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaBase64 from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaBase64")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Base64")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaBase64 object, got {}",
@@ -3471,6 +3782,7 @@ impl<'mc> JavaBase64<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn encoder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3478,6 +3790,7 @@ impl<'mc> JavaBase64<'mc> {
         let res = jni.call_static_method(cls, "getEncoder", "()Ljava/util/Base64$Encoder;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn url_encoder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3486,6 +3799,7 @@ impl<'mc> JavaBase64<'mc> {
             jni.call_static_method(cls, "getUrlEncoder", "()Ljava/util/Base64$Encoder;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn get_mime_encoder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -3501,6 +3815,7 @@ impl<'mc> JavaBase64<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn decoder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3508,6 +3823,7 @@ impl<'mc> JavaBase64<'mc> {
         let res = jni.call_static_method(cls, "getDecoder", "()Ljava/util/Base64$Decoder;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn url_decoder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3516,6 +3832,7 @@ impl<'mc> JavaBase64<'mc> {
             jni.call_static_method(cls, "getUrlDecoder", "()Ljava/util/Base64$Decoder;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn mime_decoder(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3524,6 +3841,7 @@ impl<'mc> JavaBase64<'mc> {
             jni.call_static_method(cls, "getMimeDecoder", "()Ljava/util/Base64$Decoder;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3543,6 +3861,7 @@ impl<'mc> JavaBase64<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3557,6 +3876,7 @@ impl<'mc> JavaBase64<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3568,6 +3888,7 @@ impl<'mc> JavaBase64<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3575,6 +3896,7 @@ impl<'mc> JavaBase64<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3582,6 +3904,7 @@ impl<'mc> JavaBase64<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3589,6 +3912,7 @@ impl<'mc> JavaBase64<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3597,6 +3921,12 @@ impl<'mc> JavaBase64<'mc> {
         Ok(())
     }
 }
+/// This class provides a skeletal implementation of the <tt>Collection</tt> interface, to minimize the effort required to implement this interface.
+/// <p>To implement an unmodifiable collection, the programmer needs only to extend this class and provide implementations for the <tt>iterator</tt> and <tt>size</tt> methods. (The iterator returned by the <tt>iterator</tt> method must implement <tt>hasNext</tt> and <tt>next</tt>.)</p>
+/// <p>To implement a modifiable collection, the programmer must additionally override this class's <tt>add</tt> method (which otherwise throws an <tt>UnsupportedOperationException</tt>), and the iterator returned by the <tt>iterator</tt> method must additionally implement its <tt>remove</tt> method.</p>
+/// <p>The programmer should generally provide a void (no argument) and <tt>Collection</tt> constructor, as per the recommendation in the <tt>Collection</tt> interface specification.</p>
+/// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the collection being implemented admits a more efficient implementation.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaAbstractCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3621,7 +3951,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractCollection")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractCollection")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractCollection object, got {}",
@@ -3632,6 +3962,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3646,6 +3977,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3660,6 +3992,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3671,6 +4004,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3678,6 +4012,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3685,6 +4020,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3692,6 +4028,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3702,6 +4039,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3716,6 +4054,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3730,6 +4069,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3744,6 +4084,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3758,6 +4099,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3772,6 +4114,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3791,6 +4134,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3805,6 +4149,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3812,6 +4157,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3819,6 +4165,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3826,6 +4173,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3833,6 +4181,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3843,6 +4192,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3855,6 +4205,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3869,6 +4220,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3881,6 +4233,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3901,6 +4254,9 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractCollection<'mc> {
         self.1
     }
 }
+/// This class provides skeletal implementations of some <a title="interface in java.util" href="../../java/util/Queue.html"><code>Queue</code></a> operations. The implementations in this class are appropriate when the base implementation does <em>not</em> allow <tt>null</tt> elements. Methods <a href="../../java/util/AbstractQueue.html#add-E-"><code>add</code></a>, <a href="../../java/util/AbstractQueue.html#remove--"><code>remove</code></a>, and <a href="../../java/util/AbstractQueue.html#element--"><code>element</code></a> are based on <a href="../../java/util/Queue.html#offer-E-"><code>offer</code></a>, <a href="../../java/util/Queue.html#poll--"><code>poll</code></a>, and <a href="../../java/util/Queue.html#peek--"><code>peek</code></a>, respectively, but throw exceptions instead of indicating failure via <tt>false</tt> or <tt>null</tt> returns.
+/// <p>A <tt>Queue</tt> implementation that extends this class must minimally define a method <a href="../../java/util/Queue.html#offer-E-"><code>Queue.offer(E)</code></a> which does not permit insertion of <tt>null</tt> elements, along with methods <a href="../../java/util/Queue.html#peek--"><code>Queue.peek()</code></a>, <a href="../../java/util/Queue.html#poll--"><code>Queue.poll()</code></a>, <a href="../../java/util/Collection.html#size--"><code>Collection.size()</code></a>, and <a href="../../java/util/Collection.html#iterator--"><code>Collection.iterator()</code></a>. Typically, additional methods will be overridden as well. If these requirements cannot be met, consider instead subclassing <a title="class in java.util" href="../../java/util/AbstractCollection.html"><code>AbstractCollection</code></a>.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaAbstractQueue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3924,7 +4280,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
                 eyre::eyre!("Tried to instantiate JavaAbstractQueue from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractQueue")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractQueue")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractQueue object, got {}",
@@ -3935,6 +4291,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3949,6 +4306,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3963,6 +4321,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3970,6 +4329,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3984,6 +4344,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3991,6 +4352,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4002,6 +4364,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4009,6 +4372,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4016,6 +4380,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4026,6 +4391,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4040,6 +4406,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4054,6 +4421,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4068,6 +4436,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4082,6 +4451,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -4101,6 +4471,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4115,6 +4486,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4122,6 +4494,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4129,6 +4502,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4136,6 +4510,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4143,6 +4518,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4153,6 +4529,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4165,6 +4542,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4179,6 +4557,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4191,6 +4570,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4205,6 +4585,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4219,6 +4600,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4226,6 +4608,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4239,6 +4622,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractQueue<'mc> {
         self.1
     }
 }
+/// An Entry maintaining a key and a value. The value may be changed using the <tt>setValue</tt> method. This class facilitates the process of building custom map implementations. For example, it may be convenient to return arrays of <tt>SimpleEntry</tt> instances in method <tt>Map.entrySet().toArray</tt>.
 pub struct JavaAbstractMapSimpleEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4263,7 +4647,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractMapSimpleEntry")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractMapSimpleEntry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractMapSimpleEntry object, got {}",
@@ -4292,6 +4676,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4306,6 +4691,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4317,6 +4703,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4324,6 +4711,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4331,6 +4719,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4338,6 +4727,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn set_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4352,6 +4742,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -4371,6 +4762,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4378,6 +4770,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4385,6 +4778,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4398,7 +4792,9 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMapSimpleEntry<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaObserver. Needed for returning it from Java.
+/// A class can implement the <code>Observer</code> interface when it wants to be informed of changes in observable objects.
+///
+/// This is a representation of an abstract class.
 pub struct JavaObserver<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4411,7 +4807,7 @@ impl<'mc> JavaObserver<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaObserver from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaObserver")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Observer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaObserver object, got {}",
@@ -4422,6 +4818,7 @@ impl<'mc> JavaObserver<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn update(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4451,7 +4848,9 @@ impl<'mc> JNIRaw<'mc> for JavaObserver<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaEventListener. Needed for returning it from Java.
+/// A tagging interface that all event listener interfaces must extend.
+///
+/// This is a representation of an abstract class.
 pub struct JavaEventListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4466,7 +4865,7 @@ impl<'mc> JavaEventListener<'mc> {
                 eyre::eyre!("Tried to instantiate JavaEventListener from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaEventListener")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/EventListener")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaEventListener object, got {}",
@@ -4487,7 +4886,44 @@ impl<'mc> JNIRaw<'mc> for JavaEventListener<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaQueue. Needed for returning it from Java.
+/// A collection designed for holding elements prior to processing. Besides basic <a title="interface in java.util" href="../../java/util/Collection.html"><code>Collection</code></a> operations, queues provide additional insertion, extraction, and inspection operations. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Queue</code> implementations; in most implementations, insert operations cannot fail.
+/// <table border="" cellspacing="1" cellpadding="3">
+/// <caption>
+/// Summary of Queue methods
+/// </caption>
+/// <tbody>
+/// <tr>
+/// <td></td>
+/// <td align="CENTER"><em>Throws exception</em></td>
+/// <td align="CENTER"><em>Returns special value</em></td>
+/// </tr>
+/// <tr>
+/// <td><b>Insert</b></td>
+/// <td><a href="../../java/util/Queue.html#add-E-"><code>add(e)</code></a></td>
+/// <td><a href="../../java/util/Queue.html#offer-E-"><code>offer(e)</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><b>Remove</b></td>
+/// <td><a href="../../java/util/Queue.html#remove--"><code>remove()</code></a></td>
+/// <td><a href="../../java/util/Queue.html#poll--"><code>poll()</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><b>Examine</b></td>
+/// <td><a href="../../java/util/Queue.html#element--"><code>element()</code></a></td>
+/// <td><a href="../../java/util/Queue.html#peek--"><code>peek()</code></a></td>
+/// </tr>
+/// </tbody>
+/// </table>
+/// <p>Queues typically, but do not necessarily, order elements in a FIFO (first-in-first-out) manner. Among the exceptions are priority queues, which order elements according to a supplied comparator, or the elements' natural ordering, and LIFO queues (or stacks) which order the elements LIFO (last-in-first-out). Whatever the ordering used, the <em>head</em> of the queue is that element which would be removed by a call to <a href="../../java/util/Queue.html#remove--"><code>remove()</code></a> or <a href="../../java/util/Queue.html#poll--"><code>poll()</code></a>. In a FIFO queue, all new elements are inserted at the <em>tail</em> of the queue. Other kinds of queues may use different placement rules. Every <code>Queue</code> implementation must specify its ordering properties.</p>
+/// <p>The <a href="../../java/util/Queue.html#offer-E-"><code>offer</code></a> method inserts an element if possible, otherwise returning <code>false</code>. This differs from the <a href="../../java/util/Collection.html#add-E-"><code>Collection.add</code></a> method, which can fail to add an element only by throwing an unchecked exception. The <code>offer</code> method is designed for use when failure is a normal, rather than exceptional occurrence, for example, in fixed-capacity (or "bounded") queues.</p>
+/// <p>The <a href="../../java/util/Queue.html#remove--"><code>remove()</code></a> and <a href="../../java/util/Queue.html#poll--"><code>poll()</code></a> methods remove and return the head of the queue. Exactly which element is removed from the queue is a function of the queue's ordering policy, which differs from implementation to implementation. The <code>remove()</code> and <code>poll()</code> methods differ only in their behavior when the queue is empty: the <code>remove()</code> method throws an exception, while the <code>poll()</code> method returns <code>null</code>.</p>
+/// <p>The <a href="../../java/util/Queue.html#element--"><code>element()</code></a> and <a href="../../java/util/Queue.html#peek--"><code>peek()</code></a> methods return, but do not remove, the head of the queue.</p>
+/// <p>The <code>Queue</code> interface does not define the <i>blocking queue methods</i>, which are common in concurrent programming. These methods, which wait for elements to appear or for space to become available, are defined in the <a href="../../java/util/concurrent/BlockingQueue.html" title="interface in java.util.concurrent"><code>BlockingQueue</code></a> interface, which extends this interface.</p>
+/// <p><code>Queue</code> implementations generally do not allow insertion of <code>null</code> elements, although some implementations, such as <a href="../../java/util/LinkedList.html" title="class in java.util"><code>LinkedList</code></a>, do not prohibit insertion of <code>null</code>. Even in the implementations that permit it, <code>null</code> should not be inserted into a <code>Queue</code>, as <code>null</code> is also used as a special return value by the <code>poll</code> method to indicate that the queue contains no elements.</p>
+/// <p><code>Queue</code> implementations generally do not define element-based versions of methods <code>equals</code> and <code>hashCode</code> but instead inherit the identity based versions from class <code>Object</code>, because element-based equality is not always well-defined for queues with the same elements but different ordering properties.</p>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaQueue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4500,7 +4936,7 @@ impl<'mc> JavaQueue<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaQueue from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaQueue")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Queue")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaQueue object, got {}",
@@ -4511,6 +4947,7 @@ impl<'mc> JavaQueue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4525,6 +4962,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4539,6 +4977,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -4553,6 +4992,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4560,6 +5000,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4567,6 +5008,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4574,6 +5016,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4588,6 +5031,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4595,6 +5039,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4602,6 +5047,7 @@ impl<'mc> JavaQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4609,6 +5055,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4616,6 +5063,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4626,6 +5074,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4636,6 +5085,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4650,6 +5100,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4662,6 +5113,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4676,6 +5128,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4690,6 +5143,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4704,6 +5158,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4718,6 +5173,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4732,6 +5188,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4744,6 +5201,7 @@ impl<'mc> JavaQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4773,7 +5231,14 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaQueue<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaEnumeration. Needed for returning it from Java.
+/// An object that implements the Enumeration interface generates a series of elements, one at a time. Successive calls to the <code>nextElement</code> method return successive elements of the series.
+/// <p>For example, to print all elements of a <tt>Vector&lt;E&gt;</tt> <i>v</i>:</p>
+/// <pre> for (Enumeration&lt;E&gt; e = v.elements(); e.hasMoreElements();)
+/// System.out.println(e.nextElement());</pre>
+/// <p>Methods are provided to enumerate through the elements of a vector, the keys of a hashtable, and the values in a hashtable. Enumerations are also used to specify the input streams to a <code>SequenceInputStream</code>.</p>
+/// <p>NOTE: The functionality of this interface is duplicated by the Iterator interface. In addition, Iterator adds an optional remove operation, and has shorter method names. New implementations should consider using Iterator in preference to Enumeration.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaEnumeration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4788,7 +5253,7 @@ impl<'mc> JavaEnumeration<'mc> {
                 eyre::eyre!("Tried to instantiate JavaEnumeration from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaEnumeration")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Enumeration")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaEnumeration object, got {}",
@@ -4799,6 +5264,7 @@ impl<'mc> JavaEnumeration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn as_iterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4811,6 +5277,7 @@ impl<'mc> JavaEnumeration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn has_more_elements(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4818,6 +5285,7 @@ impl<'mc> JavaEnumeration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn next_element(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4840,6 +5308,28 @@ impl<'mc> JNIRaw<'mc> for JavaEnumeration<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// This class implements a hash table, which maps keys to values. Any non-<code>null</code> object can be used as a key or as a value.
+/// <p>To successfully store and retrieve objects from a hashtable, the objects used as keys must implement the <code>hashCode</code> method and the <code>equals</code> method.</p>
+/// <p>An instance of <code>Hashtable</code> has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. The <i>capacity</i> is the number of <i>buckets</i> in the hash table, and the <i>initial capacity</i> is simply the capacity at the time the hash table is created. Note that the hash table is <i>open</i>: in the case of a "hash collision", a single bucket stores multiple entries, which must be searched sequentially. The <i>load factor</i> is a measure of how full the hash table is allowed to get before its capacity is automatically increased. The initial capacity and load factor parameters are merely hints to the implementation. The exact details as to when and whether the rehash method is invoked are implementation-dependent.</p>
+/// <p>Generally, the default load factor (.75) offers a good tradeoff between time and space costs. Higher values decrease the space overhead but increase the time cost to look up an entry (which is reflected in most <tt>Hashtable</tt> operations, including <tt>get</tt> and <tt>put</tt>).</p>
+/// <p>The initial capacity controls a tradeoff between wasted space and the need for <code>rehash</code> operations, which are time-consuming. No <code>rehash</code> operations will <i>ever</i> occur if the initial capacity is greater than the maximum number of entries the <tt>Hashtable</tt> will contain divided by its load factor. However, setting the initial capacity too high can waste space.</p>
+/// <p>If many entries are to be made into a <code>Hashtable</code>, creating it with a sufficiently large capacity may allow the entries to be inserted more efficiently than letting it perform automatic rehashing as needed to grow the table.</p>
+/// <p>This example creates a hashtable of numbers. It uses the names of the numbers as keys:</p>
+/// <pre> <code>
+/// Hashtable&lt;String, Integer&gt; numbers
+/// = new Hashtable&lt;String, Integer&gt;();
+/// numbers.put("one", 1);
+/// numbers.put("two", 2);
+/// numbers.put("three", 3);</code></pre>
+/// <p>To retrieve a number, use the following code:</p>
+/// <pre> <code>
+/// Integer n = numbers.get("two");
+/// if (n != null) {
+/// System.out.println("two = " + n);
+/// }</code></pre>
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the Hashtable is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The Enumerations returned by Hashtable's keys and elements methods are <em>not</em> fail-fast.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/Map.html" title="interface in java.util"><code>Map</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Hashtable</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> in place of <code>Hashtable</code>. If a thread-safe highly-concurrent implementation is desired, then it is recommended to use <a title="class in java.util.concurrent" href="../../java/util/concurrent/ConcurrentHashMap.html"><code>ConcurrentHashMap</code></a> in place of <code>Hashtable</code>.</p>
 pub struct JavaHashtable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4861,7 +5351,7 @@ impl<'mc> JavaHashtable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaHashtable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaHashtable")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Hashtable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaHashtable object, got {}",
@@ -4899,6 +5389,7 @@ impl<'mc> JavaHashtable<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -4918,6 +5409,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4932,6 +5424,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4951,6 +5444,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4965,6 +5459,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4976,6 +5471,7 @@ impl<'mc> JavaHashtable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4986,6 +5482,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4993,6 +5490,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5000,6 +5498,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5007,6 +5506,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5014,6 +5514,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5036,6 +5537,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5050,6 +5552,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5057,6 +5560,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5071,6 +5575,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn elements(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5081,6 +5586,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5094,6 +5600,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5101,6 +5608,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5115,6 +5623,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5134,6 +5643,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5153,6 +5663,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5167,6 +5678,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5181,6 +5693,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5200,6 +5713,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn keys(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5210,6 +5724,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5217,6 +5732,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5231,6 +5747,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5250,6 +5767,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5269,6 +5787,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5288,6 +5807,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5295,6 +5815,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5302,6 +5823,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5315,6 +5837,10 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashtable<'mc> {
         self.1
     }
 }
+/// This class provides a skeletal implementation of the <tt>Set</tt> interface to minimize the effort required to implement this interface.
+/// <p>The process of implementing a set by extending this class is identical to that of implementing a Collection by extending AbstractCollection, except that all of the methods and constructors in subclasses of this class must obey the additional constraints imposed by the <tt>Set</tt> interface (for instance, the add method must not permit addition of multiple instances of an object to a set).</p>
+/// <p>Note that this class does not override any of the implementations from the <tt>AbstractCollection</tt> class. It merely adds implementations for <tt>equals</tt> and <tt>hashCode</tt>.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaAbstractSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5338,7 +5864,7 @@ impl<'mc> JavaAbstractSet<'mc> {
                 eyre::eyre!("Tried to instantiate JavaAbstractSet from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractSet")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractSet")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractSet object, got {}",
@@ -5349,6 +5875,7 @@ impl<'mc> JavaAbstractSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5363,6 +5890,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5370,6 +5898,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5384,6 +5913,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5398,6 +5928,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5412,6 +5943,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5423,6 +5955,7 @@ impl<'mc> JavaAbstractSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5430,6 +5963,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5437,6 +5971,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5444,6 +5979,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5454,6 +5990,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5468,6 +6005,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5482,6 +6020,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5496,6 +6035,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5510,6 +6050,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5529,6 +6070,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5536,6 +6078,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5543,6 +6086,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5550,6 +6094,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5560,6 +6105,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5572,6 +6118,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5586,6 +6133,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5598,6 +6146,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5618,6 +6167,9 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractSet<'mc> {
         self.1
     }
 }
+/// A container object which may or may not contain a <code>int</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsInt()</code> will return the value.
+/// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalInt.html#orElse-int-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalInt.html#ifPresent-java.util.function.IntConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
+/// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalInt</code> may have unpredictable results and should be avoided.</p>
 pub struct JavaOptionalInt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5641,7 +6193,7 @@ impl<'mc> JavaOptionalInt<'mc> {
                 eyre::eyre!("Tried to instantiate JavaOptionalInt from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaOptionalInt")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/OptionalInt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaOptionalInt object, got {}",
@@ -5652,6 +6204,7 @@ impl<'mc> JavaOptionalInt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5659,6 +6212,22 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
+    pub unsafe fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/IntConsumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub unsafe fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5678,6 +6247,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5692,20 +6262,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/IntConsumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5720,6 +6277,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5731,6 +6289,7 @@ impl<'mc> JavaOptionalInt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5738,6 +6297,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5745,6 +6305,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5755,6 +6316,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -5769,6 +6331,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn empty(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5776,6 +6339,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalInt;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5783,6 +6347,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn or_else(&mut self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5794,6 +6359,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -5808,6 +6374,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5827,6 +6394,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5834,6 +6402,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5841,6 +6410,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5849,6 +6419,15 @@ impl<'mc> JavaOptionalInt<'mc> {
         Ok(())
     }
 }
+/// A Red-Black tree based <a href="../../java/util/NavigableMap.html" title="interface in java.util"><code>NavigableMap</code></a> implementation. The map is sorted according to the <a href="../../java/lang/Comparable.html" title="interface in java.lang">natural ordering</a> of its keys, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> provided at map creation time, depending on which constructor is used.
+/// <p>This implementation provides guaranteed log(n) time cost for the <code>containsKey</code>, <code>get</code>, <code>put</code> and <code>remove</code> operations. Algorithms are adaptations of those in Cormen, Leiserson, and Rivest's <em>Introduction to Algorithms</em>.</p>
+/// <p>Note that the ordering maintained by a tree map, like any sorted map, and whether or not an explicit comparator is provided, must be <em>consistent with <code>equals</code></em> if this sorted map is to correctly implement the <code>Map</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <em>consistent with equals</em>.) This is so because the <code>Map</code> interface is defined in terms of the <code>equals</code> operation, but a sorted map performs all key comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two keys that are deemed equal by this method are, from the standpoint of the sorted map, equal. The behavior of a sorted map <em>is</em> well-defined even if its ordering is inconsistent with <code>equals</code>; it just fails to obey the general contract of the <code>Map</code> interface.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a map concurrently, and at least one of the threads modifies the map structurally, it <em>must</em> be synchronized externally. (A structural modification is any operation that adds or deletes one or more mappings; merely changing the value associated with an existing key is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the map. If no such object exists, the map should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSortedMap-java.util.SortedMap-"><code>Collections.synchronizedSortedMap</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the map:</p>
+/// <pre> SortedMap m = Collections.synchronizedSortedMap(new TreeMap(...));</pre>
+/// <p>The iterators returned by the <code>iterator</code> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <em>the fail-fast behavior of iterators should be used only to detect bugs.</em></p>
+/// <p>All <code>Map.Entry</code> pairs returned by methods in this class and its views represent snapshots of mappings at the time they were produced. They do <strong>not</strong> support the <code>Entry.setValue</code> method. (Note however that it is possible to change mappings in the associated map using <code>put</code>.)</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaTreeMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5870,7 +6449,7 @@ impl<'mc> JavaTreeMap<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaTreeMap from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaTreeMap")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/TreeMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaTreeMap object, got {}",
@@ -5907,6 +6486,7 @@ impl<'mc> JavaTreeMap<'mc> {
         )?;
         Ok(res)
     }
+
     pub fn first_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5914,6 +6494,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn navigable_key_set(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5926,6 +6507,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn descending_key_set(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5938,6 +6520,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn descending_map(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5950,6 +6533,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn sub_map_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5977,6 +6561,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn head_map_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -5997,6 +6582,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn tail_map_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -6017,6 +6603,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn last_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6024,6 +6611,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn lower_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6038,6 +6626,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn floor_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6052,6 +6641,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn ceiling_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6066,6 +6656,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn higher_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6080,6 +6671,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn poll_first_entry(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6092,6 +6684,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn poll_last_entry(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6104,6 +6697,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn first_entry(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6116,6 +6710,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn last_entry(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6126,6 +6721,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn lower_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6140,6 +6736,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn floor_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6154,6 +6751,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn ceiling_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6168,6 +6766,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn higher_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6182,6 +6781,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -6201,6 +6801,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6215,6 +6816,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6234,6 +6836,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6244,6 +6847,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6251,6 +6855,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6258,6 +6863,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6280,6 +6886,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6294,6 +6901,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6301,6 +6909,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6314,6 +6923,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6321,6 +6931,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6335,6 +6946,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6354,6 +6966,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6373,6 +6986,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6387,6 +7001,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6401,6 +7016,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6420,6 +7036,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6427,6 +7044,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6441,6 +7059,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6460,6 +7079,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn comparator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6470,6 +7090,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6484,6 +7105,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6495,6 +7117,7 @@ impl<'mc> JavaTreeMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6502,6 +7125,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6509,6 +7133,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -6528,6 +7153,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6535,6 +7161,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6542,6 +7169,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6549,6 +7177,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6574,7 +7203,117 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeMap<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaDeque. Needed for returning it from Java.
+/// A linear collection that supports element insertion and removal at both ends. The name <i>deque</i> is short for "double ended queue" and is usually pronounced "deck". Most <code>Deque</code> implementations place no fixed limits on the number of elements they may contain, but this interface supports capacity-restricted deques as well as those with no fixed size limit.
+/// <p>This interface defines methods to access the elements at both ends of the deque. Methods are provided to insert, remove, and examine the element. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Deque</code> implementations; in most implementations, insert operations cannot fail.</p>
+/// <p>The twelve methods described above are summarized in the following table:</p>
+/// <table border="" cellpadding="3" cellspacing="1">
+/// <caption>
+/// Summary of Deque methods
+/// </caption>
+/// <tbody>
+/// <tr>
+/// <td></td>
+/// <td align="CENTER" colspan="2"><b>First Element (Head)</b></td>
+/// <td align="CENTER" colspan="2"><b>Last Element (Tail)</b></td>
+/// </tr>
+/// <tr>
+/// <td></td>
+/// <td align="CENTER"><em>Throws exception</em></td>
+/// <td align="CENTER"><em>Special value</em></td>
+/// <td align="CENTER"><em>Throws exception</em></td>
+/// <td align="CENTER"><em>Special value</em></td>
+/// </tr>
+/// <tr>
+/// <td><b>Insert</b></td>
+/// <td><a href="../../java/util/Deque.html#addFirst-E-"><code>addFirst(e)</code></a></td>
+/// <td><a href="../../java/util/Deque.html#offerFirst-E-"><code>offerFirst(e)</code></a></td>
+/// <td><a href="../../java/util/Deque.html#addLast-E-"><code>addLast(e)</code></a></td>
+/// <td><a href="../../java/util/Deque.html#offerLast-E-"><code>offerLast(e)</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><b>Remove</b></td>
+/// <td><a href="../../java/util/Deque.html#removeFirst--"><code>removeFirst()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#pollFirst--"><code>pollFirst()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#removeLast--"><code>removeLast()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#pollLast--"><code>pollLast()</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><b>Examine</b></td>
+/// <td><a href="../../java/util/Deque.html#getFirst--"><code>getFirst()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#peekFirst--"><code>peekFirst()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#getLast--"><code>getLast()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#peekLast--"><code>peekLast()</code></a></td>
+/// </tr>
+/// </tbody>
+/// </table>
+/// <p>This interface extends the <a href="../../java/util/Queue.html" title="interface in java.util"><code>Queue</code></a> interface. When a deque is used as a queue, FIFO (First-In-First-Out) behavior results. Elements are added at the end of the deque and removed from the beginning. The methods inherited from the <code>Queue</code> interface are precisely equivalent to <code>Deque</code> methods as indicated in the following table:</p>
+/// <table cellspacing="1" cellpadding="3" border="">
+/// <caption>
+/// Comparison of Queue and Deque methods
+/// </caption>
+/// <tbody>
+/// <tr>
+/// <td align="CENTER"><b><code>Queue</code> Method</b></td>
+/// <td align="CENTER"><b>Equivalent <code>Deque</code> Method</b></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Queue.html#add-E-"><code>add(e)</code></a></td>
+/// <td><a href="../../java/util/Deque.html#addLast-E-"><code>addLast(e)</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Queue.html#offer-E-"><code>offer(e)</code></a></td>
+/// <td><a href="../../java/util/Deque.html#offerLast-E-"><code>offerLast(e)</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Queue.html#remove--"><code>remove()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#removeFirst--"><code>removeFirst()</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Queue.html#poll--"><code>poll()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#pollFirst--"><code>pollFirst()</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Queue.html#element--"><code>element()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#getFirst--"><code>getFirst()</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Queue.html#peek--"><code>peek()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#peek--"><code>peekFirst()</code></a></td>
+/// </tr>
+/// </tbody>
+/// </table>
+/// <p>Deques can also be used as LIFO (Last-In-First-Out) stacks. This interface should be used in preference to the legacy <a title="class in java.util" href="../../java/util/Stack.html"><code>Stack</code></a> class. When a deque is used as a stack, elements are pushed and popped from the beginning of the deque. Stack methods are precisely equivalent to <code>Deque</code> methods as indicated in the table below:</p>
+/// <table cellpadding="3" cellspacing="1" border="">
+/// <caption>
+/// Comparison of Stack and Deque methods
+/// </caption>
+/// <tbody>
+/// <tr>
+/// <td align="CENTER"><b>Stack Method</b></td>
+/// <td align="CENTER"><b>Equivalent <code>Deque</code> Method</b></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Deque.html#push-E-"><code>push(e)</code></a></td>
+/// <td><a href="../../java/util/Deque.html#addFirst-E-"><code>addFirst(e)</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Deque.html#pop--"><code>pop()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#removeFirst--"><code>removeFirst()</code></a></td>
+/// </tr>
+/// <tr>
+/// <td><a href="../../java/util/Deque.html#peek--"><code>peek()</code></a></td>
+/// <td><a href="../../java/util/Deque.html#peekFirst--"><code>peekFirst()</code></a></td>
+/// </tr>
+/// </tbody>
+/// </table>
+/// <p>Note that the <a href="../../java/util/Deque.html#peek--"><code>peek</code></a> method works equally well when a deque is used as a queue or a stack; in either case, elements are drawn from the beginning of the deque.</p>
+/// <p>This interface provides two methods to remove interior elements, <a href="../../java/util/Deque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a> and <a href="../../java/util/Deque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>.</p>
+/// <p>Unlike the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface, this interface does not provide support for indexed access to elements.</p>
+/// <p>While <code>Deque</code> implementations are not strictly required to prohibit the insertion of null elements, they are strongly encouraged to do so. Users of any <code>Deque</code> implementations that do allow null elements are strongly encouraged <i>not</i> to take advantage of the ability to insert nulls. This is so because <code>null</code> is used as a special return value by various methods to indicated that the deque is empty.</p>
+/// <p><code>Deque</code> implementations generally do not define element-based versions of the <code>equals</code> and <code>hashCode</code> methods, but instead inherit the identity-based versions from class <code>Object</code>.</p>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaDeque<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6587,7 +7326,7 @@ impl<'mc> JavaDeque<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaDeque from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaDeque")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Deque")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaDeque object, got {}",
@@ -6598,6 +7337,7 @@ impl<'mc> JavaDeque<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn push(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6612,6 +7352,7 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6619,6 +7360,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6633,6 +7375,7 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn add_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6647,6 +7390,7 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6657,6 +7401,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6664,6 +7409,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn offer_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6678,6 +7424,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn remove_first(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6690,6 +7437,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6697,6 +7445,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6707,6 +7456,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_first_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6721,6 +7471,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn offer_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6735,6 +7486,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn remove_last(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6747,6 +7499,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6754,6 +7507,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6761,6 +7515,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_last_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6775,6 +7530,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6789,6 +7545,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn descending_iterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6801,6 +7558,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6815,6 +7573,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -6829,6 +7588,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6836,6 +7596,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6846,6 +7607,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6860,6 +7622,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6874,6 +7637,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6881,6 +7645,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6888,6 +7653,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6895,6 +7661,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6909,6 +7676,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6916,6 +7684,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6923,6 +7692,7 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6930,6 +7700,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6940,6 +7711,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6952,6 +7724,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6966,6 +7739,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6980,6 +7754,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6994,6 +7769,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7008,6 +7784,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7020,6 +7797,7 @@ impl<'mc> JavaDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7049,7 +7827,12 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaDeque<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaFormattable. Needed for returning it from Java.
+/// The <tt>Formattable</tt> interface must be implemented by any class that needs to perform custom formatting using the <tt>'s'</tt> conversion specifier of <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>. This interface allows basic control for formatting arbitrary objects. For example, the following class prints out different representations of a stock's name depending on the flags and length constraints: <code>import java.nio.CharBuffer; import java.util.Formatter; import java.util.Formattable; import java.util.Locale; import static java.util.FormattableFlags.*; ... public class StockName implements Formattable { private String symbol, companyName, frenchCompanyName; public StockName(String symbol, String companyName, String frenchCompanyName) { ... } ... public void formatTo(Formatter fmt, int f, int width, int precision) { StringBuilder sb = new StringBuilder(); // decide form of name String name = companyName; if (fmt.locale().equals(Locale.FRANCE)) name = frenchCompanyName; boolean alternate = (f &amp; ALTERNATE) == ALTERNATE; boolean usesymbol = alternate || (precision != -1 &amp;&amp; precision &lt; 10); String out = (usesymbol ? symbol : name); // apply precision if (precision == -1 || out.length() &lt; precision) { // write it all sb.append(out); } else { sb.append(out.substring(0, precision - 1)).append('*'); } // apply width and justification int len = sb.length(); if (len &lt; width) for (int i = 0; i &lt; width - len; i++) if ((f &amp; LEFT_JUSTIFY) == LEFT_JUSTIFY) sb.append(' '); else sb.insert(0, ' '); fmt.format(sb.toString()); } public String toString() { return String.format("%s - %s", symbol, companyName); } } </code>
+/// <p>When used in conjunction with the <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>, the above class produces the following output for various format strings. <code>Formatter fmt = new Formatter(); StockName sn = new StockName("HUGE", "Huge Fruit, Inc.", "Fruit Titanesque, Inc."); fmt.format("%s", sn); // -&gt; "Huge Fruit, Inc." fmt.format("%s", sn.toString()); // -&gt; "HUGE - Huge Fruit, Inc." fmt.format("%#s", sn); // -&gt; "HUGE" fmt.format("%-10.8s", sn); // -&gt; "HUGE " fmt.format("%.12s", sn); // -&gt; "Huge Fruit,*" fmt.format(Locale.FRANCE, "%25s", sn); // -&gt; " Fruit Titanesque, Inc." </code></p>
+/// <p>Formattables are not necessarily safe for multithreaded access. Thread safety is optional and may be enforced by classes that extend and implement this interface.</p>
+/// <p>Unless otherwise specified, passing a <tt>null</tt> argument to any method in this interface will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaFormattable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7064,7 +7847,7 @@ impl<'mc> JavaFormattable<'mc> {
                 eyre::eyre!("Tried to instantiate JavaFormattable from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaFormattable")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Formattable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaFormattable object, got {}",
@@ -7075,6 +7858,7 @@ impl<'mc> JavaFormattable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn format_to(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7110,6 +7894,9 @@ impl<'mc> JNIRaw<'mc> for JavaFormattable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// A container object which may or may not contain a <code>double</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsDouble()</code> will return the value.
+/// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalDouble.html#orElse-double-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalDouble.html#ifPresent-java.util.function.DoubleConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
+/// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalDouble</code> may have unpredictable results and should be avoided.</p>
 pub struct JavaOptionalDouble<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7133,7 +7920,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
                 eyre::eyre!("Tried to instantiate JavaOptionalDouble from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaOptionalDouble")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/OptionalDouble")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaOptionalDouble object, got {}",
@@ -7144,6 +7931,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7151,6 +7939,22 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
+    pub unsafe fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/DoubleConsumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub unsafe fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7170,6 +7974,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7184,20 +7989,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/DoubleConsumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7212,6 +8004,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7223,6 +8016,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7230,6 +8024,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7237,6 +8032,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7247,6 +8043,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -7261,6 +8058,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn empty(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7268,6 +8066,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalDouble;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7275,6 +8074,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn or_else(&mut self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7286,6 +8086,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub unsafe fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -7300,6 +8101,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7319,6 +8121,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7326,6 +8129,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7333,6 +8137,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7341,6 +8146,9 @@ impl<'mc> JavaOptionalDouble<'mc> {
         Ok(())
     }
 }
+/// A container object which may or may not contain a <code>long</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsLong()</code> will return the value.
+/// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalLong.html#orElse-long-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalLong.html#ifPresent-java.util.function.LongConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
+/// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalLong</code> may have unpredictable results and should be avoided.</p>
 pub struct JavaOptionalLong<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7364,7 +8172,7 @@ impl<'mc> JavaOptionalLong<'mc> {
                 eyre::eyre!("Tried to instantiate JavaOptionalLong from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaOptionalLong")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/OptionalLong")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaOptionalLong object, got {}",
@@ -7375,6 +8183,7 @@ impl<'mc> JavaOptionalLong<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7382,6 +8191,22 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
+    pub unsafe fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/LongConsumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub unsafe fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7401,6 +8226,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7415,20 +8241,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/LongConsumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7443,6 +8256,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7454,6 +8268,7 @@ impl<'mc> JavaOptionalLong<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7461,6 +8276,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7468,6 +8284,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7478,6 +8295,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
@@ -7492,6 +8310,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn empty(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7499,6 +8318,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalLong;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7506,6 +8326,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn or_else(&mut self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7517,6 +8338,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub unsafe fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -7531,6 +8353,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7550,6 +8373,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7557,6 +8381,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7564,6 +8389,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7572,6 +8398,20 @@ impl<'mc> JavaOptionalLong<'mc> {
         Ok(())
     }
 }
+/// <p>Hash table and linked list implementation of the <tt>Set</tt> interface, with predictable iteration order. This implementation differs from <tt>HashSet</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is the order in which elements were inserted into the set (<i>insertion-order</i>). Note that insertion order is <i>not</i> affected if an element is <i>re-inserted</i> into the set. (An element <tt>e</tt> is reinserted into a set <tt>s</tt> if <tt>s.add(e)</tt> is invoked when <tt>s.contains(e)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
+/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a href="../../java/util/HashSet.html" title="class in java.util"><code>HashSet</code></a>, without incurring the increased cost associated with <a title="class in java.util" href="../../java/util/TreeSet.html"><code>TreeSet</code></a>. It can be used to produce a copy of a set that has the same order as the original, regardless of the original set's implementation:</p>
+/// <pre> void foo(Set s) {
+/// Set copy = new LinkedHashSet(s);
+/// ...
+/// }
+/// </pre> This technique is particularly useful if a module takes a set on input, copies it, and later returns results whose order is determined by that of the copy. (Clients generally appreciate having things returned in the same order they were presented.)
+/// <p>This class provides all of the optional <tt>Set</tt> operations, and permits null elements. Like <tt>HashSet</tt>, it provides constant-time performance for the basic operations (<tt>add</tt>, <tt>contains</tt> and <tt>remove</tt>), assuming the hash function disperses elements properly among the buckets. Performance is likely to be just slightly below that of <tt>HashSet</tt>, due to the added expense of maintaining the linked list, with one exception: Iteration over a <tt>LinkedHashSet</tt> requires time proportional to the <i>size</i> of the set, regardless of its capacity. Iteration over a <tt>HashSet</tt> is likely to be more expensive, requiring time proportional to its <i>capacity</i>.</p>
+/// <p>A linked hash set has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. They are defined precisely as for <tt>HashSet</tt>. Note, however, that the penalty for choosing an excessively high value for initial capacity is less severe for this class than for <tt>HashSet</tt>, as iteration times for this class are unaffected by capacity.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a linked hash set concurrently, and at least one of the threads modifies the set, it <em>must</em> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
+/// <pre> Set s = Collections.synchronizedSet(new LinkedHashSet(...));</pre>
+/// <p>The iterators returned by this class's <tt>iterator</tt> method are <em>fail-fast</em>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaLinkedHashSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7595,7 +8435,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
                 eyre::eyre!("Tried to instantiate JavaLinkedHashSet from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaLinkedHashSet")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/LinkedHashSet")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaLinkedHashSet object, got {}",
@@ -7633,6 +8473,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         )?;
         Ok(res)
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7645,6 +8486,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7659,6 +8501,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7673,6 +8516,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7680,6 +8524,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7687,6 +8532,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7694,6 +8540,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7701,6 +8548,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7711,6 +8559,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7725,6 +8574,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7739,6 +8589,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7746,6 +8597,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7760,6 +8612,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7771,6 +8624,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7785,6 +8639,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7799,6 +8654,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7813,6 +8669,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7832,6 +8689,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7839,6 +8697,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7846,6 +8705,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7853,6 +8713,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7863,6 +8724,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7877,6 +8739,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7889,6 +8752,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7909,6 +8773,16 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaLinkedHashSet<'mc> {
         self.1
     }
 }
+/// Hash table based implementation of the <tt>Map</tt> interface. This implementation provides all of the optional map operations, and permits <tt>null</tt> values and the <tt>null</tt> key. (The <tt>HashMap</tt> class is roughly equivalent to <tt>Hashtable</tt>, except that it is unsynchronized and permits nulls.) This class makes no guarantees as to the order of the map; in particular, it does not guarantee that the order will remain constant over time.
+/// <p>This implementation provides constant-time performance for the basic operations (<tt>get</tt> and <tt>put</tt>), assuming the hash function disperses the elements properly among the buckets. Iteration over collection views requires time proportional to the "capacity" of the <tt>HashMap</tt> instance (the number of buckets) plus its size (the number of key-value mappings). Thus, it's very important not to set the initial capacity too high (or the load factor too low) if iteration performance is important.</p>
+/// <p>An instance of <tt>HashMap</tt> has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. The <i>capacity</i> is the number of buckets in the hash table, and the initial capacity is simply the capacity at the time the hash table is created. The <i>load factor</i> is a measure of how full the hash table is allowed to get before its capacity is automatically increased. When the number of entries in the hash table exceeds the product of the load factor and the current capacity, the hash table is <i>rehashed</i> (that is, internal data structures are rebuilt) so that the hash table has approximately twice the number of buckets.</p>
+/// <p>As a general rule, the default load factor (.75) offers a good tradeoff between time and space costs. Higher values decrease the space overhead but increase the lookup cost (reflected in most of the operations of the <tt>HashMap</tt> class, including <tt>get</tt> and <tt>put</tt>). The expected number of entries in the map and its load factor should be taken into account when setting its initial capacity, so as to minimize the number of rehash operations. If the initial capacity is greater than the maximum number of entries divided by the load factor, no rehash operations will ever occur.</p>
+/// <p>If many mappings are to be stored in a <tt>HashMap</tt> instance, creating it with a sufficiently large capacity will allow the mappings to be stored more efficiently than letting it perform automatic rehashing as needed to grow the table. Note that using many keys with the same <code>hashCode()</code> is a sure way to slow down performance of any hash table. To ameliorate impact, when keys are <a href="../../java/lang/Comparable.html" title="interface in java.lang"><code>Comparable</code></a>, this class may use comparison order among keys to help break ties.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a hash map concurrently, and at least one of the threads modifies the map structurally, it <i>must</i> be synchronized externally. (A structural modification is any operation that adds or deletes one or more mappings; merely changing the value associated with a key that an instance already contains is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the map. If no such object exists, the map should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the map:</p>
+/// <pre> Map m = Collections.synchronizedMap(new HashMap(...));</pre>
+/// <p>The iterators returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7930,7 +8804,7 @@ impl<'mc> JavaHashMap<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaHashMap from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaHashMap")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/HashMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaHashMap object, got {}",
@@ -7968,6 +8842,7 @@ impl<'mc> JavaHashMap<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -7987,6 +8862,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8001,6 +8877,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8020,6 +8897,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8030,6 +8908,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8037,6 +8916,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8044,6 +8924,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8051,6 +8932,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8073,6 +8955,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8087,6 +8970,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8094,6 +8978,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8107,6 +8992,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8114,6 +9000,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8128,6 +9015,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8147,6 +9035,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8166,6 +9055,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8180,6 +9070,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8194,6 +9085,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8213,6 +9105,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8220,6 +9113,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8234,6 +9128,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8253,6 +9148,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8272,6 +9168,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8286,6 +9183,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8297,6 +9195,7 @@ impl<'mc> JavaHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8304,6 +9203,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -8323,6 +9223,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8330,6 +9231,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8337,6 +9239,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8350,6 +9253,19 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashMap<'mc> {
         self.1
     }
 }
+/// This class implements the <tt>Map</tt> interface with a hash table, using reference-equality in place of object-equality when comparing keys (and values). In other words, in an <tt>IdentityHashMap</tt>, two keys <tt>k1</tt> and <tt>k2</tt> are considered equal if and only if <tt>(k1==k2)</tt>. (In normal <tt>Map</tt> implementations (like <tt>HashMap</tt>) two keys <tt>k1</tt> and <tt>k2</tt> are considered equal if and only if <tt>(k1==null ? k2==null : k1.equals(k2))</tt>.)
+/// <p><b>This class is <i>not</i> a general-purpose <tt>Map</tt> implementation! While this class implements the <tt>Map</tt> interface, it intentionally violates <tt>Map's</tt> general contract, which mandates the use of the <tt>equals</tt> method when comparing objects. This class is designed for use only in the rare cases wherein reference-equality semantics are required.</b></p>
+/// <p>A typical use of this class is <i>topology-preserving object graph transformations</i>, such as serialization or deep-copying. To perform such a transformation, a program must maintain a "node table" that keeps track of all the object references that have already been processed. The node table must not equate distinct objects even if they happen to be equal. Another typical use of this class is to maintain <i>proxy objects</i>. For example, a debugging facility might wish to maintain a proxy object for each object in the program being debugged.</p>
+/// <p>This class provides all of the optional map operations, and permits <tt>null</tt> values and the <tt>null</tt> key. This class makes no guarantees as to the order of the map; in particular, it does not guarantee that the order will remain constant over time.</p>
+/// <p>This class provides constant-time performance for the basic operations (<tt>get</tt> and <tt>put</tt>), assuming the system identity hash function (<a href="../../java/lang/System.html#identityHashCode-java.lang.Object-"><code>System.identityHashCode(Object)</code></a>) disperses elements properly among the buckets.</p>
+/// <p>This class has one tuning parameter (which affects performance but not semantics): <i>expected maximum size</i>. This parameter is the maximum number of key-value mappings that the map is expected to hold. Internally, this parameter is used to determine the number of buckets initially comprising the hash table. The precise relationship between the expected maximum size and the number of buckets is unspecified.</p>
+/// <p>If the size of the map (the number of key-value mappings) sufficiently exceeds the expected maximum size, the number of buckets is increased. Increasing the number of buckets ("rehashing") may be fairly expensive, so it pays to create identity hash maps with a sufficiently large expected maximum size. On the other hand, iteration over collection views requires time proportional to the number of buckets in the hash table, so it pays not to set the expected maximum size too high if you are especially concerned with iteration performance or memory usage.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access an identity hash map concurrently, and at least one of the threads modifies the map structurally, it <i>must</i> be synchronized externally. (A structural modification is any operation that adds or deletes one or more mappings; merely changing the value associated with a key that an instance already contains is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the map. If no such object exists, the map should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the map:</p>
+/// <pre> Map m = Collections.synchronizedMap(new IdentityHashMap(...));</pre>
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>fail-fast iterators should be used only to detect bugs.</i></p>
+/// <p>Implementation note: This is a simple <i>linear-probe</i> hash table, as described for example in texts by Sedgewick and Knuth. The array alternates holding keys and values. (This has better locality for large tables than does using separate arrays.) For many JRE implementations and operation mixes, this class will yield better performance than <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (which uses <i>chaining</i> rather than linear-probing).</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaIdentityHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8373,7 +9289,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
                 eyre::eyre!("Tried to instantiate JavaIdentityHashMap from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaIdentityHashMap")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/IdentityHashMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaIdentityHashMap object, got {}",
@@ -8393,6 +9309,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
         Ok(res)
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -8412,6 +9329,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8426,6 +9344,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8445,6 +9364,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8459,6 +9379,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8469,6 +9390,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8476,6 +9398,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8483,6 +9406,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8490,6 +9414,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8497,6 +9422,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8511,6 +9437,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8518,6 +9445,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8525,6 +9453,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8539,6 +9468,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8553,6 +9483,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8567,6 +9498,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8574,6 +9506,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8588,6 +9521,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8599,6 +9533,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -8618,6 +9553,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8625,6 +9561,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8632,6 +9569,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8639,6 +9577,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8661,6 +9600,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8674,6 +9614,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8693,6 +9634,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8712,6 +9654,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8731,6 +9674,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8750,6 +9694,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8775,6 +9720,23 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaIdentityHashMap<'mc> {
         self.1
     }
 }
+/// <p>Hash table and linked list implementation of the <tt>Map</tt> interface, with predictable iteration order. This implementation differs from <tt>HashMap</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is normally the order in which keys were inserted into the map (<i>insertion-order</i>). Note that insertion order is not affected if a key is <i>re-inserted</i> into the map. (A key <tt>k</tt> is reinserted into a map <tt>m</tt> if <tt>m.put(k, v)</tt> is invoked when <tt>m.containsKey(k)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
+/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (and <a title="class in java.util" href="../../java/util/Hashtable.html"><code>Hashtable</code></a>), without incurring the increased cost associated with <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. It can be used to produce a copy of a map that has the same order as the original, regardless of the original map's implementation:</p>
+/// <pre> void foo(Map m) {
+/// Map copy = new LinkedHashMap(m);
+/// ...
+/// }
+/// </pre> This technique is particularly useful if a module takes a map on input, copies it, and later returns results whose order is determined by that of the copy. (Clients generally appreciate having things returned in the same order they were presented.)
+/// <p>A special <a href="../../java/util/LinkedHashMap.html#LinkedHashMap-int-float-boolean-"><code>constructor</code></a> is provided to create a linked hash map whose order of iteration is the order in which its entries were last accessed, from least-recently accessed to most-recently (<i>access-order</i>). This kind of map is well-suited to building LRU caches. Invoking the <code>put</code>, <code>putIfAbsent</code>, <code>get</code>, <code>getOrDefault</code>, <code>compute</code>, <code>computeIfAbsent</code>, <code>computeIfPresent</code>, or <code>merge</code> methods results in an access to the corresponding entry (assuming it exists after the invocation completes). The <code>replace</code> methods only result in an access of the entry if the value is replaced. The <code>putAll</code> method generates one entry access for each mapping in the specified map, in the order that key-value mappings are provided by the specified map's entry set iterator. <i>No other methods generate entry accesses.</i> In particular, operations on collection-views do <i>not</i> affect the order of iteration of the backing map.</p>
+/// <p>The <a href="../../java/util/LinkedHashMap.html#removeEldestEntry-java.util.Map.Entry-"><code>removeEldestEntry(Map.Entry)</code></a> method may be overridden to impose a policy for removing stale mappings automatically when new mappings are added to the map.</p>
+/// <p>This class provides all of the optional <tt>Map</tt> operations, and permits null elements. Like <tt>HashMap</tt>, it provides constant-time performance for the basic operations (<tt>add</tt>, <tt>contains</tt> and <tt>remove</tt>), assuming the hash function disperses elements properly among the buckets. Performance is likely to be just slightly below that of <tt>HashMap</tt>, due to the added expense of maintaining the linked list, with one exception: Iteration over the collection-views of a <tt>LinkedHashMap</tt> requires time proportional to the <i>size</i> of the map, regardless of its capacity. Iteration over a <tt>HashMap</tt> is likely to be more expensive, requiring time proportional to its <i>capacity</i>.</p>
+/// <p>A linked hash map has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. They are defined precisely as for <tt>HashMap</tt>. Note, however, that the penalty for choosing an excessively high value for initial capacity is less severe for this class than for <tt>HashMap</tt>, as iteration times for this class are unaffected by capacity.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a linked hash map concurrently, and at least one of the threads modifies the map structurally, it <em>must</em> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the map. If no such object exists, the map should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the map:</p>
+/// <pre> Map m = Collections.synchronizedMap(new LinkedHashMap(...));</pre> A structural modification is any operation that adds or deletes one or more mappings or, in the case of access-ordered linked hash maps, affects iteration order. In insertion-ordered linked hash maps, merely changing the value associated with a key that is already contained in the map is not a structural modification. <strong>In access-ordered linked hash maps, merely querying the map with <tt>get</tt> is a structural modification. </strong>)
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's collection view methods are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>The spliterators returned by the spliterator method of the collections returned by all of this class's collection view methods are <em><a href="Spliterator.html#binding">late-binding</a></em>, <em>fail-fast</em>, and additionally report <a href="../../java/util/Spliterator.html#ORDERED"><code>Spliterator.ORDERED</code></a>.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaLinkedHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8798,7 +9760,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
                 eyre::eyre!("Tried to instantiate JavaLinkedHashMap from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaLinkedHashMap")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/LinkedHashMap")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaLinkedHashMap object, got {}",
@@ -8844,6 +9806,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8858,6 +9821,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8868,6 +9832,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8875,6 +9840,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8889,6 +9855,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8896,6 +9863,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8910,6 +9878,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8917,6 +9886,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8931,6 +9901,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8950,6 +9921,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -8969,6 +9941,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8988,6 +9961,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8995,6 +9969,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9002,6 +9977,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9024,6 +10000,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9031,6 +10008,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9044,6 +10022,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9058,6 +10037,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9077,6 +10057,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9096,6 +10077,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9110,6 +10092,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9129,6 +10112,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9148,6 +10132,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9162,6 +10147,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9173,6 +10159,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9180,6 +10167,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -9199,6 +10187,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9206,6 +10195,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9213,6 +10203,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9226,6 +10217,12 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaLinkedHashMap<'mc> {
         self.1
     }
 }
+/// This class provides a skeletal implementation of the <tt>List</tt> interface to minimize the effort required to implement this interface backed by a "sequential access" data store (such as a linked list). For random access data (such as an array), <tt>AbstractList</tt> should be used in preference to this class.
+/// <p>This class is the opposite of the <tt>AbstractList</tt> class in the sense that it implements the "random access" methods (<tt>get(int index)</tt>, <tt>set(int index, E element)</tt>, <tt>add(int index, E element)</tt> and <tt>remove(int index)</tt>) on top of the list's list iterator, instead of the other way around.</p>
+/// <p>To implement a list the programmer needs only to extend this class and provide implementations for the <tt>listIterator</tt> and <tt>size</tt> methods. For an unmodifiable list, the programmer need only implement the list iterator's <tt>hasNext</tt>, <tt>next</tt>, <tt>hasPrevious</tt>, <tt>previous</tt> and <tt>index</tt> methods.</p>
+/// <p>For a modifiable list the programmer should additionally implement the list iterator's <tt>set</tt> method. For a variable-size list the programmer should additionally implement the list iterator's <tt>remove</tt> and <tt>add</tt> methods.</p>
+/// <p>The programmer should generally provide a void (no argument) and collection constructor, as per the recommendation in the <tt>Collection</tt> interface specification.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaAbstractSequentialList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9250,7 +10247,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractSequentialList")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractSequentialList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractSequentialList object, got {}",
@@ -9261,6 +10258,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -9280,6 +10278,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_with_int(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -9294,6 +10293,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get(
         &mut self,
         arg0: i32,
@@ -9308,6 +10308,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9318,6 +10319,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -9337,6 +10339,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn set(
         &mut self,
         arg0: i32,
@@ -9356,6 +10359,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -9370,6 +10374,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9384,6 +10389,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9391,6 +10397,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9405,6 +10412,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9412,6 +10420,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9426,6 +10435,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn sub_list(
         &mut self,
         arg0: i32,
@@ -9445,6 +10455,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9456,6 +10467,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9463,6 +10475,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9470,6 +10483,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9484,6 +10498,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9498,6 +10513,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9512,6 +10528,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9526,6 +10543,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -9545,6 +10563,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9552,6 +10571,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9559,6 +10579,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9566,6 +10587,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9576,6 +10598,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -9588,6 +10611,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9602,6 +10626,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -9614,6 +10639,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9628,6 +10654,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9642,6 +10669,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9662,7 +10690,21 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractSequentialList<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaComparator. Needed for returning it from Java.
+/// A comparison function, which imposes a <i>total ordering</i> on some collection of objects. Comparators can be passed to a sort method (such as <a href="../../java/util/Collections.html#sort-java.util.List-java.util.Comparator-"><code>Collections.sort</code></a> or <a href="../../java/util/Arrays.html#sort-T:A-java.util.Comparator-"><code>Arrays.sort</code></a>) to allow precise control over the sort order. Comparators can also be used to control the order of certain data structures (such as <a href="../../java/util/SortedSet.html" title="interface in java.util"><code>sorted sets</code></a> or <a title="interface in java.util" href="../../java/util/SortedMap.html"><code>sorted maps</code></a>), or to provide an ordering for collections of objects that don't have a <a href="../../java/lang/Comparable.html" title="interface in java.lang"><code>natural ordering</code></a>.
+/// <p>The ordering imposed by a comparator <tt>c</tt> on a set of elements <tt>S</tt> is said to be <i>consistent with equals</i> if and only if <tt>c.compare(e1, e2)==0</tt> has the same boolean value as <tt>e1.equals(e2)</tt> for every <tt>e1</tt> and <tt>e2</tt> in <tt>S</tt>.</p>
+/// <p>Caution should be exercised when using a comparator capable of imposing an ordering inconsistent with equals to order a sorted set (or sorted map). Suppose a sorted set (or sorted map) with an explicit comparator <tt>c</tt> is used with elements (or keys) drawn from a set <tt>S</tt>. If the ordering imposed by <tt>c</tt> on <tt>S</tt> is inconsistent with equals, the sorted set (or sorted map) will behave "strangely." In particular the sorted set (or sorted map) will violate the general contract for set (or map), which is defined in terms of <tt>equals</tt>.</p>
+/// <p>For example, suppose one adds two elements <code>a</code> and <code>b</code> such that <code>(a.equals(b) &amp;&amp; c.compare(a, b) != 0)</code> to an empty <code>TreeSet</code> with comparator <code>c</code>. The second <code>add</code> operation will return true (and the size of the tree set will increase) because <code>a</code> and <code>b</code> are not equivalent from the tree set's perspective, even though this is contrary to the specification of the <a href="../../java/util/Set.html#add-E-"><code>Set.add</code></a> method.</p>
+/// <p>Note: It is generally a good idea for comparators to also implement <tt>java.io.Serializable</tt>, as they may be used as ordering methods in serializable data structures (like <a href="../../java/util/TreeSet.html" title="class in java.util"><code>TreeSet</code></a>, <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>). In order for the data structure to serialize successfully, the comparator (if provided) must implement <tt>Serializable</tt>.</p>
+/// <p>For the mathematically inclined, the <i>relation</i> that defines the <i>imposed ordering</i> that a given comparator <tt>c</tt> imposes on a given set of objects <tt>S</tt> is:</p>
+/// <pre> {(x, y) such that c.compare(x, y) &lt;= 0}.
+/// </pre> The <i>quotient</i> for this total order is:
+/// <pre> {(x, y) such that c.compare(x, y) == 0}.
+/// </pre> It follows immediately from the contract for <tt>compare</tt> that the quotient is an <i>equivalence relation</i> on <tt>S</tt>, and that the imposed ordering is a <i>total order</i> on <tt>S</tt>. When we say that the ordering imposed by <tt>c</tt> on <tt>S</tt> is <i>consistent with equals</i>, we mean that the quotient for the ordering is the equivalence relation defined by the objects' <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals(Object)</code></a> method(s):
+/// <pre> {(x, y) such that x.equals(y)}. </pre>
+/// <p>Unlike <code>Comparable</code>, a comparator may optionally permit comparison of null arguments, while maintaining the requirements for an equivalence relation.</p>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaComparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9677,7 +10719,7 @@ impl<'mc> JavaComparator<'mc> {
                 eyre::eyre!("Tried to instantiate JavaComparator from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaComparator")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Comparator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaComparator object, got {}",
@@ -9688,6 +10730,7 @@ impl<'mc> JavaComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9702,6 +10745,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn compare(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9721,6 +10765,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn reverse_order(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -9728,6 +10773,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = jni.call_static_method(cls, "reverseOrder", "()Ljava/util/Comparator;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn comparing_with_function(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -9747,6 +10793,7 @@ impl<'mc> JavaComparator<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn then_comparing_with_comparator(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -9761,6 +10808,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn then_comparing_with_function(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9780,6 +10828,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn comparing_int(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -9794,6 +10843,7 @@ impl<'mc> JavaComparator<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn comparing_long(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -9808,6 +10858,7 @@ impl<'mc> JavaComparator<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn comparing_double(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -9822,6 +10873,7 @@ impl<'mc> JavaComparator<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn reversed(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9832,6 +10884,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn then_comparing_int(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9846,6 +10899,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn then_comparing_long(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9860,6 +10914,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn then_comparing_double(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9874,6 +10929,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn natural_order(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -9881,6 +10937,7 @@ impl<'mc> JavaComparator<'mc> {
         let res = jni.call_static_method(cls, "naturalOrder", "()Ljava/util/Comparator;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn nulls_first(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -9895,6 +10952,7 @@ impl<'mc> JavaComparator<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn nulls_last(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -9919,6 +10977,9 @@ impl<'mc> JNIRaw<'mc> for JavaComparator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// This class implements an encoder for encoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.
+/// <p>Instances of <a href="../../java/util/Base64.Encoder.html" title="class in java.util"><code>Base64.Encoder</code></a> class are safe for use by multiple concurrent threads.</p>
+/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
 pub struct JavaBase64Encoder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9942,7 +11003,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
                 eyre::eyre!("Tried to instantiate JavaBase64Encoder from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaBase64Encoder")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Base64Encoder")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaBase64Encoder object, got {}",
@@ -9953,6 +11014,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn encode_to_string(
         &mut self,
         arg0: Vec<i8>,
@@ -9970,6 +11032,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn without_padding(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -9982,6 +11045,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn wrap(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9996,6 +11060,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn encode_with_bytes(
         &mut self,
         arg0: Vec<i8>,
@@ -10007,6 +11072,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10026,6 +11092,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10040,6 +11107,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10051,6 +11119,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10058,6 +11127,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10065,6 +11135,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10072,6 +11143,7 @@ impl<'mc> JavaBase64Encoder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10080,6 +11152,12 @@ impl<'mc> JavaBase64Encoder<'mc> {
         Ok(())
     }
 }
+/// An instance of this class is used to generate a stream of pseudorandom numbers. The class uses a 48-bit seed, which is modified using a linear congruential formula. (See Donald Knuth, <i>The Art of Computer Programming, Volume 2</i>, Section 3.2.1.)
+/// <p>If two instances of <code>Random</code> are created with the same seed, and the same sequence of method calls is made for each, they will generate and return identical sequences of numbers. In order to guarantee this property, particular algorithms are specified for the class <code>Random</code>. Java implementations must use all the algorithms shown here for the class <code>Random</code>, for the sake of absolute portability of Java code. However, subclasses of class <code>Random</code> are permitted to use other algorithms, so long as they adhere to the general contracts for all the methods.</p>
+/// <p>The algorithms implemented by class <code>Random</code> use a <code>protected</code> utility method that on each invocation can supply up to 32 pseudorandomly generated bits.</p>
+/// <p>Many applications will find the method <a href="../../java/lang/Math.html#random--"><code>Math.random()</code></a> simpler to use.</p>
+/// <p>Instances of <code>java.util.Random</code> are threadsafe. However, the concurrent use of the same <code>java.util.Random</code> instance across threads may encounter contention and consequent poor performance. Consider instead using <a href="../../java/util/concurrent/ThreadLocalRandom.html" title="class in java.util.concurrent"><code>ThreadLocalRandom</code></a> in multithreaded designs.</p>
+/// <p>Instances of <code>java.util.Random</code> are not cryptographically secure. Consider instead using <a href="../../java/security/SecureRandom.html" title="class in java.security"><code>SecureRandom</code></a> to get a cryptographically secure pseudo-random number generator for use by security-sensitive applications.</p>
 pub struct JavaRandom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10101,7 +11179,7 @@ impl<'mc> JavaRandom<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaRandom from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaRandom")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Random")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaRandom object, got {}",
@@ -10121,6 +11199,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)])?;
         Ok(res)
     }
+
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10128,6 +11207,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10147,6 +11227,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
@@ -10166,6 +11247,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -10185,6 +11267,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn ints_with_long(
         &mut self,
         arg0: i64,
@@ -10207,6 +11290,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn longs(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10229,6 +11313,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -10248,6 +11333,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn doubles_with_long(
         &mut self,
         arg0: i64,
@@ -10270,6 +11356,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn set_seed(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10281,6 +11368,7 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10288,6 +11376,7 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -10307,25 +11396,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
-    pub fn next_int(
-        &mut self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "nextInt",
-            "(II)I",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
@@ -10345,6 +11416,27 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
+    pub fn next_int(
+        &mut self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "nextInt",
+            "(II)I",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10364,6 +11456,7 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10378,6 +11471,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10389,6 +11483,7 @@ impl<'mc> JavaRandom<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10396,6 +11491,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10403,6 +11499,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10410,6 +11507,7 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10417,6 +11515,7 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10424,6 +11523,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10437,7 +11537,18 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaRandom<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaList. Needed for returning it from Java.
+/// An ordered collection (also known as a <i>sequence</i>). The user of this interface has precise control over where in the list each element is inserted. The user can access elements by their integer index (position in the list), and search for elements in the list.
+/// <p>Unlike sets, lists typically allow duplicate elements. More formally, lists typically allow pairs of elements <tt>e1</tt> and <tt>e2</tt> such that <tt>e1.equals(e2)</tt>, and they typically allow multiple null elements if they allow null elements at all. It is not inconceivable that someone might wish to implement a list that prohibits duplicates, by throwing runtime exceptions when the user attempts to insert them, but we expect this usage to be rare.</p>
+/// <p>The <tt>List</tt> interface places additional stipulations, beyond those specified in the <tt>Collection</tt> interface, on the contracts of the <tt>iterator</tt>, <tt>add</tt>, <tt>remove</tt>, <tt>equals</tt>, and <tt>hashCode</tt> methods. Declarations for other inherited methods are also included here for convenience.</p>
+/// <p>The <tt>List</tt> interface provides four methods for positional (indexed) access to list elements. Lists (like Java arrays) are zero based. Note that these operations may execute in time proportional to the index value for some implementations (the <tt>LinkedList</tt> class, for example). Thus, iterating over the elements in a list is typically preferable to indexing through it if the caller does not know the implementation.</p>
+/// <p>The <tt>List</tt> interface provides a special iterator, called a <tt>ListIterator</tt>, that allows element insertion and replacement, and bidirectional access in addition to the normal operations that the <tt>Iterator</tt> interface provides. A method is provided to obtain a list iterator that starts at a specified position in the list.</p>
+/// <p>The <tt>List</tt> interface provides two methods to search for a specified object. From a performance standpoint, these methods should be used with caution. In many implementations they will perform costly linear searches.</p>
+/// <p>The <tt>List</tt> interface provides two methods to efficiently insert and remove multiple elements at an arbitrary point in the list.</p>
+/// <p>Note: While it is permissible for lists to contain themselves as elements, extreme caution is advised: the <tt>equals</tt> and <tt>hashCode</tt> methods are no longer well defined on such a list.</p>
+/// <p>Some list implementations have restrictions on the elements that they may contain. For example, some implementations prohibit null elements, and some have restrictions on the types of their elements. Attempting to add an ineligible element throws an unchecked exception, typically <tt>NullPointerException</tt> or <tt>ClassCastException</tt>. Attempting to query the presence of an ineligible element may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible element whose completion would not result in the insertion of an ineligible element into the list may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface.</p>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10450,7 +11561,7 @@ impl<'mc> JavaList<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaList from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaList")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/List")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaList object, got {}",
@@ -10461,6 +11572,7 @@ impl<'mc> JavaList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -10480,6 +11592,7 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -10494,6 +11607,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn get(
         &mut self,
         arg0: i32,
@@ -10508,6 +11622,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10522,6 +11637,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10529,6 +11645,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn copy_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -10543,6 +11660,7 @@ impl<'mc> JavaList<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10557,6 +11675,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10564,6 +11683,7 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10578,6 +11698,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10585,6 +11706,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10599,6 +11721,7 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10606,6 +11729,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn sub_list(
         &mut self,
         arg0: i32,
@@ -10625,6 +11749,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10635,6 +11760,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
@@ -10643,6 +11769,7 @@ impl<'mc> JavaList<'mc> {
         let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/List;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of_with_object(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -10671,6 +11798,7 @@ impl<'mc> JavaList<'mc> {
 "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10)])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10685,6 +11813,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10697,6 +11826,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -10716,6 +11846,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn set(
         &mut self,
         arg0: i32,
@@ -10735,6 +11866,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10749,6 +11881,7 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10763,6 +11896,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10777,6 +11911,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -10791,6 +11926,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10805,6 +11941,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10815,6 +11952,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10829,6 +11967,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10841,6 +11980,7 @@ impl<'mc> JavaList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10870,6 +12010,21 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaList<'mc> {
         self.1
     }
 }
+/// A class that represents an immutable universally unique identifier (UUID). A UUID represents a 128-bit value.
+/// <p>There exist different variants of these global identifiers. The methods of this class are for manipulating the Leach-Salz variant, although the constructors allow the creation of any variant of UUID (described below).</p>
+/// <p>The layout of a variant 2 (Leach-Salz) UUID is as follows: The most significant long consists of the following unsigned fields:</p>
+/// <pre> 0xFFFFFFFF00000000 time_low
+/// 0x00000000FFFF0000 time_mid
+/// 0x000000000000F000 version
+/// 0x0000000000000FFF time_hi
+/// </pre> The least significant long consists of the following unsigned fields:
+/// <pre> 0xC000000000000000 variant
+/// 0x3FFF000000000000 clock_seq
+/// 0x0000FFFFFFFFFFFF node
+/// </pre>
+/// <p>The variant field contains a value which identifies the layout of the <code>UUID</code>. The bit layout described above is valid only for a <code>UUID</code> with a variant value of 2, which indicates the Leach-Salz variant.</p>
+/// <p>The version field holds a value that describes the type of this <code>UUID</code>. There are four different basic types of UUIDs: time-based, DCE security, name-based, and randomly generated UUIDs. These types have a version value of 1, 2, 3 and 4, respectively.</p>
+/// <p>For more information including algorithms used to create <code>UUID</code>s, see <a href="http://www.ietf.org/rfc/rfc4122.txt"> <i>RFC&nbsp;4122: A Universally Unique IDentifier (UUID) URN Namespace</i></a>, section 4.2 "Algorithms for Creating a Time-Based UUID".</p>
 pub struct JavaUUID<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10891,7 +12046,7 @@ impl<'mc> JavaUUID<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaUUID from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaUUID")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/UUID")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaUUID object, got {}",
@@ -10902,27 +12057,7 @@ impl<'mc> JavaUUID<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn least_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLeastSignificantBits", "()J", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
-    }
-    pub fn most_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMostSignificantBits", "()J", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
-    }
-    pub fn clock_sequence(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clockSequence", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+
     pub fn variant(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10930,6 +12065,31 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
+    pub fn least_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLeastSignificantBits", "()J", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j().unwrap())
+    }
+
+    pub fn most_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMostSignificantBits", "()J", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j().unwrap())
+    }
+
+    pub fn clock_sequence(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clockSequence", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10944,6 +12104,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10955,6 +12116,7 @@ impl<'mc> JavaUUID<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn version(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10962,6 +12124,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10969,6 +12132,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn compare_to_with_object(
         &mut self,
         arg0: std::option::Option<u128>,
@@ -10989,6 +12153,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn timestamp(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10996,6 +12161,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub fn node(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11003,6 +12169,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -11022,6 +12189,7 @@ impl<'mc> JavaUUID<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11029,6 +12197,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11036,6 +12205,7 @@ impl<'mc> JavaUUID<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11044,6 +12214,13 @@ impl<'mc> JavaUUID<'mc> {
         Ok(())
     }
 }
+/// This class implements the <tt>Set</tt> interface, backed by a hash table (actually a <tt>HashMap</tt> instance). It makes no guarantees as to the iteration order of the set; in particular, it does not guarantee that the order will remain constant over time. This class permits the <tt>null</tt> element.
+/// <p>This class offers constant time performance for the basic operations (<tt>add</tt>, <tt>remove</tt>, <tt>contains</tt> and <tt>size</tt>), assuming the hash function disperses the elements properly among the buckets. Iterating over this set requires time proportional to the sum of the <tt>HashSet</tt> instance's size (the number of elements) plus the "capacity" of the backing <tt>HashMap</tt> instance (the number of buckets). Thus, it's very important not to set the initial capacity too high (or the load factor too low) if iteration performance is important.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a hash set concurrently, and at least one of the threads modifies the set, it <i>must</i> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
+/// <pre> Set s = Collections.synchronizedSet(new HashSet(...));</pre>
+/// <p>The iterators returned by this class's <tt>iterator</tt> method are <i>fail-fast</i>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the Iterator throws a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaHashSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11065,7 +12242,7 @@ impl<'mc> JavaHashSet<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaHashSet from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaHashSet")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/HashSet")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaHashSet object, got {}",
@@ -11107,6 +12284,7 @@ impl<'mc> JavaHashSet<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11121,6 +12299,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11135,6 +12314,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11142,6 +12322,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11149,6 +12330,7 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11156,6 +12338,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11163,6 +12346,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11173,6 +12357,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11187,6 +12372,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11199,6 +12385,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11213,6 +12400,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11220,6 +12408,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11234,6 +12423,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11245,6 +12435,7 @@ impl<'mc> JavaHashSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11259,6 +12450,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11273,6 +12465,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11287,6 +12480,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -11306,6 +12500,7 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11313,6 +12508,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11320,6 +12516,7 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11327,6 +12524,7 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11337,6 +12535,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11351,6 +12550,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11363,6 +12563,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11383,6 +12584,13 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashSet<'mc> {
         self.1
     }
 }
+/// This class provides a skeletal implementation of the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface to minimize the effort required to implement this interface backed by a "random access" data store (such as an array). For sequential access data (such as a linked list), <a href="../../java/util/AbstractSequentialList.html" title="class in java.util"><code>AbstractSequentialList</code></a> should be used in preference to this class.
+/// <p>To implement an unmodifiable list, the programmer needs only to extend this class and provide implementations for the <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a> and <a href="../../java/util/List.html#size--"><code>size()</code></a> methods.</p>
+/// <p>To implement a modifiable list, the programmer must additionally override the <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a> method (which otherwise throws an <code>UnsupportedOperationException</code>). If the list is variable-size the programmer must additionally override the <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a> methods.</p>
+/// <p>The programmer should generally provide a void (no argument) and collection constructor, as per the recommendation in the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> interface specification.</p>
+/// <p>Unlike the other abstract collection implementations, the programmer does <i>not</i> have to provide an iterator implementation; the iterator and list iterator are implemented by this class, on top of the "random access" methods: <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a>, <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a>, <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a>.</p>
+/// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the collection being implemented admits a more efficient implementation.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaAbstractList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11406,7 +12614,7 @@ impl<'mc> JavaAbstractList<'mc> {
                 eyre::eyre!("Tried to instantiate JavaAbstractList from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaAbstractList")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractList object, got {}",
@@ -11417,6 +12625,7 @@ impl<'mc> JavaAbstractList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -11436,6 +12645,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove_with_int(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -11450,6 +12660,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get(
         &mut self,
         arg0: i32,
@@ -11464,6 +12675,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11478,6 +12690,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11485,6 +12698,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11499,6 +12713,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11506,6 +12721,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11520,6 +12736,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn sub_list(
         &mut self,
         arg0: i32,
@@ -11539,6 +12756,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11549,6 +12767,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -11568,6 +12787,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn set(
         &mut self,
         arg0: i32,
@@ -11587,6 +12807,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -11601,6 +12822,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11612,6 +12834,7 @@ impl<'mc> JavaAbstractList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11619,6 +12842,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11626,6 +12850,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11640,6 +12865,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11654,6 +12880,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11668,6 +12895,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11682,6 +12910,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -11701,6 +12930,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11708,6 +12938,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11715,6 +12946,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11722,6 +12954,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11732,6 +12965,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11744,6 +12978,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11758,6 +12993,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11770,6 +13006,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11784,6 +13021,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11798,6 +13036,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11818,6 +13057,9 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractList<'mc> {
         self.1
     }
 }
+/// A container object which may or may not contain a non-null value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>get()</code> will return the value.
+/// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/Optional.html#orElse-T-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/Optional.html#ifPresent-java.util.function.Consumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
+/// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>Optional</code> may have unpredictable results and should be avoided.</p>
 pub struct JavaOptional<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11839,7 +13081,7 @@ impl<'mc> JavaOptional<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaOptional from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaOptional")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Optional")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaOptional object, got {}",
@@ -11850,6 +13092,22 @@ impl<'mc> JavaOptional<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
+    pub unsafe fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/Consumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub unsafe fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11869,6 +13127,7 @@ impl<'mc> JavaOptional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn or(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11883,6 +13142,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11897,6 +13157,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of_nullable(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -11911,20 +13172,7 @@ impl<'mc> JavaOptional<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/Consumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+
     pub fn get(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11932,6 +13180,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11946,6 +13195,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11957,6 +13207,7 @@ impl<'mc> JavaOptional<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11964,6 +13215,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11971,6 +13223,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn map(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11985,6 +13238,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11995,6 +13249,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -12009,6 +13264,7 @@ impl<'mc> JavaOptional<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12023,6 +13279,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn empty(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12030,6 +13287,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = jni.call_static_method(cls, "empty", "()Ljava/util/Optional;", &[])?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn flat_map(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12044,6 +13302,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12051,6 +13310,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12065,6 +13325,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -12079,6 +13340,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -12098,6 +13360,7 @@ impl<'mc> JavaOptional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12105,6 +13368,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12112,6 +13376,7 @@ impl<'mc> JavaOptional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12120,7 +13385,13 @@ impl<'mc> JavaOptional<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements JavaListIterator. Needed for returning it from Java.
+/// An iterator for lists that allows the programmer to traverse the list in either direction, modify the list during iteration, and obtain the iterator's current position in the list. A <code>ListIterator</code> has no current element; its <i>cursor position</i> always lies between the element that would be returned by a call to <code>previous()</code> and the element that would be returned by a call to <code>next()</code>. An iterator for a list of length <code>n</code> has <code>n+1</code> possible cursor positions, as illustrated by the carets (<code>^</code>) below:
+/// <pre>Element(0) Element(1) Element(2) ... Element(n-1)
+/// cursor positions:^^^^^
+/// </pre> Note that the <a href="../../java/util/ListIterator.html#remove--"><code>remove()</code></a> and <a href="../../java/util/ListIterator.html#set-E-"><code>set(Object)</code></a> methods are <i>not</i> defined in terms of the cursor position; they are defined to operate on the last element returned by a call to <a href="../../java/util/ListIterator.html#next--"><code>next()</code></a> or <a href="../../java/util/ListIterator.html#previous--"><code>previous()</code></a>.
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaListIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12135,7 +13406,7 @@ impl<'mc> JavaListIterator<'mc> {
                 eyre::eyre!("Tried to instantiate JavaListIterator from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaListIterator")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/ListIterator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaListIterator object, got {}",
@@ -12146,6 +13417,7 @@ impl<'mc> JavaListIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12160,6 +13432,7 @@ impl<'mc> JavaListIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12167,6 +13440,7 @@ impl<'mc> JavaListIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12174,6 +13448,7 @@ impl<'mc> JavaListIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12181,6 +13456,7 @@ impl<'mc> JavaListIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn set(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12195,6 +13471,7 @@ impl<'mc> JavaListIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn next_index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12202,6 +13479,7 @@ impl<'mc> JavaListIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn previous_index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12209,6 +13487,7 @@ impl<'mc> JavaListIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn has_previous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12216,6 +13495,7 @@ impl<'mc> JavaListIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn previous(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12223,6 +13503,7 @@ impl<'mc> JavaListIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each_remaining(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12252,6 +13533,13 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaListIterator<'mc> {
         self.1
     }
 }
+/// Doubly-linked list implementation of the <code>List</code> and <code>Deque</code> interfaces. Implements all optional list operations, and permits all elements (including <code>null</code>).
+/// <p>All of the operations perform as could be expected for a doubly-linked list. Operations that index into the list will traverse the list from the beginning or the end, whichever is closer to the specified index.</p>
+/// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a linked list concurrently, and at least one of the threads modifies the list structurally, it <i>must</i> be synchronized externally. (A structural modification is any operation that adds or deletes one or more elements; merely setting the value of an element is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the list. If no such object exists, the list should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedList-java.util.List-"><code>Collections.synchronizedList</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the list:</p>
+/// <pre> List list = Collections.synchronizedList(new LinkedList(...));</pre>
+/// <p>The iterators returned by this class's <code>iterator</code> and <code>listIterator</code> methods are <i>fail-fast</i>: if the list is structurally modified at any time after the iterator is created, in any way except through the Iterator's own <code>remove</code> or <code>add</code> methods, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaLinkedList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12275,7 +13563,7 @@ impl<'mc> JavaLinkedList<'mc> {
                 eyre::eyre!("Tried to instantiate JavaLinkedList from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaLinkedList")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/LinkedList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaLinkedList object, got {}",
@@ -12299,6 +13587,7 @@ impl<'mc> JavaLinkedList<'mc> {
         )?;
         Ok(res)
     }
+
     pub unsafe fn push(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12313,6 +13602,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12320,6 +13610,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12334,6 +13625,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn add_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12348,6 +13640,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12358,6 +13651,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12365,6 +13659,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn offer_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12379,6 +13674,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn remove_first(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12391,6 +13687,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12398,6 +13695,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12408,6 +13706,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_first_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12422,6 +13721,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn offer_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12436,6 +13736,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn remove_last(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12448,6 +13749,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12455,6 +13757,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12462,6 +13765,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_last_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12476,6 +13780,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12490,6 +13795,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn descending_iterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12502,6 +13808,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -12521,6 +13828,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -12535,6 +13843,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn get(
         &mut self,
         arg0: i32,
@@ -12549,6 +13858,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12556,6 +13866,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12570,6 +13881,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12577,6 +13889,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12591,6 +13904,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12598,6 +13912,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12612,6 +13927,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12624,6 +13940,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -12643,6 +13960,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn set(
         &mut self,
         arg0: i32,
@@ -12662,6 +13980,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12669,6 +13988,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12676,6 +13996,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12683,6 +14004,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -12697,6 +14019,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12707,6 +14030,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12721,6 +14045,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12728,6 +14053,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn sub_list(
         &mut self,
         arg0: i32,
@@ -12747,6 +14073,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12758,6 +14085,7 @@ impl<'mc> JavaLinkedList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12765,6 +14093,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12779,6 +14108,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12793,6 +14123,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12807,6 +14138,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -12826,6 +14158,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12833,6 +14166,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12840,6 +14174,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12847,6 +14182,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12857,6 +14193,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12871,6 +14208,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12883,6 +14221,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12897,6 +14236,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12911,6 +14251,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12931,7 +14272,17 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaLinkedList<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaCollection. Needed for returning it from Java.
+/// The root interface in the <i>collection hierarchy</i>. A collection represents a group of objects, known as its <i>elements</i>. Some collections allow duplicate elements and others do not. Some are ordered and others unordered. The JDK does not provide any <i>direct</i> implementations of this interface: it provides implementations of more specific subinterfaces like <tt>Set</tt> and <tt>List</tt>. This interface is typically used to pass collections around and manipulate them where maximum generality is desired.
+/// <p><i>Bags</i> or <i>multisets</i> (unordered collections that may contain duplicate elements) should implement this interface directly.</p>
+/// <p>All general-purpose <tt>Collection</tt> implementation classes (which typically implement <tt>Collection</tt> indirectly through one of its subinterfaces) should provide two "standard" constructors: a void (no arguments) constructor, which creates an empty collection, and a constructor with a single argument of type <tt>Collection</tt>, which creates a new collection with the same elements as its argument. In effect, the latter constructor allows the user to copy any collection, producing an equivalent collection of the desired implementation type. There is no way to enforce this convention (as interfaces cannot contain constructors) but all of the general-purpose <tt>Collection</tt> implementations in the Java platform libraries comply.</p>
+/// <p>The "destructive" methods contained in this interface, that is, the methods that modify the collection on which they operate, are specified to throw <tt>UnsupportedOperationException</tt> if this collection does not support the operation. If this is the case, these methods may, but are not required to, throw an <tt>UnsupportedOperationException</tt> if the invocation would have no effect on the collection. For example, invoking the <a href="../../java/util/Collection.html#addAll-java.util.Collection-"><code>addAll(Collection)</code></a> method on an unmodifiable collection may, but is not required to, throw the exception if the collection to be added is empty.</p>
+/// <p><a name="optional-restrictions"> Some collection implementations have restrictions on the elements that they may contain.</a> For example, some implementations prohibit null elements, and some have restrictions on the types of their elements. Attempting to add an ineligible element throws an unchecked exception, typically <tt>NullPointerException</tt> or <tt>ClassCastException</tt>. Attempting to query the presence of an ineligible element may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible element whose completion would not result in the insertion of an ineligible element into the collection may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface.</p>
+/// <p>It is up to each collection to determine its own synchronization policy. In the absence of a stronger guarantee by the implementation, undefined behavior may result from the invocation of any method on a collection that is being mutated by another thread; this includes direct invocations, passing the collection to a method that might perform invocations, and using an existing iterator to examine the collection.</p>
+/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Collection.html#contains-java.lang.Object-"><code>contains(Object o)</code></a> method says: "returns <tt>true</tt> if and only if this collection contains at least one element <tt>e</tt> such that <tt>(o==null ? e==null : o.equals(e))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Collection.contains</tt> with a non-null argument <tt>o</tt> will cause <tt>o.equals(e)</tt> to be invoked for any element <tt>e</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two elements. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a title="class in java.lang" href="../../java/lang/Object.html"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
+/// <p>Some collection operations which perform recursive traversal of the collection may fail with an exception for self-referential instances where the collection directly or indirectly contains itself. This includes the <code>clone()</code>, <code>equals()</code>, <code>hashCode()</code> and <code>toString()</code> methods. Implementations may optionally handle the self-referential scenario, however most current implementations do not do so.</p>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12946,7 +14297,7 @@ impl<'mc> JavaCollection<'mc> {
                 eyre::eyre!("Tried to instantiate JavaCollection from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaCollection")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Collection")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaCollection object, got {}",
@@ -12957,6 +14308,7 @@ impl<'mc> JavaCollection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12971,6 +14323,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12985,6 +14338,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12999,6 +14353,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13006,6 +14361,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13013,6 +14369,7 @@ impl<'mc> JavaCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13020,6 +14377,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13027,6 +14385,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13037,6 +14396,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13047,6 +14407,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13061,6 +14422,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13073,6 +14435,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13087,6 +14450,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13101,6 +14465,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13115,6 +14480,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13129,6 +14495,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13143,6 +14510,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13155,6 +14523,7 @@ impl<'mc> JavaCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13179,7 +14548,9 @@ impl<'mc> JNIRaw<'mc> for JavaCollection<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaPrimitiveIteratorOfInt. Needed for returning it from Java.
+/// An Iterator specialized for <code>int</code> values.
+///
+/// This is a representation of an abstract class.
 pub struct JavaPrimitiveIteratorOfInt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13195,7 +14566,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaPrimitiveIteratorOfInt")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIteratorOfInt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaPrimitiveIteratorOfInt object, got {}",
@@ -13206,6 +14577,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn next_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13213,6 +14585,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13227,6 +14600,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn for_each_remaining_with_int_consumer(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13241,6 +14615,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13248,6 +14623,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13255,6 +14631,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13272,7 +14649,9 @@ impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaPrimitiveIteratorOfLong. Needed for returning it from Java.
+/// An Iterator specialized for <code>long</code> values.
+///
+/// This is a representation of an abstract class.
 pub struct JavaPrimitiveIteratorOfLong<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13288,7 +14667,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaPrimitiveIteratorOfLong")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIteratorOfLong")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaPrimitiveIteratorOfLong object, got {}",
@@ -13299,6 +14678,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn next_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13306,6 +14686,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+
     pub unsafe fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13320,6 +14701,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn for_each_remaining_with_long_consumer(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13334,6 +14716,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13341,6 +14724,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13348,6 +14732,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13365,7 +14750,14 @@ impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfLong<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaIterator. Needed for returning it from Java.
+/// An iterator over a collection. <code>Iterator</code> takes the place of <a href="../../java/util/Enumeration.html" title="interface in java.util"><code>Enumeration</code></a> in the Java Collections Framework. Iterators differ from enumerations in two ways:
+/// <ul>
+/// <li>Iterators allow the caller to remove elements from the underlying collection during the iteration with well-defined semantics.</li>
+/// <li>Method names have been improved.</li>
+/// </ul>
+/// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13378,7 +14770,7 @@ impl<'mc> JavaIterator<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaIterator from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaIterator")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Iterator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaIterator object, got {}",
@@ -13389,6 +14781,7 @@ impl<'mc> JavaIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13396,6 +14789,7 @@ impl<'mc> JavaIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn for_each_remaining(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13410,6 +14804,7 @@ impl<'mc> JavaIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13417,6 +14812,7 @@ impl<'mc> JavaIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13434,7 +14830,11 @@ impl<'mc> JNIRaw<'mc> for JavaIterator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements JavaPrimitiveIterator. Needed for returning it from Java.
+/// A base type for primitive specializations of <code>Iterator</code>. Specialized subtypes are provided for <a href="../../java/util/PrimitiveIterator.OfInt.html" title="interface in java.util"><code>int</code></a>, <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfLong.html"><code>long</code></a>, and <a href="../../java/util/PrimitiveIterator.OfDouble.html" title="interface in java.util"><code>double</code></a> values.
+/// <p>The specialized subtype default implementations of <a href="../../java/util/Iterator.html#next--"><code>Iterator.next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>Iterator.forEachRemaining(java.util.function.Consumer)</code></a> box primitive values to instances of their corresponding wrapper class. Such boxing may offset any advantages gained when using the primitive specializations. To avoid boxing, the corresponding primitive-based methods should be used. For example, <a href="../../java/util/PrimitiveIterator.OfInt.html#nextInt--"><code>PrimitiveIterator.OfInt.nextInt()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.IntConsumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.IntConsumer)</code></a> should be used in preference to <a href="../../java/util/PrimitiveIterator.OfInt.html#next--"><code>PrimitiveIterator.OfInt.next()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.Consumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.Consumer)</code></a>.</p>
+/// <p>Iteration of primitive values using boxing-based methods <a href="../../java/util/Iterator.html#next--"><code>next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>forEachRemaining()</code></a>, does not affect the order in which the values, transformed to boxed values, are encountered.</p>
+///
+/// This is a representation of an abstract class.
 pub struct JavaPrimitiveIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13450,7 +14850,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaPrimitiveIterator")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIterator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaPrimitiveIterator object, got {}",
@@ -13461,6 +14861,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13475,6 +14876,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13482,6 +14884,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13489,6 +14892,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13511,7 +14915,9 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaPrimitiveIterator<'mc> {
         self.1
     }
 }
-/// An instantiatable struct that implements JavaMapEntry. Needed for returning it from Java.
+/// A map entry (key-value pair). The <tt>Map.entrySet</tt> method returns a collection-view of the map, whose elements are of this class. The <i>only</i> way to obtain a reference to a map entry is from the iterator of this collection-view. These <tt>Map.Entry</tt> objects are valid <i>only</i> for the duration of the iteration; more formally, the behavior of a map entry is undefined if the backing map has been modified after the entry was returned by the iterator, except through the <tt>setValue</tt> operation on the map entry.
+///
+/// This is a representation of an abstract class.
 pub struct JavaMapEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13524,7 +14930,7 @@ impl<'mc> JavaMapEntry<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaMapEntry from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaMapEntry")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/MapEntry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaMapEntry object, got {}",
@@ -13535,6 +14941,7 @@ impl<'mc> JavaMapEntry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn comparing_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13549,6 +14956,7 @@ impl<'mc> JavaMapEntry<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn comparing_by_value(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13563,6 +14971,7 @@ impl<'mc> JavaMapEntry<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13577,6 +14986,7 @@ impl<'mc> JavaMapEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13584,6 +14994,7 @@ impl<'mc> JavaMapEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn copy_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -13598,6 +15009,7 @@ impl<'mc> JavaMapEntry<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13605,6 +15017,7 @@ impl<'mc> JavaMapEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13612,6 +15025,7 @@ impl<'mc> JavaMapEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn set_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13636,6 +15050,14 @@ impl<'mc> JNIRaw<'mc> for JavaMapEntry<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// A specialized <a title="interface in java.util" href="../../java/util/Set.html"><code>Set</code></a> implementation for use with enum types. All of the elements in an enum set must come from a single enum type that is specified, explicitly or implicitly, when the set is created. Enum sets are represented internally as bit vectors. This representation is extremely compact and efficient. The space and time performance of this class should be good enough to allow its use as a high-quality, typesafe alternative to traditional <tt>int</tt>-based "bit flags." Even bulk operations (such as <tt>containsAll</tt> and <tt>retainAll</tt>) should run very quickly if their argument is also an enum set.
+/// <p>The iterator returned by the <tt>iterator</tt> method traverses the elements in their <i>natural order</i> (the order in which the enum constants are declared). The returned iterator is <i>weakly consistent</i>: it will never throw <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a> and it may or may not show the effects of any modifications to the set that occur while the iteration is in progress.</p>
+/// <p>Null elements are not permitted. Attempts to insert a null element will throw <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a>. Attempts to test for the presence of a null element or to remove one will, however, function properly.</p>
+/// <p>Like most collection implementations, <tt>EnumSet</tt> is not synchronized. If multiple threads access an enum set concurrently, and at least one of the threads modifies the set, it should be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the enum set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet(java.util.Set&lt;T&gt;)</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access:</p>
+/// <pre> Set&lt;MyEnum&gt; s = Collections.synchronizedSet(EnumSet.noneOf(MyEnum.class));
+/// </pre>
+/// <p>Implementation note: All basic operations execute in constant time. They are likely (though not guaranteed) to be much faster than their <a title="class in java.util" href="../../java/util/HashSet.html"><code>HashSet</code></a> counterparts. Even bulk operations execute in constant time if their argument is also an enum set.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaEnumSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13657,7 +15079,7 @@ impl<'mc> JavaEnumSet<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaEnumSet from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaEnumSet")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/EnumSet")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaEnumSet object, got {}",
@@ -13668,6 +15090,7 @@ impl<'mc> JavaEnumSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn all_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -13682,6 +15105,7 @@ impl<'mc> JavaEnumSet<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn complement_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -13696,6 +15120,7 @@ impl<'mc> JavaEnumSet<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn range(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -13715,6 +15140,7 @@ impl<'mc> JavaEnumSet<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13722,6 +15148,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn copy_of_with_collection(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13736,6 +15163,7 @@ impl<'mc> JavaEnumSet<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn of_with_enum(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -13754,6 +15182,7 @@ impl<'mc> JavaEnumSet<'mc> {
 "(Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;)Ljava/util/EnumSet;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         Ok(res.l().unwrap())
     }
+
     pub fn none_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -13768,6 +15197,7 @@ impl<'mc> JavaEnumSet<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13782,6 +15212,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13789,6 +15220,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13803,6 +15235,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13817,6 +15250,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13831,6 +15265,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13842,6 +15277,7 @@ impl<'mc> JavaEnumSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13849,6 +15285,7 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13856,6 +15293,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13863,6 +15301,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13873,6 +15312,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13887,6 +15327,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13901,6 +15342,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13915,6 +15357,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13929,6 +15372,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -13948,6 +15392,7 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13955,6 +15400,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13962,6 +15408,7 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13969,6 +15416,7 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13979,6 +15427,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13991,6 +15440,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14005,6 +15455,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14017,6 +15468,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14037,6 +15489,12 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaEnumSet<'mc> {
         self.1
     }
 }
+/// Resizable-array implementation of the <a title="interface in java.util" href="../../java/util/Deque.html"><code>Deque</code></a> interface. Array deques have no capacity restrictions; they grow as necessary to support usage. They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. This class is likely to be faster than <a href="../../java/util/Stack.html" title="class in java.util"><code>Stack</code></a> when used as a stack, and faster than <a href="../../java/util/LinkedList.html" title="class in java.util"><code>LinkedList</code></a> when used as a queue.
+/// <p>Most <code>ArrayDeque</code> operations run in amortized constant time. Exceptions include <a href="../../java/util/ArrayDeque.html#remove-java.lang.Object-"><code>remove</code></a>, <a href="../../java/util/ArrayDeque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#contains-java.lang.Object-"><code>contains</code></a>, <a href="../../java/util/ArrayDeque.html#iterator--"><code>iterator.remove()</code></a>, and the bulk operations, all of which run in linear time.</p>
+/// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: If the deque is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will generally throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class and its iterator implement all of the <em>optional</em> methods of the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> and <a title="interface in java.util" href="../../java/util/Iterator.html"><code>Iterator</code></a> interfaces.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaArrayDeque<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14060,7 +15518,7 @@ impl<'mc> JavaArrayDeque<'mc> {
                 eyre::eyre!("Tried to instantiate JavaArrayDeque from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaArrayDeque")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/ArrayDeque")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaArrayDeque object, got {}",
@@ -14080,6 +15538,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
         Ok(res)
     }
+
     pub unsafe fn push(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14094,6 +15553,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14101,6 +15561,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14115,6 +15576,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn add_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14129,6 +15591,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14139,6 +15602,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14146,6 +15610,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn offer_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14160,6 +15625,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn remove_first(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14172,6 +15638,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14179,6 +15646,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14189,6 +15657,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_first_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14203,6 +15672,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn offer_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14217,6 +15687,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn remove_last(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14229,6 +15700,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14236,6 +15708,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14243,6 +15716,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_last_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14257,6 +15731,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14271,6 +15746,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn descending_iterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14283,6 +15759,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14297,6 +15774,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -14311,6 +15789,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14321,6 +15800,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14328,6 +15808,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14335,6 +15816,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14342,6 +15824,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14352,6 +15835,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14366,6 +15850,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn spliterator(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14378,6 +15863,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14392,6 +15878,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14406,6 +15893,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14413,6 +15901,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14420,6 +15909,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14434,6 +15924,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14441,6 +15932,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14455,6 +15947,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub unsafe fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14469,6 +15962,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14480,6 +15974,7 @@ impl<'mc> JavaArrayDeque<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub unsafe fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14494,6 +15989,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -14513,6 +16009,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14527,6 +16024,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14534,6 +16032,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14541,6 +16040,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14548,6 +16048,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14555,6 +16056,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14565,6 +16067,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn parallel_stream(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14583,6 +16086,29 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaArrayDeque<'mc> {
         self.1
     }
 }
+/// The class <code>Date</code> represents a specific instant in time, with millisecond precision.
+/// <p>Prior to JDK&nbsp;1.1, the class <code>Date</code> had two additional functions. It allowed the interpretation of dates as year, month, day, hour, minute, and second values. It also allowed the formatting and parsing of date strings. Unfortunately, the API for these functions was not amenable to internationalization. As of JDK&nbsp;1.1, the <code>Calendar</code> class should be used to convert between dates and time fields and the <code>DateFormat</code> class should be used to format and parse date strings. The corresponding methods in <code>Date</code> are deprecated.</p>
+/// <p>Although the <code>Date</code> class is intended to reflect coordinated universal time (UTC), it may not do so exactly, depending on the host environment of the Java Virtual Machine. Nearly all modern operating systems assume that 1&nbsp;day&nbsp;= 24&nbsp;×&nbsp;60&nbsp;×&nbsp;60&nbsp;= 86400 seconds in all cases. In UTC, however, about once every year or two there is an extra second, called a "leap second." The leap second is always added as the last second of the day, and always on December 31 or June 30. For example, the last minute of the year 1995 was 61 seconds long, thanks to an added leap second. Most computer clocks are not accurate enough to be able to reflect the leap-second distinction.</p>
+/// <p>Some computer standards are defined in terms of Greenwich mean time (GMT), which is equivalent to universal time (UT). GMT is the "civil" name for the standard; UT is the "scientific" name for the same standard. The distinction between UTC and UT is that UTC is based on an atomic clock and UT is based on astronomical observations, which for all practical purposes is an invisibly fine hair to split. Because the earth's rotation is not uniform (it slows down and speeds up in complicated ways), UT does not always flow uniformly. Leap seconds are introduced as needed into UTC so as to keep UTC within 0.9 seconds of UT1, which is a version of UT with certain corrections applied. There are other time and date systems as well; for example, the time scale used by the satellite-based global positioning system (GPS) is synchronized to UTC but is <i>not</i> adjusted for leap seconds. An interesting source of further information is the U.S. Naval Observatory, particularly the Directorate of Time at:</p>
+/// <blockquote>
+/// <pre> <a href="http://tycho.usno.navy.mil">http://tycho.usno.navy.mil</a>
+/// </pre>
+/// </blockquote>
+/// <p>and their definitions of "Systems of Time" at:</p>
+/// <blockquote>
+/// <pre> <a href="http://tycho.usno.navy.mil/systime.html">http://tycho.usno.navy.mil/systime.html</a>
+/// </pre>
+/// </blockquote>
+/// <p>In all methods of class <code>Date</code> that accept or return year, month, date, hours, minutes, and seconds values, the following representations are used:</p>
+/// <ul>
+/// <li>A year <i>y</i> is represented by the integer <i>y</i>&nbsp;<code>-&nbsp;1900</code>.</li>
+/// <li>A month is represented by an integer from 0 to 11; 0 is January, 1 is February, and so forth; thus 11 is December.</li>
+/// <li>A date (day of month) is represented by an integer from 1 to 31 in the usual manner.</li>
+/// <li>An hour is represented by an integer from 0 to 23. Thus, the hour from midnight to 1 a.m. is hour 0, and the hour from noon to 1 p.m. is hour 12.</li>
+/// <li>A minute is represented by an integer from 0 to 59 in the usual manner.</li>
+/// <li>A second is represented by an integer from 0 to 61; the values 60 and 61 occur only for leap seconds and even then only in Java implementations that actually track leap seconds correctly. Because of the manner in which leap seconds are currently introduced, it is extremely unlikely that two leap seconds will occur in the same minute, but this specification follows the date and time conventions for ISO C.</li>
+/// </ul>
+/// <p>In all cases, arguments given to methods for these purposes need not fall within the indicated ranges; for example, a date may be specified as January 32 and is interpreted as meaning February 1.</p>
 pub struct JavaDate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14604,7 +16130,7 @@ impl<'mc> JavaDate<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaDate from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaDate")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Date")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaDate object, got {}",
@@ -14656,6 +16182,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res)
     }
     #[deprecated]
+
     pub fn set_date(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14668,6 +16195,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
     #[deprecated]
+
     pub fn month(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14676,6 +16204,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+
     pub fn set_month(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14688,6 +16217,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
     #[deprecated]
+
     pub fn hours(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14696,6 +16226,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+
     pub fn set_hours(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14708,6 +16239,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
     #[deprecated]
+
     pub fn minutes(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14716,6 +16248,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+
     pub fn set_minutes(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14728,6 +16261,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
     #[deprecated]
+
     pub fn set_seconds(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14740,6 +16274,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
     #[deprecated]
+
     pub fn set_year(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14752,6 +16287,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
     #[deprecated]
+
     pub fn date(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14760,6 +16296,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+
     pub fn day(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14768,6 +16305,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+
     pub fn to_locale_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14783,6 +16321,7 @@ impl<'mc> JavaDate<'mc> {
             .to_string())
     }
     #[deprecated]
+
     pub fn to_gmtstring(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14798,6 +16337,7 @@ impl<'mc> JavaDate<'mc> {
             .to_string())
     }
     #[deprecated]
+
     pub fn timezone_offset(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14805,6 +16345,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14813,6 +16354,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.j().unwrap())
     }
     #[deprecated]
+
     pub fn year(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14821,6 +16363,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+
     pub fn seconds(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14828,6 +16371,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn to_instant(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14839,6 +16383,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.l().unwrap())
     }
     #[deprecated]
+
     pub fn utc(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -14870,35 +16415,20 @@ impl<'mc> JavaDate<'mc> {
         )?;
         Ok(res.j().unwrap())
     }
-    pub unsafe fn before(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+
+    pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "before",
-            "(Ljava/util/Date;)Z",
+            "setTime",
+            "(J)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub unsafe fn after(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "after",
-            "(Ljava/util/Date;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     #[deprecated]
+
     pub fn parse(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -14913,17 +16443,37 @@ impl<'mc> JavaDate<'mc> {
         )?;
         Ok(res.j().unwrap())
     }
-    pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+
+    pub unsafe fn before(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setTime",
-            "(J)V",
+            "before",
+            "(Ljava/util/Date;)Z",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
     }
+
+    pub unsafe fn after(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "after",
+            "(Ljava/util/Date;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14938,6 +16488,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14949,6 +16500,7 @@ impl<'mc> JavaDate<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14956,6 +16508,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14963,6 +16516,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn compare_to_with_date(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -14977,6 +16531,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn from(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -14991,6 +16546,7 @@ impl<'mc> JavaDate<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -15010,6 +16566,7 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15017,6 +16574,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15024,6 +16582,7 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15032,7 +16591,9 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements JavaPrimitiveIteratorOfDouble. Needed for returning it from Java.
+/// An Iterator specialized for <code>double</code> values.
+///
+/// This is a representation of an abstract class.
 pub struct JavaPrimitiveIteratorOfDouble<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15048,7 +16609,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "JavaPrimitiveIteratorOfDouble")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIteratorOfDouble")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaPrimitiveIteratorOfDouble object, got {}",
@@ -15059,6 +16620,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn next_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15066,6 +16628,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub unsafe fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -15080,6 +16643,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn for_each_remaining_with_double_consumer(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -15094,6 +16658,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15101,6 +16666,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15108,6 +16674,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15125,6 +16692,10 @@ impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// This class implements a decoder for decoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.
+/// <p>The Base64 padding character <code>'='</code> is accepted and interpreted as the end of the encoded byte data, but is not required. So if the final unit of the encoded byte data only has two or three Base64 characters (without the corresponding padding character(s) padded), they are decoded as if followed by padding character(s). If there is a padding character present in the final unit, the correct number of padding character(s) must be present, otherwise <code>IllegalArgumentException</code> ( <code>IOException</code> when reading from a Base64 stream) is thrown during decoding.</p>
+/// <p>Instances of <a title="class in java.util" href="../../java/util/Base64.Decoder.html"><code>Base64.Decoder</code></a> class are safe for use by multiple concurrent threads.</p>
+/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
 pub struct JavaBase64Decoder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15148,7 +16719,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
                 eyre::eyre!("Tried to instantiate JavaBase64Decoder from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "JavaBase64Decoder")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Base64Decoder")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaBase64Decoder object, got {}",
@@ -15159,6 +16730,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub unsafe fn decode_with_bytes(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -15173,6 +16745,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn decode_with_string(
         &mut self,
         arg0: std::option::Option<Vec<i8>>,
@@ -15184,6 +16757,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub unsafe fn wrap(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -15198,6 +16772,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -15217,6 +16792,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub unsafe fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -15231,6 +16807,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15242,6 +16819,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15249,6 +16827,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15256,6 +16835,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15263,6 +16843,7 @@ impl<'mc> JavaBase64Decoder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

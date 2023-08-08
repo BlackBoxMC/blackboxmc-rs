@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// Called when an entity explodes
 pub struct EntityExplodeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24,7 +25,8 @@ impl<'mc> EntityExplodeEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityExplodeEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityExplodeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityExplodeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityExplodeEvent object, got {}",
@@ -70,6 +72,16 @@ impl<'mc> EntityExplodeEvent<'mc> {
         )?;
         crate::event::entity::EntityExplodeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -84,13 +96,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Sets the percentage of blocks to drop from this explosion
     pub fn set_yield(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -102,6 +108,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns the percentage of blocks to drop from this explosion
     pub fn get_yield(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -109,6 +116,8 @@ impl<'mc> EntityExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -121,6 +130,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -134,6 +144,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Returns the list of blocks that would have been removed or were removed from the explosion event.
     pub fn block_list(
         &mut self,
     ) -> Result<Vec<crate::block::Block<'mc>>, Box<dyn std::error::Error>> {
@@ -150,6 +161,8 @@ impl<'mc> EntityExplodeEvent<'mc> {
         }
         Ok(new_vec)
     }
+    /// Returns the location where the explosion happened.
+    /// <p>It is not possible to get this value from the Entity as the Entity no longer exists in the world.</p>
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -162,6 +175,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -174,6 +188,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -199,6 +214,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -213,6 +229,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -220,6 +237,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -239,6 +257,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -253,6 +272,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -264,6 +284,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -271,6 +292,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -278,6 +300,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -285,6 +308,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -303,6 +327,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityExplodeEvent<'m
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a non-player entity is about to teleport because it is in contact with a portal.
+/// <p>For players see <a href="../player/PlayerPortalEvent.html" title="class in org.bukkit.event.player"><code>PlayerPortalEvent</code></a></p>
 pub struct EntityPortalEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -326,7 +352,7 @@ impl<'mc> EntityPortalEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityPortalEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPortalEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityPortalEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPortalEvent object, got {}",
@@ -362,6 +388,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         )?;
         crate::event::entity::EntityPortalEvent::from_raw(&jni, res)
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -376,6 +403,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -389,6 +417,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Set the Block radius to search in for available portals.
     pub fn set_search_radius(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -400,6 +429,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the search radius value for finding an available portal.
     pub fn search_radius(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -407,6 +437,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn from(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -419,6 +450,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -426,6 +458,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -438,6 +471,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_from(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -452,6 +486,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn to(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -461,6 +496,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_to(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -475,6 +511,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -487,6 +524,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -512,6 +550,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -526,6 +565,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -533,6 +573,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -552,6 +593,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -566,6 +608,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -577,6 +620,7 @@ impl<'mc> EntityPortalEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -584,6 +628,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -591,6 +636,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -598,6 +644,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -611,6 +658,7 @@ impl<'mc> Into<crate::event::entity::EntityTeleportEvent<'mc>> for EntityPortalE
         crate::event::entity::EntityTeleportEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a <a title="interface in org.bukkit.entity" href="../../entity/Strider.html"><code>Strider</code></a>'s temperature has changed as a result of entering or exiting blocks it considers warm.
 pub struct StriderTemperatureChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -635,7 +683,10 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "StriderTemperatureChangeEvent")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/StriderTemperatureChangeEvent",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StriderTemperatureChangeEvent object, got {}",
@@ -666,6 +717,16 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         )?;
         crate::event::entity::StriderTemperatureChangeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -680,13 +741,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Get the Strider's new shivering state.
     pub fn is_shivering(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -694,6 +749,8 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Strider<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -706,6 +763,8 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -718,6 +777,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -731,6 +791,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -756,6 +817,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -770,6 +832,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -777,6 +840,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -796,6 +860,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -810,6 +875,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -821,6 +887,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -828,6 +895,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -835,6 +903,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -842,6 +911,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -860,6 +930,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for StriderTemperatureCha
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity is damaged by a block
 pub struct EntityDamageByBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -884,7 +955,8 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityDamageByBlockEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityDamageByBlockEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityDamageByBlockEvent object, got {}",
@@ -916,6 +988,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
 "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/entity/EntityDamageEvent$DamageCause;Ljava/util/Map;Ljava/util/Map;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::event::entity::EntityDamageByBlockEvent::from_raw(&jni, res)
     }
+    /// Returns the block that damaged the player.
     pub fn damager(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -928,6 +1001,15 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -942,13 +1024,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_damage_with_double(
         &mut self,
         arg0: std::option::Option<
@@ -971,6 +1047,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns the block that damaged the player.
     pub fn get_damage(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -985,6 +1062,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn is_applicable(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -999,6 +1077,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1011,6 +1090,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1024,6 +1104,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn get_original_damage(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -1038,6 +1119,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn final_damage(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1045,6 +1127,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn cause(
         &mut self,
     ) -> Result<crate::event::entity::EntityDamageEventDamageCause<'mc>, Box<dyn std::error::Error>>
@@ -1060,6 +1143,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1072,6 +1156,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -1097,6 +1182,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1111,6 +1197,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1118,6 +1205,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1137,6 +1225,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1151,6 +1240,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1162,6 +1252,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1169,6 +1260,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1176,6 +1268,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1183,6 +1276,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1196,6 +1290,7 @@ impl<'mc> Into<crate::event::entity::EntityDamageEvent<'mc>> for EntityDamageByB
         crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a sheep regrows its wool
 pub struct SheepRegrowWoolEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1219,7 +1314,8 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
                 eyre::eyre!("Tried to instantiate SheepRegrowWoolEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "SheepRegrowWoolEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/SheepRegrowWoolEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SheepRegrowWoolEvent object, got {}",
@@ -1243,6 +1339,16 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         )?;
         crate::event::entity::SheepRegrowWoolEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1257,13 +1363,8 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Sheep<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1276,6 +1377,8 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1288,6 +1391,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1301,6 +1405,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -1326,6 +1431,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1340,6 +1446,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1347,6 +1454,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1366,6 +1474,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1380,6 +1489,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1391,6 +1501,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1398,6 +1509,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1405,6 +1517,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1412,6 +1525,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1430,6 +1544,10 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for SheepRegrowWoolEvent<
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an <a title="interface in org.bukkit.entity" href="../../entity/Entity.html"><code>Entity</code></a> enters a block and is stored in that block.
+/// <p>This event is called for bees entering a bee hive.
+///
+/// It is not called when a silverfish "enters" a stone block. For that listen to the <a href="EntityChangeBlockEvent.html" title="class in org.bukkit.event.entity"><code>EntityChangeBlockEvent</code></a>.</p>
 pub struct EntityEnterBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1454,7 +1572,8 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityEnterBlockEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityEnterBlockEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityEnterBlockEvent object, got {}",
@@ -1483,6 +1602,16 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         )?;
         crate::event::entity::EntityEnterBlockEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1497,13 +1626,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Get the block the entity will enter.
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1516,6 +1639,8 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1528,6 +1653,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1541,6 +1667,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1553,6 +1680,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -1578,6 +1706,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1592,6 +1721,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1599,6 +1729,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1618,6 +1749,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1632,6 +1764,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1643,6 +1776,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1650,6 +1784,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1657,6 +1792,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1664,6 +1800,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1682,6 +1819,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityEnterBlockEvent
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Thrown when a entity picks an item up from the ground
 pub struct EntityPickupItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1706,7 +1844,8 @@ impl<'mc> EntityPickupItemEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPickupItemEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityPickupItemEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPickupItemEvent object, got {}",
@@ -1738,6 +1877,37 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         )?;
         crate::event::entity::EntityPickupItemEvent::from_raw(&jni, res)
     }
+    /// Gets the Item picked up by the entity.
+    pub fn item(&mut self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getItem",
+            "()Lorg/bukkit/entity/Item;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::entity::Item::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the amount remaining on the ground, if any
+    pub fn remaining(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getRemaining", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1752,32 +1922,8 @@ impl<'mc> EntityPickupItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn item(&mut self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getItem",
-            "()Lorg/bukkit/entity/Item;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Item::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn remaining(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getRemaining", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -1792,6 +1938,8 @@ impl<'mc> EntityPickupItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1804,6 +1952,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1817,6 +1966,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -1842,6 +1992,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1856,6 +2007,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1863,6 +2015,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1882,6 +2035,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1896,6 +2050,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1907,6 +2062,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1914,6 +2070,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1921,6 +2078,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1928,6 +2086,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1946,6 +2105,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPickupItemEvent
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a horse jumps.
 pub struct HorseJumpEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1969,7 +2129,7 @@ impl<'mc> HorseJumpEvent<'mc> {
                 eyre::eyre!("Tried to instantiate HorseJumpEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "HorseJumpEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/HorseJumpEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a HorseJumpEvent object, got {}",
@@ -1998,6 +2158,16 @@ impl<'mc> HorseJumpEvent<'mc> {
         )?;
         crate::event::entity::HorseJumpEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2012,13 +2182,9 @@ impl<'mc> HorseJumpEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the power of the jump.
+    /// <p>Power is a value that defines how much of the horse's jump strength should be used for the jump. Power is effectively multiplied times the horse's jump strength to determine how high the jump is; 0 represents no jump strength while 1 represents full jump strength. Setting power to a value above 1 will use additional jump strength that the horse does not usually have.</p>
+    /// <p>Power does not affect how high the horse is capable of jumping, only how much of its jumping capability will be used in this jump. To set the horse's overall jump strength, see <a href="../../entity/AbstractHorse.html#setJumpStrength(double)"><code>AbstractHorse.setJumpStrength(double)</code></a>.</p>
     pub fn power(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2027,6 +2193,15 @@ impl<'mc> HorseJumpEvent<'mc> {
         Ok(res.f().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// horse jumping was moved client side.
+    /// </div>
+    /// horse jumping was moved client side.
+    ///
+    /// Sets the power of the jump.
+    /// <p>Jump power can be set to a value above 1.0 which will increase the strength of this jump above the horse's actual jump strength.</p>
+    /// <p>Setting the jump power to 0 will result in the jump animation still playing, but the horse not leaving the ground. Only canceling this event will result in no jump animation at all.</p>
     pub fn set_power(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2038,6 +2213,8 @@ impl<'mc> HorseJumpEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::AbstractHorse<'mc>, Box<dyn std::error::Error>> {
@@ -2053,6 +2230,14 @@ impl<'mc> HorseJumpEvent<'mc> {
         })
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// horse jumping was moved client side.
+    /// </div>
+    /// horse jumping was moved client side.
+    ///
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2065,6 +2250,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2078,6 +2264,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -2103,6 +2290,7 @@ impl<'mc> HorseJumpEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2117,6 +2305,7 @@ impl<'mc> HorseJumpEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2124,6 +2313,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2143,6 +2333,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2157,6 +2348,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2168,6 +2360,7 @@ impl<'mc> HorseJumpEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2175,6 +2368,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2182,6 +2376,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2189,6 +2384,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2207,6 +2403,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for HorseJumpEvent<'mc> {
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity has made a decision to explode.
 pub struct ExplosionPrimeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2230,7 +2427,8 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
                 eyre::eyre!("Tried to instantiate ExplosionPrimeEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ExplosionPrimeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/ExplosionPrimeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ExplosionPrimeEvent object, got {}",
@@ -2264,6 +2462,16 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         )?;
         crate::event::entity::ExplosionPrimeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2278,13 +2486,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the radius of the explosion
     pub fn radius(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2292,6 +2494,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Sets the radius of the explosion
     pub fn set_radius(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2303,6 +2506,8 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2315,6 +2520,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2328,6 +2534,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets whether this explosion will create fire or not
     pub fn fire(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2335,6 +2542,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets whether this explosion will create fire or not
     pub fn set_fire(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2347,6 +2555,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2359,6 +2568,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -2384,6 +2594,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2398,6 +2609,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2405,6 +2617,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2424,6 +2637,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2438,6 +2652,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2449,6 +2664,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2456,6 +2672,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2463,6 +2680,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2470,6 +2688,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2488,6 +2707,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ExplosionPrimeEvent<'
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a creature is spawned into a world.
+/// <p>If a Creature Spawn event is cancelled, the creature will not spawn.</p>
 pub struct CreatureSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2516,7 +2737,10 @@ impl<'mc> CreatureSpawnEventSpawnReason<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "CreatureSpawnEventSpawnReason")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/CreatureSpawnEventSpawnReason",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CreatureSpawnEventSpawnReason object, got {}",
@@ -2683,7 +2907,8 @@ impl<'mc> CreatureSpawnEvent<'mc> {
                 eyre::eyre!("Tried to instantiate CreatureSpawnEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "CreatureSpawnEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/CreatureSpawnEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CreatureSpawnEvent object, got {}",
@@ -2706,6 +2931,8 @@ impl<'mc> CreatureSpawnEvent<'mc> {
 "(Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/event/entity/CreatureSpawnEvent$SpawnReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         crate::event::entity::CreatureSpawnEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -2720,6 +2947,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the reason for why the creature is being spawned.
     pub fn spawn_reason(
         &mut self,
     ) -> Result<crate::event::entity::CreatureSpawnEventSpawnReason<'mc>, Box<dyn std::error::Error>>
@@ -2735,6 +2963,15 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2749,13 +2986,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2768,6 +2999,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2781,6 +3013,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2793,6 +3026,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -2818,6 +3052,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2832,6 +3067,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2839,6 +3075,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2858,6 +3095,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2872,6 +3110,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2883,6 +3122,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2890,6 +3130,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2897,6 +3138,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2904,6 +3146,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2917,6 +3160,7 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for CreatureSpawnEve
         crate::event::entity::EntitySpawnEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an item is spawned into a world
 pub struct ItemSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2940,7 +3184,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
                 eyre::eyre!("Tried to instantiate ItemSpawnEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ItemSpawnEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/ItemSpawnEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ItemSpawnEvent object, got {}",
@@ -2972,6 +3216,8 @@ impl<'mc> ItemSpawnEvent<'mc> {
         )?;
         crate::event::entity::ItemSpawnEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2984,6 +3230,15 @@ impl<'mc> ItemSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2998,13 +3253,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3017,6 +3266,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3030,6 +3280,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3042,6 +3293,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -3067,6 +3319,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3081,6 +3334,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3088,6 +3342,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3107,6 +3362,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3121,6 +3377,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3132,6 +3389,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3139,6 +3397,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3146,6 +3405,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3153,6 +3413,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3166,6 +3427,7 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for ItemSpawnEvent<'
         crate::event::entity::EntitySpawnEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Thrown when an entity creates an item drop.
 pub struct EntityDropItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3189,7 +3451,8 @@ impl<'mc> EntityDropItemEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityDropItemEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityDropItemEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityDropItemEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityDropItemEvent object, got {}",
@@ -3218,6 +3481,16 @@ impl<'mc> EntityDropItemEvent<'mc> {
         )?;
         crate::event::entity::EntityDropItemEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3232,13 +3505,8 @@ impl<'mc> EntityDropItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3251,6 +3519,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3264,6 +3533,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the Item created by the entity
     pub fn item_drop(&mut self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3276,6 +3546,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3288,6 +3559,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -3313,6 +3585,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3327,6 +3600,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3334,6 +3608,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3353,6 +3628,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3367,6 +3643,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3378,6 +3655,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3385,6 +3663,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3392,6 +3671,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3399,6 +3679,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3417,6 +3698,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityDropItemEvent<'
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a Slime splits into smaller Slimes upon death
 pub struct SlimeSplitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3440,7 +3722,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
                 eyre::eyre!("Tried to instantiate SlimeSplitEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "SlimeSplitEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/SlimeSplitEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SlimeSplitEvent object, got {}",
@@ -3469,6 +3751,24 @@ impl<'mc> SlimeSplitEvent<'mc> {
         )?;
         crate::event::entity::SlimeSplitEvent::from_raw(&jni, res)
     }
+    /// Gets the amount of smaller slimes to spawn
+    pub fn count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getCount", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i().unwrap())
+    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3483,20 +3783,8 @@ impl<'mc> SlimeSplitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getCount", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Slime<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3509,6 +3797,8 @@ impl<'mc> SlimeSplitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3521,6 +3811,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3534,6 +3825,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Sets how many smaller slimes will spawn on the split
     pub fn set_count(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3545,6 +3837,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -3570,6 +3863,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3584,6 +3878,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3591,6 +3886,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3610,6 +3906,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3624,6 +3921,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3635,6 +3933,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3642,6 +3941,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3649,6 +3949,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3656,6 +3957,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3674,6 +3976,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for SlimeSplitEvent<'mc> 
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a human entity's food level changes
 pub struct FoodLevelChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3697,7 +4000,8 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
                 eyre::eyre!("Tried to instantiate FoodLevelChangeEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FoodLevelChangeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/FoodLevelChangeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FoodLevelChangeEvent object, got {}",
@@ -3730,6 +4034,29 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         )?;
         crate::event::entity::FoodLevelChangeEvent::from_raw(&jni, res)
     }
+    /// Gets the item that triggered this event, if any.
+    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getItem",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3744,25 +4071,8 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getItem",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3775,6 +4085,8 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the resultant food level that the entity involved in this event should be set to.
+    /// <p>Where 20 is a full food bar and 0 is an empty one.</p>
     pub fn food_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3782,6 +4094,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the resultant food level that the entity involved in this event should be set to
     pub fn set_food_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3793,6 +4106,8 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3805,6 +4120,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3818,6 +4134,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -3843,6 +4160,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3857,6 +4175,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3864,6 +4183,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3883,6 +4203,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3897,6 +4218,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3908,6 +4230,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3915,6 +4238,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3922,6 +4246,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3929,6 +4254,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3947,6 +4273,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for FoodLevelChangeEvent<
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an Entity targets a <a href="../../entity/LivingEntity.html" title="interface in org.bukkit.entity"><code>LivingEntity</code></a> and can only target LivingEntity's.
 pub struct EntityTargetLivingEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3971,7 +4298,10 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityTargetLivingEntityEvent")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityTargetLivingEntityEvent",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityTargetLivingEntityEvent object, got {}",
@@ -3997,6 +4327,9 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/event/entity/EntityTargetEvent$TargetReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::EntityTargetLivingEntityEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityTargetEvent.html#getTarget()">EntityTargetEvent</a></code></span>
+    /// Get the entity that this is targeting.
+    /// <p>This will be null in the case that the event is called when the mob forgets its target.</p>
     pub fn target(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -4011,6 +4344,9 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the Entity that you want the mob to target.
+    /// <p>It is possible to be null, null will cause the entity to be target-less.</p>
+    /// <p>Must be a LivingEntity, or null.</p>
     pub fn set_target(
         &mut self,
         arg0: impl Into<&'mc crate::entity::Entity<'mc>>,
@@ -4025,6 +4361,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn reason(
         &mut self,
     ) -> Result<crate::event::entity::EntityTargetEventTargetReason<'mc>, Box<dyn std::error::Error>>
@@ -4040,6 +4377,15 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4054,13 +4400,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4073,6 +4413,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4086,6 +4427,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4098,6 +4440,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -4123,6 +4466,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4137,6 +4481,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4144,6 +4489,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -4163,6 +4509,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4177,6 +4524,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4188,6 +4536,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4195,6 +4544,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4202,6 +4552,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4209,6 +4560,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4224,6 +4576,7 @@ impl<'mc> Into<crate::event::entity::EntityTargetEvent<'mc>>
         crate::event::entity::EntityTargetEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a LivingEntity shoots a bow firing an arrow
 pub struct EntityShootBowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4247,7 +4600,8 @@ impl<'mc> EntityShootBowEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityShootBowEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityShootBowEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityShootBowEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityShootBowEvent object, got {}",
@@ -4281,6 +4635,16 @@ impl<'mc> EntityShootBowEvent<'mc> {
 "(Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/Entity;Lorg/bukkit/inventory/EquipmentSlot;FZ)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7)])?;
         crate::event::entity::EntityShootBowEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4295,13 +4659,8 @@ impl<'mc> EntityShootBowEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -4316,6 +4675,8 @@ impl<'mc> EntityShootBowEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4328,6 +4689,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4341,6 +4703,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Get the hand from which the bow was shot.
     pub fn hand(
         &mut self,
     ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
@@ -4366,6 +4729,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             crate::inventory::EquipmentSlot::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the bow ItemStack used to fire the arrow.
     pub fn bow(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4378,6 +4742,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the ItemStack to be consumed in this event (if any). For instance, bows will consume an arrow ItemStack in a player's inventory.
     pub fn consumable(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -4392,6 +4757,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the projectile which will be launched by this event
     pub fn projectile(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4404,6 +4770,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Replaces the projectile which will be launched
     pub fn set_projectile(
         &mut self,
         arg0: impl Into<&'mc crate::entity::Entity<'mc>>,
@@ -4418,6 +4785,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the force the arrow was launched with
     pub fn force(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4425,6 +4793,8 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Set whether or not the consumable item should be consumed in this event. If set to false, it is recommended that a call to <a href="../../entity/Player.html#updateInventory()"><code>Player.updateInventory()</code></a> is made as the client may disagree with the server's decision to not consume a consumable item.
+    /// <p>This value is ignored for entities where items are not required (skeletons, pillagers, etc.) or with crossbows (as no item is being consumed).</p>
     pub fn set_consume_item(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4437,6 +4807,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get whether or not the consumable item should be consumed in this event.
     pub fn should_consume_item(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4444,6 +4815,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -4469,6 +4841,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4483,6 +4856,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4490,6 +4864,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -4509,6 +4884,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4523,6 +4899,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4534,6 +4911,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4541,6 +4919,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4548,6 +4927,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4555,6 +4935,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4573,6 +4954,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityShootBowEvent<'
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity dies and may have the opportunity to be resurrected. Will be called in a cancelled state if the entity does not have a totem equipped.
 pub struct EntityResurrectEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4596,7 +4978,8 @@ impl<'mc> EntityResurrectEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityResurrectEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityResurrectEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityResurrectEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityResurrectEvent object, got {}",
@@ -4627,6 +5010,16 @@ impl<'mc> EntityResurrectEvent<'mc> {
         )?;
         crate::event::entity::EntityResurrectEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4641,13 +5034,8 @@ impl<'mc> EntityResurrectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4660,6 +5048,8 @@ impl<'mc> EntityResurrectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4672,6 +5062,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4685,6 +5076,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Get the hand in which the totem of undying was found, or null if the entity did not have a totem of undying.
     pub fn hand(
         &mut self,
     ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
@@ -4710,6 +5102,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
             crate::inventory::EquipmentSlot::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -4735,6 +5128,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4749,6 +5143,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4756,6 +5151,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -4775,6 +5171,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -4789,6 +5186,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4800,6 +5198,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4807,6 +5206,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4814,6 +5214,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4821,6 +5222,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4839,6 +5241,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityResurrectEvent<
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Stores all data related to the bartering interaction with a piglin. This event can be triggered by a piglin picking up an item that's on its bartering list.
 pub struct PiglinBarterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4862,7 +5265,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
                 eyre::eyre!("Tried to instantiate PiglinBarterEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "PiglinBarterEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/PiglinBarterEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PiglinBarterEvent object, got {}",
@@ -4905,6 +5308,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         )?;
         crate::event::entity::PiglinBarterEvent::from_raw(&jni, res)
     }
+    /// Gets the input of the barter.
     pub fn input(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -4919,6 +5323,16 @@ impl<'mc> PiglinBarterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4933,13 +5347,8 @@ impl<'mc> PiglinBarterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Piglin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4952,6 +5361,8 @@ impl<'mc> PiglinBarterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4964,6 +5375,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4977,6 +5389,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Returns a mutable list representing the outcome of the barter.
     pub fn outcome(
         &mut self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
@@ -4993,6 +5406,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -5018,6 +5432,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5032,6 +5447,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5039,6 +5455,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5058,6 +5475,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5072,6 +5490,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5083,6 +5502,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5090,6 +5510,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5097,6 +5518,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5104,6 +5526,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5122,6 +5545,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for PiglinBarterEvent<'mc
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a Pig Zombie is angered by another entity.
+/// <p>If the event is cancelled, the pig zombie will not be angered.</p>
 pub struct PigZombieAngerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5145,7 +5570,8 @@ impl<'mc> PigZombieAngerEvent<'mc> {
                 eyre::eyre!("Tried to instantiate PigZombieAngerEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "PigZombieAngerEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/PigZombieAngerEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PigZombieAngerEvent object, got {}",
@@ -5177,6 +5603,16 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         )?;
         crate::event::entity::PigZombieAngerEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5191,13 +5627,8 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::PigZombie<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5210,6 +5641,8 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5222,6 +5655,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5235,6 +5669,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the new anger resulting from this event.
     pub fn new_anger(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5242,6 +5677,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the new anger resulting from this event.
     pub fn set_new_anger(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5253,6 +5689,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the entity (if any) which triggered this anger update.
     pub fn target(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5265,6 +5702,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -5290,6 +5728,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5304,6 +5743,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5311,6 +5751,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5330,6 +5771,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5344,6 +5786,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5355,6 +5798,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5362,6 +5806,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5369,6 +5814,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5376,6 +5822,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5394,6 +5841,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for PigZombieAngerEvent<'
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Thrown when a Living Entity creates a portal in a world.
 pub struct EntityCreatePortalEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5418,7 +5866,8 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityCreatePortalEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityCreatePortalEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityCreatePortalEvent object, got {}",
@@ -5462,6 +5911,17 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         )?;
         crate::event::entity::EntityCreatePortalEvent::from_raw(&jni, res)
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5476,13 +5936,9 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -5497,6 +5953,8 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Gets a list of all blocks associated with the portal.
     pub fn blocks(
         &mut self,
     ) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
@@ -5513,6 +5971,9 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         }
         Ok(new_vec)
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5525,6 +5986,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="deprecated-label">Deprecated.</span>
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5538,6 +6000,8 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// Gets the type of portal that is trying to be created.
     pub fn portal_type(&mut self) -> Result<crate::PortalType<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5561,6 +6025,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             crate::PortalType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -5586,6 +6051,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5600,6 +6066,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5607,6 +6074,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5626,6 +6094,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5640,6 +6109,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5651,6 +6121,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5658,6 +6129,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5665,6 +6137,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5672,6 +6145,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5690,6 +6164,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityCreatePortalEve
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Sent when an entity's swimming status is toggled.
 pub struct EntityToggleSwimEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5714,7 +6189,8 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityToggleSwimEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityToggleSwimEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityToggleSwimEvent object, got {}",
@@ -5744,6 +6220,16 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         )?;
         crate::event::entity::EntityToggleSwimEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5758,13 +6244,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Returns true if the entity is now swims or false if the entity stops swimming.
     pub fn is_swimming(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5772,6 +6252,8 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5784,6 +6266,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5797,6 +6280,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5809,6 +6293,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -5834,6 +6319,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5848,6 +6334,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5855,6 +6342,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -5874,6 +6362,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -5888,6 +6377,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5899,6 +6389,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5906,6 +6397,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -5913,6 +6405,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5920,6 +6413,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5938,6 +6432,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityToggleSwimEvent
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Thrown when a non-player entity is teleported from one location to another.
+///
+/// This may be as a result of natural causes (Enderman, Shulker), pathfinding (Wolf), or commands (/teleport).
 pub struct EntityTeleportEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5961,7 +6458,8 @@ impl<'mc> EntityTeleportEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityTeleportEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityTeleportEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityTeleportEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityTeleportEvent object, got {}",
@@ -5993,6 +6491,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         )?;
         crate::event::entity::EntityTeleportEvent::from_raw(&jni, res)
     }
+    /// Gets the location that this entity moved from
     pub fn from(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6005,6 +6504,16 @@ impl<'mc> EntityTeleportEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6019,13 +6528,8 @@ impl<'mc> EntityTeleportEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -6038,6 +6542,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6051,6 +6556,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Sets the location that this entity moved from
     pub fn set_from(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -6065,6 +6571,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the location that this entity moved to
     pub fn to(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6074,6 +6581,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the location that this entity moved to
     pub fn set_to(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -6088,6 +6596,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6100,6 +6609,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -6125,6 +6635,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6139,6 +6650,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6146,6 +6658,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -6165,6 +6678,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6179,6 +6693,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6190,6 +6705,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6197,6 +6713,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6204,6 +6721,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6211,6 +6729,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6229,6 +6748,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTeleportEvent<'
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity enters love mode.
+///
+/// This can be cancelled but the item will still be consumed that was used to make the entity enter into love mode.
 pub struct EntityEnterLoveModeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6253,7 +6775,8 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityEnterLoveModeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityEnterLoveModeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityEnterLoveModeEvent object, got {}",
@@ -6286,6 +6809,16 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         )?;
         crate::event::entity::EntityEnterLoveModeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6300,13 +6833,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the animal that is entering love mode.
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6319,6 +6846,8 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -6331,6 +6860,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6344,6 +6874,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the Human Entity that caused the animal to enter love mode.
     pub fn human_entity(
         &mut self,
     ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
@@ -6358,6 +6889,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the amount of ticks that the animal will fall in love for.
     pub fn ticks_in_love(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6365,6 +6897,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the amount of ticks that the animal will fall in love for.
     pub fn set_ticks_in_love(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -6376,6 +6909,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -6401,6 +6935,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6415,6 +6950,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6422,6 +6958,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -6441,6 +6978,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6455,6 +6993,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6466,6 +7005,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6473,6 +7013,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6480,6 +7021,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6487,6 +7029,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6505,6 +7048,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityEnterLoveModeEv
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a sheep's wool is dyed
 pub struct SheepDyeWoolEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6528,7 +7072,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
                 eyre::eyre!("Tried to instantiate SheepDyeWoolEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "SheepDyeWoolEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/SheepDyeWoolEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SheepDyeWoolEvent object, got {}",
@@ -6562,27 +7106,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         )?;
         crate::event::entity::SheepDyeWoolEvent::from_raw(&jni, res)
     }
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getHandlers",
-            "()Lorg/bukkit/event/HandlerList;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Sets the DyeColor the sheep is being dyed
     pub fn set_color(
         &mut self,
         arg0: impl Into<&'mc crate::DyeColor<'mc>>,
@@ -6597,6 +7121,31 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
+    pub fn handlers(
+        &mut self,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHandlers",
+            "()Lorg/bukkit/event/HandlerList;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Gets the DyeColor the sheep is being dyed
     pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6620,6 +7169,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             crate::DyeColor::from_string(variant_str).unwrap(),
         )
     }
+    /// Returns the player dyeing the sheep, if available.
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6632,6 +7182,8 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Sheep<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6644,6 +7196,8 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -6656,6 +7210,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6669,6 +7224,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -6694,6 +7250,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6708,6 +7265,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6715,6 +7273,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -6734,6 +7293,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6748,6 +7308,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6759,6 +7320,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6766,6 +7328,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6773,6 +7336,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6780,6 +7344,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6798,6 +7363,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for SheepDyeWoolEvent<'mc
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity changes its pose.
 pub struct EntityPoseChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6822,7 +7388,8 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPoseChangeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityPoseChangeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPoseChangeEvent object, got {}",
@@ -6851,6 +7418,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         )?;
         crate::event::entity::EntityPoseChangeEvent::from_raw(&jni, res)
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6865,6 +7433,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the entity's new pose.
     pub fn pose(&mut self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6888,6 +7457,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             crate::entity::Pose::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6901,6 +7471,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6913,6 +7484,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -6938,6 +7510,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6952,6 +7525,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6959,6 +7533,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -6978,6 +7553,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6992,6 +7568,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7003,6 +7580,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7010,6 +7588,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7017,6 +7596,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7024,6 +7604,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7037,6 +7618,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPoseChangeEvent
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity is damaged by an entity
 pub struct EntityDamageByEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7061,7 +7643,8 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityDamageByEntityEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityDamageByEntityEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityDamageByEntityEvent object, got {}",
@@ -7093,6 +7676,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/entity/EntityDamageEvent$DamageCause;Ljava/util/Map;Ljava/util/Map;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::event::entity::EntityDamageByEntityEvent::from_raw(&jni, res)
     }
+    /// Returns the entity that damaged the defender.
     pub fn damager(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7105,6 +7689,15 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7119,13 +7712,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_damage_with_double(
         &mut self,
         arg0: std::option::Option<
@@ -7148,6 +7735,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns the entity that damaged the defender.
     pub fn get_damage(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -7162,6 +7750,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn is_applicable(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -7176,6 +7765,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -7188,6 +7778,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7201,6 +7792,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn get_original_damage(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -7215,6 +7807,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn final_damage(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7222,6 +7815,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn cause(
         &mut self,
     ) -> Result<crate::event::entity::EntityDamageEventDamageCause<'mc>, Box<dyn std::error::Error>>
@@ -7237,6 +7831,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7249,6 +7844,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -7274,6 +7870,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7288,6 +7885,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7295,6 +7893,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7314,6 +7913,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7328,6 +7928,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7339,6 +7940,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7346,6 +7948,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7353,6 +7956,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7360,6 +7964,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7373,6 +7978,7 @@ impl<'mc> Into<crate::event::entity::EntityDamageEvent<'mc>> for EntityDamageByE
         crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct VillagerCareerChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7401,7 +8007,10 @@ impl<'mc> VillagerCareerChangeEventChangeReason<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "VillagerCareerChangeEventChangeReason")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/VillagerCareerChangeEventChangeReason",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a VillagerCareerChangeEventChangeReason object, got {}",
@@ -7569,7 +8178,8 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "VillagerCareerChangeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/VillagerCareerChangeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a VillagerCareerChangeEvent object, got {}",
@@ -7595,6 +8205,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
 "(Lorg/bukkit/entity/Villager;Lorg/bukkit/entity/Villager$Profession;Lorg/bukkit/event/entity/VillagerCareerChangeEvent$ChangeReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::VillagerCareerChangeEvent::from_raw(&jni, res)
     }
+    /// Gets the reason for why the villager's career is changing.
     pub fn reason(
         &mut self,
     ) -> Result<
@@ -7613,6 +8224,16 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7627,13 +8248,8 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Villager<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7646,6 +8262,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the profession the villager will become from this event.
     pub fn set_profession(
         &mut self,
         arg0: impl Into<&'mc crate::entity::VillagerProfession<'mc>>,
@@ -7660,6 +8277,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the future profession of the villager.
     pub fn profession(
         &mut self,
     ) -> Result<crate::entity::VillagerProfession<'mc>, Box<dyn std::error::Error>> {
@@ -7674,6 +8292,8 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -7686,6 +8306,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7699,6 +8320,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -7724,6 +8346,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7738,6 +8361,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7745,6 +8369,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7764,6 +8389,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7778,6 +8404,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7789,6 +8416,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7796,6 +8424,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7803,6 +8432,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7810,6 +8440,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7828,6 +8459,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for VillagerCareerChangeE
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Represents an Entity-related event
 pub struct EntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -7849,7 +8481,7 @@ impl<'mc> EntityEvent<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EntityEvent from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityEvent object, got {}",
@@ -7873,6 +8505,8 @@ impl<'mc> EntityEvent<'mc> {
         )?;
         crate::event::entity::EntityEvent::from_raw(&jni, res)
     }
+    /// Returns the Entity involved in this event
+    /// Gets the EntityType of the Entity involved in this event.
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7885,6 +8519,7 @@ impl<'mc> EntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the EntityType of the Entity involved in this event.
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -7910,6 +8545,7 @@ impl<'mc> EntityEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7924,6 +8560,7 @@ impl<'mc> EntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7938,6 +8575,7 @@ impl<'mc> EntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7945,6 +8583,7 @@ impl<'mc> EntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -7964,6 +8603,7 @@ impl<'mc> EntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -7978,6 +8618,7 @@ impl<'mc> EntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -7989,6 +8630,7 @@ impl<'mc> EntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -7996,6 +8638,7 @@ impl<'mc> EntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8003,6 +8646,7 @@ impl<'mc> EntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8010,6 +8654,7 @@ impl<'mc> EntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8023,6 +8668,8 @@ impl<'mc> Into<crate::event::Event<'mc>> for EntityEvent<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a potion effect is modified on an entity.
+/// <p>If the event is cancelled, no change will be made on the entity.</p>
 pub struct EntityPotionEffectEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8051,7 +8698,10 @@ impl<'mc> EntityPotionEffectEventAction<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPotionEffectEventAction")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityPotionEffectEventAction",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPotionEffectEventAction object, got {}",
@@ -8223,7 +8873,8 @@ impl<'mc> EntityPotionEffectEventCause<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPotionEffectEventCause")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityPotionEffectEventCause")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPotionEffectEventCause object, got {}",
@@ -8391,7 +9042,8 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPotionEffectEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityPotionEffectEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPotionEffectEvent object, got {}",
@@ -8424,6 +9076,16 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
 "(Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/potion/PotionEffect;Lorg/bukkit/potion/PotionEffect;Lorg/bukkit/event/entity/EntityPotionEffectEvent$Cause;Lorg/bukkit/event/entity/EntityPotionEffectEvent$Action;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6)])?;
         crate::event::entity::EntityPotionEffectEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8438,13 +9100,8 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -8457,6 +9114,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8470,6 +9128,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the action which will be performed on the potion effect type.
     pub fn action(
         &mut self,
     ) -> Result<crate::event::entity::EntityPotionEffectEventAction<'mc>, Box<dyn std::error::Error>>
@@ -8485,6 +9144,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the old potion effect of the changed type, which will be removed.
     pub fn old_effect(
         &mut self,
     ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
@@ -8499,6 +9159,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets new potion effect of the changed type to be applied.
     pub fn new_effect(
         &mut self,
     ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
@@ -8513,6 +9174,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the modified potion effect type.
     pub fn modified_type(
         &mut self,
     ) -> Result<crate::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
@@ -8527,6 +9189,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns if the new potion effect will override the old potion effect (Only applicable for the CHANGED Action).
     pub fn is_override(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8534,6 +9197,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets if the new potion effect will override the old potion effect (Only applicable for the CHANGED action).
     pub fn set_override(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -8546,6 +9210,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the cause why the effect has changed.
     pub fn cause(
         &mut self,
     ) -> Result<crate::event::entity::EntityPotionEffectEventCause<'mc>, Box<dyn std::error::Error>>
@@ -8561,6 +9226,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8573,6 +9239,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -8598,6 +9265,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8612,6 +9280,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8619,6 +9288,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -8638,6 +9308,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8652,6 +9323,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8663,6 +9335,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8670,6 +9343,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8677,6 +9351,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8684,6 +9359,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8702,6 +9378,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPotionEffectEve
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct ItemMergeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8725,7 +9402,7 @@ impl<'mc> ItemMergeEvent<'mc> {
                 eyre::eyre!("Tried to instantiate ItemMergeEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ItemMergeEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/ItemMergeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ItemMergeEvent object, got {}",
@@ -8754,6 +9431,16 @@ impl<'mc> ItemMergeEvent<'mc> {
         )?;
         crate::event::entity::ItemMergeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8768,13 +9455,8 @@ impl<'mc> ItemMergeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8787,6 +9469,8 @@ impl<'mc> ItemMergeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -8799,6 +9483,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8812,6 +9497,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the Item entity the main Item is being merged into.
     pub fn target(&mut self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8824,6 +9510,7 @@ impl<'mc> ItemMergeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -8849,6 +9536,7 @@ impl<'mc> ItemMergeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8863,6 +9551,7 @@ impl<'mc> ItemMergeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8870,6 +9559,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -8889,6 +9579,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -8903,6 +9594,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8914,6 +9606,7 @@ impl<'mc> ItemMergeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8921,6 +9614,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -8928,6 +9622,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8935,6 +9630,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -8953,6 +9649,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ItemMergeEvent<'mc> {
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called whenever a villager acquires a new trade.
 pub struct VillagerAcquireTradeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8977,7 +9674,8 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "VillagerAcquireTradeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/VillagerAcquireTradeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a VillagerAcquireTradeEvent object, got {}",
@@ -9007,6 +9705,16 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         )?;
         crate::event::entity::VillagerAcquireTradeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9021,13 +9729,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Get the recipe to be acquired.
     pub fn recipe(
         &mut self,
     ) -> Result<crate::inventory::MerchantRecipe<'mc>, Box<dyn std::error::Error>> {
@@ -9042,6 +9744,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the recipe to be acquired.
     pub fn set_recipe(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::MerchantRecipe<'mc>>,
@@ -9056,6 +9759,8 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9068,6 +9773,8 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -9080,6 +9787,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9093,6 +9801,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -9118,6 +9827,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9132,6 +9842,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9139,6 +9850,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -9158,6 +9870,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9172,6 +9885,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9183,6 +9897,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9190,6 +9905,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9197,6 +9913,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9204,6 +9921,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9222,6 +9940,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for VillagerAcquireTradeE
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a splash potion hits an area
 pub struct LingeringPotionSplashEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9246,7 +9965,8 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "LingeringPotionSplashEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/LingeringPotionSplashEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a LingeringPotionSplashEvent object, got {}",
@@ -9276,6 +9996,16 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         )?;
         crate::event::entity::LingeringPotionSplashEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9290,13 +10020,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the AreaEffectCloud spawned
     pub fn area_effect_cloud(
         &mut self,
     ) -> Result<crate::entity::AreaEffectCloud<'mc>, Box<dyn std::error::Error>> {
@@ -9311,6 +10035,8 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9323,6 +10049,12 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ProjectileHitEvent.html#setCancelled(boolean)">ProjectileHitEvent</a></code></span>
+    /// Whether to cancel the action that occurs when the projectile hits. In the case of an entity, it will not collide (unless it's a firework, then use <a title="class in org.bukkit.event.entity" href="FireworkExplodeEvent.html"><code>FireworkExplodeEvent</code></a>).
+    ///
+    /// In the case of a block, some blocks (eg target block, bell) will not perform the action associated.
+    ///
+    /// This does NOT prevent block collisions, and explosions will still occur unless their respective events are cancelled.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -9335,6 +10067,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9348,6 +10081,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn hit_block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9360,6 +10094,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn hit_block_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -9385,6 +10120,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn hit_entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9397,6 +10133,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -9422,6 +10159,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9436,6 +10174,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9443,6 +10182,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -9462,6 +10202,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9476,6 +10217,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9487,6 +10229,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9494,6 +10237,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9501,6 +10245,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9508,6 +10253,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9526,6 +10272,7 @@ impl<'mc> Into<crate::event::entity::ProjectileHitEvent<'mc>> for LingeringPotio
         crate::event::entity::ProjectileHitEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Thrown when a LivingEntity is tamed
 pub struct EntityTameEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9549,7 +10296,7 @@ impl<'mc> EntityTameEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityTameEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityTameEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityTameEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityTameEvent object, got {}",
@@ -9578,6 +10325,16 @@ impl<'mc> EntityTameEvent<'mc> {
         )?;
         crate::event::entity::EntityTameEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9592,13 +10349,7 @@ impl<'mc> EntityTameEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the owning AnimalTamer
     pub fn owner(&mut self) -> Result<crate::entity::AnimalTamer<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9611,6 +10362,8 @@ impl<'mc> EntityTameEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -9625,6 +10378,8 @@ impl<'mc> EntityTameEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -9637,6 +10392,7 @@ impl<'mc> EntityTameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9650,6 +10406,7 @@ impl<'mc> EntityTameEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -9675,6 +10432,7 @@ impl<'mc> EntityTameEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9689,6 +10447,7 @@ impl<'mc> EntityTameEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9696,6 +10455,7 @@ impl<'mc> EntityTameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -9715,6 +10475,7 @@ impl<'mc> EntityTameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -9729,6 +10490,7 @@ impl<'mc> EntityTameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9740,6 +10502,7 @@ impl<'mc> EntityTameEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9747,6 +10510,7 @@ impl<'mc> EntityTameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9754,6 +10518,7 @@ impl<'mc> EntityTameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9761,6 +10526,7 @@ impl<'mc> EntityTameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9779,6 +10545,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTameEvent<'mc> 
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an <a href="../../entity/Entity.html" title="interface in org.bukkit.entity"><code>Entity</code></a> breaks a door
+/// <p>Cancelling the event will cause the event to be delayed</p>
 pub struct EntityBreakDoorEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -9802,7 +10570,8 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityBreakDoorEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityBreakDoorEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityBreakDoorEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityBreakDoorEvent object, got {}",
@@ -9831,6 +10600,8 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         )?;
         crate::event::entity::EntityBreakDoorEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9843,6 +10614,15 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9857,13 +10637,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9876,6 +10650,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn block_data(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -9890,6 +10665,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -9902,6 +10678,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9915,6 +10692,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn to(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -9935,6 +10713,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -9960,6 +10739,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9974,6 +10754,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -9981,6 +10762,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10000,6 +10782,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10014,6 +10797,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10025,6 +10809,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10032,6 +10817,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10039,6 +10825,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10046,6 +10833,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10059,6 +10847,7 @@ impl<'mc> Into<crate::event::entity::EntityChangeBlockEvent<'mc>> for EntityBrea
         crate::event::entity::EntityChangeBlockEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when one Entity breeds with another Entity.
 pub struct EntityBreedEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10082,7 +10871,7 @@ impl<'mc> EntityBreedEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityBreedEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityBreedEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityBreedEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityBreedEvent object, got {}",
@@ -10113,6 +10902,16 @@ impl<'mc> EntityBreedEvent<'mc> {
 "(Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/entity/LivingEntity;Lorg/bukkit/inventory/ItemStack;I)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6)])?;
         crate::event::entity::EntityBreedEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10127,13 +10926,8 @@ impl<'mc> EntityBreedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10146,6 +10940,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the amount of experience granted by breeding.
     pub fn experience(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10153,6 +10948,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Set the amount of experience granted by breeding.
     pub fn set_experience(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10164,6 +10960,8 @@ impl<'mc> EntityBreedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -10176,6 +10974,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10189,6 +10988,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the parent creating this entity.
     pub fn mother(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -10203,6 +11003,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the other parent of the newly born entity.
     pub fn father(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -10217,6 +11018,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the Entity responsible for breeding. Breeder is null for spontaneous conception.
     pub fn breeder(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -10231,6 +11033,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// The ItemStack that was used to initiate breeding, if present.
     pub fn bred_with(
         &mut self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -10245,6 +11048,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -10270,6 +11074,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10284,6 +11089,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10291,6 +11097,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10310,6 +11117,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10324,6 +11132,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10335,6 +11144,7 @@ impl<'mc> EntityBreedEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10342,6 +11152,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10349,6 +11160,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10356,6 +11168,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10374,6 +11187,9 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityBreedEvent<'mc>
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Triggered when a entity is created in the world by a player "placing" an item on a block.
+///
+/// Note that this event is currently only fired for four specific placements: armor stands, boats, minecarts, and end crystals.
 pub struct EntityPlaceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10397,7 +11213,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityPlaceEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPlaceEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityPlaceEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPlaceEvent object, got {}",
@@ -10428,6 +11244,16 @@ impl<'mc> EntityPlaceEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;Lorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::event::entity::EntityPlaceEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10442,13 +11268,8 @@ impl<'mc> EntityPlaceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Returns the block that the entity was placed on
+    /// Returns the face of the block that the entity was placed on
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10461,6 +11282,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the player placing the entity
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10473,6 +11295,8 @@ impl<'mc> EntityPlaceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -10485,6 +11309,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10498,6 +11323,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Get the hand used to place the entity.
     pub fn hand(
         &mut self,
     ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
@@ -10523,6 +11349,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             crate::inventory::EquipmentSlot::from_string(variant_str).unwrap(),
         )
     }
+    /// Returns the face of the block that the entity was placed on
     pub fn block_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -10548,6 +11375,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10560,6 +11388,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -10585,6 +11414,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10599,6 +11429,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10606,6 +11437,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10625,6 +11457,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10639,6 +11472,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10650,6 +11484,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10657,6 +11492,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10664,6 +11500,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10671,6 +11508,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10689,6 +11527,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPlaceEvent<'mc>
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a block causes an entity to combust.
 pub struct EntityCombustByBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10713,7 +11552,8 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityCombustByBlockEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityCombustByBlockEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityCombustByBlockEvent object, got {}",
@@ -10746,6 +11586,8 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         )?;
         crate::event::entity::EntityCombustByBlockEvent::from_raw(&jni, res)
     }
+    /// The combuster can be lava or a block that is on fire.
+    /// <p>WARNING: block may be null.</p>
     pub fn combuster(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10758,6 +11600,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn duration(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10765,6 +11608,15 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10779,13 +11631,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_duration(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10797,6 +11643,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -10809,6 +11656,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10822,6 +11670,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10834,6 +11683,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -10859,6 +11709,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10873,6 +11724,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10880,6 +11732,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -10899,6 +11752,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -10913,6 +11767,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10924,6 +11779,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10931,6 +11787,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -10938,6 +11795,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10945,6 +11803,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -10958,6 +11817,8 @@ impl<'mc> Into<crate::event::entity::EntityCombustEvent<'mc>> for EntityCombustB
         crate::event::entity::EntityCombustEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// This event is called when a <a href="../../entity/Item.html" title="interface in org.bukkit.entity"><code>Item</code></a> is removed from the world because it has existed for 5 minutes.
+/// <p>Cancelling the event results in the item being allowed to exist for 5 more minutes. This behavior is not guaranteed and may change in future versions.</p>
 pub struct ItemDespawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -10981,7 +11842,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
                 eyre::eyre!("Tried to instantiate ItemDespawnEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ItemDespawnEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/ItemDespawnEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ItemDespawnEvent object, got {}",
@@ -11010,6 +11871,16 @@ impl<'mc> ItemDespawnEvent<'mc> {
         )?;
         crate::event::entity::ItemDespawnEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11024,13 +11895,8 @@ impl<'mc> ItemDespawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11043,6 +11909,8 @@ impl<'mc> ItemDespawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -11055,6 +11923,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11068,6 +11937,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the location at which the item is despawning.
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11080,6 +11950,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -11105,6 +11976,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11119,6 +11991,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11126,6 +11999,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -11145,6 +12019,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11159,6 +12034,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11170,6 +12046,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11177,6 +12054,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11184,6 +12062,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11191,6 +12070,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11209,6 +12089,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ItemDespawnEvent<'mc>
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Stores data for health-regain events
 pub struct EntityRegainHealthEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11237,7 +12118,10 @@ impl<'mc> EntityRegainHealthEventRegainReason<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityRegainHealthEventRegainReason")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityRegainHealthEventRegainReason",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a EntityRegainHealthEventRegainReason object, got {}",
@@ -11405,7 +12289,8 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityRegainHealthEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityRegainHealthEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityRegainHealthEvent object, got {}",
@@ -11431,6 +12316,16 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;DLorg/bukkit/event/entity/EntityRegainHealthEvent$RegainReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::EntityRegainHealthEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11445,13 +12340,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the amount of regained health
     pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11459,6 +12348,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Sets the amount of regained health
     pub fn set_amount(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -11470,6 +12360,8 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -11482,6 +12374,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11495,6 +12388,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the reason for why the entity is regaining health
     pub fn regain_reason(
         &mut self,
     ) -> Result<
@@ -11513,6 +12407,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11525,6 +12420,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -11550,6 +12446,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11564,6 +12461,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11571,6 +12469,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -11590,6 +12489,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11604,6 +12504,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11615,6 +12516,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11622,6 +12524,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11629,6 +12532,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11636,6 +12540,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11654,6 +12559,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityRegainHealthEve
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a bat attempts to sleep or wake up from its slumber.
+/// <p>If a Bat Toggle Sleep event is cancelled, the Bat will not toggle its sleep state.</p>
 pub struct BatToggleSleepEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11677,7 +12584,8 @@ impl<'mc> BatToggleSleepEvent<'mc> {
                 eyre::eyre!("Tried to instantiate BatToggleSleepEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "BatToggleSleepEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/BatToggleSleepEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BatToggleSleepEvent object, got {}",
@@ -11707,6 +12615,16 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         )?;
         crate::event::entity::BatToggleSleepEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11721,13 +12639,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Get whether or not the bat is attempting to awaken.
     pub fn is_awake(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11735,6 +12647,8 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -11747,6 +12661,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11760,6 +12675,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11772,6 +12688,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -11797,6 +12714,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11811,6 +12729,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11818,6 +12737,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -11837,6 +12757,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -11851,6 +12772,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11862,6 +12784,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11869,6 +12792,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -11876,6 +12800,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11883,6 +12808,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11901,6 +12827,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for BatToggleSleepEvent<'
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a projectile is launched.
 pub struct ProjectileLaunchEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11925,7 +12852,8 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ProjectileLaunchEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/ProjectileLaunchEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ProjectileLaunchEvent object, got {}",
@@ -11949,6 +12877,8 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         )?;
         crate::event::entity::ProjectileLaunchEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -11956,6 +12886,8 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11968,6 +12900,8 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -11980,6 +12914,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11994,6 +12929,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12007,6 +12943,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12019,6 +12956,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -12044,6 +12982,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12058,6 +12997,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12065,6 +13005,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -12084,6 +13025,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12098,6 +13040,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12109,6 +13052,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12116,6 +13060,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12123,6 +13068,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12130,6 +13076,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12148,6 +13095,7 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for ProjectileLaunch
         crate::event::entity::EntitySpawnEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Thrown whenever a <a title="interface in org.bukkit.entity" href="../../entity/Player.html"><code>Player</code></a> dies
 pub struct PlayerDeathEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12171,7 +13119,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
                 eyre::eyre!("Tried to instantiate PlayerDeathEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "PlayerDeathEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/PlayerDeathEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PlayerDeathEvent object, got {}",
@@ -12226,6 +13174,8 @@ impl<'mc> PlayerDeathEvent<'mc> {
         )?;
         crate::event::entity::PlayerDeathEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12238,6 +13188,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the Level the Player should have at respawn.
     pub fn new_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12245,6 +13196,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the Level the Player should have at respawn.
     pub fn set_new_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12256,6 +13208,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Set the death message that will appear to everyone on the server.
     pub fn set_death_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -12270,6 +13223,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the death message that will appear to everyone on the server.
     pub fn death_message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12284,6 +13238,8 @@ impl<'mc> PlayerDeathEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets how much EXP the Player should have at respawn.
+    /// <p>This does not indicate how much EXP should be dropped, please see <a href="EntityDeathEvent.html#getDroppedExp()"><code>EntityDeathEvent.getDroppedExp()</code></a> for that.</p>
     pub fn new_exp(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12291,6 +13247,8 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets how much EXP the Player should have at respawn.
+    /// <p>This does not indicate how much EXP should be dropped, please see <a href="EntityDeathEvent.html#setDroppedExp(int)"><code>EntityDeathEvent.setDroppedExp(int)</code></a> for that.</p>
     pub fn set_new_exp(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12302,6 +13260,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the Total EXP the Player should have at respawn.
     pub fn new_total_exp(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12309,6 +13268,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the Total EXP the Player should have at respawn.
     pub fn set_new_total_exp(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12320,6 +13280,8 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets if the Player should keep all EXP at respawn.
+    /// <p>This flag overrides other EXP settings</p>
     pub fn keep_level(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12327,6 +13289,9 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets if the Player should keep all EXP at respawn.
+    /// <p>This overrides all other EXP settings</p>
+    /// <p><b>This doesn't prevent the EXP from dropping. <a href="EntityDeathEvent.html#setDroppedExp(int)"><code>EntityDeathEvent.setDroppedExp(int)</code></a> should be used stop the EXP from dropping.</b></p>
     pub fn set_keep_level(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -12339,6 +13304,8 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets if the Player keeps inventory on death.
+    /// <p><b>This doesn't prevent the items from dropping. <code>getDrops().clear()</code> should be used stop the items from dropping.</b></p>
     pub fn set_keep_inventory(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -12351,6 +13318,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets if the Player keeps inventory on death.
     pub fn keep_inventory(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12358,6 +13326,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12372,6 +13341,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn drops(
         &mut self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
@@ -12388,6 +13358,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12401,6 +13372,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn dropped_exp(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12408,6 +13380,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn set_dropped_exp(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12419,6 +13392,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -12444,6 +13418,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12458,6 +13433,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12465,6 +13441,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -12484,6 +13461,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12498,6 +13476,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12509,6 +13488,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12516,6 +13496,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12523,6 +13504,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12530,6 +13512,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12543,6 +13526,7 @@ impl<'mc> Into<crate::event::entity::EntityDeathEvent<'mc>> for PlayerDeathEvent
         crate::event::entity::EntityDeathEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a lingering potion applies it's effects. Happens once every 5 ticks
 pub struct AreaEffectCloudApplyEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12567,7 +13551,8 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "AreaEffectCloudApplyEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/AreaEffectCloudApplyEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AreaEffectCloudApplyEvent object, got {}",
@@ -12608,6 +13593,16 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         )?;
         crate::event::entity::AreaEffectCloudApplyEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12622,13 +13617,8 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::AreaEffectCloud<'mc>, Box<dyn std::error::Error>> {
@@ -12643,6 +13633,8 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -12655,6 +13647,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12668,6 +13661,8 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Retrieves a mutable list of the effected entities
+    /// <p>It is important to note that not every entity in this list is guaranteed to be effected. The cloud may die during the application of its effects due to the depletion of <a href="../../entity/AreaEffectCloud.html#getDurationOnUse()"><code>AreaEffectCloud.getDurationOnUse()</code></a> or <a href="../../entity/AreaEffectCloud.html#getRadiusOnUse()"><code>AreaEffectCloud.getRadiusOnUse()</code></a></p>
     pub fn affected_entities(
         &mut self,
     ) -> Result<Vec<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
@@ -12687,6 +13682,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -12712,6 +13708,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12726,6 +13723,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12733,6 +13731,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -12752,6 +13751,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -12766,6 +13766,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12777,6 +13778,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12784,6 +13786,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12791,6 +13794,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12798,6 +13802,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -12816,6 +13821,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for AreaEffectCloudApplyE
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when any Entity changes a block and a more specific event is not available.
 pub struct EntityChangeBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -12840,7 +13846,8 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityChangeBlockEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityChangeBlockEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityChangeBlockEvent object, got {}",
@@ -12865,6 +13872,16 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;Lorg/bukkit/block/data/BlockData;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::EntityChangeBlockEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12879,13 +13896,8 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the block the entity is changing
+    /// Gets the data for the block that would be changed into
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12898,6 +13910,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the data for the block that would be changed into
     pub fn block_data(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -12912,6 +13925,8 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -12924,6 +13939,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12937,6 +13953,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the Material that the block is changing into
     pub fn to(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -12957,6 +13974,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12969,6 +13987,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -12994,6 +14013,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13008,6 +14028,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13015,6 +14036,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -13034,6 +14056,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13048,6 +14071,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13059,6 +14083,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13066,6 +14091,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13073,6 +14099,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13080,6 +14107,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13098,6 +14126,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityChangeBlockEven
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity causes another entity to combust.
 pub struct EntityCombustByEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13122,7 +14151,8 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityCombustByEntityEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityCombustByEntityEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityCombustByEntityEvent object, got {}",
@@ -13155,6 +14185,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         )?;
         crate::event::entity::EntityCombustByEntityEvent::from_raw(&jni, res)
     }
+    /// Get the entity that caused the combustion event.
     pub fn combuster(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13167,6 +14198,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn duration(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13174,6 +14206,15 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13188,13 +14229,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_duration(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13206,6 +14241,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13218,6 +14254,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13231,6 +14268,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13243,6 +14281,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -13268,6 +14307,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13282,6 +14322,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13289,6 +14330,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -13308,6 +14350,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13322,6 +14365,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13333,6 +14377,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13340,6 +14385,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13347,6 +14393,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13354,6 +14401,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13367,6 +14415,7 @@ impl<'mc> Into<crate::event::entity::EntityCombustEvent<'mc>> for EntityCombustB
         crate::event::entity::EntityCombustEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a human entity experiences exhaustion. An exhaustion level greater than 4.0 causes a decrease in saturation by 1.
 pub struct EntityExhaustionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13395,7 +14444,10 @@ impl<'mc> EntityExhaustionEventExhaustionReason<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityExhaustionEventExhaustionReason")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityExhaustionEventExhaustionReason",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a EntityExhaustionEventExhaustionReason object, got {}",
@@ -13563,7 +14615,8 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityExhaustionEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityExhaustionEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityExhaustionEvent object, got {}",
@@ -13588,6 +14641,16 @@ impl<'mc> EntityExhaustionEvent<'mc> {
 "(Lorg/bukkit/entity/HumanEntity;Lorg/bukkit/event/entity/EntityExhaustionEvent$ExhaustionReason;F)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::EntityExhaustionEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13602,13 +14665,8 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
@@ -13623,6 +14681,8 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the <a title="enum in org.bukkit.event.entity" href="EntityExhaustionEvent.ExhaustionReason.html"><code>EntityExhaustionEvent.ExhaustionReason</code></a> for this event
+    /// Get the amount of exhaustion to add to the player's current exhaustion.
     pub fn exhaustion(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13630,6 +14690,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f().unwrap())
     }
+    /// Set the exhaustion to apply to the player. The maximum exhaustion that a player can have is 40. No error will be thrown if this limit is hit. This value may be negative, but there is unknown behavior for when exhaustion is below 0.
     pub fn set_exhaustion(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13641,6 +14702,8 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13653,6 +14716,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13666,6 +14730,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the <a title="enum in org.bukkit.event.entity" href="EntityExhaustionEvent.ExhaustionReason.html"><code>EntityExhaustionEvent.ExhaustionReason</code></a> for this event
     pub fn exhaustion_reason(
         &mut self,
     ) -> Result<
@@ -13684,6 +14749,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -13709,6 +14775,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13723,6 +14790,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13730,6 +14798,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -13749,6 +14818,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -13763,6 +14833,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13774,6 +14845,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13781,6 +14853,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -13788,6 +14861,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13795,6 +14869,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13813,6 +14888,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityExhaustionEvent
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called immediately prior to a creature being leashed by a player.
 pub struct PlayerLeashEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -13837,7 +14913,8 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PlayerLeashEntityEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/PlayerLeashEntityEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PlayerLeashEntityEvent object, got {}",
@@ -13866,6 +14943,16 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/entity/Entity;Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::entity::PlayerLeashEntityEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13880,13 +14967,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Returns the entity that is holding the leash.
     pub fn leash_holder(
         &mut self,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -13901,6 +14982,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the player involved in this event
     pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13913,6 +14995,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the entity being leashed.
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13925,6 +15008,8 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13937,6 +15022,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13950,6 +15036,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Returns the hand used by the player to leash the entity.
     pub fn hand(
         &mut self,
     ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
@@ -13975,6 +15062,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             crate::inventory::EquipmentSlot::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13989,6 +15077,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -13996,6 +15085,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -14015,6 +15105,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14029,6 +15120,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14040,6 +15132,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14047,6 +15140,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14054,6 +15148,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14061,6 +15156,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14079,6 +15175,7 @@ impl<'mc> Into<crate::event::Event<'mc>> for PlayerLeashEntityEvent<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Stores data for pigs being zapped
 pub struct PigZapEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14100,7 +15197,7 @@ impl<'mc> PigZapEvent<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PigZapEvent from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "PigZapEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/PigZapEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PigZapEvent object, got {}",
@@ -14125,6 +15222,16 @@ impl<'mc> PigZapEvent<'mc> {
 "(Lorg/bukkit/entity/Pig;Lorg/bukkit/entity/LightningStrike;Lorg/bukkit/entity/PigZombie;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::PigZapEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14139,13 +15246,8 @@ impl<'mc> PigZapEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14158,6 +15260,8 @@ impl<'mc> PigZapEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -14170,6 +15274,7 @@ impl<'mc> PigZapEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14183,6 +15288,7 @@ impl<'mc> PigZapEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the bolt which is striking the pig.
     pub fn lightning(
         &mut self,
     ) -> Result<crate::entity::LightningStrike<'mc>, Box<dyn std::error::Error>> {
@@ -14198,6 +15304,13 @@ impl<'mc> PigZapEvent<'mc> {
         })
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// use <a href="EntityTransformEvent.html#getTransformedEntity()"><code>EntityTransformEvent.getTransformedEntity()</code></a>
+    /// </div>
+    /// use <a href="EntityTransformEvent.html#getTransformedEntity()"><code>EntityTransformEvent.getTransformedEntity()</code></a>
+    ///
+    /// Gets the zombie pig that will replace the pig, provided the event is not cancelled first.
     pub fn pig_zombie(
         &mut self,
     ) -> Result<crate::entity::PigZombie<'mc>, Box<dyn std::error::Error>> {
@@ -14212,6 +15325,7 @@ impl<'mc> PigZapEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn transformed_entity(
         &mut self,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -14226,6 +15340,7 @@ impl<'mc> PigZapEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn transformed_entities(
         &mut self,
     ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
@@ -14245,6 +15360,7 @@ impl<'mc> PigZapEvent<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn transform_reason(
         &mut self,
     ) -> Result<
@@ -14263,6 +15379,7 @@ impl<'mc> PigZapEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -14288,6 +15405,7 @@ impl<'mc> PigZapEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14302,6 +15420,7 @@ impl<'mc> PigZapEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14309,6 +15428,7 @@ impl<'mc> PigZapEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -14328,6 +15448,7 @@ impl<'mc> PigZapEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14342,6 +15463,7 @@ impl<'mc> PigZapEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14353,6 +15475,7 @@ impl<'mc> PigZapEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14360,6 +15483,7 @@ impl<'mc> PigZapEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14367,6 +15491,7 @@ impl<'mc> PigZapEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14374,6 +15499,7 @@ impl<'mc> PigZapEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14392,6 +15518,7 @@ impl<'mc> Into<crate::event::entity::EntityTransformEvent<'mc>> for PigZapEvent<
         crate::event::entity::EntityTransformEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a firework explodes.
 pub struct FireworkExplodeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14415,7 +15542,8 @@ impl<'mc> FireworkExplodeEvent<'mc> {
                 eyre::eyre!("Tried to instantiate FireworkExplodeEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FireworkExplodeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/FireworkExplodeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FireworkExplodeEvent object, got {}",
@@ -14439,6 +15567,16 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         )?;
         crate::event::entity::FireworkExplodeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14453,13 +15591,8 @@ impl<'mc> FireworkExplodeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Firework<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14472,6 +15605,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the cancelled state of this event. If the firework explosion is cancelled, the firework will still be removed, but no particles will be displayed.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -14484,6 +15618,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14497,6 +15632,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -14522,6 +15658,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14536,6 +15673,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14543,6 +15681,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -14562,6 +15701,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14576,6 +15716,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14587,6 +15728,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14594,6 +15736,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14601,6 +15744,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14608,6 +15752,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14626,6 +15771,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for FireworkExplodeEvent<
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an arrow enters or exists an entity's body.
 pub struct ArrowBodyCountChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14650,7 +15796,8 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ArrowBodyCountChangeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/ArrowBodyCountChangeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ArrowBodyCountChangeEvent object, got {}",
@@ -14687,6 +15834,16 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         )?;
         crate::event::entity::ArrowBodyCountChangeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14701,13 +15858,8 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -14722,6 +15874,8 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -14734,6 +15888,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14747,6 +15902,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Whether the event was called because the entity was reset.
     pub fn is_reset(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14754,6 +15910,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the old amount of arrows in the entity's body.
     pub fn old_amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14761,6 +15918,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the new amount of arrows in the entity's body.
     pub fn new_amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14768,6 +15926,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the final amount of arrows in the entity's body.
     pub fn set_new_amount(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14779,6 +15938,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -14804,6 +15964,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14818,6 +15979,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14825,6 +15987,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -14844,6 +16007,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -14858,6 +16022,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14869,6 +16034,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14876,6 +16042,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -14883,6 +16050,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14890,6 +16058,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -14908,6 +16077,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ArrowBodyCountChangeE
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called before an entity exits a portal.
+/// <p>This event allows you to modify the velocity of the entity after they have successfully exited the portal.</p>
 pub struct EntityPortalExitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14932,7 +16103,8 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPortalExitEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityPortalExitEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPortalExitEvent object, got {}",
@@ -14961,6 +16133,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/Location;Lorg/bukkit/Location;Lorg/bukkit/util/Vector;Lorg/bukkit/util/Vector;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::event::entity::EntityPortalExitEvent::from_raw(&jni, res)
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14975,6 +16148,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -14988,6 +16162,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets a copy of the velocity that the entity has before entering the portal.
     pub fn before(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15000,6 +16175,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets a copy of the velocity that the entity will have after exiting the portal.
     pub fn after(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15012,6 +16188,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the velocity that the entity will have after exiting the portal.
     pub fn set_after(
         &mut self,
         arg0: impl Into<&'mc crate::util::Vector<'mc>>,
@@ -15026,6 +16203,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn from(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15038,6 +16216,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15045,6 +16224,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -15057,6 +16237,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_from(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -15071,6 +16252,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn to(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15080,6 +16262,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_to(
         &mut self,
         arg0: impl Into<&'mc crate::Location<'mc>>,
@@ -15094,6 +16277,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15106,6 +16290,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -15131,6 +16316,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15145,6 +16331,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15152,6 +16339,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -15171,6 +16359,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -15185,6 +16374,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15196,6 +16386,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15203,6 +16394,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15210,6 +16402,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15217,6 +16410,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15230,6 +16424,7 @@ impl<'mc> Into<crate::event::entity::EntityTeleportEvent<'mc>> for EntityPortalE
         crate::event::entity::EntityTeleportEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Stores data for damage events
 pub struct EntityDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15258,7 +16453,8 @@ impl<'mc> EntityDamageEventDamageCause<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityDamageEventDamageCause")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityDamageEventDamageCause")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityDamageEventDamageCause object, got {}",
@@ -15430,7 +16626,10 @@ impl<'mc> EntityDamageEventDamageModifier<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityDamageEventDamageModifier")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityDamageEventDamageModifier",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a EntityDamageEventDamageModifier object, got {}",
@@ -15597,7 +16796,7 @@ impl<'mc> EntityDamageEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityDamageEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityDamageEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityDamageEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityDamageEvent object, got {}",
@@ -15626,6 +16825,16 @@ impl<'mc> EntityDamageEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/entity/EntityDamageEvent$DamageCause;Ljava/util/Map;Ljava/util/Map;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::entity::EntityDamageEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -15640,13 +16849,9 @@ impl<'mc> EntityDamageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Sets the damage for the specified modifier.
+    /// Sets the raw amount of damage caused by the event.
+    /// <p>For compatibility this also recalculates the modifiers and scales them by the difference between the modifier for the previous damage value and the new one.</p>
     pub fn set_damage_with_double(
         &mut self,
         arg0: std::option::Option<
@@ -15669,6 +16874,8 @@ impl<'mc> EntityDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the damage change for some modifier
+    /// Gets the raw amount of damage caused by the event
     pub fn get_damage(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -15683,6 +16890,8 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// This checks to see if a particular modifier is valid for this event's caller, such that, <a href="#setDamage(org.bukkit.event.entity.EntityDamageEvent.DamageModifier,double)"><code>setDamage(DamageModifier, double)</code></a> will not throw an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/UnsupportedOperationException.html" title="class or interface in java.lang" class="external-link"><code>UnsupportedOperationException</code></a>.
+    /// <p><a href="EntityDamageEvent.DamageModifier.html#BASE"><code>EntityDamageEvent.DamageModifier.BASE</code></a> is always applicable.</p>
     pub fn is_applicable(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -15697,6 +16906,8 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -15709,6 +16920,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -15722,6 +16934,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the original damage for the specified modifier, as defined at this event's construction.
     pub fn get_original_damage(
         &mut self,
         arg0: impl Into<&'mc crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -15736,6 +16949,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the amount of damage caused by the event after all damage reduction is applied.
     pub fn final_damage(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15743,6 +16957,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the cause of the damage.
     pub fn cause(
         &mut self,
     ) -> Result<crate::event::entity::EntityDamageEventDamageCause<'mc>, Box<dyn std::error::Error>>
@@ -15758,6 +16973,7 @@ impl<'mc> EntityDamageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15770,6 +16986,7 @@ impl<'mc> EntityDamageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -15795,6 +17012,7 @@ impl<'mc> EntityDamageEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15809,6 +17027,7 @@ impl<'mc> EntityDamageEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15816,6 +17035,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -15835,6 +17055,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -15849,6 +17070,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15860,6 +17082,7 @@ impl<'mc> EntityDamageEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15867,6 +17090,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -15874,6 +17098,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15881,6 +17106,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -15899,6 +17125,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityDamageEvent<'mc
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Thrown whenever a LivingEntity dies
 pub struct EntityDeathEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -15922,7 +17149,7 @@ impl<'mc> EntityDeathEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityDeathEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityDeathEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityDeathEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityDeathEvent object, got {}",
@@ -15965,6 +17192,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         )?;
         crate::event::entity::EntityDeathEvent::from_raw(&jni, res)
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -15979,6 +17207,8 @@ impl<'mc> EntityDeathEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15991,6 +17221,7 @@ impl<'mc> EntityDeathEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets all the items which will drop when the entity dies
     pub fn drops(
         &mut self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
@@ -16007,6 +17238,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         }
         Ok(new_vec)
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -16020,6 +17252,8 @@ impl<'mc> EntityDeathEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets how much EXP should be dropped from this death.
+    /// <p>This does not indicate how much EXP should be taken from the entity in question, merely how much should be created after its death.</p>
     pub fn dropped_exp(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16027,6 +17261,8 @@ impl<'mc> EntityDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets how much EXP should be dropped from this death.
+    /// <p>This does not indicate how much EXP should be taken from the entity in question, merely how much should be created after its death.</p>
     pub fn set_dropped_exp(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16038,6 +17274,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -16063,6 +17300,7 @@ impl<'mc> EntityDeathEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16077,6 +17315,7 @@ impl<'mc> EntityDeathEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16084,6 +17323,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -16103,6 +17343,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -16117,6 +17358,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -16128,6 +17370,7 @@ impl<'mc> EntityDeathEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16135,6 +17378,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -16142,6 +17386,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16149,6 +17394,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16162,6 +17408,11 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityDeathEvent<'mc>
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Sent when an entity's gliding status is toggled with an Elytra. Examples of when this event would be called:
+/// <ul>
+/// <li>Player presses the jump key while in midair and using an Elytra</li>
+/// <li>Player lands on ground while they are gliding (with an Elytra)</li>
+/// </ul> This can be visually estimated by the animation in which a player turns horizontal.
 pub struct EntityToggleGlideEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16186,7 +17437,8 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityToggleGlideEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityToggleGlideEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityToggleGlideEvent object, got {}",
@@ -16216,6 +17468,16 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         )?;
         crate::event::entity::EntityToggleGlideEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -16230,13 +17492,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Returns true if the entity is now gliding or false if the entity stops gliding.
     pub fn is_gliding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16244,6 +17500,8 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -16256,6 +17514,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -16269,6 +17528,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16281,6 +17541,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -16306,6 +17567,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16320,6 +17582,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16327,6 +17590,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -16346,6 +17610,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -16360,6 +17625,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -16371,6 +17637,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16378,6 +17645,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -16385,6 +17653,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16392,6 +17661,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16410,6 +17680,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityToggleGlideEven
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a creature targets or untargets another entity
 pub struct EntityTargetEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16438,7 +17709,10 @@ impl<'mc> EntityTargetEventTargetReason<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityTargetEventTargetReason")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityTargetEventTargetReason",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityTargetEventTargetReason object, got {}",
@@ -16605,7 +17879,7 @@ impl<'mc> EntityTargetEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityTargetEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityTargetEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntityTargetEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityTargetEvent object, got {}",
@@ -16630,6 +17904,7 @@ impl<'mc> EntityTargetEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/entity/EntityTargetEvent$TargetReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::EntityTargetEvent::from_raw(&jni, res)
     }
+    /// Returns the reason for the targeting
     pub fn reason(
         &mut self,
     ) -> Result<crate::event::entity::EntityTargetEventTargetReason<'mc>, Box<dyn std::error::Error>>
@@ -16645,6 +17920,16 @@ impl<'mc> EntityTargetEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -16659,13 +17944,8 @@ impl<'mc> EntityTargetEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -16678,6 +17958,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -16691,6 +17972,8 @@ impl<'mc> EntityTargetEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Get the entity that this is targeting.
+    /// <p>This will be null in the case that the event is called when the mob forgets its target.</p>
     pub fn target(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16703,6 +17986,9 @@ impl<'mc> EntityTargetEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the entity that you want the mob to target instead.
+    /// <p>It is possible to be null, null will cause the entity to be target-less.</p>
+    /// <p>This is different from cancelling the event. Cancelling the event will cause the entity to keep an original target, while setting to be null will cause the entity to be reset.</p>
     pub fn set_target(
         &mut self,
         arg0: impl Into<&'mc crate::entity::Entity<'mc>>,
@@ -16717,6 +18003,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16729,6 +18016,7 @@ impl<'mc> EntityTargetEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -16754,6 +18042,7 @@ impl<'mc> EntityTargetEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16768,6 +18057,7 @@ impl<'mc> EntityTargetEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16775,6 +18065,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -16794,6 +18085,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -16808,6 +18100,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -16819,6 +18112,7 @@ impl<'mc> EntityTargetEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16826,6 +18120,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -16833,6 +18128,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16840,6 +18136,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -16858,6 +18155,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTargetEvent<'mc
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a Creeper is struck by lightning.
+/// <p>If a Creeper Power event is cancelled, the Creeper will not be powered.</p>
 pub struct CreeperPowerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16886,7 +18185,8 @@ impl<'mc> CreeperPowerEventPowerCause<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "CreeperPowerEventPowerCause")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/CreeperPowerEventPowerCause")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CreeperPowerEventPowerCause object, got {}",
@@ -17053,7 +18353,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
                 eyre::eyre!("Tried to instantiate CreeperPowerEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "CreeperPowerEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/CreeperPowerEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CreeperPowerEvent object, got {}",
@@ -17082,6 +18382,16 @@ impl<'mc> CreeperPowerEvent<'mc> {
 "(Lorg/bukkit/entity/Creeper;Lorg/bukkit/entity/LightningStrike;Lorg/bukkit/event/entity/CreeperPowerEvent$PowerCause;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::CreeperPowerEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17096,13 +18406,8 @@ impl<'mc> CreeperPowerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Creeper<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17115,6 +18420,8 @@ impl<'mc> CreeperPowerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -17127,6 +18434,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17140,6 +18448,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the lightning bolt which is striking the Creeper.
     pub fn lightning(
         &mut self,
     ) -> Result<crate::entity::LightningStrike<'mc>, Box<dyn std::error::Error>> {
@@ -17154,6 +18463,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the cause of the creeper being (un)powered.
     pub fn cause(
         &mut self,
     ) -> Result<crate::event::entity::CreeperPowerEventPowerCause<'mc>, Box<dyn std::error::Error>>
@@ -17169,6 +18479,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -17194,6 +18505,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17208,6 +18520,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17215,6 +18528,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -17234,6 +18548,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -17248,6 +18563,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -17259,6 +18575,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17266,6 +18583,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -17273,6 +18591,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17280,6 +18599,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17298,6 +18618,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for CreeperPowerEvent<'mc
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity is spawned into a world by a spawner.
+/// <p>If a Spawner Spawn event is cancelled, the entity will not spawn.</p>
 pub struct SpawnerSpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17321,7 +18643,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
                 eyre::eyre!("Tried to instantiate SpawnerSpawnEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "SpawnerSpawnEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/SpawnerSpawnEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SpawnerSpawnEvent object, got {}",
@@ -17350,6 +18672,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         )?;
         crate::event::entity::SpawnerSpawnEvent::from_raw(&jni, res)
     }
+
     pub fn spawner(
         &mut self,
     ) -> Result<crate::block::CreatureSpawner<'mc>, Box<dyn std::error::Error>> {
@@ -17364,6 +18687,15 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17378,13 +18710,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -17397,6 +18723,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17410,6 +18737,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17422,6 +18750,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17434,6 +18763,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -17459,6 +18789,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17473,6 +18804,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17480,6 +18812,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -17499,6 +18832,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -17513,6 +18847,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -17524,6 +18859,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17531,6 +18867,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -17538,6 +18875,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17545,6 +18883,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17558,6 +18897,7 @@ impl<'mc> Into<crate::event::entity::EntitySpawnEvent<'mc>> for SpawnerSpawnEven
         crate::event::entity::EntitySpawnEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an EnderDragon switches controller phase.
 pub struct EnderDragonChangePhaseEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17582,7 +18922,8 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EnderDragonChangePhaseEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EnderDragonChangePhaseEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EnderDragonChangePhaseEvent object, got {}",
@@ -17608,6 +18949,16 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
 "(Lorg/bukkit/entity/EnderDragon;Lorg/bukkit/entity/EnderDragon$Phase;Lorg/bukkit/entity/EnderDragon$Phase;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::EnderDragonChangePhaseEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17622,13 +18973,8 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::EnderDragon<'mc>, Box<dyn std::error::Error>> {
@@ -17643,6 +18989,8 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -17655,6 +19003,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17668,6 +19017,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Sets the new phase for the ender dragon.
     pub fn set_new_phase(
         &mut self,
         arg0: impl Into<&'mc crate::entity::EnderDragonPhase<'mc>>,
@@ -17682,6 +19032,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the current phase that the dragon is in. This method will return null when a dragon is first spawned and hasn't yet been assigned a phase.
     pub fn current_phase(
         &mut self,
     ) -> Result<crate::entity::EnderDragonPhase<'mc>, Box<dyn std::error::Error>> {
@@ -17696,6 +19047,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the new phase that the dragon will switch to.
     pub fn new_phase(
         &mut self,
     ) -> Result<crate::entity::EnderDragonPhase<'mc>, Box<dyn std::error::Error>> {
@@ -17710,6 +19062,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -17735,6 +19088,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17749,6 +19103,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17756,6 +19111,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -17775,6 +19131,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -17789,6 +19146,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -17800,6 +19158,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17807,6 +19166,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -17814,6 +19174,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17821,6 +19182,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -17839,6 +19201,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EnderDragonChangePhas
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a projectile hits an object
 pub struct ProjectileHitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -17862,7 +19225,8 @@ impl<'mc> ProjectileHitEvent<'mc> {
                 eyre::eyre!("Tried to instantiate ProjectileHitEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ProjectileHitEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/ProjectileHitEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ProjectileHitEvent object, got {}",
@@ -17891,6 +19255,16 @@ impl<'mc> ProjectileHitEvent<'mc> {
 "(Lorg/bukkit/entity/Projectile;Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::event::entity::ProjectileHitEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17905,13 +19279,8 @@ impl<'mc> ProjectileHitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17924,6 +19293,11 @@ impl<'mc> ProjectileHitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Whether to cancel the action that occurs when the projectile hits. In the case of an entity, it will not collide (unless it's a firework, then use <a href="FireworkExplodeEvent.html" title="class in org.bukkit.event.entity"><code>FireworkExplodeEvent</code></a>).
+    ///
+    /// In the case of a block, some blocks (eg target block, bell) will not perform the action associated.
+    ///
+    /// This does NOT prevent block collisions, and explosions will still occur unless their respective events are cancelled.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -17936,6 +19310,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -17949,6 +19324,8 @@ impl<'mc> ProjectileHitEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the block that was hit, if it was a block that was hit.
+    /// Gets the block face that was hit, if it was a block that was hit and the face was provided in the vent.
     pub fn hit_block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17961,6 +19338,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the block face that was hit, if it was a block that was hit and the face was provided in the vent.
     pub fn hit_block_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -17986,6 +19364,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets the entity that was hit, if it was an entity that was hit.
     pub fn hit_entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17998,6 +19377,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -18023,6 +19403,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18037,6 +19418,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18044,6 +19426,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -18063,6 +19446,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18077,6 +19461,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18088,6 +19473,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18095,6 +19481,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18102,6 +19489,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18109,6 +19497,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18127,6 +19516,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for ProjectileHitEvent<'m
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity comes into contact with a portal
 pub struct EntityPortalEnterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18151,7 +19541,8 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityPortalEnterEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityPortalEnterEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityPortalEnterEvent object, got {}",
@@ -18180,6 +19571,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         )?;
         crate::event::entity::EntityPortalEnterEvent::from_raw(&jni, res)
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -18194,6 +19586,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -18207,6 +19600,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the portal block the entity is touching
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18219,6 +19613,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18231,6 +19626,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -18256,6 +19652,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18270,6 +19667,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18277,6 +19675,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -18296,6 +19695,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18310,6 +19710,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18321,6 +19722,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18328,6 +19730,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18335,6 +19738,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18342,6 +19746,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18355,6 +19760,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityPortalEnterEven
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when the amount of air an entity has remaining changes.
 pub struct EntityAirChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18378,7 +19784,8 @@ impl<'mc> EntityAirChangeEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityAirChangeEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityAirChangeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityAirChangeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityAirChangeEvent object, got {}",
@@ -18407,6 +19814,16 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         )?;
         crate::event::entity::EntityAirChangeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -18421,13 +19838,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the amount of air the entity has left (measured in ticks).
     pub fn amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18435,6 +19846,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the amount of air remaining for the entity (measured in ticks.
     pub fn set_amount(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18446,6 +19858,8 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -18458,6 +19872,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -18471,6 +19886,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18483,6 +19899,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -18508,6 +19925,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18522,6 +19940,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18529,6 +19948,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -18548,6 +19968,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18562,6 +19983,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18573,6 +19995,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18580,6 +20003,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18587,6 +20011,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18594,6 +20019,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18612,6 +20038,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityAirChangeEvent<
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called immediately prior to an entity being unleashed.
 pub struct EntityUnleashEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18640,7 +20067,10 @@ impl<'mc> EntityUnleashEventUnleashReason<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityUnleashEventUnleashReason")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityUnleashEventUnleashReason",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a EntityUnleashEventUnleashReason object, got {}",
@@ -18807,7 +20237,8 @@ impl<'mc> EntityUnleashEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityUnleashEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityUnleashEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityUnleashEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityUnleashEvent object, got {}",
@@ -18830,6 +20261,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Lorg/bukkit/event/entity/EntityUnleashEvent$UnleashReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         crate::event::entity::EntityUnleashEvent::from_raw(&jni, res)
     }
+    /// Returns the reason for the unleashing.
     pub fn reason(
         &mut self,
     ) -> Result<
@@ -18847,6 +20279,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -18861,6 +20294,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -18874,6 +20308,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18886,6 +20321,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -18911,6 +20347,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18925,6 +20362,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18932,6 +20370,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -18951,6 +20390,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -18965,6 +20405,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18976,6 +20417,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18983,6 +20425,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -18990,6 +20433,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -18997,6 +20441,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19010,6 +20455,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityUnleashEvent<'m
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a ThrownExpBottle hits and releases experience.
 pub struct ExpBottleEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19033,7 +20479,7 @@ impl<'mc> ExpBottleEvent<'mc> {
                 eyre::eyre!("Tried to instantiate ExpBottleEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ExpBottleEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/ExpBottleEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ExpBottleEvent object, got {}",
@@ -19062,6 +20508,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         )?;
         crate::event::entity::ExpBottleEvent::from_raw(&jni, res)
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -19076,6 +20523,8 @@ impl<'mc> ExpBottleEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19088,6 +20537,8 @@ impl<'mc> ExpBottleEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// This method retrieves the amount of experience to be created.
+    /// <p>The number indicates a total amount to be divided into orbs.</p>
     pub fn experience(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19095,6 +20546,8 @@ impl<'mc> ExpBottleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// This method sets the amount of experience to be created.
+    /// <p>The number indicates a total amount to be divided into orbs.</p>
     pub fn set_experience(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -19106,6 +20559,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -19119,6 +20573,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// This method indicates if the particle effect should be shown.
     pub fn show_effect(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19126,6 +20581,8 @@ impl<'mc> ExpBottleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// This method sets if the particle effect will be shown.
+    /// <p>This does not change the experience created.</p>
     pub fn set_show_effect(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -19138,6 +20595,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19145,6 +20603,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -19157,6 +20616,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn hit_block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19169,6 +20629,7 @@ impl<'mc> ExpBottleEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn hit_block_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -19194,6 +20655,7 @@ impl<'mc> ExpBottleEvent<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn hit_entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19206,6 +20668,7 @@ impl<'mc> ExpBottleEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -19231,6 +20694,7 @@ impl<'mc> ExpBottleEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19245,6 +20709,7 @@ impl<'mc> ExpBottleEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19252,6 +20717,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -19271,6 +20737,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -19285,6 +20752,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19296,6 +20764,7 @@ impl<'mc> ExpBottleEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19303,6 +20772,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19310,6 +20780,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19317,6 +20788,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19330,6 +20802,8 @@ impl<'mc> Into<crate::event::entity::ProjectileHitEvent<'mc>> for ExpBottleEvent
         crate::event::entity::ProjectileHitEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity combusts.
+/// <p>If an Entity Combust event is cancelled, the entity will not combust.</p>
 pub struct EntityCombustEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19353,7 +20827,8 @@ impl<'mc> EntityCombustEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityCombustEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityCombustEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityCombustEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityCombustEvent object, got {}",
@@ -19382,6 +20857,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         )?;
         crate::event::entity::EntityCombustEvent::from_raw(&jni, res)
     }
+
     pub fn duration(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19389,6 +20865,16 @@ impl<'mc> EntityCombustEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -19403,13 +20889,8 @@ impl<'mc> EntityCombustEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// The number of seconds the combustee should be alight for.
+    /// <p>This value will only ever increase the combustion time, not decrease existing combustion times.</p>
     pub fn set_duration(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -19421,6 +20902,8 @@ impl<'mc> EntityCombustEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -19433,6 +20916,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -19446,6 +20930,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19458,6 +20943,7 @@ impl<'mc> EntityCombustEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -19483,6 +20969,7 @@ impl<'mc> EntityCombustEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19497,6 +20984,7 @@ impl<'mc> EntityCombustEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19504,6 +20992,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -19523,6 +21012,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -19537,6 +21027,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19548,6 +21039,7 @@ impl<'mc> EntityCombustEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19555,6 +21047,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19562,6 +21055,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19569,6 +21063,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19587,6 +21082,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityCombustEvent<'m
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a <a title="interface in org.bukkit.entity" href="../../entity/Spellcaster.html"><code>Spellcaster</code></a> casts a spell.
 pub struct EntitySpellCastEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19610,7 +21106,8 @@ impl<'mc> EntitySpellCastEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntitySpellCastEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntitySpellCastEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntitySpellCastEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntitySpellCastEvent object, got {}",
@@ -19639,6 +21136,16 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         )?;
         crate::event::entity::EntitySpellCastEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -19653,13 +21160,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Get the spell to be cast in this event. This is a convenience method equivalent to <a href="../../entity/Spellcaster.html#getSpell()"><code>Spellcaster.getSpell()</code></a>.
     pub fn spell(
         &mut self,
     ) -> Result<crate::entity::SpellcasterSpell<'mc>, Box<dyn std::error::Error>> {
@@ -19674,6 +21175,8 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::Spellcaster<'mc>, Box<dyn std::error::Error>> {
@@ -19688,6 +21191,8 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -19700,6 +21205,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -19713,6 +21219,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -19738,6 +21245,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19752,6 +21260,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19759,6 +21268,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -19778,6 +21288,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -19792,6 +21303,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19803,6 +21315,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19810,6 +21323,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -19817,6 +21331,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19824,6 +21339,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -19842,6 +21358,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntitySpellCastEvent<
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity is about to be replaced by another entity.
 pub struct EntityTransformEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -19870,7 +21387,10 @@ impl<'mc> EntityTransformEventTransformReason<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "EntityTransformEventTransformReason")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/event/entity/EntityTransformEventTransformReason",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a EntityTransformEventTransformReason object, got {}",
@@ -20037,7 +21557,8 @@ impl<'mc> EntityTransformEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityTransformEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityTransformEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityTransformEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityTransformEvent object, got {}",
@@ -20073,6 +21594,16 @@ impl<'mc> EntityTransformEvent<'mc> {
 "(Lorg/bukkit/entity/Entity;Ljava/util/List;Lorg/bukkit/event/entity/EntityTransformEvent$TransformReason;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
         crate::event::entity::EntityTransformEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -20087,13 +21618,8 @@ impl<'mc> EntityTransformEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -20106,6 +21632,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -20119,6 +21646,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the entity that the original entity was transformed to. This returns the first entity in the transformed entity list.
     pub fn transformed_entity(
         &mut self,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -20133,6 +21661,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the entities that the original entity was transformed to.
     pub fn transformed_entities(
         &mut self,
     ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
@@ -20152,6 +21681,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the reason for the conversion that has occurred.
     pub fn transform_reason(
         &mut self,
     ) -> Result<
@@ -20170,6 +21700,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20182,6 +21713,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -20207,6 +21739,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20221,6 +21754,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20228,6 +21762,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -20247,6 +21782,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -20261,6 +21797,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20272,6 +21809,7 @@ impl<'mc> EntityTransformEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20279,6 +21817,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20286,6 +21825,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20293,6 +21833,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20311,6 +21852,7 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityTransformEvent<
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a splash potion hits an area
 pub struct PotionSplashEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20334,7 +21876,7 @@ impl<'mc> PotionSplashEvent<'mc> {
                 eyre::eyre!("Tried to instantiate PotionSplashEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "PotionSplashEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/PotionSplashEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PotionSplashEvent object, got {}",
@@ -20363,6 +21905,16 @@ impl<'mc> PotionSplashEvent<'mc> {
         )?;
         crate::event::entity::PotionSplashEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -20377,13 +21929,8 @@ impl<'mc> PotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(
         &mut self,
     ) -> Result<crate::entity::ThrownPotion<'mc>, Box<dyn std::error::Error>> {
@@ -20398,6 +21945,12 @@ impl<'mc> PotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ProjectileHitEvent.html#setCancelled(boolean)">ProjectileHitEvent</a></code></span>
+    /// Whether to cancel the action that occurs when the projectile hits. In the case of an entity, it will not collide (unless it's a firework, then use <a title="class in org.bukkit.event.entity" href="FireworkExplodeEvent.html"><code>FireworkExplodeEvent</code></a>).
+    ///
+    /// In the case of a block, some blocks (eg target block, bell) will not perform the action associated.
+    ///
+    /// This does NOT prevent block collisions, and explosions will still occur unless their respective events are cancelled.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -20410,6 +21963,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -20423,6 +21977,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Retrieves a list of all effected entities
     pub fn affected_entities(
         &mut self,
     ) -> Result<Vec<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
@@ -20442,6 +21997,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the potion which caused this event
     pub fn potion(
         &mut self,
     ) -> Result<crate::entity::ThrownPotion<'mc>, Box<dyn std::error::Error>> {
@@ -20456,6 +22012,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the intensity of the potion's effects for given entity; This depends on the distance to the impact center
     pub fn get_intensity(
         &mut self,
         arg0: impl Into<&'mc crate::entity::LivingEntity<'mc>>,
@@ -20470,6 +22027,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Overwrites the intensity for a given entity
     pub fn set_intensity(
         &mut self,
         arg0: impl Into<&'mc crate::entity::LivingEntity<'mc>>,
@@ -20489,6 +22047,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn hit_block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20501,6 +22060,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn hit_block_face(
         &mut self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
@@ -20526,6 +22086,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn hit_entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20538,6 +22099,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -20563,6 +22125,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20577,6 +22140,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20584,6 +22148,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -20603,6 +22168,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -20617,6 +22183,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20628,6 +22195,7 @@ impl<'mc> PotionSplashEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20635,6 +22203,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20642,6 +22211,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20649,6 +22219,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20667,6 +22238,7 @@ impl<'mc> Into<crate::event::entity::ProjectileHitEvent<'mc>> for PotionSplashEv
         crate::event::entity::ProjectileHitEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity interacts with an object
 pub struct EntityInteractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20690,7 +22262,8 @@ impl<'mc> EntityInteractEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntityInteractEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntityInteractEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/EntityInteractEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntityInteractEvent object, got {}",
@@ -20719,6 +22292,16 @@ impl<'mc> EntityInteractEvent<'mc> {
         )?;
         crate::event::entity::EntityInteractEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -20733,13 +22316,7 @@ impl<'mc> EntityInteractEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Returns the involved block
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20752,6 +22329,8 @@ impl<'mc> EntityInteractEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -20764,6 +22343,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -20777,6 +22357,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20789,6 +22370,7 @@ impl<'mc> EntityInteractEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -20814,6 +22396,7 @@ impl<'mc> EntityInteractEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20828,6 +22411,7 @@ impl<'mc> EntityInteractEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20835,6 +22419,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -20854,6 +22439,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -20868,6 +22454,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20879,6 +22466,7 @@ impl<'mc> EntityInteractEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20886,6 +22474,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -20893,6 +22482,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20900,6 +22490,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -20918,6 +22509,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntityInteractEvent<'
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when an entity is spawned into a world.
+/// <p>If an Entity Spawn event is cancelled, the entity will not spawn.</p>
 pub struct EntitySpawnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -20941,7 +22534,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
                 eyre::eyre!("Tried to instantiate EntitySpawnEvent from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EntitySpawnEvent")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/entity/EntitySpawnEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EntitySpawnEvent object, got {}",
@@ -20965,6 +22558,16 @@ impl<'mc> EntitySpawnEvent<'mc> {
         )?;
         crate::event::entity::EntitySpawnEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -20979,13 +22582,8 @@ impl<'mc> EntitySpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -20998,6 +22596,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -21011,6 +22610,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    /// Gets the location at which the entity is spawning.
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21023,6 +22623,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21035,6 +22636,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -21060,6 +22662,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21074,6 +22677,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21081,6 +22685,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -21100,6 +22705,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -21114,6 +22720,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -21125,6 +22732,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21132,6 +22740,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -21139,6 +22748,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21146,6 +22756,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21164,6 +22775,8 @@ impl<'mc> Into<crate::event::entity::EntityEvent<'mc>> for EntitySpawnEvent<'mc>
         crate::event::entity::EntityEvent::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Called when a <a href="../../entity/Villager.html" title="interface in org.bukkit.entity"><code>Villager</code></a> is about to restock one of its trades.
+/// <p>If this event passes, the villager will reset the <a href="../../inventory/MerchantRecipe.html#getUses()"><code>uses</code></a> of the affected <a href="#getRecipe()"><code>MerchantRecipe</code></a> to <code>0</code>.</p>
 pub struct VillagerReplenishTradeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -21188,7 +22801,8 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "VillagerReplenishTradeEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/event/entity/VillagerReplenishTradeEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a VillagerReplenishTradeEvent object, got {}",
@@ -21218,6 +22832,16 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         )?;
         crate::event::entity::VillagerReplenishTradeEvent::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -21232,13 +22856,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Get the recipe to replenish.
     pub fn recipe(
         &mut self,
     ) -> Result<crate::inventory::MerchantRecipe<'mc>, Box<dyn std::error::Error>> {
@@ -21253,6 +22871,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the recipe to replenish.
     pub fn set_recipe(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::MerchantRecipe<'mc>>,
@@ -21267,6 +22886,8 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="EntityEvent.html#getEntity()">EntityEvent</a></code></span>
+    /// Returns the Entity involved in this event
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21279,6 +22900,8 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -21291,6 +22914,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn handler_list(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -21305,6 +22929,13 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         crate::event::HandlerList::from_raw(&jni, obj)
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// MC 1.14 has changed how villagers restock their trades. Use <a href="../../inventory/MerchantRecipe.html#getUses()"><code>MerchantRecipe.getUses()</code></a>.
+    /// </div>
+    /// MC 1.14 has changed how villagers restock their trades. Use <a href="../../inventory/MerchantRecipe.html#getUses()"><code>MerchantRecipe.getUses()</code></a>.
+    ///
+    /// Get the bonus uses added.
     pub fn bonus(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21313,6 +22944,13 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// MC 1.14 has changed how villagers restock their trades. This has no effect anymore.
+    /// </div>
+    /// MC 1.14 has changed how villagers restock their trades. This has no effect anymore.
+    ///
+    /// Set the bonus uses added.
     pub fn set_bonus(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -21324,6 +22962,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn entity_type(
         &mut self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
@@ -21349,6 +22988,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             crate::entity::EntityType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -21363,6 +23003,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21370,6 +23011,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -21389,6 +23031,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -21403,6 +23046,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -21414,6 +23058,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21421,6 +23066,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -21428,6 +23074,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -21435,6 +23082,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

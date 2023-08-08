@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// Utility class for storing and retrieving classes for <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>.
 pub struct ConfigurationSerialization<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25,7 +26,10 @@ impl<'mc> ConfigurationSerialization<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ConfigurationSerialization")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/configuration/serialization/ConfigurationSerialization",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConfigurationSerialization object, got {}",
@@ -36,6 +40,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Attempts to get a registered <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> class by its alias
     pub fn get_class_by_alias(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -50,6 +55,12 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    /// Attempts to deserialize the given arguments into a new instance of the given class.
+    /// <p>The class must implement <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a>, including the extra methods as specified in the javadoc of ConfigurationSerializable.</p>
+    /// <p>If a new instance could not be made, an example being the class not fully implementing the interface, null will be returned.</p>
+    /// Attempts to deserialize the given arguments into a new instance of the given class.
+    /// <p>The class must implement <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a>, including the extra methods as specified in the javadoc of ConfigurationSerializable.</p>
+    /// <p>If a new instance could not be made, an example being the class not fully implementing the interface, null will be returned.</p>
     pub fn deserialize(
         &mut self,
         arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
@@ -70,6 +81,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    /// Gets the correct alias for the given <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> class
     pub fn get_alias(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -87,6 +99,8 @@ impl<'mc> ConfigurationSerialization<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Registers the given <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> class by its alias
+    /// Registers the given alias to the specified <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> class
     pub fn register_class_with_class(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -106,6 +120,8 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
+    /// Unregisters the specified alias to a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a>
+    /// Unregisters any aliases for the specified <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> class
     pub fn unregister_class_with_class(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -120,6 +136,12 @@ impl<'mc> ConfigurationSerialization<'mc> {
         )?;
         Ok(())
     }
+    /// Attempts to deserialize the given arguments into a new instance of the given class.
+    /// <p>The class must implement <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a>, including the extra methods as specified in the javadoc of ConfigurationSerializable.</p>
+    /// <p>If a new instance could not be made, an example being the class not fully implementing the interface, null will be returned.</p>
+    /// Attempts to deserialize the given arguments into a new instance of the given class.
+    /// <p>The class must implement <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a>, including the extra methods as specified in the javadoc of ConfigurationSerializable.</p>
+    /// <p>If a new instance could not be made, an example being the class not fully implementing the interface, null will be returned.</p>
     pub fn deserialize_object_with_map(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc>>>,
@@ -138,6 +160,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let obj = res.l()?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -157,6 +180,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -171,6 +195,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -182,6 +207,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -189,6 +215,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Attempts to get a registered <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> class by its alias
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -196,6 +223,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -203,6 +231,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -211,7 +240,15 @@ impl<'mc> ConfigurationSerialization<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements ConfigurationSerializable. Needed for returning it from Java.
+/// Represents an object that may be serialized.
+/// <p>These objects MUST implement one of the following, in addition to the methods as defined by this interface:</p>
+/// <ul>
+/// <li>A static method "deserialize" that accepts a single <a title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" class="external-link"><code>Map</code></a>&lt; <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" class="external-link"><code>String</code></a>, <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang"><code>Object</code></a>&gt; and returns the class.</li>
+/// <li>A static method "valueOf" that accepts a single <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>&lt;<a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" class="external-link"><code>String</code></a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" class="external-link" title="class or interface in java.lang"><code>Object</code></a>&gt; and returns the class.</li>
+/// <li>A constructor that accepts a single <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util"><code>Map</code></a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" class="external-link" title="class or interface in java.lang"><code>String</code></a>, <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" class="external-link"><code>Object</code></a>&gt;.</li>
+/// </ul> In addition to implementing this interface, you must register the class with <a href="ConfigurationSerialization.html#registerClass(java.lang.Class)"><code>ConfigurationSerialization.registerClass(Class)</code></a>.
+///
+/// This is a representation of an abstract class.
 pub struct ConfigurationSerializable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -237,7 +274,10 @@ impl<'mc> ConfigurationSerializable<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ConfigurationSerializable")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/configuration/serialization/ConfigurationSerializable",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConfigurationSerializable object, got {}",
@@ -248,6 +288,8 @@ impl<'mc> ConfigurationSerializable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Creates a Map representation of this class.
+    /// <p>This class must provide a method to restore this class, as defined in the <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> interface javadocs.</p>
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -269,7 +311,11 @@ impl<'mc> JNIRaw<'mc> for ConfigurationSerializable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements SerializableAs. Needed for returning it from Java.
+/// Represents an "alias" that a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> may be stored as. If this is not present on a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> class, it will use the fully qualified name of the class.
+/// <p>This value will be stored in the configuration so that the configuration deserialization can determine what type it is.</p>
+/// <p>Using this annotation on any other class than a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> will have no effect.</p>
+///
+/// This is a representation of an abstract class.
 pub struct SerializableAs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -284,7 +330,10 @@ impl<'mc> SerializableAs<'mc> {
                 eyre::eyre!("Tried to instantiate SerializableAs from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "SerializableAs")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/configuration/serialization/SerializableAs",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SerializableAs object, got {}",
@@ -295,6 +344,8 @@ impl<'mc> SerializableAs<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// This is the name your class will be stored and retrieved as.
+    /// <p>This name MUST be unique. We recommend using names such as "MyPluginThing" instead of "Thing".</p>
     pub fn value(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -306,6 +357,7 @@ impl<'mc> SerializableAs<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -320,6 +372,7 @@ impl<'mc> SerializableAs<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -331,6 +384,7 @@ impl<'mc> SerializableAs<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -338,6 +392,7 @@ impl<'mc> SerializableAs<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn annotation_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -360,7 +415,9 @@ impl<'mc> JNIRaw<'mc> for SerializableAs<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements DelegateDeserialization. Needed for returning it from Java.
+/// Applies to a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> that will delegate all deserialization to another <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a>.
+///
+/// This is a representation of an abstract class.
 pub struct DelegateDeserialization<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -376,7 +433,10 @@ impl<'mc> DelegateDeserialization<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "DelegateDeserialization")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/configuration/serialization/DelegateDeserialization",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DelegateDeserialization object, got {}",
@@ -387,6 +447,7 @@ impl<'mc> DelegateDeserialization<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Which class should be used as a delegate for this classes deserialization
     pub fn value(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -394,6 +455,7 @@ impl<'mc> DelegateDeserialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -408,6 +470,7 @@ impl<'mc> DelegateDeserialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -419,6 +482,7 @@ impl<'mc> DelegateDeserialization<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -426,6 +490,7 @@ impl<'mc> DelegateDeserialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn annotation_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {

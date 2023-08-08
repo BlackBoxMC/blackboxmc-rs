@@ -1,7 +1,9 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// An instantiatable struct that implements ProjectileSource. Needed for returning it from Java.
+/// Represents a valid source of a projectile.
+///
+/// This is a representation of an abstract class.
 pub struct ProjectileSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16,7 +18,7 @@ impl<'mc> ProjectileSource<'mc> {
                 eyre::eyre!("Tried to instantiate ProjectileSource from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ProjectileSource")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/projectiles/ProjectileSource")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ProjectileSource object, got {}",
@@ -27,6 +29,8 @@ impl<'mc> ProjectileSource<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Launches a <a title="interface in org.bukkit.entity" href="../entity/Projectile.html"><code>Projectile</code></a> from the ProjectileSource.
+    /// Launches a <a title="interface in org.bukkit.entity" href="../entity/Projectile.html"><code>Projectile</code></a> from the ProjectileSource with an initial velocity.
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -59,7 +63,9 @@ impl<'mc> JNIRaw<'mc> for ProjectileSource<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements BlockProjectileSource. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct BlockProjectileSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -75,7 +81,8 @@ impl<'mc> BlockProjectileSource<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "BlockProjectileSource")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/projectiles/BlockProjectileSource")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BlockProjectileSource object, got {}",
@@ -86,6 +93,7 @@ impl<'mc> BlockProjectileSource<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the block this projectile source belongs to.
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -98,6 +106,7 @@ impl<'mc> BlockProjectileSource<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,

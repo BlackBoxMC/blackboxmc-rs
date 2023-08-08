@@ -66,7 +66,8 @@ impl<'mc> MushroomBlockTexture<'mc> {
                 eyre::eyre!("Tried to instantiate MushroomBlockTexture from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "MushroomBlockTexture")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/material/types/MushroomBlockTexture")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MushroomBlockTexture object, got {}",

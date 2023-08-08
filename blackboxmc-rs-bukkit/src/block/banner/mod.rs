@@ -120,7 +120,7 @@ impl<'mc> PatternType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PatternType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "PatternType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/banner/PatternType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PatternType object, got {}",
@@ -219,6 +219,7 @@ impl<'mc> PatternType<'mc> {
         }
     }
 }
+
 pub struct Pattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -240,7 +241,7 @@ impl<'mc> Pattern<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Pattern from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Pattern")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/banner/Pattern")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Pattern object, got {}",
@@ -271,6 +272,9 @@ impl<'mc> Pattern<'mc> {
         )?;
         crate::block::banner::Pattern::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../configuration/serialization/ConfigurationSerializable.html#serialize()">ConfigurationSerializable</a></code></span>
+    /// Creates a Map representation of this class.
+    /// <p>This class must provide a method to restore this class, as defined in the <a title="interface in org.bukkit.configuration.serialization" href="../../configuration/serialization/ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> interface javadocs.</p>
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -282,6 +286,7 @@ impl<'mc> Pattern<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns the color of the pattern
     pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -305,6 +310,7 @@ impl<'mc> Pattern<'mc> {
             crate::DyeColor::from_string(variant_str).unwrap(),
         )
     }
+    /// Returns the type of pattern
     pub fn pattern(
         &mut self,
     ) -> Result<crate::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
@@ -330,6 +336,7 @@ impl<'mc> Pattern<'mc> {
             crate::block::banner::PatternType::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -344,6 +351,7 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -351,6 +359,7 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -370,6 +379,7 @@ impl<'mc> Pattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -381,6 +391,7 @@ impl<'mc> Pattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -388,6 +399,7 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -395,6 +407,7 @@ impl<'mc> Pattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

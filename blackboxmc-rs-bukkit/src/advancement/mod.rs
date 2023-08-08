@@ -1,7 +1,9 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// An instantiatable struct that implements AdvancementProgress. Needed for returning it from Java.
+/// The individual status of an advancement for a player. This class is not reference safe as the underlying advancement may be reloaded.
+///
+/// This is a representation of an abstract class.
 pub struct AdvancementProgress<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16,7 +18,8 @@ impl<'mc> AdvancementProgress<'mc> {
                 eyre::eyre!("Tried to instantiate AdvancementProgress from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "AdvancementProgress")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/advancement/AdvancementProgress")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AdvancementProgress object, got {}",
@@ -27,6 +30,7 @@ impl<'mc> AdvancementProgress<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Check if all criteria for this advancement have been met.
     pub fn is_done(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -34,6 +38,7 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// The advancement this progress is concerning.
     pub fn advancement(
         &mut self,
     ) -> Result<crate::advancement::Advancement<'mc>, Box<dyn std::error::Error>> {
@@ -48,6 +53,7 @@ impl<'mc> AdvancementProgress<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Mark the specified criteria as awarded at the current time.
     pub fn award_criteria(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -62,6 +68,7 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Mark the specified criteria as uncompleted.
     pub fn revoke_criteria(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -76,6 +83,7 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get the date the specified criteria was awarded.
     pub fn get_date_awarded(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -92,6 +100,7 @@ impl<'mc> AdvancementProgress<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the criteria which have not been awarded.
     pub fn remaining_criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -114,6 +123,7 @@ impl<'mc> AdvancementProgress<'mc> {
         }
         Ok(new_vec)
     }
+    /// Gets the criteria which have been awarded.
     pub fn awarded_criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -192,7 +202,8 @@ impl<'mc> AdvancementDisplayType<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "AdvancementDisplayType")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/advancement/AdvancementDisplayType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AdvancementDisplayType object, got {}",
@@ -215,7 +226,9 @@ impl<'mc> AdvancementDisplayType<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements AdvancementDisplay. Needed for returning it from Java.
+/// Holds information about how the advancement is displayed by the game.
+///
+/// This is a representation of an abstract class.
 pub struct AdvancementDisplay<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -230,7 +243,7 @@ impl<'mc> AdvancementDisplay<'mc> {
                 eyre::eyre!("Tried to instantiate AdvancementDisplay from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "AdvancementDisplay")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/advancement/AdvancementDisplay")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AdvancementDisplay object, got {}",
@@ -241,20 +254,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getX", "()F", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
-    }
-    pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getY", "()F", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
-    }
+    /// Gets the visible description of the advancement.
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -269,6 +269,23 @@ impl<'mc> AdvancementDisplay<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// The X position of the advancement in the advancement screen.
+    pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getX", "()F", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f().unwrap())
+    }
+    /// The Y position of the advancement in the advancement screen.
+    pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getY", "()F", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.f().unwrap())
+    }
+    /// Gets the title of the advancement.
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -280,6 +297,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// The icon that is used for this advancement.
     pub fn icon(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -292,6 +310,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Whether to show a toast to the player when this advancement has been completed.
     pub fn should_show_toast(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -299,6 +318,7 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Whether to announce in the chat when this advancement has been completed.
     pub fn should_announce_chat(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -306,6 +326,7 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Whether to hide this advancement and all its children from the advancement screen until this advancement have been completed. Has no effect on root advancements themselves, but still affects all their children.
     pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -313,6 +334,7 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// The display type of this advancement.
     pub fn get_type(
         &mut self,
     ) -> Result<crate::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
@@ -348,7 +370,9 @@ impl<'mc> JNIRaw<'mc> for AdvancementDisplay<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements Advancement. Needed for returning it from Java.
+/// Represents an advancement that may be awarded to a player. This class is not reference safe as the underlying advancement may be reloaded.
+///
+/// This is a representation of an abstract class.
 pub struct Advancement<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -361,7 +385,7 @@ impl<'mc> Advancement<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Advancement from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Advancement")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/advancement/Advancement")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Advancement object, got {}",
@@ -372,6 +396,7 @@ impl<'mc> Advancement<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get all the criteria present in this advancement.
     pub fn criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -394,6 +419,7 @@ impl<'mc> Advancement<'mc> {
         }
         Ok(new_vec)
     }
+    /// Returns the display information for this advancement. This includes it's name, description and other visible tags.
     pub fn display(
         &mut self,
     ) -> Result<crate::advancement::AdvancementDisplay<'mc>, Box<dyn std::error::Error>> {
@@ -408,6 +434,7 @@ impl<'mc> Advancement<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),

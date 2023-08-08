@@ -1,7 +1,10 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// An instantiatable struct that implements PlayerTextures. Needed for returning it from Java.
+/// Provides access to the textures stored inside a <a title="interface in org.bukkit.profile" href="PlayerProfile.html"><code>PlayerProfile</code></a>.
+/// <p>Modifying the textures immediately invalidates and clears any previously present attributes that are specific to official player profiles, such as the <a href="#getTimestamp()"><code>timestamp</code></a> and <a href="#isSigned()"><code>signature</code></a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct PlayerTextures<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -16,7 +19,7 @@ impl<'mc> PlayerTextures<'mc> {
                 eyre::eyre!("Tried to instantiate PlayerTextures from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "PlayerTextures")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/profile/PlayerTextures")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PlayerTextures object, got {}",
@@ -27,6 +30,7 @@ impl<'mc> PlayerTextures<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Checks if the textures are signed and the signature is valid.
     pub fn is_signed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -34,6 +38,9 @@ impl<'mc> PlayerTextures<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the URL that points to the player's skin.
+    /// Gets the model of the player's skin.
+    /// <p>This returns <a href="PlayerTextures.SkinModel.html#CLASSIC"><code>PlayerTextures.SkinModel.CLASSIC</code></a> if no skin is set.</p>
     pub fn skin(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -41,6 +48,15 @@ impl<'mc> PlayerTextures<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// Sets the player's skin to the specified URL, and the skin model to <a href="PlayerTextures.SkinModel.html#CLASSIC"><code>PlayerTextures.SkinModel.CLASSIC</code></a>.
+    /// <p>The URL <b>must</b> point to the Minecraft texture server. Example URL:</p>
+    /// <pre> http://textures.minecraft.net/texture/b3fbd454b599df593f57101bfca34e67d292a8861213d2202bb575da7fd091ac
+    /// </pre>
+    /// Sets the player's skin and <a href="PlayerTextures.SkinModel.html" title="enum in org.bukkit.profile"><code>PlayerTextures.SkinModel</code></a>.
+    /// <p>The URL <b>must</b> point to the Minecraft texture server. Example URL:</p>
+    /// <pre> http://textures.minecraft.net/texture/b3fbd454b599df593f57101bfca34e67d292a8861213d2202bb575da7fd091ac
+    /// </pre>
+    /// <p>A skin model of <code>null</code> results in <a href="PlayerTextures.SkinModel.html#CLASSIC"><code>PlayerTextures.SkinModel.CLASSIC</code></a> to be used.</p>
     pub unsafe fn set_skin_with_url(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -61,6 +77,8 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the model of the player's skin.
+    /// <p>This returns <a href="PlayerTextures.SkinModel.html#CLASSIC"><code>PlayerTextures.SkinModel.CLASSIC</code></a> if no skin is set.</p>
     pub fn skin_model(
         &mut self,
     ) -> Result<crate::profile::PlayerTexturesSkinModel<'mc>, Box<dyn std::error::Error>> {
@@ -75,6 +93,7 @@ impl<'mc> PlayerTextures<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the URL that points to the player's cape.
     pub fn cape(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -82,6 +101,10 @@ impl<'mc> PlayerTextures<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// Sets the URL that points to the player's cape.
+    /// <p>The URL <b>must</b> point to the Minecraft texture server. Example URL:</p>
+    /// <pre> http://textures.minecraft.net/texture/2340c0e03dd24a11b15a8b33c2a7e9e32abb2051b2481d0ba7defd635ca7a933
+    /// </pre>
     pub unsafe fn set_cape(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -96,6 +119,7 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the timestamp at which the profile was last updated.
     pub fn timestamp(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -103,6 +127,7 @@ impl<'mc> PlayerTextures<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j().unwrap())
     }
+    /// Clears the textures.
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -110,6 +135,7 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if the profile stores no textures.
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -127,6 +153,7 @@ impl<'mc> JNIRaw<'mc> for PlayerTextures<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// The different Minecraft skin models.
 pub struct PlayerTexturesSkinModel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -151,7 +178,8 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PlayerTexturesSkinModel")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/profile/PlayerTexturesSkinModel")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PlayerTexturesSkinModel object, got {}",
@@ -162,6 +190,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -182,6 +211,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -193,6 +223,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -207,6 +238,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -218,6 +250,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -225,6 +258,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -239,6 +273,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -251,6 +286,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -258,6 +294,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -277,6 +314,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -284,6 +322,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -291,6 +330,7 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -299,7 +339,11 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements PlayerProfile. Needed for returning it from Java.
+/// A player profile.
+/// <p>A player profile always provides a unique id, a non-empty name, or both. Its unique id and name are immutable, but other properties (such as its textures) can be altered.</p>
+/// <p>New profiles can be created via <a href="../Server.html#createPlayerProfile(java.util.UUID,java.lang.String)"><code>Server.createPlayerProfile(UUID, String)</code></a>.</p>
+///
+/// This is a representation of an abstract class.
 pub struct PlayerProfile<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -312,7 +356,7 @@ impl<'mc> PlayerProfile<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PlayerProfile from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "PlayerProfile")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/profile/PlayerProfile")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PlayerProfile object, got {}",
@@ -323,6 +367,7 @@ impl<'mc> PlayerProfile<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the <a href="PlayerTextures.html" title="interface in org.bukkit.profile"><code>PlayerTextures</code></a> of this profile.
     pub fn textures(
         &mut self,
     ) -> Result<crate::profile::PlayerTextures<'mc>, Box<dyn std::error::Error>> {
@@ -337,6 +382,7 @@ impl<'mc> PlayerProfile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Copies the given textures.
     pub fn set_textures(
         &mut self,
         arg0: impl Into<&'mc crate::profile::PlayerTextures<'mc>>,
@@ -351,6 +397,8 @@ impl<'mc> PlayerProfile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks whether this profile is complete.
+    /// <p>A profile is currently considered complete if it has a name, a unique id, and textures.</p>
     pub fn is_complete(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -358,6 +406,7 @@ impl<'mc> PlayerProfile<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the player name.
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -369,6 +418,7 @@ impl<'mc> PlayerProfile<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
@@ -383,6 +433,7 @@ impl<'mc> PlayerProfile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {

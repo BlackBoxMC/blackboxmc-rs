@@ -42,7 +42,7 @@ impl<'mc> Side<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Side from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Side")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/sign/Side")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Side object, got {}",
@@ -63,7 +63,9 @@ impl<'mc> Side<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements SignSide. Needed for returning it from Java.
+/// Represents a side of a sign.
+///
+/// This is a representation of an abstract class.
 pub struct SignSide<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -76,7 +78,7 @@ impl<'mc> SignSide<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SignSide from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "SignSide")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/sign/SignSide")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SignSide object, got {}",
@@ -87,6 +89,7 @@ impl<'mc> SignSide<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets whether this side of the sign has glowing text.
     pub fn is_glowing_text(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -94,6 +97,9 @@ impl<'mc> SignSide<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets all the lines of text currently on this side of the sign.
+    /// Gets the line of text at the specified index on this side of the sign.
+    /// <p>For example, getLine(0) will return the first line of text.</p>
     pub fn get_line(&mut self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -109,6 +115,8 @@ impl<'mc> SignSide<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Sets the line of text at the specified index on this side of the sign.
+    /// <p>For example, setLine(0, "Line One") will set the first line of text to "Line One".</p>
     pub fn set_line(
         &mut self,
         arg0: i32,
@@ -128,6 +136,7 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets whether this side of the sign has glowing text.
     pub fn set_glowing_text(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -140,6 +149,7 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_color(
         &mut self,
         arg0: impl Into<&'mc crate::DyeColor<'mc>>,
@@ -154,6 +164,7 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),

@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// NumericPrompt is the base class for any prompt that requires a <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html" class="external-link"><code>Number</code></a> response from the user.
 pub struct NumericPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22,7 +23,7 @@ impl<'mc> NumericPrompt<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate NumericPrompt from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "NumericPrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/NumericPrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a NumericPrompt object, got {}",
@@ -40,6 +41,7 @@ impl<'mc> NumericPrompt<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::conversations::NumericPrompt::from_raw(&jni, res)
     }
+
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -54,6 +56,7 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -67,6 +70,7 @@ impl<'mc> NumericPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -86,6 +90,7 @@ impl<'mc> NumericPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -100,6 +105,7 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -111,6 +117,7 @@ impl<'mc> NumericPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -118,6 +125,7 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -125,6 +133,7 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -132,6 +141,7 @@ impl<'mc> NumericPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -139,6 +149,7 @@ impl<'mc> NumericPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -163,7 +174,9 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for NumericPrompt<'m
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements ConversationPrefix. Needed for returning it from Java.
+/// A ConversationPrefix implementation prepends all output from the conversation to the player. The ConversationPrefix can be used to display the plugin name or conversation status as the conversation evolves.
+///
+/// This is a representation of an abstract class.
 pub struct ConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -188,7 +201,8 @@ impl<'mc> ConversationPrefix<'mc> {
                 eyre::eyre!("Tried to instantiate ConversationPrefix from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ConversationPrefix")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/conversations/ConversationPrefix")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConversationPrefix object, got {}",
@@ -199,6 +213,7 @@ impl<'mc> ConversationPrefix<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the prefix to use before each message to the player.
     pub fn get_prefix(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -227,6 +242,8 @@ impl<'mc> JNIRaw<'mc> for ConversationPrefix<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// A ConversationFactory is responsible for creating a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a> from a predefined template. A ConversationFactory is typically created when a plugin is instantiated and builds a Conversation each time a user initiates a conversation with the plugin. Each Conversation maintains its own state and calls back as needed into the plugin.
+/// <p>The ConversationFactory implements a fluid API, allowing parameters to be set as an extension to the constructor.</p>
 pub struct ConversationFactory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -250,7 +267,8 @@ impl<'mc> ConversationFactory<'mc> {
                 eyre::eyre!("Tried to instantiate ConversationFactory from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ConversationFactory")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/conversations/ConversationFactory")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConversationFactory object, got {}",
@@ -274,6 +292,8 @@ impl<'mc> ConversationFactory<'mc> {
         )?;
         crate::conversations::ConversationFactory::from_raw(&jni, res)
     }
+    /// Sets the <a title="interface in org.bukkit.conversations" href="ConversationPrefix.html"><code>ConversationPrefix</code></a> that prepends all output from all generated conversations.
+    /// <p>The default is a <a title="class in org.bukkit.conversations" href="NullConversationPrefix.html"><code>NullConversationPrefix</code></a>;</p>
     pub fn with_prefix(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationPrefix<'mc>>,
@@ -285,6 +305,8 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the modality of all <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>s created by this factory. If a conversation is modal, all messages directed to the player are suppressed for the duration of the conversation.
+    /// <p>The default is True.</p>
     pub fn with_modality(
         &mut self,
         arg0: bool,
@@ -302,6 +324,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the local echo status for all <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>s created by this factory. If local echo is enabled, any text submitted to a conversation gets echoed back into the submitter's chat window.
     pub fn with_local_echo(
         &mut self,
         arg0: bool,
@@ -319,6 +342,8 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the number of inactive seconds to wait before automatically abandoning all generated conversations.
+    /// <p>The default is 600 seconds (5 minutes).</p>
     pub fn with_timeout(
         &mut self,
         arg0: i32,
@@ -335,6 +360,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Adds a <a href="ConversationCanceller.html" title="interface in org.bukkit.conversations"><code>ConversationCanceller</code></a> to constructed conversations.
     pub fn with_conversation_canceller(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationCanceller<'mc>>,
@@ -346,6 +372,8 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the first prompt to use in all generated conversations.
+    /// <p>The default is Prompt.END_OF_CONVERSATION.</p>
     pub fn with_first_prompt(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Prompt<'mc>>,
@@ -362,6 +390,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets any initial data with which to populate the conversation context sessionData map.
     pub fn with_initial_session_data(
         &mut self,
         arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
@@ -378,6 +407,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the player input that, when received, will immediately terminate the conversation.
     pub fn with_escape_sequence(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -394,6 +424,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Prevents this factory from creating a conversation for non-player <a href="Conversable.html" title="interface in org.bukkit.conversations"><code>Conversable</code></a> objects.
     pub fn that_excludes_non_players_with_message(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -410,6 +441,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Adds a <a title="interface in org.bukkit.conversations" href="ConversationAbandonedListener.html"><code>ConversationAbandonedListener</code></a> to all conversations constructed by this factory.
     pub fn add_conversation_abandoned_listener(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationAbandonedListener<'mc>>,
@@ -421,6 +453,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Constructs a <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a> in accordance with the defaults set for this factory.
     pub fn build_conversation(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Conversable<'mc>>,
@@ -437,6 +470,7 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -456,6 +490,7 @@ impl<'mc> ConversationFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -470,6 +505,7 @@ impl<'mc> ConversationFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -481,6 +517,7 @@ impl<'mc> ConversationFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -488,6 +525,7 @@ impl<'mc> ConversationFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -495,6 +533,7 @@ impl<'mc> ConversationFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -502,6 +541,7 @@ impl<'mc> ConversationFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -510,6 +550,7 @@ impl<'mc> ConversationFactory<'mc> {
         Ok(())
     }
 }
+/// An InactivityConversationCanceller will cancel a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a> after a period of inactivity by the user.
 pub struct InactivityConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -534,7 +575,10 @@ impl<'mc> InactivityConversationCanceller<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "InactivityConversationCanceller")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/InactivityConversationCanceller",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a InactivityConversationCanceller object, got {}",
@@ -566,6 +610,8 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         )?;
         crate::conversations::InactivityConversationCanceller::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#setConversation(org.bukkit.conversations.Conversation)">ConversationCanceller</a></code></span>
+    /// Sets the conversation this ConversationCanceller can optionally cancel.
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Conversation<'mc>>,
@@ -580,6 +626,8 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#cancelBasedOnInput(org.bukkit.conversations.ConversationContext,java.lang.String)">ConversationCanceller</a></code></span>
+    /// Cancels a conversation based on user input.
     pub fn cancel_based_on_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -599,6 +647,9 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#clone()">ConversationCanceller</a></code></span>
+    /// Allows the <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> to duplicate this ConversationCanceller when creating a new <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>.
+    /// <p>Implementing this method should reset any internal object state.</p>
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -606,6 +657,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -625,6 +677,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -639,6 +692,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -650,6 +704,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -657,6 +712,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -664,6 +720,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -671,6 +728,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -686,6 +744,7 @@ impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
         crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// An ExactMatchConversationCanceller cancels a conversation if the user enters an exact input string
 pub struct ExactMatchConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -710,7 +769,10 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ExactMatchConversationCanceller")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/ExactMatchConversationCanceller",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a ExactMatchConversationCanceller object, got {}",
@@ -737,6 +799,8 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         )?;
         crate::conversations::ExactMatchConversationCanceller::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#setConversation(org.bukkit.conversations.Conversation)">ConversationCanceller</a></code></span>
+    /// Sets the conversation this ConversationCanceller can optionally cancel.
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Conversation<'mc>>,
@@ -751,6 +815,8 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#cancelBasedOnInput(org.bukkit.conversations.ConversationContext,java.lang.String)">ConversationCanceller</a></code></span>
+    /// Cancels a conversation based on user input.
     pub fn cancel_based_on_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -770,6 +836,9 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#clone()">ConversationCanceller</a></code></span>
+    /// Allows the <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> to duplicate this ConversationCanceller when creating a new <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>.
+    /// <p>Implementing this method should reset any internal object state.</p>
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -777,6 +846,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -796,6 +866,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -810,6 +881,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -821,6 +893,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -828,6 +901,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -835,6 +909,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -842,6 +917,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -857,7 +933,9 @@ impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
         crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Conversable. Needed for returning it from Java.
+/// The Conversable interface is used to indicate objects that can have conversations.
+///
+/// This is a representation of an abstract class.
 pub struct Conversable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -870,7 +948,7 @@ impl<'mc> Conversable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Conversable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Conversable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/Conversable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Conversable object, got {}",
@@ -881,6 +959,7 @@ impl<'mc> Conversable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Accepts input into the active conversation. If no conversation is in progress, this method does nothing.
     pub fn accept_conversation_input(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -895,6 +974,7 @@ impl<'mc> Conversable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Enters into a dialog with a Conversation object.
     pub fn begin_conversation(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Conversation<'mc>>,
@@ -909,6 +989,8 @@ impl<'mc> Conversable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Abandons an active conversation.
+    /// Abandons an active conversation.
     pub fn abandon_conversation_with_conversation(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::conversations::Conversation<'mc>>>,
@@ -924,6 +1006,7 @@ impl<'mc> Conversable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Tests to see of a Conversable object is actively engaged in a conversation.
     pub fn is_conversing(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -931,6 +1014,8 @@ impl<'mc> Conversable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sends this sender a message raw
+    /// Sends this sender a message raw
     pub fn send_raw_message_with_string(
         &mut self,
         arg0: std::option::Option<u128>,
@@ -967,6 +1052,11 @@ impl<'mc> JNIRaw<'mc> for Conversable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// The Conversation class is responsible for tracking the current state of a conversation, displaying prompts to the user, and dispatching the user's response to the appropriate place. Conversation objects are not typically instantiated directly. Instead a <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> is used to construct identical conversations on demand.
+/// <p>Conversation flow consists of a directed graph of <a title="interface in org.bukkit.conversations" href="Prompt.html"><code>Prompt</code></a> objects. Each time a prompt gets input from the user, it must return the next prompt in the graph. Since each Prompt chooses the next Prompt, complex conversation trees can be implemented where the nature of the player's response directs the flow of the conversation.</p>
+/// <p>Each conversation has a <a href="ConversationPrefix.html" title="interface in org.bukkit.conversations"><code>ConversationPrefix</code></a> that prepends all output from the conversation to the player. The ConversationPrefix can be used to display the plugin name or conversation status as the conversation evolves.</p>
+/// <p>Each conversation has a timeout measured in the number of inactive seconds to wait before abandoning the conversation. If the inactivity timeout is reached, the conversation is abandoned and the user's incoming and outgoing chat is returned to normal.</p>
+/// <p>You should not construct a conversation manually. Instead, use the <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> for access to all available options.</p>
 pub struct Conversation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -995,7 +1085,10 @@ impl<'mc> ConversationConversationState<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ConversationConversationState")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/ConversationConversationState",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConversationConversationState object, got {}",
@@ -1160,7 +1253,7 @@ impl<'mc> Conversation<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Conversation from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Conversation")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/Conversation")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Conversation object, got {}",
@@ -1189,6 +1282,7 @@ impl<'mc> Conversation<'mc> {
 "(Lorg/bukkit/plugin/Plugin;Lorg/bukkit/conversations/Conversable;Lorg/bukkit/conversations/Prompt;Ljava/util/Map;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
         crate::conversations::Conversation::from_raw(&jni, res)
     }
+    /// Gets the <a title="interface in org.bukkit.conversations" href="ConversationPrefix.html"><code>ConversationPrefix</code></a> that prepends all output from this conversation.
     pub fn prefix(
         &mut self,
     ) -> Result<crate::conversations::ConversationPrefix<'mc>, Box<dyn std::error::Error>> {
@@ -1203,6 +1297,7 @@ impl<'mc> Conversation<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Passes player input into the current prompt. The next prompt (as determined by the current prompt) is then displayed to the user.
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1217,6 +1312,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the modality of this conversation. If a conversation is modal, all messages directed to the player are suppressed for the duration of the conversation.
     pub fn is_modal(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1224,6 +1320,7 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Adds a <a href="ConversationAbandonedListener.html" title="interface in org.bukkit.conversations"><code>ConversationAbandonedListener</code></a>.
     pub fn add_conversation_abandoned_listener(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationAbandonedListener<'mc>>,
@@ -1238,6 +1335,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the status of local echo for this conversation. If local echo is enabled, any text submitted to a conversation gets echoed back into the submitter's chat window.
     pub fn set_local_echo_enabled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1250,6 +1348,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the entity for whom this conversation is mediating.
     pub fn for_whom(
         &mut self,
     ) -> Result<crate::conversations::Conversable<'mc>, Box<dyn std::error::Error>> {
@@ -1264,6 +1363,8 @@ impl<'mc> Conversation<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Abandons and resets the current conversation. Restores the user's normal chat behavior.
+    /// Abandons and resets the current conversation. Restores the user's normal chat behavior.
     pub fn abandon(
         &mut self,
         arg0: std::option::Option<
@@ -1281,6 +1382,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the status of local echo for this conversation. If local echo is enabled, any text submitted to a conversation gets echoed back into the submitter's chat window.
     pub fn is_local_echo_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1288,6 +1390,7 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the list of <a href="ConversationCanceller.html" title="interface in org.bukkit.conversations"><code>ConversationCanceller</code></a>s
     pub fn cancellers(
         &mut self,
     ) -> Result<Vec<crate::conversations::ConversationCanceller<'mc>>, Box<dyn std::error::Error>>
@@ -1310,6 +1413,7 @@ impl<'mc> Conversation<'mc> {
         }
         Ok(new_vec)
     }
+    /// Displays the next user prompt and abandons the conversation if the next prompt is null.
     pub fn output_next_prompt(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1317,6 +1421,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Removes a <a href="ConversationAbandonedListener.html" title="interface in org.bukkit.conversations"><code>ConversationAbandonedListener</code></a>.
     pub fn remove_conversation_abandoned_listener(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationAbandonedListener<'mc>>,
@@ -1331,6 +1436,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Displays the first prompt of this conversation and begins redirecting the user's chat responses.
     pub fn begin(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1338,6 +1444,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Returns the Conversation's <a title="class in org.bukkit.conversations" href="ConversationContext.html"><code>ConversationContext</code></a>.
     pub fn context(
         &mut self,
     ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
@@ -1352,6 +1459,7 @@ impl<'mc> Conversation<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns Returns the current state of the conversation.
     pub fn state(
         &mut self,
     ) -> Result<crate::conversations::ConversationConversationState<'mc>, Box<dyn std::error::Error>>
@@ -1367,6 +1475,7 @@ impl<'mc> Conversation<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1386,6 +1495,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1400,6 +1510,7 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1411,6 +1522,7 @@ impl<'mc> Conversation<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1418,6 +1530,7 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1425,6 +1538,7 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1432,6 +1546,7 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1440,7 +1555,9 @@ impl<'mc> Conversation<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements ConversationAbandonedListener. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct ConversationAbandonedListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1456,7 +1573,10 @@ impl<'mc> ConversationAbandonedListener<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ConversationAbandonedListener")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/ConversationAbandonedListener",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConversationAbandonedListener object, got {}",
@@ -1467,6 +1587,7 @@ impl<'mc> ConversationAbandonedListener<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Called whenever a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a> is abandoned.
     pub fn conversation_abandoned(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationAbandonedEvent<'mc>>,
@@ -1496,6 +1617,7 @@ impl<'mc> Into<blackboxmc_java::JavaEventListener<'mc>> for ConversationAbandone
         blackboxmc_java::JavaEventListener::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// ValidatingPrompt is the base class for any prompt that requires validation. ValidatingPrompt will keep replaying the prompt text until the user enters a valid response.
 pub struct ValidatingPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1519,7 +1641,7 @@ impl<'mc> ValidatingPrompt<'mc> {
                 eyre::eyre!("Tried to instantiate ValidatingPrompt from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ValidatingPrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/ValidatingPrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ValidatingPrompt object, got {}",
@@ -1537,6 +1659,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::conversations::ValidatingPrompt::from_raw(&jni, res)
     }
+    /// Ensures that the prompt waits for the user to provide input.
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -1551,6 +1674,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Accepts and processes input from the user and validates it. If validation fails, this prompt is returned for re-execution, otherwise the next Prompt in the prompt graph is returned.
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -1564,6 +1688,7 @@ impl<'mc> ValidatingPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1583,6 +1708,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1597,6 +1723,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1608,6 +1735,7 @@ impl<'mc> ValidatingPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1615,6 +1743,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1622,6 +1751,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1629,6 +1759,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1636,6 +1767,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -1660,6 +1792,7 @@ impl<'mc> Into<crate::conversations::Prompt<'mc>> for ValidatingPrompt<'mc> {
         crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// RegexPrompt is the base class for any prompt that requires an input validated by a regular expression.
 pub struct RegexPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1681,7 +1814,7 @@ impl<'mc> RegexPrompt<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RegexPrompt from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "RegexPrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/RegexPrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RegexPrompt object, got {}",
@@ -1706,6 +1839,7 @@ impl<'mc> RegexPrompt<'mc> {
         )?;
         crate::conversations::RegexPrompt::from_raw(&jni, res)
     }
+
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -1720,6 +1854,7 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -1733,6 +1868,7 @@ impl<'mc> RegexPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1752,6 +1888,7 @@ impl<'mc> RegexPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1766,6 +1903,7 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1777,6 +1915,7 @@ impl<'mc> RegexPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1784,6 +1923,7 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1791,6 +1931,7 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1798,6 +1939,7 @@ impl<'mc> RegexPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1805,6 +1947,7 @@ impl<'mc> RegexPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -1829,6 +1972,7 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for RegexPrompt<'mc>
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// The ManuallyAbandonedConversationCanceller is only used as part of a <a title="class in org.bukkit.conversations" href="ConversationAbandonedEvent.html"><code>ConversationAbandonedEvent</code></a> to indicate that the conversation was manually abandoned by programmatically calling the abandon() method on it.
 pub struct ManuallyAbandonedConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1853,7 +1997,10 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ManuallyAbandonedConversationCanceller")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/ManuallyAbandonedConversationCanceller",
+        )?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a ManuallyAbandonedConversationCanceller object, got {}",
@@ -1875,6 +2022,8 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::conversations::ManuallyAbandonedConversationCanceller::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#setConversation(org.bukkit.conversations.Conversation)">ConversationCanceller</a></code></span>
+    /// Sets the conversation this ConversationCanceller can optionally cancel.
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Conversation<'mc>>,
@@ -1889,6 +2038,8 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#cancelBasedOnInput(org.bukkit.conversations.ConversationContext,java.lang.String)">ConversationCanceller</a></code></span>
+    /// Cancels a conversation based on user input.
     pub fn cancel_based_on_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -1908,6 +2059,9 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConversationCanceller.html#clone()">ConversationCanceller</a></code></span>
+    /// Allows the <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> to duplicate this ConversationCanceller when creating a new <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>.
+    /// <p>Implementing this method should reset any internal object state.</p>
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1915,6 +2069,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1934,6 +2089,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1948,6 +2104,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1959,6 +2116,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1966,6 +2124,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1973,6 +2132,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1980,6 +2140,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1995,6 +2156,7 @@ impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
         crate::conversations::ConversationCanceller::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// StringPrompt is the base class for any prompt that accepts an arbitrary string from the user.
 pub struct StringPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2016,7 +2178,7 @@ impl<'mc> StringPrompt<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate StringPrompt from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "StringPrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/StringPrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StringPrompt object, got {}",
@@ -2034,6 +2196,7 @@ impl<'mc> StringPrompt<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::conversations::StringPrompt::from_raw(&jni, res)
     }
+    /// Ensures that the prompt waits for the user to provide input.
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2048,6 +2211,7 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2067,6 +2231,7 @@ impl<'mc> StringPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2081,6 +2246,7 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2092,6 +2258,7 @@ impl<'mc> StringPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2099,6 +2266,7 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2106,6 +2274,7 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2113,6 +2282,7 @@ impl<'mc> StringPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2120,6 +2290,7 @@ impl<'mc> StringPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2138,6 +2309,7 @@ impl<'mc> StringPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2157,6 +2329,7 @@ impl<'mc> Into<crate::conversations::Prompt<'mc>> for StringPrompt<'mc> {
         crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// PluginNameConversationPrefix is a <a title="interface in org.bukkit.conversations" href="ConversationPrefix.html"><code>ConversationPrefix</code></a> implementation that displays the plugin name in front of conversation output.
 pub struct PluginNameConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2181,7 +2354,10 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PluginNameConversationPrefix")?;
+        let (valid, name) = env.validate_name(
+            &obj,
+            "org/bukkit/conversations/PluginNameConversationPrefix",
+        )?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginNameConversationPrefix object, got {}",
@@ -2216,6 +2392,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         )?;
         crate::conversations::PluginNameConversationPrefix::from_raw(&jni, res)
     }
+    /// Prepends each conversation message with the plugin name.
     pub fn get_prefix(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2234,6 +2411,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2253,6 +2431,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2267,6 +2446,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2278,6 +2458,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2285,6 +2466,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2292,6 +2474,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2299,6 +2482,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2314,7 +2498,9 @@ impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>>
         crate::conversations::ConversationPrefix::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements ConversationCanceller. Needed for returning it from Java.
+/// A ConversationCanceller is a class that cancels an active <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>. A Conversation can have more than one ConversationCanceller.
+///
+/// This is a representation of an abstract class.
 pub struct ConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2341,7 +2527,8 @@ impl<'mc> ConversationCanceller<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ConversationCanceller")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/conversations/ConversationCanceller")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConversationCanceller object, got {}",
@@ -2352,6 +2539,7 @@ impl<'mc> ConversationCanceller<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sets the conversation this ConversationCanceller can optionally cancel.
     pub fn set_conversation(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::Conversation<'mc>>,
@@ -2366,6 +2554,7 @@ impl<'mc> ConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Cancels a conversation based on user input.
     pub fn cancel_based_on_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2385,6 +2574,8 @@ impl<'mc> ConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Allows the <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> to duplicate this ConversationCanceller when creating a new <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>.
+    /// <p>Implementing this method should reset any internal object state.</p>
     pub fn clone(
         &mut self,
     ) -> Result<crate::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>> {
@@ -2409,6 +2600,7 @@ impl<'mc> JNIRaw<'mc> for ConversationCanceller<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// FixedSetPrompt is the base class for any prompt that requires a fixed set response from the user.
 pub struct FixedSetPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2432,7 +2624,7 @@ impl<'mc> FixedSetPrompt<'mc> {
                 eyre::eyre!("Tried to instantiate FixedSetPrompt from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FixedSetPrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/FixedSetPrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FixedSetPrompt object, got {}",
@@ -2451,6 +2643,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = jni.new_object(cls, "(Ljava/lang/String;)V", &[])?;
         crate::conversations::FixedSetPrompt::from_raw(&jni, res)
     }
+
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2465,6 +2658,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2478,6 +2672,7 @@ impl<'mc> FixedSetPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2497,6 +2692,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2511,6 +2707,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2522,6 +2719,7 @@ impl<'mc> FixedSetPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2529,6 +2727,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2536,6 +2735,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2543,6 +2743,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2550,6 +2751,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2574,6 +2776,7 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for FixedSetPrompt<'
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// NullConversationPrefix is a <a href="ConversationPrefix.html" title="interface in org.bukkit.conversations"><code>ConversationPrefix</code></a> implementation that displays nothing in front of conversation output.
 pub struct NullConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2598,7 +2801,8 @@ impl<'mc> NullConversationPrefix<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "NullConversationPrefix")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/conversations/NullConversationPrefix")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a NullConversationPrefix object, got {}",
@@ -2616,6 +2820,7 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::conversations::NullConversationPrefix::from_raw(&jni, res)
     }
+    /// Prepends each conversation message with an empty string.
     pub fn get_prefix(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2634,6 +2839,7 @@ impl<'mc> NullConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2653,6 +2859,7 @@ impl<'mc> NullConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2667,6 +2874,7 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2678,6 +2886,7 @@ impl<'mc> NullConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2685,6 +2894,7 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2692,6 +2902,7 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2699,6 +2910,7 @@ impl<'mc> NullConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2712,7 +2924,9 @@ impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>> for NullConversati
         crate::conversations::ConversationPrefix::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Prompt. Needed for returning it from Java.
+/// A Prompt is the main constituent of a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>. Each prompt displays text to the user and optionally waits for a user's response. Prompts are chained together into a directed graph that represents the conversation flow. To halt a conversation, END_OF_CONVERSATION is returned in liu of another Prompt object.
+///
+/// This is a representation of an abstract class.
 pub struct Prompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2735,7 +2949,7 @@ impl<'mc> Prompt<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Prompt from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Prompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/Prompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Prompt object, got {}",
@@ -2746,6 +2960,7 @@ impl<'mc> Prompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the text to display to the user when this prompt is first presented.
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2764,6 +2979,7 @@ impl<'mc> Prompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Checks to see if this prompt implementation should wait for user input or immediately display the next prompt.
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2778,6 +2994,7 @@ impl<'mc> Prompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Accepts and processes input from the user. Using the input, the next Prompt in the prompt graph is returned.
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -2801,6 +3018,7 @@ impl<'mc> JNIRaw<'mc> for Prompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// ConversationAbandonedEvent contains information about an abandoned conversation.
 pub struct ConversationAbandonedEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2825,7 +3043,8 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ConversationAbandonedEvent")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/conversations/ConversationAbandonedEvent")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConversationAbandonedEvent object, got {}",
@@ -2851,6 +3070,15 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
 "(Lorg/bukkit/conversations/Conversation;Lorg/bukkit/conversations/ConversationCanceller;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
         crate::conversations::ConversationAbandonedEvent::from_raw(&jni, res)
     }
+    /// Indicates how the conversation was abandoned - naturally as part of the prompt chain or prematurely via a <a title="interface in org.bukkit.conversations" href="ConversationCanceller.html"><code>ConversationCanceller</code></a>.
+    pub fn graceful_exit(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "gracefulExit", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z().unwrap())
+    }
+    /// Gets the object that caused the conversation to be abandoned.
     pub fn canceller(
         &mut self,
     ) -> Result<crate::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>> {
@@ -2865,13 +3093,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn graceful_exit(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "gracefulExit", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    /// Gets the abandoned conversation's conversation context.
     pub fn context(
         &mut self,
     ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
@@ -2886,6 +3108,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn source(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2896,6 +3119,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2907,6 +3131,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2926,6 +3151,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2940,6 +3166,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2947,6 +3174,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2954,6 +3182,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2961,6 +3190,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2969,6 +3199,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         Ok(())
     }
 }
+/// A ConversationContext provides continuity between nodes in the prompt graph by giving the developer access to the subject of the conversation and a generic map for storing values that are shared between all <a title="interface in org.bukkit.conversations" href="Prompt.html"><code>Prompt</code></a> invocations.
 pub struct ConversationContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2992,7 +3223,8 @@ impl<'mc> ConversationContext<'mc> {
                 eyre::eyre!("Tried to instantiate ConversationContext from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ConversationContext")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/conversations/ConversationContext")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ConversationContext object, got {}",
@@ -3024,6 +3256,7 @@ impl<'mc> ConversationContext<'mc> {
         )?;
         crate::conversations::ConversationContext::from_raw(&jni, res)
     }
+    /// Gets the plugin that owns this conversation.
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3036,6 +3269,7 @@ impl<'mc> ConversationContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the subject of the conversation.
     pub fn for_whom(
         &mut self,
     ) -> Result<crate::conversations::Conversable<'mc>, Box<dyn std::error::Error>> {
@@ -3050,6 +3284,7 @@ impl<'mc> ConversationContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets the underlying sessionData map. May be directly modified to manipulate session data.
     pub fn all_session_data(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -3064,6 +3299,7 @@ impl<'mc> ConversationContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Gets session data shared between all <a title="interface in org.bukkit.conversations" href="Prompt.html"><code>Prompt</code></a> invocations. Use this as a way to pass data through each Prompt as the conversation develops.
     pub fn get_session_data(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3078,6 +3314,7 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+    /// Sets session data shared between all <a href="Prompt.html" title="interface in org.bukkit.conversations"><code>Prompt</code></a> invocations. Use this as a way to pass data through each prompt as the conversation develops.
     pub fn set_session_data(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3097,6 +3334,7 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3116,6 +3354,7 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3130,6 +3369,7 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3141,6 +3381,7 @@ impl<'mc> ConversationContext<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3148,6 +3389,7 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3155,6 +3397,7 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3162,6 +3405,7 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3170,6 +3414,7 @@ impl<'mc> ConversationContext<'mc> {
         Ok(())
     }
 }
+/// PlayerNamePrompt is the base class for any prompt that requires the player to enter another player's name.
 pub struct PlayerNamePrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3193,7 +3438,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
                 eyre::eyre!("Tried to instantiate PlayerNamePrompt from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "PlayerNamePrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/PlayerNamePrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PlayerNamePrompt object, got {}",
@@ -3217,6 +3462,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         )?;
         crate::conversations::PlayerNamePrompt::from_raw(&jni, res)
     }
+
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3231,6 +3477,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3244,6 +3491,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3263,6 +3511,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3277,6 +3526,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3288,6 +3538,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3295,6 +3546,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3302,6 +3554,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3309,6 +3562,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3316,6 +3570,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3340,6 +3595,7 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for PlayerNamePrompt
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// BooleanPrompt is the base class for any prompt that requires a boolean response from the user.
 pub struct BooleanPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3361,7 +3617,7 @@ impl<'mc> BooleanPrompt<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BooleanPrompt from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "BooleanPrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/BooleanPrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BooleanPrompt object, got {}",
@@ -3379,6 +3635,7 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::conversations::BooleanPrompt::from_raw(&jni, res)
     }
+
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3393,6 +3650,7 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3406,6 +3664,7 @@ impl<'mc> BooleanPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3425,6 +3684,7 @@ impl<'mc> BooleanPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3439,6 +3699,7 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3450,6 +3711,7 @@ impl<'mc> BooleanPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3457,6 +3719,7 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3464,6 +3727,7 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3471,6 +3735,7 @@ impl<'mc> BooleanPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3478,6 +3743,7 @@ impl<'mc> BooleanPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3502,6 +3768,7 @@ impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for BooleanPrompt<'m
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// MessagePrompt is the base class for any prompt that only displays a message to the user and requires no input.
 pub struct MessagePrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3523,7 +3790,7 @@ impl<'mc> MessagePrompt<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MessagePrompt from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MessagePrompt")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/conversations/MessagePrompt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MessagePrompt object, got {}",
@@ -3541,6 +3808,7 @@ impl<'mc> MessagePrompt<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::conversations::MessagePrompt::from_raw(&jni, res)
     }
+    /// Message prompts never wait for user input before continuing.
     pub fn blocks_for_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3555,6 +3823,7 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Accepts and ignores any user input, returning the next prompt in the prompt graph instead.
     pub fn accept_input(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,
@@ -3568,6 +3837,7 @@ impl<'mc> MessagePrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -3587,6 +3857,7 @@ impl<'mc> MessagePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -3601,6 +3872,7 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3612,6 +3884,7 @@ impl<'mc> MessagePrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3619,6 +3892,7 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3626,6 +3900,7 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3633,6 +3908,7 @@ impl<'mc> MessagePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3640,6 +3916,7 @@ impl<'mc> MessagePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn get_prompt_text(
         &mut self,
         arg0: impl Into<&'mc crate::conversations::ConversationContext<'mc>>,

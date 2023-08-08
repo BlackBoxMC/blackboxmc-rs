@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+
 pub struct DefaultPermissions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24,7 +25,8 @@ impl<'mc> DefaultPermissions<'mc> {
                 eyre::eyre!("Tried to instantiate DefaultPermissions from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "DefaultPermissions")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/util/permissions/DefaultPermissions")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DefaultPermissions object, got {}",
@@ -35,6 +37,7 @@ impl<'mc> DefaultPermissions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn register_permission_with_permission(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -51,6 +54,7 @@ impl<'mc> DefaultPermissions<'mc> {
         let obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
+
     pub fn register_permission_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -72,6 +76,7 @@ impl<'mc> DefaultPermissions<'mc> {
         let obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
+
     pub fn register_core_permissions(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -79,6 +84,7 @@ impl<'mc> DefaultPermissions<'mc> {
         let res = jni.call_static_method(cls, "registerCorePermissions", "()V", &[])?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -98,6 +104,7 @@ impl<'mc> DefaultPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -112,6 +119,7 @@ impl<'mc> DefaultPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -123,6 +131,7 @@ impl<'mc> DefaultPermissions<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -130,6 +139,7 @@ impl<'mc> DefaultPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -137,6 +147,7 @@ impl<'mc> DefaultPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -144,6 +155,7 @@ impl<'mc> DefaultPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -152,6 +164,7 @@ impl<'mc> DefaultPermissions<'mc> {
         Ok(())
     }
 }
+
 pub struct CommandPermissions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -175,7 +188,8 @@ impl<'mc> CommandPermissions<'mc> {
                 eyre::eyre!("Tried to instantiate CommandPermissions from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "CommandPermissions")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/util/permissions/CommandPermissions")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a CommandPermissions object, got {}",
@@ -186,6 +200,7 @@ impl<'mc> CommandPermissions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn register_permissions(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::permissions::Permission<'mc>>,
@@ -201,6 +216,7 @@ impl<'mc> CommandPermissions<'mc> {
         let obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -220,6 +236,7 @@ impl<'mc> CommandPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -234,6 +251,7 @@ impl<'mc> CommandPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -245,6 +263,7 @@ impl<'mc> CommandPermissions<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -252,6 +271,7 @@ impl<'mc> CommandPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -259,6 +279,7 @@ impl<'mc> CommandPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -266,6 +287,7 @@ impl<'mc> CommandPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -274,6 +296,7 @@ impl<'mc> CommandPermissions<'mc> {
         Ok(())
     }
 }
+
 pub struct BroadcastPermissions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -297,7 +320,8 @@ impl<'mc> BroadcastPermissions<'mc> {
                 eyre::eyre!("Tried to instantiate BroadcastPermissions from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "BroadcastPermissions")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/util/permissions/BroadcastPermissions")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BroadcastPermissions object, got {}",
@@ -308,6 +332,7 @@ impl<'mc> BroadcastPermissions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn register_permissions(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::permissions::Permission<'mc>>,
@@ -323,6 +348,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         let obj = res.l()?;
         crate::permissions::Permission::from_raw(&jni, obj)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -342,6 +368,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -356,6 +383,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -367,6 +395,7 @@ impl<'mc> BroadcastPermissions<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -374,6 +403,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -381,6 +411,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -388,6 +419,7 @@ impl<'mc> BroadcastPermissions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

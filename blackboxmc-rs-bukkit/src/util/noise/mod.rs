@@ -1,6 +1,8 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// Generates simplex-based noise.
+/// <p>This is a modified version of the freely published version in the paper by Stefan Gustavson at <a href="http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf"> http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf</a></p>
 pub struct SimplexNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25,7 +27,8 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "SimplexNoiseGenerator")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/util/noise/SimplexNoiseGenerator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SimplexNoiseGenerator object, got {}",
@@ -59,6 +62,11 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         )?;
         crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="NoiseGenerator.html#noise(double,double,double)">NoiseGenerator</a></code></span>
+    /// Computes and returns the 3D noise for the given coordinates in 3D space
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="NoiseGenerator.html#noise(double,double)">NoiseGenerator</a></code></span>
+    /// Computes and returns the 2D noise for the given coordinates in 2D space
+    /// Computes and returns the 4D simplex noise for the given coordinates in 4D space
     pub fn noise_with_double(
         &mut self,
         arg0: f64,
@@ -94,6 +102,10 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Computes and returns the 1D unseeded simplex noise for the given coordinates in 1D space
+    /// Computes and returns the 2D unseeded simplex noise for the given coordinates in 2D space
+    /// Computes and returns the 3D unseeded simplex noise for the given coordinates in 3D space
+    /// Computes and returns the 4D simplex noise for the given coordinates in 4D space
     pub fn get_noise_with_double(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -125,6 +137,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         )?;
         Ok(res.d().unwrap())
     }
+    /// Gets the singleton unseeded instance of this generator
     pub fn instance(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
@@ -138,6 +151,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let obj = res.l()?;
         crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
     }
+
     pub fn floor(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -152,6 +166,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -171,6 +186,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -185,6 +201,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -196,6 +213,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -203,6 +221,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -210,6 +229,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -217,6 +237,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -230,6 +251,7 @@ impl<'mc> Into<crate::util::noise::PerlinNoiseGenerator<'mc>> for SimplexNoiseGe
         crate::util::noise::PerlinNoiseGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Generates noise using the "classic" perlin generator
 pub struct PerlinNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -253,7 +275,8 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
                 eyre::eyre!("Tried to instantiate PerlinNoiseGenerator from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "PerlinNoiseGenerator")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/util/noise/PerlinNoiseGenerator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PerlinNoiseGenerator object, got {}",
@@ -287,6 +310,8 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)])?;
         crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="NoiseGenerator.html#noise(double,double,double)">NoiseGenerator</a></code></span>
+    /// Computes and returns the 3D noise for the given coordinates in 3D space
     pub fn noise_with_double(
         &mut self,
         arg0: f64,
@@ -322,6 +347,12 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Computes and returns the 1D unseeded perlin noise for the given coordinates in 1D space
+    /// Computes and returns the 2D unseeded perlin noise for the given coordinates in 2D space
+    /// Computes and returns the 3D unseeded perlin noise for the given coordinates in 3D space
+    /// Generates noise for the 1D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 2D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
     pub fn get_noise_with_double(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -353,6 +384,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         )?;
         Ok(res.d().unwrap())
     }
+    /// Gets the singleton unseeded instance of this generator
     pub fn instance(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
@@ -366,6 +398,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let obj = res.l()?;
         crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, obj)
     }
+
     pub fn floor(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -380,6 +413,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -399,6 +433,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -413,6 +448,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -424,6 +460,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -431,6 +468,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -438,6 +476,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -445,6 +484,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -458,6 +498,7 @@ impl<'mc> Into<crate::util::noise::NoiseGenerator<'mc>> for PerlinNoiseGenerator
         crate::util::noise::NoiseGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Creates simplex noise through unbiased octaves
 pub struct SimplexOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -482,7 +523,8 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "SimplexOctaveGenerator")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/util/noise/SimplexOctaveGenerator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SimplexOctaveGenerator object, got {}",
@@ -529,6 +571,9 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         )?;
         crate::util::noise::SimplexOctaveGenerator::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="OctaveGenerator.html#setScale(double)">OctaveGenerator</a></code></span>
+    /// Sets the scale used for all coordinates passed to this generator.
+    /// <p>This is the equivalent to setting each coordinate to the specified value.</p>
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -540,6 +585,8 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
     pub fn noise_with_double(
         &mut self,
         arg0: f64,
@@ -575,6 +622,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Sets the scale used for each W-coordinates passed
     pub fn set_wscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -586,6 +634,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the scale used for each W-coordinates passed
     pub fn wscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -593,6 +642,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn set_xscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -604,6 +654,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_yscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -615,6 +666,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_zscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -626,6 +678,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn xscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -633,6 +686,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn yscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -640,6 +694,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn zscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -647,6 +702,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -666,6 +722,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -680,6 +737,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -691,6 +749,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -698,6 +757,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -705,6 +765,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -712,6 +773,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -725,6 +787,7 @@ impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for SimplexOctaveGenera
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Creates noise using unbiased octaves
 pub struct OctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -748,7 +811,7 @@ impl<'mc> OctaveGenerator<'mc> {
                 eyre::eyre!("Tried to instantiate OctaveGenerator from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "OctaveGenerator")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/util/noise/OctaveGenerator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a OctaveGenerator object, got {}",
@@ -759,6 +822,8 @@ impl<'mc> OctaveGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sets the scale used for all coordinates passed to this generator.
+    /// <p>This is the equivalent to setting each coordinate to the specified value.</p>
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -770,6 +835,7 @@ impl<'mc> OctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the scale used for each X-coordinates passed
     pub fn set_xscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -781,6 +847,7 @@ impl<'mc> OctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the scale used for each Y-coordinates passed
     pub fn set_yscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -792,6 +859,7 @@ impl<'mc> OctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Sets the scale used for each Z-coordinates passed
     pub fn set_zscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -803,6 +871,7 @@ impl<'mc> OctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the scale used for each X-coordinates passed
     pub fn xscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -810,6 +879,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the scale used for each Y-coordinates passed
     pub fn yscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -817,6 +887,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the scale used for each Z-coordinates passed
     pub fn zscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -824,6 +895,12 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Generates noise for the 1D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 1D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 2D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 2D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
     pub fn noise_with_double(
         &mut self,
         arg0: f64,
@@ -856,6 +933,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -875,6 +953,7 @@ impl<'mc> OctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -889,6 +968,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -900,6 +980,7 @@ impl<'mc> OctaveGenerator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -907,6 +988,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -914,6 +996,7 @@ impl<'mc> OctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -921,6 +1004,7 @@ impl<'mc> OctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -929,6 +1013,7 @@ impl<'mc> OctaveGenerator<'mc> {
         Ok(())
     }
 }
+/// Creates perlin noise through unbiased octaves
 pub struct PerlinOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -953,7 +1038,8 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "PerlinOctaveGenerator")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/util/noise/PerlinOctaveGenerator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PerlinOctaveGenerator object, got {}",
@@ -1000,6 +1086,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         )?;
         crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
     }
+
     pub fn set_scale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1011,6 +1098,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_xscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1022,6 +1110,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_yscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1033,6 +1122,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn set_zscale(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1044,6 +1134,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn xscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1051,6 +1142,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn yscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1058,6 +1150,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn zscale(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1065,6 +1158,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn noise_with_double(
         &mut self,
         arg0: f64,
@@ -1097,6 +1191,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1116,6 +1211,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1130,6 +1226,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1141,6 +1238,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1148,6 +1246,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1155,6 +1254,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1162,6 +1262,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1175,6 +1276,7 @@ impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for PerlinOctaveGenerat
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Base class for all noise generators
 pub struct NoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1208,7 +1310,7 @@ impl<'mc> NoiseGenerator<'mc> {
                 eyre::eyre!("Tried to instantiate NoiseGenerator from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "NoiseGenerator")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/util/noise/NoiseGenerator")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a NoiseGenerator object, got {}",
@@ -1226,6 +1328,15 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::util::noise::NoiseGenerator::from_raw(&jni, res)
     }
+    /// Computes and returns the 1D noise for the given coordinate in 1D space
+    /// Computes and returns the 2D noise for the given coordinates in 2D space
+    /// Computes and returns the 3D noise for the given coordinates in 3D space
+    /// Generates noise for the 1D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 1D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 2D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 2D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
+    /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
     pub fn noise_with_double(
         &mut self,
         arg0: f64,
@@ -1261,6 +1372,7 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Speedy floor, faster than (int)Math.floor(x)
     pub fn floor(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -1275,6 +1387,7 @@ impl<'mc> NoiseGenerator<'mc> {
         )?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1294,6 +1407,7 @@ impl<'mc> NoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1308,6 +1422,7 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1319,6 +1434,7 @@ impl<'mc> NoiseGenerator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1326,6 +1442,7 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1333,6 +1450,7 @@ impl<'mc> NoiseGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1340,6 +1458,7 @@ impl<'mc> NoiseGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

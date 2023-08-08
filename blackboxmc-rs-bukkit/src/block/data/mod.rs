@@ -1,7 +1,9 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// An instantiatable struct that implements Hatchable. Needed for returning it from Java.
+/// 'hatch' is the number of entities which may hatch from these eggs.
+///
+/// This is a representation of an abstract class.
 pub struct Hatchable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14,7 +16,7 @@ impl<'mc> Hatchable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Hatchable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Hatchable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Hatchable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Hatchable object, got {}",
@@ -25,6 +27,7 @@ impl<'mc> Hatchable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'hatch' property.
     pub fn hatch(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -32,6 +35,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the value of the 'hatch' property.
     pub fn set_hatch(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -43,6 +47,7 @@ impl<'mc> Hatchable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the maximum allowed value of the 'hatch' property.
     pub fn maximum_hatch(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -50,6 +55,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -64,6 +70,7 @@ impl<'mc> Hatchable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -79,6 +86,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -102,6 +110,7 @@ impl<'mc> Hatchable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -116,6 +125,7 @@ impl<'mc> Hatchable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -128,6 +138,7 @@ impl<'mc> Hatchable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -135,6 +146,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -142,6 +154,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -152,6 +165,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -166,6 +180,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -191,6 +206,7 @@ impl<'mc> Hatchable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -210,6 +226,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -235,6 +252,7 @@ impl<'mc> Hatchable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -249,6 +267,7 @@ impl<'mc> Hatchable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -263,6 +282,7 @@ impl<'mc> Hatchable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -277,6 +297,7 @@ impl<'mc> Hatchable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -291,6 +312,7 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -322,7 +344,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Hatchable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Lightable. Needed for returning it from Java.
+/// 'lit' denotes whether this block (either a redstone torch or furnace) is currently lit - that is not burned out.
+///
+/// This is a representation of an abstract class.
 pub struct Lightable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -335,7 +359,7 @@ impl<'mc> Lightable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Lightable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Lightable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Lightable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Lightable object, got {}",
@@ -346,6 +370,7 @@ impl<'mc> Lightable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'lit' property.
     pub fn is_lit(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -353,6 +378,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the value of the 'lit' property.
     pub fn set_lit(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -365,6 +391,7 @@ impl<'mc> Lightable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -379,6 +406,7 @@ impl<'mc> Lightable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -394,6 +422,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -417,6 +446,7 @@ impl<'mc> Lightable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -431,6 +461,7 @@ impl<'mc> Lightable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -443,6 +474,7 @@ impl<'mc> Lightable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -450,6 +482,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -457,6 +490,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -467,6 +501,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -481,6 +516,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -506,6 +542,7 @@ impl<'mc> Lightable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -525,6 +562,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -550,6 +588,7 @@ impl<'mc> Lightable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -564,6 +603,7 @@ impl<'mc> Lightable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -578,6 +618,7 @@ impl<'mc> Lightable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -592,6 +633,7 @@ impl<'mc> Lightable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -606,6 +648,7 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -637,7 +680,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Lightable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Orientable. Needed for returning it from Java.
+/// 'axis' represents the axis along whilst this block is oriented.
+///
+/// Some blocks such as the portal block may not be able to be placed in all orientations, use <a href="#getAxes()"><code>getAxes()</code></a> to retrieve all possible such orientations.
+///
+/// This is a representation of an abstract class.
 pub struct Orientable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -650,7 +697,7 @@ impl<'mc> Orientable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Orientable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Orientable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Orientable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Orientable object, got {}",
@@ -661,6 +708,7 @@ impl<'mc> Orientable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'axis' property.
     pub fn axis(&mut self) -> Result<crate::Axis<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -681,6 +729,7 @@ impl<'mc> Orientable<'mc> {
             crate::Axis::from_string(variant_str).unwrap(),
         )
     }
+    /// Sets the value of the 'axis' property.
     pub fn set_axis(
         &mut self,
         arg0: impl Into<&'mc crate::Axis<'mc>>,
@@ -695,6 +744,7 @@ impl<'mc> Orientable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the axes which are applicable to this block.
     pub fn axes(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -704,6 +754,7 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -718,6 +769,7 @@ impl<'mc> Orientable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -733,6 +785,7 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -756,6 +809,7 @@ impl<'mc> Orientable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -770,6 +824,7 @@ impl<'mc> Orientable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -782,6 +837,7 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -789,6 +845,7 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -796,6 +853,7 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -806,6 +864,7 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -820,6 +879,7 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -845,6 +905,7 @@ impl<'mc> Orientable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -864,6 +925,7 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -889,6 +951,7 @@ impl<'mc> Orientable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -903,6 +966,7 @@ impl<'mc> Orientable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -917,6 +981,7 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -931,6 +996,7 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -945,6 +1011,7 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -976,7 +1043,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Orientable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements FaceAttachable. Needed for returning it from Java.
+/// 'face' represents the face to which a lever or button is stuck.
+///
+/// This is used in conjunction with <a href="Directional.html" title="interface in org.bukkit.block.data"><code>Directional</code></a> to compute the orientation of these blocks.
+///
+/// This is a representation of an abstract class.
 pub struct FaceAttachable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -991,7 +1062,7 @@ impl<'mc> FaceAttachable<'mc> {
                 eyre::eyre!("Tried to instantiate FaceAttachable from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "FaceAttachable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/FaceAttachable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FaceAttachable object, got {}",
@@ -1002,6 +1073,7 @@ impl<'mc> FaceAttachable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sets the value of the 'face' property.
     pub fn set_attached_face(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::FaceAttachableAttachedFace<'mc>>,
@@ -1016,6 +1088,7 @@ impl<'mc> FaceAttachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the value of the 'face' property.
     pub fn attached_face(
         &mut self,
     ) -> Result<crate::block::data::FaceAttachableAttachedFace<'mc>, Box<dyn std::error::Error>>
@@ -1031,6 +1104,7 @@ impl<'mc> FaceAttachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -1045,6 +1119,7 @@ impl<'mc> FaceAttachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -1060,6 +1135,7 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1083,6 +1159,7 @@ impl<'mc> FaceAttachable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1097,6 +1174,7 @@ impl<'mc> FaceAttachable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1109,6 +1187,7 @@ impl<'mc> FaceAttachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1116,6 +1195,7 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1123,6 +1203,7 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1133,6 +1214,7 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -1147,6 +1229,7 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -1172,6 +1255,7 @@ impl<'mc> FaceAttachable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -1191,6 +1275,7 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -1216,6 +1301,7 @@ impl<'mc> FaceAttachable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -1230,6 +1316,7 @@ impl<'mc> FaceAttachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -1244,6 +1331,7 @@ impl<'mc> FaceAttachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -1258,6 +1346,7 @@ impl<'mc> FaceAttachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -1272,6 +1361,7 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -1303,7 +1393,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for FaceAttachable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Powerable. Needed for returning it from Java.
+/// 'powered' indicates whether this block is in the powered state or not, i.e. receiving a redstone current of power &gt; 0.
+///
+/// This is a representation of an abstract class.
 pub struct Powerable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1316,7 +1408,7 @@ impl<'mc> Powerable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Powerable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Powerable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Powerable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Powerable object, got {}",
@@ -1327,6 +1419,7 @@ impl<'mc> Powerable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'powered' property.
     pub fn is_powered(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1334,6 +1427,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the value of the 'powered' property.
     pub fn set_powered(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1346,6 +1440,7 @@ impl<'mc> Powerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -1360,6 +1455,7 @@ impl<'mc> Powerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -1375,6 +1471,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1398,6 +1495,7 @@ impl<'mc> Powerable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1412,6 +1510,7 @@ impl<'mc> Powerable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1424,6 +1523,7 @@ impl<'mc> Powerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1431,6 +1531,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1438,6 +1539,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1448,6 +1550,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -1462,6 +1565,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -1487,6 +1591,7 @@ impl<'mc> Powerable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -1506,6 +1611,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -1531,6 +1637,7 @@ impl<'mc> Powerable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -1545,6 +1652,7 @@ impl<'mc> Powerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -1559,6 +1667,7 @@ impl<'mc> Powerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -1573,6 +1682,7 @@ impl<'mc> Powerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -1587,6 +1697,7 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -1618,6 +1729,7 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Powerable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// The face to which a switch type block is stuck.
 pub struct FaceAttachableAttachedFace<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1642,7 +1754,8 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "FaceAttachableAttachedFace")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/data/FaceAttachableAttachedFace")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a FaceAttachableAttachedFace object, got {}",
@@ -1653,6 +1766,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -1673,6 +1787,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1684,6 +1799,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1698,6 +1814,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1709,6 +1826,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1716,6 +1834,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -1730,6 +1849,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -1742,6 +1862,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1749,6 +1870,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1768,6 +1890,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1775,6 +1898,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1782,6 +1906,7 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1790,7 +1915,13 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements Levelled. Needed for returning it from Java.
+/// 'level' represents the amount of fluid contained within this block, either by itself or inside a cauldron.
+///
+/// In the case of water and lava blocks the levels have special meanings: a level of 0 corresponds to a source block, 1-7 regular fluid heights, and 8-15 to "falling" fluids. All falling fluids have the same behaviour, but the level corresponds to that of the block above them, equal to <code>this.level - 8</code> <b>Note that counterintuitively, an adjusted level of 1 is the highest level, whilst 7 is the lowest.</b>
+///
+/// May not be higher than <a href="#getMaximumLevel()"><code>getMaximumLevel()</code></a>.
+///
+/// This is a representation of an abstract class.
 pub struct Levelled<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1803,7 +1934,7 @@ impl<'mc> Levelled<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Levelled from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Levelled")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Levelled")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Levelled object, got {}",
@@ -1814,6 +1945,7 @@ impl<'mc> Levelled<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sets the value of the 'level' property.
     pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1825,6 +1957,7 @@ impl<'mc> Levelled<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the value of the 'level' property.
     pub fn level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1832,6 +1965,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the maximum allowed value of the 'level' property.
     pub fn maximum_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1839,6 +1973,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -1853,6 +1988,7 @@ impl<'mc> Levelled<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -1868,6 +2004,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1891,6 +2028,7 @@ impl<'mc> Levelled<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1905,6 +2043,7 @@ impl<'mc> Levelled<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1917,6 +2056,7 @@ impl<'mc> Levelled<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1924,6 +2064,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1931,6 +2072,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1941,6 +2083,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -1955,6 +2098,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -1980,6 +2124,7 @@ impl<'mc> Levelled<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -1999,6 +2144,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -2024,6 +2170,7 @@ impl<'mc> Levelled<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -2038,6 +2185,7 @@ impl<'mc> Levelled<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -2052,6 +2200,7 @@ impl<'mc> Levelled<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -2066,6 +2215,7 @@ impl<'mc> Levelled<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -2080,6 +2230,7 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -2111,7 +2262,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Levelled<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Ageable. Needed for returning it from Java.
+/// 'age' represents the different growth stages that a crop-like block can go through.
+///
+/// A value of 0 indicates that the crop was freshly planted, whilst a value equal to <a href="#getMaximumAge()"><code>getMaximumAge()</code></a> indicates that the crop is ripe and ready to be harvested.
+///
+/// This is a representation of an abstract class.
 pub struct Ageable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2124,7 +2279,7 @@ impl<'mc> Ageable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Ageable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Ageable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Ageable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Ageable object, got {}",
@@ -2135,6 +2290,7 @@ impl<'mc> Ageable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'age' property.
     pub fn age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2142,6 +2298,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the value of the 'age' property.
     pub fn set_age(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2153,6 +2310,7 @@ impl<'mc> Ageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the maximum allowed value of the 'age' property.
     pub fn maximum_age(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2160,6 +2318,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -2174,6 +2333,7 @@ impl<'mc> Ageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -2189,6 +2349,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2212,6 +2373,7 @@ impl<'mc> Ageable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2226,6 +2388,7 @@ impl<'mc> Ageable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2238,6 +2401,7 @@ impl<'mc> Ageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2245,6 +2409,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2252,6 +2417,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2262,6 +2428,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -2276,6 +2443,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -2301,6 +2469,7 @@ impl<'mc> Ageable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -2320,6 +2489,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -2345,6 +2515,7 @@ impl<'mc> Ageable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -2359,6 +2530,7 @@ impl<'mc> Ageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -2373,6 +2545,7 @@ impl<'mc> Ageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -2387,6 +2560,7 @@ impl<'mc> Ageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -2401,6 +2575,7 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -2432,7 +2607,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Ageable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements MultipleFacing. Needed for returning it from Java.
+/// This class encompasses the 'north', 'east', 'south', 'west', 'up', 'down' boolean flags which are used to set which faces of the block textures are displayed on.
+///
+/// Some blocks may not be able to have faces on all directions, use <a href="#getAllowedFaces()"><code>getAllowedFaces()</code></a> to get all possible faces for this block. It is not valid to call any methods on non-allowed faces.
+///
+/// This is a representation of an abstract class.
 pub struct MultipleFacing<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2447,7 +2626,7 @@ impl<'mc> MultipleFacing<'mc> {
                 eyre::eyre!("Tried to instantiate MultipleFacing from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "MultipleFacing")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/MultipleFacing")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MultipleFacing object, got {}",
@@ -2458,6 +2637,17 @@ impl<'mc> MultipleFacing<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get all of the faces which are enabled on this block.
+    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Set whether this block has the specified face enabled.
     pub fn set_face(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -2478,15 +2668,7 @@ impl<'mc> MultipleFacing<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFaces", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+    /// Gets all of this faces which may be set on this block.
     pub fn allowed_faces(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -2501,6 +2683,7 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if this block has the specified face enabled.
     pub fn has_face(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -2515,6 +2698,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -2529,6 +2713,7 @@ impl<'mc> MultipleFacing<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -2544,6 +2729,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2567,6 +2753,7 @@ impl<'mc> MultipleFacing<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2581,6 +2768,7 @@ impl<'mc> MultipleFacing<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2593,6 +2781,7 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2600,6 +2789,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2607,6 +2797,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2617,6 +2808,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -2631,6 +2823,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -2656,6 +2849,7 @@ impl<'mc> MultipleFacing<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -2675,6 +2869,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -2700,6 +2895,7 @@ impl<'mc> MultipleFacing<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -2714,6 +2910,7 @@ impl<'mc> MultipleFacing<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -2728,6 +2925,7 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -2742,6 +2940,7 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -2756,6 +2955,7 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -2787,6 +2987,7 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for MultipleFacing<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// The different types of shapes a rail block can occupy.
 pub struct RailShape<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2808,7 +3009,7 @@ impl<'mc> RailShape<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RailShape from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "RailShape")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/RailShape")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a RailShape object, got {}",
@@ -2819,6 +3020,7 @@ impl<'mc> RailShape<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -2839,6 +3041,7 @@ impl<'mc> RailShape<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2850,6 +3053,7 @@ impl<'mc> RailShape<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2864,6 +3068,7 @@ impl<'mc> RailShape<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2875,6 +3080,7 @@ impl<'mc> RailShape<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2882,6 +3088,7 @@ impl<'mc> RailShape<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -2896,6 +3103,7 @@ impl<'mc> RailShape<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -2908,6 +3116,7 @@ impl<'mc> RailShape<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2915,6 +3124,7 @@ impl<'mc> RailShape<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2934,6 +3144,7 @@ impl<'mc> RailShape<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2941,6 +3152,7 @@ impl<'mc> RailShape<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2948,6 +3160,7 @@ impl<'mc> RailShape<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2956,7 +3169,9 @@ impl<'mc> RailShape<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements Snowable. Needed for returning it from Java.
+/// 'snowy' denotes whether this block has a snow covered side and top texture (normally because the block above is snow).
+///
+/// This is a representation of an abstract class.
 pub struct Snowable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2969,7 +3184,7 @@ impl<'mc> Snowable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Snowable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Snowable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Snowable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Snowable object, got {}",
@@ -2980,6 +3195,7 @@ impl<'mc> Snowable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'snowy' property.
     pub fn is_snowy(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2987,6 +3203,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the value of the 'snowy' property.
     pub fn set_snowy(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2999,6 +3216,7 @@ impl<'mc> Snowable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -3013,6 +3231,7 @@ impl<'mc> Snowable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -3028,6 +3247,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3051,6 +3271,7 @@ impl<'mc> Snowable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3065,6 +3286,7 @@ impl<'mc> Snowable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3077,6 +3299,7 @@ impl<'mc> Snowable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3084,6 +3307,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3091,6 +3315,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3101,6 +3326,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -3115,6 +3341,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -3140,6 +3367,7 @@ impl<'mc> Snowable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -3159,6 +3387,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -3184,6 +3413,7 @@ impl<'mc> Snowable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -3198,6 +3428,7 @@ impl<'mc> Snowable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -3212,6 +3443,7 @@ impl<'mc> Snowable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -3226,6 +3458,7 @@ impl<'mc> Snowable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -3240,6 +3473,7 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -3271,7 +3505,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Snowable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Directional. Needed for returning it from Java.
+/// 'facing' represents the face towards which the block is pointing.
+///
+/// Some blocks may not be able to face in all directions, use <a href="#getFaces()"><code>getFaces()</code></a> to get all possible directions for this block.
+///
+/// This is a representation of an abstract class.
 pub struct Directional<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3284,7 +3522,7 @@ impl<'mc> Directional<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Directional from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Directional")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Directional")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Directional object, got {}",
@@ -3295,6 +3533,7 @@ impl<'mc> Directional<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'facing' property.
     pub fn facing(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3318,6 +3557,7 @@ impl<'mc> Directional<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+    /// Sets the value of the 'facing' property.
     pub fn set_facing(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -3332,6 +3572,7 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the faces which are applicable to this block.
     pub fn faces(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3341,6 +3582,7 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -3355,6 +3597,7 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -3370,6 +3613,7 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3393,6 +3637,7 @@ impl<'mc> Directional<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3407,6 +3652,7 @@ impl<'mc> Directional<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3419,6 +3665,7 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3426,6 +3673,7 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3433,6 +3681,7 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3443,6 +3692,7 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -3457,6 +3707,7 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -3482,6 +3733,7 @@ impl<'mc> Directional<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -3501,6 +3753,7 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -3526,6 +3779,7 @@ impl<'mc> Directional<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -3540,6 +3794,7 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -3554,6 +3809,7 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -3568,6 +3824,7 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -3582,6 +3839,7 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -3613,7 +3871,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Directional<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Openable. Needed for returning it from Java.
+/// 'open' denotes whether this block is currently opened.
+///
+/// This is a representation of an abstract class.
 pub struct Openable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3626,7 +3886,7 @@ impl<'mc> Openable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Openable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Openable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Openable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Openable object, got {}",
@@ -3637,6 +3897,7 @@ impl<'mc> Openable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Sets the value of the 'open' property.
     pub fn set_open(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3649,6 +3910,7 @@ impl<'mc> Openable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the value of the 'open' property.
     pub fn is_open(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3656,6 +3918,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -3670,6 +3933,7 @@ impl<'mc> Openable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -3685,6 +3949,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3708,6 +3973,7 @@ impl<'mc> Openable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3722,6 +3988,7 @@ impl<'mc> Openable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3734,6 +4001,7 @@ impl<'mc> Openable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3741,6 +4009,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3748,6 +4017,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3758,6 +4028,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -3772,6 +4043,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -3797,6 +4069,7 @@ impl<'mc> Openable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -3816,6 +4089,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -3841,6 +4115,7 @@ impl<'mc> Openable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -3855,6 +4130,7 @@ impl<'mc> Openable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -3869,6 +4145,7 @@ impl<'mc> Openable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -3883,6 +4160,7 @@ impl<'mc> Openable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -3897,6 +4175,7 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -3928,7 +4207,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Openable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Rotatable. Needed for returning it from Java.
+/// 'rotation' represents the current rotation of this block.
+///
+/// This is a representation of an abstract class.
 pub struct Rotatable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3941,7 +4222,7 @@ impl<'mc> Rotatable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Rotatable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Rotatable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Rotatable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Rotatable object, got {}",
@@ -3952,6 +4233,7 @@ impl<'mc> Rotatable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'rotation' property.
     pub fn rotation(&mut self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3975,6 +4257,7 @@ impl<'mc> Rotatable<'mc> {
             crate::block::BlockFace::from_string(variant_str).unwrap(),
         )
     }
+    /// Sets the value of the 'rotation' property.
     pub fn set_rotation(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -3989,6 +4272,7 @@ impl<'mc> Rotatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -4003,6 +4287,7 @@ impl<'mc> Rotatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -4018,6 +4303,7 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4041,6 +4327,7 @@ impl<'mc> Rotatable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4055,6 +4342,7 @@ impl<'mc> Rotatable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4067,6 +4355,7 @@ impl<'mc> Rotatable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4074,6 +4363,7 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4081,6 +4371,7 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4091,6 +4382,7 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -4105,6 +4397,7 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -4130,6 +4423,7 @@ impl<'mc> Rotatable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -4149,6 +4443,7 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -4174,6 +4469,7 @@ impl<'mc> Rotatable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -4188,6 +4484,7 @@ impl<'mc> Rotatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -4202,6 +4499,7 @@ impl<'mc> Rotatable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -4216,6 +4514,7 @@ impl<'mc> Rotatable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -4230,6 +4529,7 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -4261,7 +4561,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Rotatable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Hangable. Needed for returning it from Java.
+/// 'hanging' denotes whether the lantern is hanging from a block.
+///
+/// This is a representation of an abstract class.
 pub struct Hangable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4274,7 +4576,7 @@ impl<'mc> Hangable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Hangable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Hangable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Hangable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Hangable object, got {}",
@@ -4285,6 +4587,7 @@ impl<'mc> Hangable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'hanging' property.
     pub fn is_hanging(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4292,6 +4595,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the value of the 'hanging' property.
     pub fn set_hanging(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4304,6 +4608,7 @@ impl<'mc> Hangable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -4318,6 +4623,7 @@ impl<'mc> Hangable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -4333,6 +4639,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4356,6 +4663,7 @@ impl<'mc> Hangable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4370,6 +4678,7 @@ impl<'mc> Hangable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4382,6 +4691,7 @@ impl<'mc> Hangable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4389,6 +4699,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4396,6 +4707,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4406,6 +4718,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -4420,6 +4733,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -4445,6 +4759,7 @@ impl<'mc> Hangable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -4464,6 +4779,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -4489,6 +4805,7 @@ impl<'mc> Hangable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -4503,6 +4820,7 @@ impl<'mc> Hangable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -4517,6 +4835,7 @@ impl<'mc> Hangable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -4531,6 +4850,7 @@ impl<'mc> Hangable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -4545,6 +4865,7 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -4576,7 +4897,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Hangable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Rail. Needed for returning it from Java.
+/// 'shape' represents the current layout of a minecart rail.
+///
+/// Some types of rail may not be able to be laid out in all shapes, use <a href="#getShapes()"><code>getShapes()</code></a> to get those applicable to this block.
+///
+/// This is a representation of an abstract class.
 pub struct Rail<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4589,7 +4914,7 @@ impl<'mc> Rail<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Rail from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Rail")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Rail")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Rail object, got {}",
@@ -4600,6 +4925,8 @@ impl<'mc> Rail<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'shape' property.
+    /// Gets the shapes which are applicable to this block.
     pub fn shape(
         &mut self,
     ) -> Result<crate::block::data::RailShape<'mc>, Box<dyn std::error::Error>> {
@@ -4614,6 +4941,7 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the value of the 'shape' property.
     pub fn set_shape(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::RailShape<'mc>>,
@@ -4628,6 +4956,7 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the shapes which are applicable to this block.
     pub fn shapes(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -4637,6 +4966,7 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4644,6 +4974,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4656,6 +4987,7 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -4670,6 +5002,7 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -4685,6 +5018,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4708,6 +5042,7 @@ impl<'mc> Rail<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4722,6 +5057,7 @@ impl<'mc> Rail<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4734,6 +5070,7 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4741,6 +5078,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4748,6 +5086,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4758,6 +5097,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -4772,6 +5112,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -4797,6 +5138,7 @@ impl<'mc> Rail<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -4816,6 +5158,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -4841,6 +5184,7 @@ impl<'mc> Rail<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -4855,6 +5199,7 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -4869,6 +5214,7 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -4883,6 +5229,7 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -4897,6 +5244,7 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -4928,7 +5276,9 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Rail<'mc> {
         crate::block::data::Waterlogged::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Waterlogged. Needed for returning it from Java.
+/// 'waterlogged' denotes whether this block has fluid in it.
+///
+/// This is a representation of an abstract class.
 pub struct Waterlogged<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4941,7 +5291,7 @@ impl<'mc> Waterlogged<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Waterlogged from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Waterlogged")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Waterlogged")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Waterlogged object, got {}",
@@ -4952,6 +5302,7 @@ impl<'mc> Waterlogged<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'waterlogged' property.
     pub fn is_waterlogged(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -4959,6 +5310,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the value of the 'waterlogged' property.
     pub fn set_waterlogged(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4971,6 +5323,7 @@ impl<'mc> Waterlogged<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -4985,6 +5338,7 @@ impl<'mc> Waterlogged<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -5000,6 +5354,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5023,6 +5378,7 @@ impl<'mc> Waterlogged<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5037,6 +5393,7 @@ impl<'mc> Waterlogged<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5049,6 +5406,7 @@ impl<'mc> Waterlogged<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5056,6 +5414,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5063,6 +5422,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5073,6 +5433,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -5087,6 +5448,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -5112,6 +5474,7 @@ impl<'mc> Waterlogged<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -5131,6 +5494,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -5156,6 +5520,7 @@ impl<'mc> Waterlogged<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -5170,6 +5535,7 @@ impl<'mc> Waterlogged<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -5184,6 +5550,7 @@ impl<'mc> Waterlogged<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -5198,6 +5565,7 @@ impl<'mc> Waterlogged<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -5212,6 +5580,7 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -5243,7 +5612,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Waterlogged<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements BlockData. Needed for returning it from Java.
+
+///
+/// This is a representation of an abstract class.
 pub struct BlockData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5256,7 +5627,7 @@ impl<'mc> BlockData<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BlockData from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "BlockData")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/BlockData")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BlockData object, got {}",
@@ -5267,6 +5638,8 @@ impl<'mc> BlockData<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Rotates this blockdata by the specified <a title="enum in org.bukkit.block.structure" href="../structure/StructureRotation.html"><code>StructureRotation</code></a>.
+    /// <p>This has no effect on blocks that do not have any rotatable states.</p>
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -5281,6 +5654,10 @@ impl<'mc> BlockData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Checks if this state would be properly supported if it were placed at the given <a href="../Block.html" title="interface in org.bukkit.block"><code>Block</code></a>.
+    /// <p>This may be useful, for instance, to check whether or not a wall torch is capable of surviving on its neighbouring block states.</p>
+    /// Checks if this state would be properly supported if it were placed at the block at the given <a href="../../Location.html" title="class in org.bukkit"><code>Location</code></a>.
+    /// <p>This may be useful, for instance, to check whether or not a wall torch is capable of surviving on its neighbouring block states.</p>
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -5296,6 +5673,7 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get the Material represented by this block data.
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5319,6 +5697,16 @@ impl<'mc> BlockData<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+    /// Gets a string, which when passed into a method such as <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(java.lang.String)</code></a> will unambiguously recreate this instance.
+    /// Gets a string, which when passed into a method such as <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(java.lang.String)</code></a> will recreate this or a similar instance where unspecified states (if any) may be optionally omitted. If this instance was parsed and states are omitted, this exact instance will be creatable when parsed again, else their equality cannot be guaranteed.
+    /// <p>This method will only take effect for BlockData instances created by methods such as <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(String)</code></a> or any similar method whereby states are optionally defined. If otherwise, the result of <a href="#getAsString()"><code>getAsString()</code></a> will be returned. The following behaviour would be expected:</p>
+    /// <pre><code>
+    /// String dataString = "minecraft:chest[waterlogged=true]"
+    /// BlockData data = Bukkit.createBlockData(dataString);
+    /// dataString.equals(data.getAsString(true)); // This would return true
+    /// dataString.equals(data.getAsString(false)); // This would return false as all states are present
+    /// dataString.equals(data.getAsString()); // This is equivalent to the above, "getAsString(false)"
+    /// </code></pre>
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5333,6 +5721,7 @@ impl<'mc> BlockData<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Gets the block's <a href="../../SoundGroup.html" title="interface in org.bukkit"><code>SoundGroup</code></a> which can be used to get its step sound, hit sound, and others.
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5345,6 +5734,7 @@ impl<'mc> BlockData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the amount of light emitted by this state when in the world.
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5352,6 +5742,8 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Check whether or not this state will occlude other blocks.
+    /// <p>Block state occlusion affects visual features of other blocks (e.g. leaves and wet sponges will not spawn dripping water particles if an occluding state is below it), or whether light will pass through it.</p>
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5359,6 +5751,7 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Check whether or not this state requires a specific item to be used to drop items when broken. For example, diamond ore requires an iron pickaxe and will not drop diamonds when broken with a wooden or stone pickaxe.
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5369,6 +5762,7 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Returns if the given item is a preferred choice to break this Block. In some cases this determines if a block will drop anything or extra loot.
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -5383,6 +5777,7 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Returns the reaction of the block when moved by a piston
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -5408,6 +5803,8 @@ impl<'mc> BlockData<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+    /// Checks if a state's <a title="enum in org.bukkit.block" href="../BlockFace.html"><code>BlockFace</code></a> is capable of providing a given level of <a href="../BlockSupport.html" title="enum in org.bukkit.block"><code>BlockSupport</code></a> for neighbouring block states.
+    /// <p>Any given state may support either none, one, or more than one level of block support depending on its states. A common example would be a wall's ability to support torches only on the center of the upper block face, whereas a grass block would support all levels of block support on all block faces.</p>
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -5427,6 +5824,11 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets the material that a player would use to place this block.
+    /// <p>For most blocks this is the same as <a href="#getMaterial()"><code>getMaterial()</code></a> but some blocks have different materials used to place them. For example:</p>
+    /// <pre> <a href="../../Material.html#REDSTONE_WIRE"><code>Material.REDSTONE_WIRE</code></a> -&gt; <a href="../../Material.html#REDSTONE"><code>Material.REDSTONE</code></a>
+    /// <a href="../../Material.html#CARROTS"><code>Material.CARROTS</code></a> -&gt; <a href="../../Material.html#CARROT"><code>Material.CARROT</code></a>
+    /// </pre>
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -5452,6 +5854,8 @@ impl<'mc> BlockData<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+    /// Mirrors this blockdata using the specified <a title="enum in org.bukkit.block.structure" href="../structure/Mirror.html"><code>Mirror</code></a>.
+    /// <p>This has no effect on blocks that do not have any mirrorable states.</p>
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -5466,6 +5870,7 @@ impl<'mc> BlockData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Creates a new default <a href="../BlockState.html" title="interface in org.bukkit.block"><code>BlockState</code></a> for this type of Block, not bound to a location.
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -5480,6 +5885,7 @@ impl<'mc> BlockData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Returns a copy of this BlockData.
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -5494,6 +5900,11 @@ impl<'mc> BlockData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if the specified BlockData matches this block data.
+    ///
+    /// The semantics of this method are such that for manually created or modified BlockData it has the same effect as <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals-java.lang.Object-" class="external-link" title="class or interface in java.lang"><code>Object.equals(java.lang.Object)</code></a>, whilst for parsed data (that to which <a href="#merge(org.bukkit.block.data.BlockData)"><code>merge(org.bukkit.block.data.BlockData)</code></a> applies, it will return true when the type and all explicitly set states match.
+    ///
+    /// <b>Note that these semantics mean that a.matches(b) may not be the same as b.matches(a)</b>
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -5508,6 +5919,11 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Merges all explicitly set states from the given data with this BlockData.
+    ///
+    /// Note that the given data MUST have been created from one of the String parse methods, e.g. <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(java.lang.String)</code></a> and not have been subsequently modified.
+    ///
+    /// Note also that the block types must match identically.
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -5534,7 +5950,11 @@ impl<'mc> JNIRaw<'mc> for BlockData<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements AnaloguePowerable. Needed for returning it from Java.
+/// 'power' represents the redstone power level currently being emitted or transmitted via this block.
+///
+/// May not be over 9000 or <a href="#getMaximumPower()"><code>getMaximumPower()</code></a> (usually 15).
+///
+/// This is a representation of an abstract class.
 pub struct AnaloguePowerable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5549,7 +5969,7 @@ impl<'mc> AnaloguePowerable<'mc> {
                 eyre::eyre!("Tried to instantiate AnaloguePowerable from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "AnaloguePowerable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/AnaloguePowerable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AnaloguePowerable object, got {}",
@@ -5560,6 +5980,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'power' property.
     pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5567,6 +5988,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the value of the 'power' property.
     pub fn set_power(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5578,6 +6000,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the maximum allowed value of the 'power' property.
     pub fn maximum_power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5585,6 +6008,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -5599,6 +6023,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -5614,6 +6039,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5637,6 +6063,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5651,6 +6078,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5663,6 +6091,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5670,6 +6099,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5677,6 +6107,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5687,6 +6118,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -5701,6 +6133,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -5726,6 +6159,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -5745,6 +6179,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -5770,6 +6205,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -5784,6 +6220,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -5798,6 +6235,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -5812,6 +6250,7 @@ impl<'mc> AnaloguePowerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -5826,6 +6265,7 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -5857,7 +6297,9 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for AnaloguePowerable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Brushable. Needed for returning it from Java.
+/// 'dusted' represents how far uncovered by brush the block is.
+///
+/// This is a representation of an abstract class.
 pub struct Brushable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5870,7 +6312,7 @@ impl<'mc> Brushable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Brushable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Brushable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Brushable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Brushable object, got {}",
@@ -5881,6 +6323,7 @@ impl<'mc> Brushable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'dusted' property.
     pub fn dusted(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5888,6 +6331,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the value of the 'dusted' property.
     pub fn set_dusted(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5899,6 +6343,7 @@ impl<'mc> Brushable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the maximum allowed value of the 'dusted' property.
     pub fn maximum_dusted(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5906,6 +6351,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -5920,6 +6366,7 @@ impl<'mc> Brushable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -5935,6 +6382,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5958,6 +6406,7 @@ impl<'mc> Brushable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5972,6 +6421,7 @@ impl<'mc> Brushable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5984,6 +6434,7 @@ impl<'mc> Brushable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5991,6 +6442,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -5998,6 +6450,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6008,6 +6461,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -6022,6 +6476,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -6047,6 +6502,7 @@ impl<'mc> Brushable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -6066,6 +6522,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -6091,6 +6548,7 @@ impl<'mc> Brushable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -6105,6 +6563,7 @@ impl<'mc> Brushable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -6119,6 +6578,7 @@ impl<'mc> Brushable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -6133,6 +6593,7 @@ impl<'mc> Brushable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -6147,6 +6608,7 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -6178,7 +6640,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Brushable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Attachable. Needed for returning it from Java.
+/// 'attached' denotes whether a tripwire hook or string forms a complete tripwire circuit and is ready to trigger.
+///
+/// Updating the property on a tripwire hook will change the texture to indicate a connected string, but will not have any effect when used on the tripwire string itself. It may however still be used to check whether the string forms a circuit.
+///
+/// This is a representation of an abstract class.
 pub struct Attachable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6191,7 +6657,7 @@ impl<'mc> Attachable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Attachable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Attachable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Attachable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Attachable object, got {}",
@@ -6202,6 +6668,7 @@ impl<'mc> Attachable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'attached' property.
     pub fn is_attached(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6209,6 +6676,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the value of the 'attached' property.
     pub fn set_attached(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -6221,6 +6689,7 @@ impl<'mc> Attachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -6235,6 +6704,7 @@ impl<'mc> Attachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -6250,6 +6720,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6273,6 +6744,7 @@ impl<'mc> Attachable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6287,6 +6759,7 @@ impl<'mc> Attachable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6299,6 +6772,7 @@ impl<'mc> Attachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6306,6 +6780,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6313,6 +6788,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6323,6 +6799,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -6337,6 +6814,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -6362,6 +6840,7 @@ impl<'mc> Attachable<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -6381,6 +6860,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -6406,6 +6886,7 @@ impl<'mc> Attachable<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -6420,6 +6901,7 @@ impl<'mc> Attachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -6434,6 +6916,7 @@ impl<'mc> Attachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -6448,6 +6931,7 @@ impl<'mc> Attachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -6462,6 +6946,7 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -6493,7 +6978,11 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Attachable<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
-/// An instantiatable struct that implements Bisected. Needed for returning it from Java.
+/// 'half' denotes which half of a two block tall material this block is.
+///
+/// In game it may be referred to as either (top, bottom) or (upper, lower).
+///
+/// This is a representation of an abstract class.
 pub struct Bisected<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6506,7 +6995,7 @@ impl<'mc> Bisected<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Bisected from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Bisected")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/Bisected")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Bisected object, got {}",
@@ -6517,6 +7006,7 @@ impl<'mc> Bisected<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the value of the 'half' property.
     pub fn half(
         &mut self,
     ) -> Result<crate::block::data::BisectedHalf<'mc>, Box<dyn std::error::Error>> {
@@ -6531,6 +7021,7 @@ impl<'mc> Bisected<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the value of the 'half' property.
     pub fn set_half(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BisectedHalf<'mc>>,
@@ -6545,6 +7036,7 @@ impl<'mc> Bisected<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn rotate(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::StructureRotation<'mc>>,
@@ -6559,6 +7051,7 @@ impl<'mc> Bisected<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn is_supported_with_block(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
@@ -6574,6 +7067,7 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn material(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6597,6 +7091,7 @@ impl<'mc> Bisected<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6611,6 +7106,7 @@ impl<'mc> Bisected<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn sound_group(&mut self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6623,6 +7119,7 @@ impl<'mc> Bisected<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn light_emission(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6630,6 +7127,7 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn is_occluding(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6637,6 +7135,7 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn requires_correct_tool_for_drops(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6647,6 +7146,7 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn is_preferred_tool(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -6661,6 +7161,7 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn piston_move_reaction(
         &mut self,
     ) -> Result<crate::block::PistonMoveReaction<'mc>, Box<dyn std::error::Error>> {
@@ -6686,6 +7187,7 @@ impl<'mc> Bisected<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn is_face_sturdy(
         &mut self,
         arg0: impl Into<&'mc crate::block::BlockFace<'mc>>,
@@ -6705,6 +7207,7 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn placement_material(
         &mut self,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -6730,6 +7233,7 @@ impl<'mc> Bisected<'mc> {
             crate::Material::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn mirror(
         &mut self,
         arg0: impl Into<&'mc crate::block::structure::Mirror<'mc>>,
@@ -6744,6 +7248,7 @@ impl<'mc> Bisected<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn create_block_state(
         &mut self,
     ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -6758,6 +7263,7 @@ impl<'mc> Bisected<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn clone(
         &mut self,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
@@ -6772,6 +7278,7 @@ impl<'mc> Bisected<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn matches(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -6786,6 +7293,7 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn merge(
         &mut self,
         arg0: impl Into<&'mc crate::block::data::BlockData<'mc>>,
@@ -6817,6 +7325,7 @@ impl<'mc> Into<crate::block::data::BlockData<'mc>> for Bisected<'mc> {
         crate::block::data::BlockData::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// The half of a vertically bisected block.
 pub struct BisectedHalf<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6838,7 +7347,7 @@ impl<'mc> BisectedHalf<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BisectedHalf from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "BisectedHalf")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/data/BisectedHalf")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BisectedHalf object, got {}",
@@ -6849,6 +7358,7 @@ impl<'mc> BisectedHalf<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -6869,6 +7379,7 @@ impl<'mc> BisectedHalf<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6880,6 +7391,7 @@ impl<'mc> BisectedHalf<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -6894,6 +7406,7 @@ impl<'mc> BisectedHalf<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6905,6 +7418,7 @@ impl<'mc> BisectedHalf<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6912,6 +7426,7 @@ impl<'mc> BisectedHalf<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -6926,6 +7441,7 @@ impl<'mc> BisectedHalf<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -6938,6 +7454,7 @@ impl<'mc> BisectedHalf<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6945,6 +7462,7 @@ impl<'mc> BisectedHalf<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -6964,6 +7482,7 @@ impl<'mc> BisectedHalf<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -6971,6 +7490,7 @@ impl<'mc> BisectedHalf<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -6978,6 +7498,7 @@ impl<'mc> BisectedHalf<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

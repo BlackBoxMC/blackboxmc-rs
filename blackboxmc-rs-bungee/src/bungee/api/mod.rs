@@ -46,7 +46,7 @@ impl<'mc> ChatMessageType<'mc> {
                 eyre::eyre!("Tried to instantiate ChatMessageType from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ChatMessageType")?;
+        let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/ChatMessageType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ChatMessageType object, got {}",
@@ -69,6 +69,7 @@ impl<'mc> ChatMessageType<'mc> {
         }
     }
 }
+
 pub struct ChatColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -90,7 +91,7 @@ impl<'mc> ChatColor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ChatColor from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "ChatColor")?;
+        let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/ChatColor")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ChatColor object, got {}",
@@ -101,45 +102,7 @@ impl<'mc> ChatColor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub fn strip_color(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "stripColor",
-            "(Ljava/lang/String;)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn translate_alternate_color_codes(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: u16,
-        arg1: impl Into<&'mc String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Char(arg0.into());
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
-        let cls = &jni.find_class("java/lang/String")?;
-        let res = jni.call_static_method(
-            cls,
-            "translateAlternateColorCodes",
-            "(CLjava/lang/String;)Ljava/lang/String;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
+
     pub fn color(&mut self) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -175,6 +138,7 @@ impl<'mc> ChatColor<'mc> {
         (r, g, b);
         Ok((r, g, b))
     }
+
     pub fn get_by_char(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
@@ -190,7 +154,49 @@ impl<'mc> ChatColor<'mc> {
         let obj = res.l()?;
         crate::bungee::api::ChatColor::from_raw(&jni, obj)
     }
+
+    pub fn strip_color(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "stripColor",
+            "(Ljava/lang/String;)Ljava/lang/String;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
+    pub fn translate_alternate_color_codes(
+        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: u16,
+        arg1: impl Into<&'mc String>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
+        let cls = &jni.find_class("java/lang/String")?;
+        let res = jni.call_static_method(
+            cls,
+            "translateAlternateColorCodes",
+            "(CLjava/lang/String;)Ljava/lang/String;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        )?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     #[deprecated]
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -202,6 +208,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -216,6 +223,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -227,6 +235,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -235,6 +244,7 @@ impl<'mc> ChatColor<'mc> {
         Ok(res.i().unwrap())
     }
     #[deprecated]
+
     pub fn value_of(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -250,6 +260,7 @@ impl<'mc> ChatColor<'mc> {
         let obj = res.l()?;
         crate::bungee::api::ChatColor::from_raw(&jni, obj)
     }
+
     pub fn of_with_color(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc String>>,
@@ -266,6 +277,7 @@ impl<'mc> ChatColor<'mc> {
         crate::bungee::api::ChatColor::from_raw(&jni, obj)
     }
     #[deprecated]
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -273,6 +285,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -292,6 +305,7 @@ impl<'mc> ChatColor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -299,6 +313,7 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -306,6 +321,7 @@ impl<'mc> ChatColor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

@@ -1,7 +1,9 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// An instantiatable struct that implements Attributable. Needed for returning it from Java.
+/// Represents an object which may contain attributes.
+///
+/// This is a representation of an abstract class.
 pub struct Attributable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14,7 +16,7 @@ impl<'mc> Attributable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Attributable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Attributable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/attribute/Attributable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Attributable object, got {}",
@@ -25,6 +27,7 @@ impl<'mc> Attributable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the specified attribute instance from the object. This instance will be backed directly to the object and any changes will be visible at once.
     pub fn get_attribute(
         &mut self,
         arg0: impl Into<&'mc crate::attribute::Attribute<'mc>>,
@@ -116,7 +119,7 @@ impl<'mc> Attribute<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Attribute from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Attribute")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/attribute/Attribute")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Attribute object, got {}",
@@ -160,7 +163,9 @@ impl<'mc> Attribute<'mc> {
         }
     }
 }
-/// An instantiatable struct that implements AttributeInstance. Needed for returning it from Java.
+/// Represents a mutable instance of an attribute and its associated modifiers and values.
+///
+/// This is a representation of an abstract class.
 pub struct AttributeInstance<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -175,7 +180,7 @@ impl<'mc> AttributeInstance<'mc> {
                 eyre::eyre!("Tried to instantiate AttributeInstance from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "AttributeInstance")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/attribute/AttributeInstance")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AttributeInstance object, got {}",
@@ -186,6 +191,7 @@ impl<'mc> AttributeInstance<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// The attribute pertaining to this instance.
     pub fn attribute(
         &mut self,
     ) -> Result<crate::attribute::Attribute<'mc>, Box<dyn std::error::Error>> {
@@ -211,6 +217,7 @@ impl<'mc> AttributeInstance<'mc> {
             crate::attribute::Attribute::from_string(variant_str).unwrap(),
         )
     }
+    /// Base value of this instance before modifiers are applied.
     pub fn base_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -218,6 +225,7 @@ impl<'mc> AttributeInstance<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Set the base value of this instance.
     pub fn set_base_value(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -229,6 +237,7 @@ impl<'mc> AttributeInstance<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Add a modifier to this instance.
     pub fn add_modifier(
         &mut self,
         arg0: impl Into<&'mc crate::attribute::AttributeModifier<'mc>>,
@@ -243,6 +252,7 @@ impl<'mc> AttributeInstance<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Remove a modifier from this instance.
     pub fn remove_modifier(
         &mut self,
         arg0: impl Into<&'mc crate::attribute::AttributeModifier<'mc>>,
@@ -257,6 +267,7 @@ impl<'mc> AttributeInstance<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get all modifiers present on this instance.
     pub fn modifiers(
         &mut self,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -279,6 +290,7 @@ impl<'mc> AttributeInstance<'mc> {
         }
         Ok(new_vec)
     }
+    /// Get the value of this instance after all associated modifiers have been applied.
     pub fn value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -286,6 +298,7 @@ impl<'mc> AttributeInstance<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Gets the default value of the Attribute attached to this instance.
     pub fn default_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -303,6 +316,7 @@ impl<'mc> JNIRaw<'mc> for AttributeInstance<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Concrete implementation of an attribute modifier.
 pub struct AttributeModifier<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -331,7 +345,8 @@ impl<'mc> AttributeModifierOperation<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "AttributeModifierOperation")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/attribute/AttributeModifierOperation")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AttributeModifierOperation object, got {}",
@@ -498,7 +513,7 @@ impl<'mc> AttributeModifier<'mc> {
                 eyre::eyre!("Tried to instantiate AttributeModifier from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "AttributeModifier")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/attribute/AttributeModifier")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a AttributeModifier object, got {}",
@@ -557,6 +572,9 @@ impl<'mc> AttributeModifier<'mc> {
 "(Ljava/util/UUID;Ljava/lang/String;DLorg/bukkit/attribute/AttributeModifier$Operation;Lorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
         crate::attribute::AttributeModifier::from_raw(&jni, res)
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../configuration/serialization/ConfigurationSerializable.html#serialize()">ConfigurationSerializable</a></code></span>
+    /// Creates a Map representation of this class.
+    /// <p>This class must provide a method to restore this class, as defined in the <a href="../configuration/serialization/ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> interface javadocs.</p>
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -568,6 +586,7 @@ impl<'mc> AttributeModifier<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn deserialize(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
@@ -583,6 +602,7 @@ impl<'mc> AttributeModifier<'mc> {
         let obj = res.l()?;
         crate::attribute::AttributeModifier::from_raw(&jni, obj)
     }
+    /// Get the amount by which this modifier will apply its <a title="enum in org.bukkit.attribute" href="AttributeModifier.Operation.html"><code>AttributeModifier.Operation</code></a>.
     pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -590,6 +610,7 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d().unwrap())
     }
+    /// Get the operation this modifier will apply.
     pub fn operation(
         &mut self,
     ) -> Result<crate::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
@@ -604,6 +625,7 @@ impl<'mc> AttributeModifier<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the name of this modifier.
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -615,6 +637,7 @@ impl<'mc> AttributeModifier<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -629,6 +652,7 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -640,6 +664,7 @@ impl<'mc> AttributeModifier<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -647,6 +672,7 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the <a title="enum in org.bukkit.inventory" href="../inventory/EquipmentSlot.html"><code>EquipmentSlot</code></a> this AttributeModifier is active on, or null if this modifier is applicable for any slot.
     pub fn slot(
         &mut self,
     ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
@@ -672,6 +698,7 @@ impl<'mc> AttributeModifier<'mc> {
             crate::inventory::EquipmentSlot::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -691,6 +718,7 @@ impl<'mc> AttributeModifier<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -698,6 +726,7 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -705,6 +734,7 @@ impl<'mc> AttributeModifier<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

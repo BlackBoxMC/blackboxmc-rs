@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+
 pub struct SelectorComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25,7 +26,8 @@ impl<'mc> SelectorComponentSerializer<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "SelectorComponentSerializer")?;
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/chat/SelectorComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a SelectorComponentSerializer object, got {}",
@@ -44,6 +46,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::bungee::chat::SelectorComponentSerializer::from_raw(&jni, res)
     }
+
     pub unsafe fn serialize_with_selector_component(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -57,6 +60,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn deserialize_with_json_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -72,6 +76,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -91,6 +96,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -105,6 +111,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -116,6 +123,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -123,6 +131,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -130,6 +139,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -137,6 +147,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -157,6 +168,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct TextComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -181,7 +193,8 @@ impl<'mc> TextComponentSerializer<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "TextComponentSerializer")?;
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/chat/TextComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TextComponentSerializer object, got {}",
@@ -199,6 +212,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::bungee::chat::TextComponentSerializer::from_raw(&jni, res)
     }
+
     pub unsafe fn serialize_with_text_component(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -212,6 +226,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn deserialize_with_json_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -227,6 +242,7 @@ impl<'mc> TextComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -246,6 +262,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -260,6 +277,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -271,6 +289,7 @@ impl<'mc> TextComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -278,6 +297,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -285,6 +305,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -292,6 +313,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -310,6 +332,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>> for TextCompon
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct BaseComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -334,7 +357,8 @@ impl<'mc> BaseComponentSerializer<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "BaseComponentSerializer")?;
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/chat/BaseComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a BaseComponentSerializer object, got {}",
@@ -352,6 +376,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::bungee::chat::BaseComponentSerializer::from_raw(&jni, res)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -371,6 +396,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -385,6 +411,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -396,6 +423,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -403,6 +431,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -410,6 +439,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -417,6 +447,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -425,6 +456,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         Ok(())
     }
 }
+
 pub struct ScoreComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -449,7 +481,8 @@ impl<'mc> ScoreComponentSerializer<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "ScoreComponentSerializer")?;
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/chat/ScoreComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ScoreComponentSerializer object, got {}",
@@ -468,6 +501,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::bungee::chat::ScoreComponentSerializer::from_raw(&jni, res)
     }
+
     pub unsafe fn serialize_with_score_component(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -481,6 +515,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn deserialize_with_json_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -496,6 +531,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -515,6 +551,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -529,6 +566,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -540,6 +578,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -547,6 +586,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -554,6 +594,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -561,6 +602,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -581,6 +623,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct TranslatableComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -605,7 +648,8 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "TranslatableComponentSerializer")?;
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/chat/TranslatableComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a TranslatableComponentSerializer object, got {}",
@@ -624,6 +668,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::bungee::chat::TranslatableComponentSerializer::from_raw(&jni, res)
     }
+
     pub unsafe fn serialize_with_translatable_component(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -637,6 +682,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn deserialize_with_json_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -653,6 +699,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -672,6 +719,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -686,6 +734,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -697,6 +746,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -704,6 +754,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -711,6 +762,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -718,6 +770,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -738,6 +791,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct KeybindComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -762,7 +816,8 @@ impl<'mc> KeybindComponentSerializer<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "KeybindComponentSerializer")?;
+        let (valid, name) =
+            env.validate_name(&obj, "net/md_5/bungee/chat/KeybindComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a KeybindComponentSerializer object, got {}",
@@ -781,6 +836,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::bungee::chat::KeybindComponentSerializer::from_raw(&jni, res)
     }
+
     pub unsafe fn serialize_with_keybind_component(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -794,6 +850,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l().unwrap())
     }
+
     pub unsafe fn deserialize_with_json_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -809,6 +866,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -828,6 +886,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -842,6 +901,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -853,6 +913,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -860,6 +921,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -867,6 +929,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -874,6 +937,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -894,6 +958,7 @@ impl<'mc> Into<crate::bungee::chat::BaseComponentSerializer<'mc>>
         crate::bungee::chat::BaseComponentSerializer::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+
 pub struct TranslationRegistry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -917,7 +982,7 @@ impl<'mc> TranslationRegistry<'mc> {
                 eyre::eyre!("Tried to instantiate TranslationRegistry from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "TranslationRegistry")?;
+        let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/chat/TranslationRegistry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TranslationRegistry object, got {}",
@@ -928,6 +993,7 @@ impl<'mc> TranslationRegistry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+
     pub fn translate(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -946,6 +1012,7 @@ impl<'mc> TranslationRegistry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -960,6 +1027,7 @@ impl<'mc> TranslationRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -971,6 +1039,7 @@ impl<'mc> TranslationRegistry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -978,6 +1047,7 @@ impl<'mc> TranslationRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -997,6 +1067,7 @@ impl<'mc> TranslationRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1004,6 +1075,7 @@ impl<'mc> TranslationRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1011,6 +1083,7 @@ impl<'mc> TranslationRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1019,6 +1092,7 @@ impl<'mc> TranslationRegistry<'mc> {
         Ok(())
     }
 }
+
 pub struct ComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1042,7 +1116,7 @@ impl<'mc> ComponentSerializer<'mc> {
                 eyre::eyre!("Tried to instantiate ComponentSerializer from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "ComponentSerializer")?;
+        let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/chat/ComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a ComponentSerializer object, got {}",
@@ -1060,6 +1134,7 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::bungee::chat::ComponentSerializer::from_raw(&jni, res)
     }
+
     pub unsafe fn deserialize_with_json_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1075,6 +1150,7 @@ impl<'mc> ComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn to_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1092,6 +1168,7 @@ impl<'mc> ComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn to_string_with_base_components(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
@@ -1108,6 +1185,7 @@ impl<'mc> ComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1127,6 +1205,7 @@ impl<'mc> ComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1141,6 +1220,7 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1148,6 +1228,7 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1155,6 +1236,7 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1162,6 +1244,7 @@ impl<'mc> ComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

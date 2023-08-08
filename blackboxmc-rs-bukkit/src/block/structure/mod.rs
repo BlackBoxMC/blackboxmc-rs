@@ -48,7 +48,8 @@ impl<'mc> StructureRotation<'mc> {
                 eyre::eyre!("Tried to instantiate StructureRotation from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "StructureRotation")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/block/structure/StructureRotation")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a StructureRotation object, got {}",
@@ -119,7 +120,7 @@ impl<'mc> UsageMode<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate UsageMode from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "UsageMode")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/structure/UsageMode")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a UsageMode object, got {}",
@@ -187,7 +188,7 @@ impl<'mc> Mirror<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Mirror from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Mirror")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/block/structure/Mirror")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Mirror object, got {}",

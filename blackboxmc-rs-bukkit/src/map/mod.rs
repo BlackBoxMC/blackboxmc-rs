@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// Represents the graphics for a single character in a MapFont.
 pub struct MapFontCharacterSprite<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -25,7 +26,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapFontCharacterSprite")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapFontCharacterSprite")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapFontCharacterSprite object, got {}",
@@ -55,6 +56,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         )?;
         crate::map::MapFontCharacterSprite::from_raw(&jni, res)
     }
+    /// Get the height of the character sprite.
     pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -62,6 +64,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the width of the character sprite.
     pub fn width(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -69,6 +72,9 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the value of a pixel of the character.
+    /// Get the width of the character sprite.
+    /// Get the height of the character sprite.
     pub fn get(&mut self, arg0: i32, arg1: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
@@ -84,6 +90,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -103,6 +110,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -117,6 +125,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -128,6 +137,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -135,6 +145,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -142,6 +153,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -149,6 +161,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -157,6 +170,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         Ok(())
     }
 }
+/// Represents all the map cursors on a <a href="MapCanvas.html" title="interface in org.bukkit.map"><code>MapCanvas</code></a>. Like MapCanvas, a MapCursorCollection is linked to a specific <a href="MapRenderer.html" title="class in org.bukkit.map"><code>MapRenderer</code></a>.
 pub struct MapCursorCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -180,7 +194,7 @@ impl<'mc> MapCursorCollection<'mc> {
                 eyre::eyre!("Tried to instantiate MapCursorCollection from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "MapCursorCollection")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapCursorCollection")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapCursorCollection object, got {}",
@@ -198,6 +212,7 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::map::MapCursorCollection::from_raw(&jni, res)
     }
+    /// Get a cursor from this collection.
     pub fn get_cursor(
         &mut self,
         arg0: i32,
@@ -214,6 +229,7 @@ impl<'mc> MapCursorCollection<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Remove a cursor from the collection.
     pub fn remove_cursor(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapCursor<'mc>>,
@@ -228,6 +244,29 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Add a cursor to the collection.
+    /// Add a cursor to the collection.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Add a cursor to the collection.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Add a cursor to the collection.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Add a cursor to the collection.
     pub fn add_cursor_with_map_cursor(
         &mut self,
         arg0: std::option::Option<i32>,
@@ -253,6 +292,29 @@ impl<'mc> MapCursorCollection<'mc> {
         })
     }
     #[deprecated]
+    /// Add a cursor to the collection.
+    /// Add a cursor to the collection.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Add a cursor to the collection.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Add a cursor to the collection.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Add a cursor to the collection.
     pub fn add_cursor_with_int(
         &mut self,
         arg0: i32,
@@ -288,6 +350,7 @@ impl<'mc> MapCursorCollection<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the amount of cursors in this collection.
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -295,6 +358,7 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -314,6 +378,7 @@ impl<'mc> MapCursorCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -328,6 +393,7 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -339,6 +405,7 @@ impl<'mc> MapCursorCollection<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -346,6 +413,7 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -353,6 +421,7 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -360,6 +429,7 @@ impl<'mc> MapCursorCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -368,7 +438,9 @@ impl<'mc> MapCursorCollection<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements MapCanvas. Needed for returning it from Java.
+/// Represents a canvas for drawing to a map. Each canvas is associated with a specific <a href="MapRenderer.html" title="class in org.bukkit.map"><code>MapRenderer</code></a> and represents that renderer's layer on the map.
+///
+/// This is a representation of an abstract class.
 pub struct MapCanvas<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -381,7 +453,7 @@ impl<'mc> MapCanvas<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapCanvas from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapCanvas")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapCanvas")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapCanvas object, got {}",
@@ -392,6 +464,7 @@ impl<'mc> MapCanvas<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Get the map this canvas is attached to.
     pub fn map_view(&mut self) -> Result<crate::map::MapView<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -404,6 +477,7 @@ impl<'mc> MapCanvas<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Get the cursor collection associated with this canvas.
     pub fn cursors(
         &mut self,
     ) -> Result<crate::map::MapCursorCollection<'mc>, Box<dyn std::error::Error>> {
@@ -418,6 +492,7 @@ impl<'mc> MapCanvas<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the cursor collection associated with this canvas. This does not usually need to be called since a MapCursorCollection is already provided.
     pub fn set_cursors(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapCursorCollection<'mc>>,
@@ -432,6 +507,7 @@ impl<'mc> MapCanvas<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get a pixel from the canvas. If no color is set at the given position for this canvas, then null is returned and the color returned by <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a> is shown on the map.
     pub fn get_pixel_color(
         &mut self,
         arg0: i32,
@@ -479,6 +555,7 @@ impl<'mc> MapCanvas<'mc> {
         (r, g, b);
         Ok((r, g, b))
     }
+    /// Get a pixel from the layers below this canvas.
     pub fn get_base_pixel_color(
         &mut self,
         arg0: i32,
@@ -526,6 +603,15 @@ impl<'mc> MapCanvas<'mc> {
         (r, g, b);
         Ok((r, g, b))
     }
+    /// Draw a pixel to the canvas.
+    /// <p>The provided color might be converted to another color, which is in the map color range. This means, that <a href="#getPixelColor(int,int)"><code>getPixelColor(int, int)</code></a> might return another color than set. If null is used as color, then the color returned by <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a> is shown on the map.</p>
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value, use <a href="#setPixelColor(int,int,java.awt.Color)"><code>setPixelColor(int, int, Color)</code></a>
+    /// </div>
+    /// Magic value, use <a href="#setPixelColor(int,int,java.awt.Color)"><code>setPixelColor(int, int, Color)</code></a>
+    ///
+    /// Draw a pixel to the canvas.
     pub fn set_pixel(
         &mut self,
         arg0: i32,
@@ -549,6 +635,14 @@ impl<'mc> MapCanvas<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// Get a pixel from the canvas. If no color is set at the given position for this canvas, then null is returned and the color returned by <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a> is shown on the map.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value, use <a href="#getPixelColor(int,int)"><code>getPixelColor(int, int)</code></a>
+    /// </div>
+    /// Magic value, use <a href="#getPixelColor(int,int)"><code>getPixelColor(int, int)</code></a>
+    ///
+    /// Get a pixel from the canvas.
     pub fn get_pixel(&mut self, arg0: i32, arg1: i32) -> Result<i8, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
@@ -565,6 +659,14 @@ impl<'mc> MapCanvas<'mc> {
         Ok(res.b().unwrap())
     }
     #[deprecated]
+    /// Get a pixel from the layers below this canvas.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value, use <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a>
+    /// </div>
+    /// Magic value, use <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a>
+    ///
+    /// Get a pixel from the layers below this canvas.
     pub fn get_base_pixel(
         &mut self,
         arg0: i32,
@@ -584,6 +686,7 @@ impl<'mc> MapCanvas<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
+    /// Draw an image to the map. The image will be clipped if necessary.
     pub fn draw_image(
         &mut self,
         arg0: i32,
@@ -606,6 +709,7 @@ impl<'mc> MapCanvas<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Render text to the map using fancy formatting. Newline (\n) characters will move down one line and return to the original column, and the text color can be changed using sequences such as "§12;", replacing 12 with the palette index of the color (see <a href="MapPalette.html" title="class in org.bukkit.map"><code>MapPalette</code></a>).
     pub fn draw_text(
         &mut self,
         arg0: i32,
@@ -641,6 +745,7 @@ impl<'mc> JNIRaw<'mc> for MapCanvas<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents a renderer for a map.
 pub struct MapRenderer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -672,7 +777,7 @@ impl<'mc> MapRenderer<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapRenderer from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapRenderer")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapRenderer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapRenderer object, got {}",
@@ -693,6 +798,7 @@ impl<'mc> MapRenderer<'mc> {
         let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_1)])?;
         crate::map::MapRenderer::from_raw(&jni, res)
     }
+    /// Get whether the renderer is contextual, i.e. has different canvases for different players.
     pub fn is_contextual(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -700,6 +806,7 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Render to the given map.
     pub fn render(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapView<'mc>>,
@@ -722,6 +829,7 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Initialize this MapRenderer for the given map.
     pub fn initialize(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapView<'mc>>,
@@ -736,6 +844,7 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -755,6 +864,7 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -769,6 +879,7 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -780,6 +891,7 @@ impl<'mc> MapRenderer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -787,6 +899,7 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -794,6 +907,7 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -801,6 +915,7 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -809,6 +924,7 @@ impl<'mc> MapRenderer<'mc> {
         Ok(())
     }
 }
+/// An enum representing all possible scales a map can be set to.
 pub struct MapViewScale<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -830,7 +946,7 @@ impl<'mc> MapViewScale<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapViewScale from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapViewScale")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapViewScale")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapViewScale object, got {}",
@@ -842,6 +958,14 @@ impl<'mc> MapViewScale<'mc> {
         }
     }
     #[deprecated]
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get the scale given the raw value.
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i8>,
@@ -857,6 +981,14 @@ impl<'mc> MapViewScale<'mc> {
         let obj = res.l()?;
         crate::map::MapViewScale::from_raw(&jni, obj)
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get the scale given the raw value.
     pub fn value_of_with_class(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -878,6 +1010,13 @@ impl<'mc> MapViewScale<'mc> {
         Self::from_raw(&jni, obj)
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get the raw value of this scale level.
     pub fn value(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -885,6 +1024,7 @@ impl<'mc> MapViewScale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -896,6 +1036,7 @@ impl<'mc> MapViewScale<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -910,6 +1051,7 @@ impl<'mc> MapViewScale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -921,6 +1063,7 @@ impl<'mc> MapViewScale<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -928,6 +1071,7 @@ impl<'mc> MapViewScale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -942,6 +1086,7 @@ impl<'mc> MapViewScale<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -954,6 +1099,7 @@ impl<'mc> MapViewScale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -961,6 +1107,7 @@ impl<'mc> MapViewScale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -980,6 +1127,7 @@ impl<'mc> MapViewScale<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -987,6 +1135,7 @@ impl<'mc> MapViewScale<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -994,6 +1143,7 @@ impl<'mc> MapViewScale<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1002,7 +1152,9 @@ impl<'mc> MapViewScale<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements MapView. Needed for returning it from Java.
+/// Represents a map item.
+///
+/// This is a representation of an abstract class.
 pub struct MapView<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1015,7 +1167,7 @@ impl<'mc> MapView<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapView from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapView")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapView")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapView object, got {}",
@@ -1026,6 +1178,7 @@ impl<'mc> MapView<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Set the scale of this map.
     pub fn set_scale(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapViewScale<'mc>>,
@@ -1040,6 +1193,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets whether the map is locked or not. A locked map may not be explored further.
     pub fn is_locked(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1047,6 +1201,17 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get the world that this map is associated with. Primarily used by the internal renderer, but may be used by external renderers. May return null if the world the map is associated with is not loaded.
+    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::World::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    /// Get the scale of this map.
     pub fn scale(&mut self) -> Result<crate::map::MapViewScale<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1059,15 +1224,7 @@ impl<'mc> MapView<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getWorld", "()Lorg/bukkit/World;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::World::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+    /// Set the world that this map is associated with. The world is used by the internal renderer, and may also be used by external renderers.
     pub fn set_world(
         &mut self,
         arg0: impl Into<&'mc crate::World<'mc>>,
@@ -1082,6 +1239,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the center X position of this map.
     pub fn center_x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1089,6 +1247,7 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the center Z position of this map.
     pub fn center_z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1096,6 +1255,7 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Check whether this map is virtual. A map is virtual if its lowermost MapRenderer is plugin-provided.
     pub fn is_virtual(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1103,6 +1263,7 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Set the center X position of this map.
     pub fn set_center_x(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1114,6 +1275,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Set the center Z position of this map.
     pub fn set_center_z(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1125,6 +1287,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get a list of MapRenderers currently in effect.
     pub fn renderers(
         &mut self,
     ) -> Result<Vec<crate::map::MapRenderer<'mc>>, Box<dyn std::error::Error>> {
@@ -1144,6 +1307,7 @@ impl<'mc> MapView<'mc> {
         }
         Ok(new_vec)
     }
+    /// Add a renderer to this map.
     pub fn add_renderer(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapRenderer<'mc>>,
@@ -1158,6 +1322,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Remove a renderer from this map.
     pub fn remove_renderer(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapRenderer<'mc>>,
@@ -1172,6 +1337,7 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Gets whether a position cursor should be shown when the map is near its center.
     pub fn is_tracking_position(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1179,6 +1345,7 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets whether a position cursor should be shown when the map is near its center.
     pub fn set_tracking_position(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1191,6 +1358,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Whether the map will show a smaller position cursor (true), or no position cursor (false) when cursor is outside of map's range.
     pub fn is_unlimited_tracking(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1198,6 +1366,7 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Whether the map will show a smaller position cursor (true), or no position cursor (false) when cursor is outside of map's range.
     pub fn set_unlimited_tracking(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1210,6 +1379,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets whether the map is locked or not. A locked map may not be explored further.
     pub fn set_locked(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1222,6 +1392,7 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the ID of this map item for use with <a href="../inventory/meta/MapMeta.html" title="interface in org.bukkit.inventory.meta"><code>MapMeta</code></a>.
     pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1239,6 +1410,7 @@ impl<'mc> JNIRaw<'mc> for MapView<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents a bitmap font drawable to a map.
 pub struct MapFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1260,7 +1432,7 @@ impl<'mc> MapFont<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapFont from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapFont")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapFont")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapFont object, got {}",
@@ -1278,6 +1450,7 @@ impl<'mc> MapFont<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::map::MapFont::from_raw(&jni, res)
     }
+    /// Check whether the given text is valid.
     pub fn is_valid(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1292,6 +1465,7 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Get the height of this font.
     pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1299,6 +1473,7 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the width of the given text as it would be rendered using this font.
     pub fn get_width(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1313,6 +1488,7 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Get the sprite for a given character.
     pub fn get_char(
         &mut self,
         arg0: u16,
@@ -1329,6 +1505,7 @@ impl<'mc> MapFont<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Set the sprite for a given character.
     pub fn set_char(
         &mut self,
         arg0: u16,
@@ -1348,6 +1525,7 @@ impl<'mc> MapFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1367,6 +1545,7 @@ impl<'mc> MapFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1381,6 +1560,7 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1392,6 +1572,7 @@ impl<'mc> MapFont<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1399,6 +1580,7 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1406,6 +1588,7 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1413,6 +1596,7 @@ impl<'mc> MapFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1421,6 +1605,7 @@ impl<'mc> MapFont<'mc> {
         Ok(())
     }
 }
+/// Represents the built-in Minecraft font.
 pub struct MinecraftFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1442,7 +1627,7 @@ impl<'mc> MinecraftFont<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MinecraftFont from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MinecraftFont")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MinecraftFont")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MinecraftFont object, got {}",
@@ -1460,6 +1645,7 @@ impl<'mc> MinecraftFont<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::map::MinecraftFont::from_raw(&jni, res)
     }
+
     pub fn is_valid(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1474,6 +1660,7 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn height(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1481,6 +1668,7 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn get_width(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -1495,6 +1683,7 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn get_char(
         &mut self,
         arg0: u16,
@@ -1511,6 +1700,7 @@ impl<'mc> MinecraftFont<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn set_char(
         &mut self,
         arg0: u16,
@@ -1530,6 +1720,7 @@ impl<'mc> MinecraftFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1549,6 +1740,7 @@ impl<'mc> MinecraftFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1563,6 +1755,7 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1574,6 +1767,7 @@ impl<'mc> MinecraftFont<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1581,6 +1775,7 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1588,6 +1783,7 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1595,6 +1791,7 @@ impl<'mc> MinecraftFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1608,11 +1805,14 @@ impl<'mc> Into<crate::map::MapFont<'mc>> for MinecraftFont<'mc> {
         crate::map::MapFont::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// Represents the palette that map items use.
+/// <p>These fields are hee base color ranges. Each entry corresponds to four colors of varying shades with values entry to entry + 3.</p>
 pub struct MapPalette<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-/// An instantiatable struct that implements MapPaletteMapColorCache. Needed for returning it from Java.
+///
+/// This is a representation of an abstract class.
 pub struct MapPaletteMapColorCache<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1628,7 +1828,7 @@ impl<'mc> MapPaletteMapColorCache<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapPaletteMapColorCache")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapPaletteMapColorCache")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapPaletteMapColorCache object, got {}",
@@ -1673,7 +1873,7 @@ impl<'mc> MapPalette<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapPalette from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapPalette")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapPalette")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapPalette object, got {}",
@@ -1685,6 +1885,13 @@ impl<'mc> MapPalette<'mc> {
         }
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get the value of the given color in the palette.
     pub fn get_color(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i8,
@@ -1725,6 +1932,20 @@ impl<'mc> MapPalette<'mc> {
         Ok((r, g, b))
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get the index of the closest matching color in the palette to the given color.
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get the index of the closest matching color in the palette to the given color.
     pub fn match_color_with_color(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -1747,6 +1968,7 @@ impl<'mc> MapPalette<'mc> {
         )?;
         Ok(res.b().unwrap())
     }
+    /// Resize an image to 128x128.
     pub fn resize_image(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -1761,6 +1983,7 @@ impl<'mc> MapPalette<'mc> {
         )?;
         Ok(res.l().unwrap())
     }
+    /// Sets the given MapColorCache.
     pub fn set_map_color_cache(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::map::MapPaletteMapColorCache<'mc>>,
@@ -1775,6 +1998,7 @@ impl<'mc> MapPalette<'mc> {
         )?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -1794,6 +2018,7 @@ impl<'mc> MapPalette<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -1808,6 +2033,7 @@ impl<'mc> MapPalette<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1819,6 +2045,7 @@ impl<'mc> MapPalette<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1826,6 +2053,7 @@ impl<'mc> MapPalette<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1833,6 +2061,7 @@ impl<'mc> MapPalette<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1840,6 +2069,7 @@ impl<'mc> MapPalette<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1848,6 +2078,7 @@ impl<'mc> MapPalette<'mc> {
         Ok(())
     }
 }
+/// Represents a cursor on a map.
 pub struct MapCursor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1873,7 +2104,7 @@ impl<'mc> MapCursorType<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapCursorType from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapCursorType")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapCursorType")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapCursorType object, got {}",
@@ -2062,7 +2293,7 @@ impl<'mc> MapCursor<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapCursor from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "MapCursor")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/map/MapCursor")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a MapCursor object, got {}",
@@ -2104,6 +2335,7 @@ impl<'mc> MapCursor<'mc> {
         )?;
         crate::map::MapCursor::from_raw(&jni, res)
     }
+    /// Set the type of this cursor.
     pub fn set_type(
         &mut self,
         arg0: impl Into<&'mc crate::map::MapCursorType<'mc>>,
@@ -2118,6 +2350,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the visibility status of this cursor.
     pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2125,6 +2358,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Set the visibility status of this cursor.
     pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2137,6 +2371,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the X position of this cursor.
     pub fn x(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2144,6 +2379,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
+    /// Get the Y position of this cursor.
     pub fn y(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2151,6 +2387,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
+    /// Set the X position of this cursor.
     pub fn set_x(&mut self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Byte(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2162,6 +2399,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Set the Y position of this cursor.
     pub fn set_y(&mut self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Byte(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2173,6 +2411,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the direction of this cursor.
     pub fn direction(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2180,6 +2419,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
+    /// Set the direction of this cursor.
     pub fn set_direction(&mut self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Byte(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2192,6 +2432,13 @@ impl<'mc> MapCursor<'mc> {
         Ok(())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Set the type of this cursor.
     pub fn set_raw_type(&mut self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Byte(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2203,6 +2450,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the caption on this cursor.
     pub fn caption(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2217,6 +2465,7 @@ impl<'mc> MapCursor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Sets the caption on this cursor.
     pub fn set_caption(
         &mut self,
         arg0: impl Into<&'mc String>,
@@ -2231,6 +2480,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the type of this cursor.
     pub fn get_type(
         &mut self,
     ) -> Result<crate::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
@@ -2246,6 +2496,13 @@ impl<'mc> MapCursor<'mc> {
         })
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// Magic value
+    /// </div>
+    /// Magic value
+    ///
+    /// Get the type of this cursor.
     pub fn raw_type(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2253,6 +2510,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -2272,6 +2530,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -2286,6 +2545,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2297,6 +2557,7 @@ impl<'mc> MapCursor<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2304,6 +2565,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2311,6 +2573,7 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2318,6 +2581,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

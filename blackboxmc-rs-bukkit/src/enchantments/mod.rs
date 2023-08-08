@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// A simple wrapper for ease of selecting <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>s
 pub struct EnchantmentWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -24,7 +25,8 @@ impl<'mc> EnchantmentWrapper<'mc> {
                 eyre::eyre!("Tried to instantiate EnchantmentWrapper from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EnchantmentWrapper")?;
+        let (valid, name) =
+            env.validate_name(&obj, "org/bukkit/enchantments/EnchantmentWrapper")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EnchantmentWrapper object, got {}",
@@ -48,6 +50,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         )?;
         crate::enchantments::EnchantmentWrapper::from_raw(&jni, res)
     }
+    /// Gets the enchantment bound to this wrapper
     pub fn enchantment(
         &mut self,
     ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
@@ -62,6 +65,8 @@ impl<'mc> EnchantmentWrapper<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#getStartLevel()">Enchantment</a></code></span>
+    /// Gets the level that this Enchantment should start at
     pub fn start_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -69,6 +74,8 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#getMaxLevel()">Enchantment</a></code></span>
+    /// Gets the maximum level that this Enchantment may become.
     pub fn max_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -76,6 +83,9 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#canEnchantItem(org.bukkit.inventory.ItemStack)">Enchantment</a></code></span>
+    /// Checks if this Enchantment may be applied to the given <a href="../inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a>.
+    /// <p>This does not check if it conflicts with any enchantments already applied to the item.</p>
     pub fn can_enchant_item(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -90,6 +100,8 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#getItemTarget()">Enchantment</a></code></span>
+    /// Gets the type of <a href="../inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a> that may fit this Enchantment.
     pub fn item_target(
         &mut self,
     ) -> Result<crate::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
@@ -104,6 +116,10 @@ impl<'mc> EnchantmentWrapper<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#isTreasure()">Enchantment</a></code></span>
+    /// Checks if this enchantment is a treasure enchantment.
+    ///
+    /// Treasure enchantments can only be received via looting, trading, or fishing.
     pub fn is_treasure(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -111,6 +127,10 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#isCursed()">Enchantment</a></code></span>
+    /// Checks if this enchantment is a cursed enchantment
+    ///
+    /// Cursed enchantments are found the same way treasure enchantments are
     pub fn is_cursed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -118,6 +138,8 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#conflictsWith(org.bukkit.enchantments.Enchantment)">Enchantment</a></code></span>
+    /// Check if this enchantment conflicts with another enchantment.
     pub fn conflicts_with(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -132,6 +154,8 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="Enchantment.html#getName()">Enchantment</a></code></span>
+    /// Gets the unique name of this enchantment
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -143,6 +167,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -158,6 +183,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
+
     pub fn stop_accepting_registrations(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -165,6 +191,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
         Ok(())
     }
+
     pub fn register_enchantment(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -179,6 +206,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         )?;
         Ok(())
     }
+
     pub fn is_accepting_registrations(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -186,6 +214,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.call_static_method(cls, "isAcceptingRegistrations", "()Z", &[])?;
         Ok(res.z().unwrap())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -200,6 +229,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -211,6 +241,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -218,6 +249,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -231,6 +263,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         })
     }
     #[deprecated]
+
     pub fn get_by_name(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -246,6 +279,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -265,6 +299,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -272,6 +307,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -279,6 +315,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -292,6 +329,7 @@ impl<'mc> Into<crate::enchantments::Enchantment<'mc>> for EnchantmentWrapper<'mc
         crate::enchantments::Enchantment::from_raw(&self.jni_ref(), self.1).unwrap()
     }
 }
+/// A class for the available enchantment offers in the enchantment table.
 pub struct EnchantmentOffer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -315,7 +353,7 @@ impl<'mc> EnchantmentOffer<'mc> {
                 eyre::eyre!("Tried to instantiate EnchantmentOffer from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EnchantmentOffer")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/enchantments/EnchantmentOffer")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EnchantmentOffer object, got {}",
@@ -347,6 +385,8 @@ impl<'mc> EnchantmentOffer<'mc> {
         )?;
         crate::enchantments::EnchantmentOffer::from_raw(&jni, res)
     }
+    /// Get the type of the enchantment.
+    /// Gets the level of the enchantment.
     pub fn enchantment(
         &mut self,
     ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
@@ -361,6 +401,8 @@ impl<'mc> EnchantmentOffer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Sets the type of the enchantment.
+    /// Sets the level of the enchantment.
     pub fn set_enchantment(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -375,6 +417,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the level of the enchantment.
     pub fn enchantment_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -382,6 +425,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the level of the enchantment.
     pub fn set_enchantment_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -393,6 +437,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Gets the cost (minimum level) which is displayed as a number on the right hand side of the enchantment offer.
     pub fn cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -400,6 +445,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Sets the cost (minimum level) which is displayed as a number on the right hand side of the enchantment offer.
     pub fn set_cost(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -411,6 +457,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -430,6 +477,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -444,6 +492,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -455,6 +504,7 @@ impl<'mc> EnchantmentOffer<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -462,6 +512,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -469,6 +520,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -476,6 +528,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -484,6 +537,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         Ok(())
     }
 }
+/// Represents the applicable target for a <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>
 pub struct EnchantmentTarget<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -507,7 +561,7 @@ impl<'mc> EnchantmentTarget<'mc> {
                 eyre::eyre!("Tried to instantiate EnchantmentTarget from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "EnchantmentTarget")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/enchantments/EnchantmentTarget")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EnchantmentTarget object, got {}",
@@ -518,6 +572,8 @@ impl<'mc> EnchantmentTarget<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Check whether this target includes the specified item.
+    /// Check whether this target includes the specified item.
     pub fn includes_with_item_stack(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::Material<'mc>>>,
@@ -533,6 +589,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
     pub fn value_of_with_string(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
@@ -553,6 +610,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         let obj = res.l()?;
         Self::from_raw(&jni, obj)
     }
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -564,6 +622,7 @@ impl<'mc> EnchantmentTarget<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -578,6 +637,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -589,6 +649,7 @@ impl<'mc> EnchantmentTarget<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -596,6 +657,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn describe_constable(
         &mut self,
     ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
@@ -610,6 +672,7 @@ impl<'mc> EnchantmentTarget<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+
     pub fn declaring_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -622,6 +685,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -629,6 +693,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -648,6 +713,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -655,6 +721,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -662,6 +729,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -670,6 +738,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         Ok(())
     }
 }
+/// The various type of enchantments that may be added to armour or weapons
 pub struct Enchantment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -691,7 +760,7 @@ impl<'mc> Enchantment<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Enchantment from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Enchantment")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/enchantments/Enchantment")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Enchantment object, got {}",
@@ -715,6 +784,7 @@ impl<'mc> Enchantment<'mc> {
         )?;
         crate::enchantments::Enchantment::from_raw(&jni, res)
     }
+    /// Gets the Enchantment at the specified key
     pub fn get_by_key(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
@@ -730,6 +800,7 @@ impl<'mc> Enchantment<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
+    /// Gets the level that this Enchantment should start at
     pub fn start_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -737,6 +808,7 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Gets the maximum level that this Enchantment may become.
     pub fn max_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -744,6 +816,8 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// Checks if this Enchantment may be applied to the given <a href="../inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a>.
+    /// <p>This does not check if it conflicts with any enchantments already applied to the item.</p>
     pub fn can_enchant_item(
         &mut self,
         arg0: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
@@ -758,6 +832,7 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Stops accepting any enchantment registrations
     pub fn stop_accepting_registrations(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -765,6 +840,7 @@ impl<'mc> Enchantment<'mc> {
         let res = jni.call_static_method(cls, "stopAcceptingRegistrations", "()V", &[])?;
         Ok(())
     }
+    /// Gets the type of <a href="../inventory/ItemStack.html" title="class in org.bukkit.inventory"><code>ItemStack</code></a> that may fit this Enchantment.
     pub fn item_target(
         &mut self,
     ) -> Result<crate::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
@@ -779,6 +855,9 @@ impl<'mc> Enchantment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Checks if this enchantment is a treasure enchantment.
+    ///
+    /// Treasure enchantments can only be received via looting, trading, or fishing.
     pub fn is_treasure(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -787,6 +866,15 @@ impl<'mc> Enchantment<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// cursed enchantments are no longer special. Will return true only for <a href="#BINDING_CURSE"><code>BINDING_CURSE</code></a> and <a href="#VANISHING_CURSE"><code>VANISHING_CURSE</code></a>.
+    /// </div>
+    /// cursed enchantments are no longer special. Will return true only for <a href="#BINDING_CURSE"><code>BINDING_CURSE</code></a> and <a href="#VANISHING_CURSE"><code>VANISHING_CURSE</code></a>.
+    ///
+    /// Checks if this enchantment is a cursed enchantment
+    ///
+    /// Cursed enchantments are found the same way treasure enchantments are
     pub fn is_cursed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -794,6 +882,7 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Check if this enchantment conflicts with another enchantment.
     pub fn conflicts_with(
         &mut self,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -808,6 +897,8 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Registers an enchantment with the given ID and object.
+    /// <p>Generally not to be used from within a plugin.</p>
     pub fn register_enchantment(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
@@ -822,6 +913,7 @@ impl<'mc> Enchantment<'mc> {
         )?;
         Ok(())
     }
+    /// Checks if this is accepting Enchantment registrations.
     pub fn is_accepting_registrations(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -830,6 +922,13 @@ impl<'mc> Enchantment<'mc> {
         Ok(res.z().unwrap())
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// enchantments are badly named, use <a href="#getKey()"><code>getKey()</code></a>.
+    /// </div>
+    /// enchantments are badly named, use <a href="#getKey()"><code>getKey()</code></a>.
+    ///
+    /// Gets the unique name of this enchantment
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -841,6 +940,7 @@ impl<'mc> Enchantment<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -855,6 +955,7 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -866,6 +967,7 @@ impl<'mc> Enchantment<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -873,6 +975,8 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Keyed.html#getKey()">Keyed</a></code></span>
+    /// Return the namespaced identifier for this object.
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -886,6 +990,13 @@ impl<'mc> Enchantment<'mc> {
         })
     }
     #[deprecated]
+    /// <span class="deprecated-label">Deprecated.</span>
+    /// <div class="deprecation-comment">
+    /// enchantments are badly named, use <a href="#getByKey(org.bukkit.NamespacedKey)"><code>getByKey(org.bukkit.NamespacedKey)</code></a>.
+    /// </div>
+    /// enchantments are badly named, use <a href="#getByKey(org.bukkit.NamespacedKey)"><code>getByKey(org.bukkit.NamespacedKey)</code></a>.
+    ///
+    /// Gets the Enchantment at the specified name
     pub fn get_by_name(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc String>,
@@ -901,6 +1012,7 @@ impl<'mc> Enchantment<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -920,6 +1032,7 @@ impl<'mc> Enchantment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -927,6 +1040,7 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -934,6 +1048,7 @@ impl<'mc> Enchantment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

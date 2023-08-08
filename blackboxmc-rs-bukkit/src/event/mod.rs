@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+/// A list of event handlers, stored per-event. Based on lahwran's fevents.
 pub struct HandlerList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -22,7 +23,7 @@ impl<'mc> HandlerList<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate HandlerList from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "HandlerList")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/HandlerList")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a HandlerList object, got {}",
@@ -40,6 +41,12 @@ impl<'mc> HandlerList<'mc> {
         let res = jni.new_object(cls, "()V", &[])?;
         crate::event::HandlerList::from_raw(&jni, res)
     }
+    /// Unregister all listeners from all handler lists.
+    /// Unregister a specific plugin's listeners from all handler lists.
+    /// Unregister a specific listener from all handler lists.
+    /// Remove a listener from a specific order slot
+    /// Remove a specific plugin's listeners from this handler
+    /// Remove a specific listener from this handler
     pub fn unregister_with_registered_listener(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
@@ -55,6 +62,12 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Unregister all listeners from all handler lists.
+    /// Unregister a specific plugin's listeners from all handler lists.
+    /// Unregister a specific listener from all handler lists.
+    /// Remove a listener from a specific order slot
+    /// Remove a specific plugin's listeners from this handler
+    /// Remove a specific listener from this handler
     pub fn unregister_with_listener(
         &mut self,
         arg0: std::option::Option<impl Into<&'mc crate::event::Listener<'mc>>>,
@@ -70,6 +83,9 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Unregister all listeners from all handler lists.
+    /// Unregister a specific plugin's listeners from all handler lists.
+    /// Unregister a specific listener from all handler lists.
     pub fn unregister_all(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<&'mc crate::event::Listener<'mc>>>,
@@ -85,6 +101,7 @@ impl<'mc> HandlerList<'mc> {
         )?;
         Ok(())
     }
+    /// Bake all handler lists. Best used just after all normal event registration is complete, ie just after all plugins are loaded if you're using fevents in a plugin system.
     pub fn bake_all(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -92,6 +109,8 @@ impl<'mc> HandlerList<'mc> {
         let res = jni.call_static_method(cls, "bakeAll", "()V", &[])?;
         Ok(())
     }
+    /// Bake all handler lists. Best used just after all normal event registration is complete, ie just after all plugins are loaded if you're using fevents in a plugin system.
+    /// Bake HashMap and ArrayLists to 2d array - does nothing if not necessary
     pub fn bake(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -99,6 +118,8 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    /// Get the baked registered listeners associated with this handler list
+    /// Get a specific plugin's registered listeners associated with this handler list
     pub fn get_registered_listeners(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
@@ -114,6 +135,7 @@ impl<'mc> HandlerList<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaArrayList::from_raw(&jni, obj)
     }
+    /// Get a list of all handler lists for every event type
     pub fn handler_lists(
         jni: blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
@@ -122,6 +144,8 @@ impl<'mc> HandlerList<'mc> {
         let obj = res.l()?;
         blackboxmc_java::JavaArrayList::from_raw(&jni, obj)
     }
+    /// Register a new listener in this handler list
+    /// Register a collection of new listeners in this handler list
     pub fn register(
         &mut self,
         arg0: impl Into<&'mc crate::plugin::RegisteredListener<'mc>>,
@@ -136,6 +160,7 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -155,6 +180,7 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -169,6 +195,7 @@ impl<'mc> HandlerList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -180,6 +207,7 @@ impl<'mc> HandlerList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -187,6 +215,7 @@ impl<'mc> HandlerList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -194,6 +223,7 @@ impl<'mc> HandlerList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -201,6 +231,7 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -209,7 +240,9 @@ impl<'mc> HandlerList<'mc> {
         Ok(())
     }
 }
-/// An instantiatable struct that implements Listener. Needed for returning it from Java.
+/// Simple interface for tagging all EventListeners
+///
+/// This is a representation of an abstract class.
 pub struct Listener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -222,7 +255,7 @@ impl<'mc> Listener<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Listener from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Listener")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Listener")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Listener object, got {}",
@@ -243,7 +276,9 @@ impl<'mc> JNIRaw<'mc> for Listener<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements Cancellable. Needed for returning it from Java.
+/// A type characterizing events that may be cancelled by a plugin or the server.
+///
+/// This is a representation of an abstract class.
 pub struct Cancellable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -256,7 +291,7 @@ impl<'mc> Cancellable<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Cancellable from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Cancellable")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Cancellable")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Cancellable object, got {}",
@@ -267,6 +302,7 @@ impl<'mc> Cancellable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -274,6 +310,7 @@ impl<'mc> Cancellable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -296,7 +333,9 @@ impl<'mc> JNIRaw<'mc> for Cancellable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An instantiatable struct that implements EventHandler. Needed for returning it from Java.
+/// An annotation to mark methods as being event handler methods
+///
+/// This is a representation of an abstract class.
 pub struct EventHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -309,7 +348,7 @@ impl<'mc> EventHandler<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EventHandler from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "EventHandler")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventHandler")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EventHandler object, got {}",
@@ -320,6 +359,8 @@ impl<'mc> EventHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    /// Define if the handler ignores a cancelled event.
+    /// <p>If ignoreCancelled is true and the event is cancelled, the method is not called. Otherwise, the method is always called.</p>
     pub fn ignore_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -327,6 +368,16 @@ impl<'mc> EventHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+    /// Define the priority of the event.
+    /// <p>First priority to the last priority executed:</p>
+    /// <ol>
+    /// <li>LOWEST</li>
+    /// <li>LOW</li>
+    /// <li>NORMAL</li>
+    /// <li>HIGH</li>
+    /// <li>HIGHEST</li>
+    /// <li>MONITOR</li>
+    /// </ol>
     pub fn priority(
         &mut self,
     ) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
@@ -352,6 +403,7 @@ impl<'mc> EventHandler<'mc> {
             crate::event::EventPriority::from_string(variant_str).unwrap(),
         )
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -366,6 +418,7 @@ impl<'mc> EventHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -377,6 +430,7 @@ impl<'mc> EventHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -384,6 +438,7 @@ impl<'mc> EventHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn annotation_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -406,6 +461,7 @@ impl<'mc> JNIRaw<'mc> for EventHandler<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+/// Represents an event. All events require a static method named getHandlerList() which returns the same <a title="class in org.bukkit.event" href="HandlerList.html"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
 pub struct Event<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -431,7 +487,7 @@ impl<'mc> EventResult<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EventResult from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "EventResult")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventResult")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EventResult object, got {}",
@@ -596,7 +652,7 @@ impl<'mc> Event<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Event from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "Event")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/Event")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a Event object, got {}",
@@ -617,6 +673,7 @@ impl<'mc> Event<'mc> {
         let res = jni.new_object(cls, "(Z)V", &[jni::objects::JValueGen::from(&val_1)])?;
         crate::event::Event::from_raw(&jni, res)
     }
+
     pub fn handlers(
         &mut self,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -631,6 +688,7 @@ impl<'mc> Event<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    /// Convenience method for providing a user-friendly identifier. By default, it is the event's class's <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getSimpleName--" title="class or interface in java.lang">simple name</a>.
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -645,6 +703,16 @@ impl<'mc> Event<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    /// Any custom event that should not by synchronized with other events must use the specific constructor. These are the caveats of using an asynchronous event:
+    /// <ul>
+    /// <li>The event is never fired from inside code triggered by a synchronous event. Attempting to do so results in an <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html" title="class or interface in java.lang"><code>IllegalStateException</code></a>.</li>
+    /// <li>However, asynchronous event handlers may fire synchronous or asynchronous events</li>
+    /// <li>The event may be fired multiple times simultaneously and in any order.</li>
+    /// <li>Any newly registered or unregistered handler is ignored after an event starts execution.</li>
+    /// <li>The handlers for this event may block for any length of time.</li>
+    /// <li>Some implementations may selectively declare a specific event use as asynchronous. This behavior should be clearly defined.</li>
+    /// <li>Asynchronous calls are not calculated in the plugin timing system.</li>
+    /// </ul>
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -652,6 +720,7 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -671,6 +740,7 @@ impl<'mc> Event<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -685,6 +755,7 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z().unwrap())
     }
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -696,6 +767,7 @@ impl<'mc> Event<'mc> {
             .to_string_lossy()
             .to_string())
     }
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -703,6 +775,7 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i().unwrap())
     }
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -710,6 +783,7 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -717,6 +791,7 @@ impl<'mc> Event<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -774,7 +849,7 @@ impl<'mc> EventPriority<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EventPriority from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "EventPriority")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/event/EventPriority")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a EventPriority object, got {}",
