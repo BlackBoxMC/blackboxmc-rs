@@ -2,7 +2,7 @@
 name = "blackboxmc_proc"
 version = "0.1.0"
 edition = "2021"
-license = "../LICENSE"
+license = "LGPL"
 description = "Procedrual macros for the BlackboxMC crates."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

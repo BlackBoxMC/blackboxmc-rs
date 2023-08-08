@@ -2,7 +2,7 @@
 name = "blackboxmc_general"
 version = "0.1.0"
 edition = "2021"
-license = "../LICENSE"
+license = "LGPL"
 description = "Helper functions for BlackboxMC"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
