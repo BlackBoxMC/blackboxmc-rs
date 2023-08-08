@@ -1,6 +1,6 @@
 [package]
 name = "blackboxmc_general"
-version = "0.1.0"
+version = "0.0.0"
 edition = "2021"
 license = "../LICENSE"
 
@@ -10,6 +10,5 @@ license = "../LICENSE"
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"
-blackboxmc_proc = {version = "0.1.0", path="../blackboxmc-rs-proc"}
 once_cell = "1.18.0"
 parking_lot = "0.12.1"
