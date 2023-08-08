@@ -1,6 +1,6 @@
 [package]
 name = "blackboxmc_bungee"
-version = "0.0.0"
+version = "0.1.0"
 edition = "2021"
 license = "../LICENSE"
 
@@ -10,3 +10,5 @@ license = "../LICENSE"
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"
+blackboxmc_general = {version = "0.1.0", path = "../blackboxmc-rs-general"}
+blackboxmc_java = {version = "0.1.0", path = "../blackboxmc-rs-java"}
