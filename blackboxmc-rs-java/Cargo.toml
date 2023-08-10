@@ -2,7 +2,7 @@
 name = "blackboxmc_java"
 version = "0.2.0"
 edition = "2021"
-license = "GNU LGPL"
+license = "LGPL-2.0-or-later"
 description = "BlackboxMC bindings for java.util"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
