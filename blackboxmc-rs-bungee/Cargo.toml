@@ -1,6 +1,6 @@
 [package]
 name = "blackboxmc_bungee"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "GNU LGPL"
 description = "BlackboxMC bindings for net.md_5.bungee"
